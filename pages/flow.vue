@@ -46,12 +46,23 @@
                   >Get Moments</Button
                 >
                 <Button
+                  @click="getMeta"
+                  class="fill"
+                  :fill="true"
+                  size="large"
+                  >Get Meta</Button
+                >
+                <Button
                   @click="fcl.unauthenticate"
                   class="fill"
                   :fill="true"
                   size="large"
                   >Disconnect</Button
                 >
+                
+              </div>
+              <div v-if="moments">
+                <MomentsList :moments="moments" displayMode="list"/>
                 
               </div>
             </div>
@@ -101,6 +112,7 @@
 <script>
 import * as fcl from '@onflow/fcl'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+import { sendScript } from '../utils/flow'
 export default {
   name: 'FlowPage',
   mounted() {
@@ -136,7 +148,7 @@ export default {
   data() {
     return {
       fcl,
-      
+      moments: []
     }
   },
   computed: {
@@ -153,6 +165,8 @@ export default {
     }),
     ...mapActions({
       subscribeUser: 'flowStore/subscribeUser',
+      setupTopShotAndSignatureAccount: 'flowStore/setupTopShotAndSignatureAccount',
+      // loadMomentData: 'flowStore/loadMomentData',
       
     }),
     logFcl() {
@@ -177,7 +191,6 @@ export default {
     // },
     async disconnnectUser() {
       console.log('fcl', fcl)
-      console.log('fcl.unauthenticate', fcl.unauthenticate)
       // await fcl.unauthenticate().then(user =>{
       //   if(user.loggedIn){
 
@@ -188,12 +201,102 @@ export default {
       //   // fcl.authenticate
       // }).catch(error => console.log('error', error))
     },
-    getMoments() {
-      console.log('get moments')
+    async getMoments() {
+      // console.log('get moments', this.setupTopShotAndSignatureAccount)
+      await this.setupTopShotAndSignatureAccount();
+      console.log('got here');
+          // if (vm.$route.name !== 'flow') {
+          //   vm.$router.push('/flow')
+          // }
+      // await this.loadMomentMetadata().then(result => console.log('hereeee'))
+          //  vm.setMoments(await vm.loadMomentMetadata())
+    },
+    async getMeta(){
+      console.log('getMeta')
+      // await this.loadMomentMetadata()
+      console.log('address', this.address)
+      
+      const theScript =  `
+                import TopShot from 0x179b6b1cb6755e31
+                pub fun main(): [UInt64] {
+                    let acct = getAccount(0x${this.address})
+                    let collectionRef = acct.getCapability(/public/MomentCollection)!
+                                            .borrow<&{TopShot.MomentCollectionPublic}>()!
+                    log(collectionRef.getIDs())
+                    return collectionRef.getIDs()
+                }
+            `;
+      const getSetup = async () => {
+        return await this.setupTopShotAndSignatureAccount();
+      }
+      const getResult = async () => {
+        const data = await fcl.send([fcl.script`${theScript}`])
+        return fcl.decode(data)
+      }
+      const getMetaItem= async (context, id) => {
+        console.log('id', id)
+        const data = await this.getMomentMeta(this, id)
+        console.log('he: ', fcl.decode(data))
+        return fcl.decode(data)
+      }
+      const momentIds = await getResult();
+
+      console.log('mom', momentIds)
+      const getIds = async () => {
+        console.log('momentIds', momentIds)
+        const moments = []
+          for (const momentId of momentIds) {
+            
+            const metadata =  await this.getMomentMeta(this, momentId).then(result => {
+                console.log('result', result)
+                return result;
+              });
+            console.log('metadata', metadata)
+            moments.push(metadata)
+            // moments.push(momentId)
+          }
+          console.log('moments', moments)
+          // this.moments = moments
+          return moments
+      }
+      
+      return await getIds().then(response => {
+        this.moments = response;
+      })
+      
+      
+        
+    },
+    async getMomentMeta(context, momentId) {
+      const theScript = `
+          import TopShot from 0x179b6b1cb6755e31
+          pub fun main(): {String: String} {
+              let collectionRef = getAccount(0x${this.address}).getCapability(/public/MomentCollection)!
+                  .borrow<&{TopShot.MomentCollectionPublic}>()
+                  ?? panic("Could not get public moment collection reference")
+              let token = collectionRef.borrowMoment(id: ${momentId})
+                  ?? panic("Could not borrow a reference to the specified moment")
+              let data = token.data
+              let metadata = TopShot.getPlayMetaData(playID: data.playID) ?? panic("Play doesn't exist")
+              log(metadata)
+              return metadata
+          }
+      `;
+      
+        const getData = async () => {
+          return await fcl.send([fcl.script`${theScript}`])
+        };
+        
+        return getData().then(res => {
+          return fcl.decode(res)
+        })
+
     },
     async loadMomentMetadata() {
+      console.log('loadMomentMetadata')
       const vm = this
-      const momentIds = await vm.sendScript(`
+      console.log('this', this)
+      const momentIds = await sendScript(this, `
                 import TopShot from 0x179b6b1cb6755e31
                 pub fun main(): [UInt64] {
                     let acct = getAccount(0x${vm.address})
@@ -203,6 +306,7 @@ export default {
                     return collectionRef.getIDs()
                 }
             `)
+            console.log('momentIds', momentIds)
       const moments = []
       for (const momentId of momentIds) {
         const metadata = await vm.getMoment(momentId)

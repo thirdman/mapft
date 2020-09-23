@@ -42,6 +42,7 @@ export { default as MintForm } from '../../components/MintForm.vue'
 export { default as MintPreview } from '../../components/MintPreview.vue'
 export { default as MintedInformation } from '../../components/MintedInformation.vue'
 export { default as ModelViewer } from '../../components/ModelViewer.vue'
+export { default as MomentsList } from '../../components/MomentsList.vue'
 export { default as RenderAudio } from '../../components/RenderAudio.vue'
 export { default as RenderItem } from '../../components/RenderItem.vue'
 export { default as RenderPdf } from '../../components/RenderPdf.vue'
@@ -99,6 +100,7 @@ export const LazyMintForm = import('../../components/MintForm.vue' /* webpackChu
 export const LazyMintPreview = import('../../components/MintPreview.vue' /* webpackChunkName: "components/MintPreview" */).then(c => c.default || c)
 export const LazyMintedInformation = import('../../components/MintedInformation.vue' /* webpackChunkName: "components/MintedInformation" */).then(c => c.default || c)
 export const LazyModelViewer = import('../../components/ModelViewer.vue' /* webpackChunkName: "components/ModelViewer" */).then(c => c.default || c)
+export const LazyMomentsList = import('../../components/MomentsList.vue' /* webpackChunkName: "components/MomentsList" */).then(c => c.default || c)
 export const LazyRenderAudio = import('../../components/RenderAudio.vue' /* webpackChunkName: "components/RenderAudio" */).then(c => c.default || c)
 export const LazyRenderItem = import('../../components/RenderItem.vue' /* webpackChunkName: "components/RenderItem" */).then(c => c.default || c)
 export const LazyRenderPdf = import('../../components/RenderPdf.vue' /* webpackChunkName: "components/RenderPdf" */).then(c => c.default || c)

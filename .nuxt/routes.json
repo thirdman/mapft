@@ -96,5 +96,12 @@
     "component": "/Users/garethbedford/Sites/infinft-flow/pages/index.vue",
     "chunkName": "pages/index",
     "_name": "_69b6f48e"
+  },
+  {
+    "name": "fl",
+    "path": "/:fl",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/_fl/index.vue",
+    "chunkName": "pages/_fl/index",
+    "_name": "_1bd7be64"
   }
 ]

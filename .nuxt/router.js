@@ -17,6 +17,7 @@ const _5aac6530 = () => interopDefault(import('../pages/gift/_contract/notid/ind
 const _4547fef1 = () => interopDefault(import('../pages/gift/_contract/_id.vue' /* webpackChunkName: "pages/gift/_contract/_id" */))
 const _af0985b4 = () => interopDefault(import('../pages/view/_contract/_id.vue' /* webpackChunkName: "pages/view/_contract/_id" */))
 const _69b6f48e = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
+const _1bd7be64 = () => interopDefault(import('../pages/_fl/index.vue' /* webpackChunkName: "pages/_fl/index" */))
 
 // TODO: remove in Nuxt 3
 const emptyFn = () => {}
@@ -90,6 +91,10 @@ export const routerOptions = {
     path: "/",
     component: _69b6f48e,
     name: "index"
+  }, {
+    path: "/:fl",
+    component: _1bd7be64,
+    name: "fl"
   }],
 
   fallback: false

@@ -263,6 +263,12 @@
   "LazyModelViewer": {
     "description": "Auto imported from components/ModelViewer.vue"
   },
+  "MomentsList": {
+    "description": "Auto imported from components/MomentsList.vue"
+  },
+  "LazyMomentsList": {
+    "description": "Auto imported from components/MomentsList.vue"
+  },
   "RenderAudio": {
     "description": "Auto imported from components/RenderAudio.vue"
   },

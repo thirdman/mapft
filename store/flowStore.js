@@ -2,6 +2,8 @@ import Vuex from "vuex"
 import Vue from "vue"
 import * as fcl from "@onflow/fcl"
 
+import {sendTransaction} from "../utils/flow"
+
 Vue.use(Vuex);
 
 export const state = () => ({
@@ -40,7 +42,7 @@ export const mutations = {
 
 export const actions = {
   
-  async sendTransaction(store, transaction) {
+  sendTransaction: async (store, transaction) => {
       const response = await fcl.send([
           fcl.transaction`${transaction}`,
           fcl.proposer(fcl.currentUser().authorization),
@@ -62,8 +64,56 @@ export const actions = {
 
       return fcl.decode(response);
   },
+  async setupTopShotAndSignatureAccount( context ) {
+                console.log('context', context);
+                const vm = context;
+                // console.log("dispatch.sendTransaction", dispatch('deployForm/sendTransaction');
+                console.log('vm: ', vm)
+                
+                const thisTransaction = `
+                    import TopShot from 0x179b6b1cb6755e31
+                    import Autograph from 0xf3fcd2c1a78f5eee
+    
+                    transaction {
+    
+                        prepare(acct: AuthAccount) {
+    
+                            // First, check to see if a moment collection already exists
+                            if acct.borrow<&TopShot.Collection>(from: /storage/MomentCollection) == nil {
+    
+                                // create a new TopShot Collection
+                                let collection <- TopShot.createEmptyCollection() as! @TopShot.Collection
+    
+                                // Put the new Collection in storage
+                                acct.save(<-collection, to: /storage/MomentCollection)
+    
+                                // create a public capability for the collection
+                                acct.link<&{TopShot.MomentCollectionPublic}>(/public/MomentCollection, target: /storage/MomentCollection)
+                            }
+    
+                            if acct.borrow<&Autograph.Collection>(from: /storage/AutographCollection) == nil {
+    
+                                // create a new Autograph Collection
+                                let collection <- Autograph.createEmptyCollection() as! @Autograph.Collection
+    
+                                // Put the new Collection in storage
+                                acct.save(<-collection, to: /storage/AutographCollection)
+    
+                                // create a public capability for the collection
+                                acct.link<&{Autograph.AutographCollectionPublic}>(/public/AutographCollection, target: /storage/AutographCollection)
+                            }
+                        }
+                    }
+                `;
+                await sendTransaction(context, thisTransaction)
+                return 'test';
+                // console.log('setupTopShotAndSignatureAccount result: ', result)
+                // return result
+      },
+  
   async getMoment({ dispatch, getters }, momentId) {
       const vm = this;
+      console.log('dispatch', dispatch);
 
       const metadata = await dispatch("sendScript", `
           import TopShot from 0x179b6b1cb6755e31
