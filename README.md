@@ -1,4 +1,6 @@
-# flower-power
+# infinft-flow
+demo forked from flower-power
+
 
 ## Project setup
 
