@@ -1,0 +1,16 @@
+.pageContainer > * {
+  opacity: 1;
+  transition: opacity 0.4s ease-in-out;
+}
+.pageContainer.page-enter-active > header {
+  /* border: 1px solid lime; */
+}
+.pageContainer.page-enter-active > *:not(header),
+.pageContainer.page-leave-active > *:not(header) {
+  opacity: 0.5;
+  /* transition: opacity 0.5s ease-in-out; */
+}
+.pageContainer.page-enter > *:not(header),
+.pageContainer.page-leave-to > *:not(header) {
+  opacity: 0.1;
+}

@@ -1,0 +1,192 @@
+<template>
+  <client-only>
+    <div class="modelWrapper">
+      <div class="loadingContainer" v-if="isLoading">
+        <div class="loadingBar" :style="{ width: loadingPercent + '%' }">
+          <span class="loadingText" v-if="loadingPercent < 100">
+            {{ loadingPercent }}%
+            <span>of {{fileSize}}</span>
+          </span>
+        </div>
+        <div class="loadingMeta">{{ loadingMeta }}</div>
+      </div>
+      <model-gltf
+        class="modelViewer"
+        v-if="
+          viewData &&
+          (viewData.fileType === 'glb' || viewData.fileType === 'gltf')
+        "
+        :rotation="rotation"
+        backgroundColor="#ffffff"
+        :backgroundAlpha="0"
+        :lights="allLights"
+        @on-load="onLoadModel"
+        @on-progress="handleProgress"
+        :src="`https://gateway.pinata.cloud/ipfs/${viewData.fileIpfsHash}`"
+      ></model-gltf>
+      <!-- @on-click="onClick" -->
+      <model-obj
+        class="modelViewer"
+        v-if="viewData && viewData.fileType === 'obj'"
+        :rotation="rotation"
+        :lights="allLights"
+        backgroundColor="#ffffff"
+        :backgroundAlpha="0"
+        @on-load="onLoadModel"
+        @on-progress="handleProgress"
+        :src="`https://gateway.pinata.cloud/ipfs/${viewData.fileIpfsHash}`"
+      ></model-obj>
+    </div>
+  </client-only>
+</template>
+
+<style>
+.modelViewer {
+  border: none;
+  width: 100vw;
+  height: 100vh;
+}
+.modelWrapper {
+  width: 100vw;
+  height: 100vh;
+}
+.loadingContainer {
+  position: fixed;
+  top: 49%;
+  left: 22%;
+  right: 22%;
+  height: 2rem;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid var(--line-color, #eee);
+}
+.loadingBar {
+  width: 0%;
+  background: var(--text-color, #ccc);
+  color: var(--background-color, #ccc);
+  font-size: 0.75rem;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transition: width 0.1s ease-out;
+}
+.loadingText {
+  color: var(--ui-color, #111);
+  position: absolute;
+  right: 0.5rem;
+  height: 100%;
+  line-height: 2rem;
+  font-size: 0.75rem;
+  font-variation-settings: 'wght' 700;
+}
+.loadingMeta {
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  line-height: 2rem;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+  color: var(--fill-color, #111);
+}
+</style>
+
+<script>
+// <div>model viewer: {{ viewData.fileIpfsHash }}</div>
+// <model-viewer
+//       src="https://gateway.pinata.cloud/ipfs/QmUNq7S11NViNagUZLw7db4vWoqnptUbGHGbvNDnjxispX"
+//       alt="alt"
+//       class="ModelViewer"
+//       auto-rotate
+//       camera-controls
+//       style="width: 100%; height: 800px;"
+//     ></model-viewer>
+import { mapFields } from 'vuex-map-fields'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { ModelObj, ModelGltf } from 'vue-3d-model'
+import { humanFileSize } from '../utils/misc'
+
+export default {
+  components: { ModelObj, ModelGltf },
+
+  props: ['src', 'alt', 'autoPlay', 'loop', 'autoRotate'],
+  data() {
+    return {
+      isActive: false,
+      // isRotating: false, // TODO move to store.
+      isLoading: true,
+      loaded: 0,
+      total: 100,
+      loadingPercent: 0,
+      fileSize: undefined,
+      loadingMeta: '',
+      cameraPosition: { x: 0, y: 0.075, z: 0.25 },
+    }
+  },
+  computed: {
+    ...mapGetters({
+      viewData: 'ui/viewData',
+      allLights: 'lightStore/allLights',
+      rotation: 'lightStore/rotation',
+      isRotating: 'lightStore/isRotating',
+    }),
+  },
+  methods: {
+    onClick(data) {
+      // console.log('data', data)
+      if (!data) {
+        return null
+      }
+      console.log('data.position', data.object.position)
+    },
+    onLoadModel() {
+      console.log('loaded model', this)
+      // console.log('this.isRotating', this.isRotating)
+      this.isLoading = false
+      if (this.isRotating) {
+        console.log('roate it!')
+        this.rotate()
+      }
+    },
+    rotate() {
+      console.log('startRotate')
+      this.hasRotation = true
+      this.rotation.y += 0.01
+      requestAnimationFrame(this.rotate)
+    },
+    noRotate() {
+      this.hasRotation = false
+      this.rotation = {
+        // x: -Math.PI / 2,
+        x: 0,
+        y: 0,
+        z: 0,
+      }
+      cancelAnimationFrame(this.noRotate)
+    },
+    handleProgress(progress) {
+      console.log('progress:', progress)
+      console.log('progress LOADED: ', progress.loaded)
+      console.log('progress TOTAL: ', progress.total)
+      const loadingPercent = (progress.loaded / progress.total) * 100
+      console.log('loadingPercent: ', loadingPercent)
+      const tempFileSize = humanFileSize(progress.total)
+
+      if (progress.total > progress.loaded) {
+        console.log('still loading')
+        this.fileSize = tempFileSize
+        this.isLoading = true
+        this.loadingPercent = loadingPercent.toFixed(1)
+        this.loadingMeta = 'loading'
+      } else {
+        console.log('finished')
+        // this.isLoading = false
+        this.loadingPercent = 100
+        this.loadingMeta = 'rendering'
+      }
+    },
+  },
+}
+</script>

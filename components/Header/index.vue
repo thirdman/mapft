@@ -1,0 +1,375 @@
+<template>
+  <header
+    class="w3-top header"
+    :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
+  >
+    <div class="devModeFlag shadow" v-if="devMode">DEV MODE</div>
+    <div class="headerRow w3-row">
+      <div class="brand w3-col s2">
+        <span class="logoWrap">
+          <span class="logoBg"></span>
+          <span class="logoPosition">
+            <IconLogo
+              :fillClass="
+                uiMode === 'full' && contrastMode === 'dark' ? 'light' : 'dark'
+              "
+            />
+          </span>
+        </span>
+        <div v-if="uiMode === 'none'" class="hamburgerToggle">
+          <button class="btn iconButton" @click="toggleHiddenUi(!hideUi)">
+            <IconMenu :strokeClass="contrastMode" />
+          </button>
+          <div class="toggleTooltip">Toggle menu options</div>
+        </div>
+        <span class="brandname">INFINFT</span>
+        <span class="subtitle">by NFT42</span>
+        <div class="wedgeWrap">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 100 100"
+            class="wedgeSvg"
+            preserveAspectRatio="none"
+          >
+            <polygon fill="#000" points="0,100 0,0 100,0" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="navRow">
+        <div class="navItem">
+          <nuxt-link to="/" class="w3-button navLink">About</nuxt-link>
+        </div>
+
+        <div class="navItem">
+          <nuxt-link to="/mint" class="w3-button navLink">Mint</nuxt-link>
+        </div>
+        <div class="navItem">
+          <nuxt-link to="/gallery" class="w3-button navLink">Gallery</nuxt-link>
+        </div>
+        <div class="navItem">
+          <nuxt-link to="/view" class="w3-button navLink">View</nuxt-link>
+        </div>
+        <div class="wedgeWrap">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 100 100"
+            class="wedgeSvg"
+            preserveAspectRatio="none"
+          >
+            <polygon fill="#000" points="0,0 100,100 100,0" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="search" v-if="isSearchRoute">
+        <button @click="setShowSearch(!showSearch)" class="btn iconButton">
+          <IconSearch :strokeClass="contrastMode" />
+        </button>
+        <div class="wedgeWrap">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 100 100"
+            class="wedgeSvg"
+            preserveAspectRatio="none"
+          >
+            <polygon fill="#ccc" points="0,100 0,0 100,0 100,100" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="profile">
+        <client-only>
+          <div class="minimalIcon" v-if="hasWallet && uiMode === 'minimal'">
+            <button @click="handleModal" class="btn iconButton">
+              <IconUser :strokeClass="contrastMode" />
+            </button>
+            <button @click="handleModal" class="btn iconButton caretPosition">
+              <IconCaret :strokeClass="contrastMode" />
+            </button>
+          </div>
+
+          <div id="accountWrap" class="accountWrap">
+            <div id="footerAccountWrap">
+              <div class="itemContent" v-if="!hasWallet">
+                <label id="footerWalletLabel" class="footerUserLabel"
+                  >Wallet</label
+                >
+                <div class="walletLoggedOut">
+                  <span class="loggedOutMsg">No Wallet</span>
+
+                  <button
+                    id="connectButton"
+                    class="w3-button w3-block w3-black"
+                    @click="
+                      connectWallet({
+                        setWallet,
+                        setWalletStatus,
+                        setNetworkName,
+                      })
+                    "
+                  >
+                    Connect
+                  </button>
+                  <span class="errorMsg danger" v-if="walletStatus === 'denied'"
+                    >Wallet Denied</span
+                  >
+                  <button @click="handleModal" class="btn iconButton">
+                    <IconSettings :strokeClass="contrastMode" />
+                    <IconCaret :strokeClass="contrastMode" />
+                  </button>
+                </div>
+              </div>
+
+              <div class="accountItem" v-if="hasWallet && uiMode !== 'minimal'">
+                <div class="itemIcon">
+                  <button @click="handleModal" class="btn iconButton">
+                    <IconUser :strokeClass="contrastMode" />
+                  </button>
+                </div>
+                <div class="itemContent">
+                  <label id="footerWalletLabel" class="footerUserLabel"
+                    >Wallet</label
+                  >
+                  <div
+                    id="accountElement"
+                    class="user profileElement"
+                    v-if="hasWallet"
+                  >
+                    <span class="accountAddress">{{ walletAddress }}</span>
+                    <button @click="handleModal" class="btn iconButton">
+                      <IconSettings :strokeClass="contrastMode" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="accountItem" v-if="hasWallet && uiMode !== 'minimal'">
+                <div class="itemIcon"></div>
+                <div class="itemContent">
+                  <label id="footerContractLabel" class="footerUserLabel"
+                    >Contract</label
+                  >
+                  <div id="contractElement" class="userContent profileElement">
+                    <span>{{ activeContractId || 'No User Contract' }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="wedgeWrap">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 100 100"
+                  class="wedgeSvg"
+                  preserveAspectRatio="none"
+                >
+                  <polygon fill="#000" points="0,0 100,0 100,100" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </client-only>
+
+        <div class="wedgeWrap">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 100 100"
+            class="wedgeSvg"
+            preserveAspectRatio="none"
+          >
+            <polygon fill="#000" points="0,100 0,0 100,0" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <client-only>
+      <account-modal />
+      <div style="opacity: 0; visibility: 0; z-index: -1">
+        {{ shallShowStatusModal ? 'yes' : '' }}
+      </div>
+      <status-modal />
+    </client-only>
+  </header>
+</template>
+
+<style>
+.header .footerUserLabel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+.devModeFlag {
+  position: fixed;
+  top: 0;
+  left: 5rem;
+  background: red;
+  padding: 2px 1rem;
+  font-weight: bold;
+  font-size: 0.75rem;
+  color: #fff;
+  z-index: 999999;
+}
+.hamburgerToggle {
+  position: absolute;
+  left: 0.5rem;
+  top: 2rem;
+}
+.hamburgerToggle:hover .toggleTooltip {
+  display: block;
+}
+.toggleTooltip {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background: var(--ui-color, #111);
+  color: var(--background-color, #111);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+.caretPosition {
+  position: absolute;
+  right: -1.35rem;
+}
+</style>
+
+<script>
+import { mapMutations, mapGetters, mapActions } from 'vuex'
+import { connectWallet, handleAccountLink } from '../../utils/wallet.js'
+
+// import { handleLoadStorage } from '../utils/misc.js'
+
+// if (process.server) {
+//     const { req, res, beforeNuxtRender } = context;
+//     console.log('server side: ', beforeNuxtRender)
+//   } else {
+//     console.log('client side: ', process)
+//   }
+
+export default {
+  // mixins: [myMixin],
+  components: {
+    // ExampleModal,
+  },
+
+  mounted() {
+    mounted: () => {
+      this.$refs.modal.show()
+    }
+  },
+  created() {
+    if (process.client) {
+      // handle client side
+      // console.log('created client')
+      // console.log('this.$scopedSlots', this.$scopedSlots)
+    }
+    if (process.server) {
+      // const { req, res, beforeNuxtRender } = context
+      console.log('created server')
+      // console.log('this.$scopedSlots', this.$scopedSlots)
+    }
+  },
+  data() {
+    return {
+      greeting: 'Hello World',
+      showIt: false,
+    }
+  },
+  computed: {
+    ...mapGetters({
+      uiMode: 'ui/uiMode',
+      contrastMode: 'ui/contrastMode',
+      hideUi: 'ui/hideUi',
+      devMode: 'ui/devMode',
+      walletStatus: 'ui/walletStatus',
+    }),
+    isSearchRoute() {
+      console.log('route: ', this.$route)
+      const routeArray = ['view-contract-id', 'ViewPage', 'gallery', 'view']
+      const isSearchRoute = routeArray.includes(this.$route.name)
+      console.log('isSearchRoute', isSearchRoute)
+      return isSearchRoute ? true : false
+    },
+    
+
+    hasWallet() {
+      const walletAddress = this.$store.state.ui.walletAddress
+
+      // return this.$store.state.ui.hasWallet
+      return walletAddress ? true : false
+    },
+    walletAddress() {
+      return this.$store.state.ui.walletAddress
+    },
+    showSearch() {
+      return this.$store.state.ui.showSearch
+    },
+    activeContractId() {
+      return this.$store.state.ui.activeContractId
+    },
+    // showAccount() {
+    //   // console.log('this', this.$modal)
+    //   const walletAddress = this.$store.state.ui.walletAddress
+    //   // return this.$store.state.ui.showAccount
+    //   return walletAddress ? true : false
+    // },
+    iconStrokeColor() {
+      return this.$store.state.ui.uiMode === 'minimal' ? 'dark' : 'light'
+    },
+  },
+  methods: {
+    connectWallet,
+    ...mapMutations({
+      setShowAccount: 'ui/setShowAccount',
+      setShowSearch: 'ui/setShowSearch',
+      toggleHiddenUi: 'ui/toggleHiddenUi',
+    }),
+
+    // setTheme,
+    ...mapActions({
+      showStatusModal: 'mintFormStore/showStatusModal',
+    }),
+    clearActiveContractId(value) {
+      this.$store.commit('ui/clearActiveContractId', value)
+      this.$store.commit('mintFormStore/clearActiveContractId', value)
+    },
+
+    setWallet(value) {
+      console.log('value', value)
+      this.$store.commit('ui/setWallet', value)
+    },
+    setWalletStatus(value) {
+      console.log('value', value)
+      this.$store.commit('ui/setWalletStatus', value)
+    },
+    setProvider(value) {
+      console.log('value', value)
+      this.$store.commit('ui/setWalletProvider', value)
+    },
+    setNetworkName(value) {
+      console.log('value', value)
+      this.$store.commit('ui/setNetworkName', value)
+    },
+
+    handleModal() {
+      this.$modal.show('account-modal')
+    },
+    async shallShowStatusModal() {
+      if (process.client) {
+        const shouldShow = await this.showStatusModal()
+        // console.log('SHOULD: ', shouldShow)
+        if (shouldShow) {
+          this.$modal.show('status-modal')
+          this.showIt = true
+        } else {
+          this.$modal.hide('status-modal')
+          this.showIt = true
+        }
+        return null
+      } else {
+        return null
+      }
+    },
+  },
+}
+</script>

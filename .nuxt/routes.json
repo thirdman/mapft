@@ -1,0 +1,100 @@
+[
+  {
+    "name": "about",
+    "path": "/about",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/about.vue",
+    "chunkName": "pages/about",
+    "_name": "_49ff19c9"
+  },
+  {
+    "name": "alpha",
+    "path": "/alpha",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/alpha.vue",
+    "chunkName": "pages/alpha",
+    "_name": "_7676571a"
+  },
+  {
+    "name": "flow",
+    "path": "/flow",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/flow.vue",
+    "chunkName": "pages/flow",
+    "_name": "_b1b073bc"
+  },
+  {
+    "name": "gallery",
+    "path": "/gallery",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/gallery/index.vue",
+    "chunkName": "pages/gallery/index",
+    "_name": "_4c854e11"
+  },
+  {
+    "name": "mint",
+    "path": "/mint",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/mint.vue",
+    "chunkName": "pages/mint",
+    "_name": "_4483a154"
+  },
+  {
+    "name": "view",
+    "path": "/view",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/view/index.vue",
+    "chunkName": "pages/view/index",
+    "_name": "_c1028848"
+  },
+  {
+    "name": "gift-notgift",
+    "path": "/gift/notgift",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/gift/notgift.vue",
+    "chunkName": "pages/gift/notgift",
+    "_name": "_5fb032d0"
+  },
+  {
+    "name": "gallery-contract",
+    "path": "/gallery/:contract",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/gallery/_contract.vue",
+    "chunkName": "pages/gallery/_contract",
+    "_name": "_125756a0"
+  },
+  {
+    "name": "gift-contract",
+    "path": "/gift/:contract",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/gift/_contract/index.vue",
+    "chunkName": "pages/gift/_contract/index",
+    "_name": "_432cfe49"
+  },
+  {
+    "name": "view-contract",
+    "path": "/view/:contract",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/view/_contract/index.vue",
+    "chunkName": "pages/view/_contract/index",
+    "_name": "_b2ecf984"
+  },
+  {
+    "name": "gift-contract-notid",
+    "path": "/gift/:contract?/notid",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/gift/_contract/notid/index.vue",
+    "chunkName": "pages/gift/_contract/notid/index",
+    "_name": "_5aac6530"
+  },
+  {
+    "name": "gift-contract-id",
+    "path": "/gift/:contract?/:id",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/gift/_contract/_id.vue",
+    "chunkName": "pages/gift/_contract/_id",
+    "_name": "_4547fef1"
+  },
+  {
+    "name": "view-contract-id",
+    "path": "/view/:contract/:id",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/view/_contract/_id.vue",
+    "chunkName": "pages/view/_contract/_id",
+    "_name": "_af0985b4"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/Users/garethbedford/Sites/infinft-flow/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_69b6f48e"
+  }
+]

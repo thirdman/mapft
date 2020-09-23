@@ -1,0 +1,15 @@
+.icon.light.small,
+.icon.dark.small,
+.logo.light.small,
+.logo.dark.small {
+  width: 16px;
+  height: 16px;
+}
+
+.icon.light.large,
+.icon.dark.large,
+.logo.light.large,
+.logo.dark.large {
+  width: 32px;
+  height: 32px;
+}
