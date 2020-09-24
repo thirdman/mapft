@@ -1,6 +1,7 @@
 export { default as AccountModal } from '../../components/AccountModal.vue'
 export { default as Address } from '../../components/Address.vue'
 export { default as Button } from '../../components/Button.vue'
+export { default as ChainModal } from '../../components/ChainModal.vue'
 export { default as DefaultImage } from '../../components/DefaultImage.vue'
 export { default as DeployForm } from '../../components/DeployForm.vue'
 export { default as DeployStatusInformation } from '../../components/DeployStatusInformation.vue'
@@ -59,6 +60,7 @@ export { default as Header } from '../../components/Header/index.vue'
 export const LazyAccountModal = import('../../components/AccountModal.vue' /* webpackChunkName: "components/AccountModal" */).then(c => c.default || c)
 export const LazyAddress = import('../../components/Address.vue' /* webpackChunkName: "components/Address" */).then(c => c.default || c)
 export const LazyButton = import('../../components/Button.vue' /* webpackChunkName: "components/Button" */).then(c => c.default || c)
+export const LazyChainModal = import('../../components/ChainModal.vue' /* webpackChunkName: "components/ChainModal" */).then(c => c.default || c)
 export const LazyDefaultImage = import('../../components/DefaultImage.vue' /* webpackChunkName: "components/DefaultImage" */).then(c => c.default || c)
 export const LazyDeployForm = import('../../components/DeployForm.vue' /* webpackChunkName: "components/DeployForm" */).then(c => c.default || c)
 export const LazyDeployStatusInformation = import('../../components/DeployStatusInformation.vue' /* webpackChunkName: "components/DeployStatusInformation" */).then(c => c.default || c)

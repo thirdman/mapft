@@ -100,6 +100,7 @@ export const mutations = {
     }
   },
   setUiTheme(state, value, rootState) {
+    console.log(';settng ui theme: ', value)
     state.uiTheme = value
     if (process.client) {
       const doContrast = () => {

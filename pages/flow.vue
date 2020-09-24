@@ -1,6 +1,6 @@
 <template>
   <div class="pageContainer">
-
+<Header />
 
     <!--  VUE MINT FORM SECTION-->
     <section id="flow" class="">
@@ -12,21 +12,24 @@
       </div>
       <div class="primary">
         
-          <div>
-            <h1>Flow test</h1>
-          </div>
+          <!-- <div>
+            <h1>Flow Beta</h1>
+          </div> -->
+        
           <div v-if="!loggedIn">
+            <label>logged out</label>
             <Button @click="fcl.authenticate" class="" size="large"
               >login</Button
             >
-            <Button @click="logFcl" class="fill" :fill="true" size="large"
+            <!-- <Button @click="logFcl" class="fill" :fill="true" size="large"
               >logFcl</Button
-            >
+            > -->
           </div>
           
-          <Button @click="logCurrentUser" class="fill" :fill="true" size="large"
+          <!-- <Button @click="logCurrentUser" class="fill" :fill="true" size="large"
             >log current user</Button
-          >
+          > -->
+
           <div v-if="loggedIn">
             <div class="userProfile shadow" v-if="user && user.identity">
               <img
@@ -37,35 +40,39 @@
               <h2>{{ user.identity.name }}</h2>
               <h5>{{ user.add }}</h5>
               <p>{{ user.identity.bio }}</p>
-              <div class="userActions">
-                <Button
-                  @click="getMoments"
+              <div v-if="flowStatus !== 'disconnected'" class="statusWrap">
+          <label>Status</label>
+          {{flowStatus}}
+        </div>
+              <div class="userActions" v-if="flowStatus==='connected'">
+                <!-- <Button
+                  @click="doSetup"
                   class="fill"
                   :fill="true"
                   size="large"
-                  >Get Moments</Button
-                >
+                  >Setup</Button
+                > -->
                 <Button
                   @click="getMeta"
                   class="fill"
                   :fill="true"
-                  size="large"
-                  >Get Meta</Button
+                  size="medium"
+                  >Load Assets</Button
                 >
                 <Button
                   @click="fcl.unauthenticate"
                   class="fill"
                   :fill="true"
-                  size="large"
+                  size="medium"
+                  mode="secondary"
                   >Disconnect</Button
                 >
                 
               </div>
-              <div v-if="moments">
-                <MomentsList :moments="moments" displayMode="list"/>
-                
-              </div>
             </div>
+              <!-- <div v-if="moments">
+                <MomentsList :moments="moments" displayMode="list"/>
+              </div> -->
           </div>
         
       </div>
@@ -77,7 +84,7 @@
         </div>
       </div>
     </section>
-
+<Footer />
   </div>
 </template>
 
@@ -106,6 +113,19 @@
 }
 .userActions {
   padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.userActions button{
+  margin-right: .25rem;
+  white-space: nowrap;
+}
+.statusWrap{
+  display: block;
+  padding: .5rem;
+  background: rgba(0,0,0,.05);
+  text-transform: capitalize;
 }
 </style>
 
@@ -133,6 +153,7 @@ export default {
         vm.$store.commit('flowStore/setUser', user)
           // this.setUser(user);
           console.log('user loggedIn:', user)
+          this.setFlowStatus('connected')
           // await vm.setupTopShotAndSignatureAccount()
           // if (vm.$route.name !== 'flow') {
           //   vm.$router.push('/flow')
@@ -140,6 +161,7 @@ export default {
           // vm.setMoments(await vm.loadMomentMetadata())
         } else {
           console.log('user loggedout:', user)
+          this.setFlowStatus('disconnnected')
           // vm.setMoments([])
         }
       })
@@ -148,7 +170,7 @@ export default {
   data() {
     return {
       fcl,
-      moments: []
+      
     }
   },
   computed: {
@@ -156,12 +178,18 @@ export default {
       loggedIn: 'flowStore/loggedIn',
       address: 'flowStore/address',
       user: 'flowStore/user',
+      moments: 'flowStore/moments',
+      flowStatus: 'flowStore/flowStatus',
+      
     }),
   },
   methods: {
     ...mapMutations({
       setUser: 'flowStore/setUser',
       removeUser: 'flowStore/removeUser',
+      setMoments: 'flowStore/setMoments',
+      setFlowStatus: 'flowStore/setFlowStatus',
+    
     }),
     ...mapActions({
       subscribeUser: 'flowStore/subscribeUser',
@@ -201,21 +229,23 @@ export default {
       //   // fcl.authenticate
       // }).catch(error => console.log('error', error))
     },
-    async getMoments() {
-      // console.log('get moments', this.setupTopShotAndSignatureAccount)
+    async doSetup() {
       await this.setupTopShotAndSignatureAccount();
       console.log('got here');
-          // if (vm.$route.name !== 'flow') {
-          //   vm.$router.push('/flow')
-          // }
+      this.setFlowStatus('setup')
+      console.log('this.route', this.$route);
+          if (this.$route.name !== 'FlowAssets') {
+            this.$router.push('/fl')
+          }
       // await this.loadMomentMetadata().then(result => console.log('hereeee'))
-          //  vm.setMoments(await vm.loadMomentMetadata())
+      //      vm.setMoments(await vm.loadMomentMetadata())
     },
     async getMeta(){
       console.log('getMeta')
+      const context = this;
       // await this.loadMomentMetadata()
       console.log('address', this.address)
-      
+      this.setFlowStatus('getting data')
       const theScript =  `
                 import TopShot from 0x179b6b1cb6755e31
                 pub fun main(): [UInt64] {
@@ -239,14 +269,20 @@ export default {
         console.log('he: ', fcl.decode(data))
         return fcl.decode(data)
       }
+
+      this.setFlowStatus('Getting data refs... ')
       const momentIds = await getResult();
 
       console.log('mom', momentIds)
+      this.setFlowStatus('Getting metadata...')
       const getIds = async () => {
         console.log('momentIds', momentIds)
         const moments = []
+        let count = 0;
           for (const momentId of momentIds) {
-            
+            count = count + 1;
+            console.log('this.setFlowStatus', this.setFlowStatus)
+            this.setFlowStatus(`loading item ${count}`)
             const metadata =  await this.getMomentMeta(this, momentId).then(result => {
                 console.log('result', result)
                 return result;
@@ -261,7 +297,13 @@ export default {
       }
       
       return await getIds().then(response => {
-        this.moments = response;
+        // this.moments = response;
+        this.setFlowStatus('connected')
+        this.setMoments(response)
+        console.log('this.route', this.$route);
+          if (this.$route.name !== 'FlowAssets') {
+            this.$router.push('/fl')
+          }
       })
       
       

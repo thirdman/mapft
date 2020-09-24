@@ -2,13 +2,15 @@
   <div
     id="body"
     class="hasSearch"
-  >
-    <!-- :class="[
+    :class="[
       uiMode,
       uiTheme,
       this.$store.state.ui.walletNetwork || 'no-network',
-    ]" -->
+    ]"
+  >
+    <!-- <Header /> -->
     <Nuxt />
+    <!-- <Footer /> -->
   </div>
 </template>
 
@@ -23,30 +25,31 @@ export default {
     }
   },
   created() {
-    // const uiModeQueryItem = this.$route.query.ui
-    // const uiThemeQueryItem = this.$route.query.theme
-    // if (uiModeQueryItem) {
-    //   this.$store.commit('ui/setUiMode', uiModeQueryItem)
-    // }
-    // if (uiThemeQueryItem) {
-    //   this.setUiTheme(uiThemeQueryItem)
-    // } else if (this.uiTheme) {
-    //   this.setUiTheme(this.uiTheme)
-    // }
+    const uiModeQueryItem = this.$route.query.ui
+    const uiThemeQueryItem = this.$route.query.theme
+    if (uiModeQueryItem) {
+      this.$store.commit('ui/setUiMode', uiModeQueryItem)
+    }
+    if (uiThemeQueryItem) {
+      this.setUiTheme(uiThemeQueryItem)
+    } else if (this.uiTheme) {
+      this.setUiTheme(this.uiTheme)
+    }
   },
   computed: {
-    // ...mapGetters({
-    //   uiMode: 'ui/uiMode',
-    //   uiTheme: 'ui/uiTheme',
-    // }),
-    // walletNetwork() {
-    //   return this.$store.state.ui.walletNetwork
-    // },
+    ...mapGetters({
+      uiMode: 'ui/uiMode',
+      uiTheme: 'ui/uiTheme',
+      contrastMode: 'ui/contrastMode',
+    }),
+    walletNetwork() {
+      return this.$store.state.ui.walletNetwork
+    },
   },
   methods: {
-    // ...mapMutations({
-    //   setUiTheme: 'ui/setUiTheme',
-    // }),
+    ...mapMutations({
+      setUiTheme: 'ui/setUiTheme',
+    }),
   },
 }
 </script>

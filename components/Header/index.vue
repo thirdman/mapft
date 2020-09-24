@@ -80,6 +80,9 @@
 
       <div class="profile">
         <client-only>
+          <div class="modaltest">
+            <Button size="small" mode="secondary" @click="handleChainModal">connect</Button>
+            </div>
           <div class="minimalIcon" v-if="hasWallet && uiMode === 'minimal'">
             <button @click="handleModal" class="btn iconButton">
               <IconUser :strokeClass="contrastMode" />
@@ -186,6 +189,7 @@
         {{ shallShowStatusModal ? 'yes' : '' }}
       </div>
       <status-modal />
+      <chain-modal />
     </client-only>
   </header>
 </template>
@@ -353,6 +357,9 @@ export default {
 
     handleModal() {
       this.$modal.show('account-modal')
+    },
+    handleChainModal() {
+      this.$modal.show('chain-modal')
     },
     async shallShowStatusModal() {
       if (process.client) {

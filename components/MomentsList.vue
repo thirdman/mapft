@@ -27,9 +27,11 @@
             <label>
               {{ item.FullName }}
             </label>
+            <div class="metaContent">
             <p class="help">{{item.CurrentTeam}}</p>
+            <p class="help">{{item.PlayType}}</p>
             <p class="help">{{item.DateOfMoment}}</p>
-            
+            </div>
             
           </div>
         </a>
@@ -101,6 +103,18 @@
 .galleryListItemContent {
   display: flex;
   width: 100%;
+}
+
+#MomentsList .galleryGrid.compact .galleryImageWrap{
+  
+  flex-basis: 50%;
+}
+#MomentsList .galleryListItemContent{
+  flex-direction: column;
+}
+#MomentsList .galleryListItemContent p{
+  margin: 0;
+  padding: 0;
 }
 .gallerylistItem label {
   font-size: 0.675rem;

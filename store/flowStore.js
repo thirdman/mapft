@@ -8,10 +8,13 @@ Vue.use(Vuex);
 
 export const state = () => ({
   user: {},
-  moments: []
+  moments: [],
+  flowStatus: 'disconnected'
 });
 export const getters = {
   user: (state) => state.user,
+  moments: (state) => state.moments,
+  flowStatus: (state) => state.flowStatus,
   loggedIn(state) {
       if (state.user) {
           return state.user.loggedIn
@@ -37,6 +40,9 @@ export const mutations = {
   },
   setMoments(state, moments) {
     state.moments = moments
+  },
+  setFlowStatus(state, newState) {
+    state.flowStatus = newState
   }
 }
 

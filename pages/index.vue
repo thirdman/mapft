@@ -1,6 +1,6 @@
 <template>
   <div class="pageContainer">
-    <!-- <Header /> -->
+    <Header />
 
     <!-- HERO Container -->
     <section id="intro" class="intro borderBottom">
@@ -19,7 +19,7 @@
             <span class="betaFlag">beta</span>
           </h1>
           <h3>A token minting platform with a focus on flexibility and longevity</h3>
-          <!-- <ul class="heroList">
+          <ul class="heroList">
             <li>
               <IconLogo size="small" :fillClass="contrastMode" />On-Chain Metadata
             </li>
@@ -35,22 +35,23 @@
             <li class="soon">
               <IconLogo size="small" :fillClass="contrastMode" />Custom Meta
             </li>
-          </ul> -->
+          </ul>
           <div class="ctaWrap">
             <nuxt-link to="/mint#deploy" class="btn hero">Get Started »</nuxt-link>
             <a href="#about" class="btn hollow asButton">How it works</a>
             
           </div>
-          <nuxt-link to="/flow" class="btn hero">Flow »</nuxt-link>
+          <br />
+          <nuxt-link to="/flow" class="btn hero asButton">Flow Test »</nuxt-link>
         </div>
       </div>
       <div class="secondary">
-        <!-- <HeroImages /> -->
+        <HeroImages />
       </div>
     </section>
 
 
-    <!-- <Footer /> -->
+    <Footer />
   </div>
 </template>
 

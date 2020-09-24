@@ -17,6 +17,12 @@
   "LazyButton": {
     "description": "Auto imported from components/Button.vue"
   },
+  "ChainModal": {
+    "description": "Auto imported from components/ChainModal.vue"
+  },
+  "LazyChainModal": {
+    "description": "Auto imported from components/ChainModal.vue"
+  },
   "DefaultImage": {
     "description": "Auto imported from components/DefaultImage.vue"
   },
