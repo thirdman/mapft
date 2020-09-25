@@ -22,6 +22,7 @@
                 connectWallet({
                   setWallet,
                   setWalletStatus,
+                  setWalletChain,
                   setNetworkName,
                 })
               "
@@ -56,9 +57,7 @@
         <div class="tertiary">
           <h2>Artist Contract</h2>
           <div class="aside">
-            <p>
-              Your own mint contract to be used to generate tokens.
-            </p>
+            <p>Your own mint contract to be used to generate tokens.</p>
           </div>
         </div>
         <div class="primary">
@@ -72,6 +71,7 @@
                 connectWallet({
                   setWallet,
                   setWalletStatus,
+                  setWalletChain,
                   setNetworkName,
                 })
               "
@@ -102,25 +102,26 @@
 <style></style>
 
 <script>
-import { mapMutations, mapGetters, mapActions } from 'vuex'
-import { connectWallet, handleAccountLink } from '../utils/wallet'
+import { mapMutations, mapGetters, mapActions } from "vuex";
+import { connectWallet, handleAccountLink } from "../utils/wallet";
 export default {
-  name: 'MintPage',
+  name: "MintPage",
   computed: {
     ...mapGetters({
-      hasWallet: 'ui/hasWallet',
-      walletAddress: 'ui/walletAddress',
+      hasWallet: "ui/hasWallet",
+      walletAddress: "ui/walletAddress",
     }),
   },
   methods: {
     connectWallet,
     ...mapMutations({
-      setShowAccount: 'ui/setShowAccount',
-      setShowSearch: 'ui/setShowSearch',
-      setWallet: 'ui/setWallet',
-      setWalletStatus: 'ui/setWalletStatus',
-      setNetworkName: 'ui/setNetworkName',
+      setShowAccount: "ui/setShowAccount",
+      setShowSearch: "ui/setShowSearch",
+      setWallet: "ui/setWallet",
+      setWalletStatus: "ui/setWalletStatus",
+      setNetworkName: "ui/setNetworkName",
+      setWalletChain: "ui/setWalletChain",
     }),
   },
-}
+};
 </script>

@@ -37,7 +37,7 @@
         <div class="subtitle row contentRow between">
           <div class="column">{{ walletAddress }}</div>
           <Button
-            @click="setWallet(null)"
+            @click="handleDisconnect"
             size="small"
             mode="secondary"
             v-if="walletAddress"
@@ -63,17 +63,17 @@
           <div class="row" v-if="activeContractSymbol">
             <div class="column col-50">
               <label class="subtitle">SYMBOL</label>
-              <div>{{ activeContractSymbol || '-' }}</div>
+              <div>{{ activeContractSymbol || "-" }}</div>
             </div>
             <div class="column col-50">
               <label class="subtitle">Name</label>
-              <div>{{ activeContractName || '-' }}</div>
+              <div>{{ activeContractName || "-" }}</div>
             </div>
           </div>
           <label class="subtitle">Address</label>
           <div class="row between">
             <div class="subtitle">
-              {{ activeContractId || 'None Selected' }}
+              {{ activeContractId || "None Selected" }}
             </div>
             <Button
               @click="clearActiveContractId(null)"
@@ -119,7 +119,7 @@
       <div class="modalSection">
         <label>Previously Used Contracts</label>
         <div v-for="(item, index) in usedContracts" :key="index">
-          <div class="row between contractRow" >
+          <div class="row between contractRow">
             <span class="column col-66">{{ item }}</span>
             <!-- <div class="column" v-if="item === activeContractId">
               <span class="activeTag">ACTIVE</span>
@@ -253,83 +253,88 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from 'vuex'
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
-  name: 'AccountModal',
+  name: "AccountModal",
   data() {
     return {
       showAddInterface: false,
-      customContractId: '',
-    }
+      customContractId: "",
+    };
   },
   computed: {
     ...mapGetters({
-      isDevAddress: 'ui/isDevAddress',
-      uiMode: 'ui/uiMode',
-      contrastMode: 'ui/contrastMode',
-      uiTheme: 'ui/uiTheme',
-      statusModalMode: 'ui/statusModalMode',
-      activeContractId: 'ui/activeContractId',
-      activeContractName: 'ui/activeContractName',
-      activeContractSymbol: 'ui/activeContractSymbol',
+      isDevAddress: "ui/isDevAddress",
+      uiMode: "ui/uiMode",
+      contrastMode: "ui/contrastMode",
+      uiTheme: "ui/uiTheme",
+      statusModalMode: "ui/statusModalMode",
+      activeContractId: "ui/activeContractId",
+      activeContractName: "ui/activeContractName",
+      activeContractSymbol: "ui/activeContractSymbol",
     }),
 
     walletAddress() {
-      return this.$store.state.ui.walletAddress
+      return this.$store.state.ui.walletAddress;
     },
 
     usedContracts() {
-      return this.$store.state.ui.usedContracts
+      return this.$store.state.ui.usedContracts;
     },
     devMode() {
-      return this.$store.state.ui.devMode
+      return this.$store.state.ui.devMode;
     },
   },
   methods: {
     ...mapMutations({
-      setStatusModalMode: 'ui/setStatusModalMode',
-      removeUsedContractId: 'ui/removeUsedContractId',
-      setUiMode: 'ui/setUiMode',
-      setUiTheme: 'ui/setUiTheme',
+      setStatusModalMode: "ui/setStatusModalMode",
+      removeUsedContractId: "ui/removeUsedContractId",
+      setUiMode: "ui/setUiMode",
+      setUiTheme: "ui/setUiTheme",
+      setWalletChain: "ui/setWalletChain",
     }),
 
     clearActiveContractId(value) {
-      this.$store.commit('ui/clearActiveContractId', value)
+      this.$store.commit("ui/clearActiveContractId", value);
     },
     setActiveContractId(value) {
-      this.$store.commit('ui/setActiveContractId', value)
+      this.$store.commit("ui/setActiveContractId", value);
     },
 
     setDevMode(value) {
-      this.$store.commit('ui/setDevMode', value)
+      this.$store.commit("ui/setDevMode", value);
     },
     devModeClass(state) {
-      return state ? 'active' : 'inactive'
+      return state ? "active" : "inactive";
     },
     accountLink() {
-      console.log('test')
+      console.log("test");
     },
     setWallet(value) {
-      console.log('value', value)
-      this.$store.commit('ui/setWallet', value)
+      console.log("value", value);
+      this.$store.commit("ui/setWallet", value);
     },
     handleConnect() {
-      alert('todo')
+      alert("todo");
+    },
+    handleDisconnect() {
+      this.setWallet(null);
+      this.setWalletChain("");
     },
     addContract() {
-      console.log('adding contract', this.customContractId)
-      this.$store.commit('ui/setActiveContractId', this.customContractId)
-      this.showAddInterface = false
+      console.log("adding contract", this.customContractId);
+      this.$store.commit("ui/setActiveContractId", this.customContractId);
+      this.showAddInterface = false;
     },
     handleModal() {
-      this.$modal.show('account-modal')
+      this.$modal.show("account-modal");
     },
     toggleAddInterface(newState) {
-      this.showAddInterface = newState
+      this.showAddInterface = newState;
     },
   },
-}
+};
 </script>
 
 <style>
@@ -408,7 +413,7 @@ export default {
   border-radius: 0.25rem;
   font-size: 0.75rem;
   line-height: 2rem;
-  font-variation-settings: 'wght' 800;
+  font-variation-settings: "wght" 800;
 }
 .row.contractRow {
   font-size: 0.75rem;

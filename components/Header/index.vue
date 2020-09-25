@@ -9,11 +9,7 @@
         <span class="logoWrap">
           <span class="logoBg"></span>
           <span class="logoPosition">
-            <IconLogo
-              :fillClass="
-                headerContrastMode
-              "
-            />
+            <IconLogo :fillClass="headerContrastMode" />
           </span>
         </span>
         <div v-if="uiMode === 'none'" class="hamburgerToggle">
@@ -22,6 +18,7 @@
           </button>
           <div class="toggleTooltip">Toggle menu options</div>
         </div>
+        <span class="chainname">{{ walletChain }}</span>
         <span class="brandname">INFINFT</span>
         <span class="subtitle">by NFT42</span>
         <div class="wedgeWrap">
@@ -81,8 +78,10 @@
       <div class="profile">
         <client-only>
           <div class="modaltest">
-            <Button size="small" mode="secondary" @click="handleChainModal">connect</Button>
-            </div>
+            <Button size="small" mode="secondary" @click="handleChainModal"
+              >connect</Button
+            >
+          </div>
           <div class="minimalIcon" v-if="hasWallet && uiMode === 'minimal'">
             <button @click="handleModal" class="btn iconButton">
               <IconUser :strokeClass="contrastMode" />
@@ -108,6 +107,7 @@
                       connectWallet({
                         setWallet,
                         setWalletStatus,
+                        setWalletChain,
                         setNetworkName,
                       })
                     "
@@ -153,7 +153,7 @@
                     >Contract</label
                   >
                   <div id="contractElement" class="userContent profileElement">
-                    <span>{{ activeContractId || 'No User Contract' }}</span>
+                    <span>{{ activeContractId || "No User Contract" }}</span>
                   </div>
                 </div>
               </div>
@@ -186,7 +186,7 @@
     <client-only>
       <account-modal />
       <div style="opacity: 0; visibility: 0; z-index: -1">
-        {{ shallShowStatusModal ? 'yes' : '' }}
+        {{ shallShowStatusModal ? "yes" : "" }}
       </div>
       <status-modal />
       <chain-modal />
@@ -238,8 +238,8 @@
 </style>
 
 <script>
-import { mapMutations, mapGetters, mapActions } from 'vuex'
-import { connectWallet, handleAccountLink } from '../../utils/wallet.js'
+import { mapMutations, mapGetters, mapActions } from "vuex";
+import { connectWallet, handleAccountLink } from "../../utils/wallet.js";
 
 // import { handleLoadStorage } from '../utils/misc.js'
 
@@ -258,8 +258,8 @@ export default {
 
   mounted() {
     mounted: () => {
-      this.$refs.modal.show()
-    }
+      this.$refs.modal.show();
+    };
   },
   created() {
     if (process.client) {
@@ -269,69 +269,74 @@ export default {
     }
     if (process.server) {
       // const { req, res, beforeNuxtRender } = context
-      console.log('created server')
+      console.log("created server");
       // console.log('this.$scopedSlots', this.$scopedSlots)
     }
   },
   data() {
     return {
-      greeting: 'Hello World',
+      greeting: "Hello World",
       showIt: false,
-    }
+    };
   },
   computed: {
     ...mapGetters({
-      uiMode: 'ui/uiMode',
-      contrastMode: 'ui/contrastMode',
-      hideUi: 'ui/hideUi',
-      devMode: 'ui/devMode',
-      walletStatus: 'ui/walletStatus',
+      uiMode: "ui/uiMode",
+      contrastMode: "ui/contrastMode",
+      hideUi: "ui/hideUi",
+      devMode: "ui/devMode",
+      walletStatus: "ui/walletStatus",
+      walletChain: "ui/walletChain",
     }),
     isSearchRoute() {
-      console.log('route: ', this.$route)
-      const routeArray = ['view-contract-id', 'ViewPage', 'gallery', 'view']
-      const isSearchRoute = routeArray.includes(this.$route.name)
-      console.log('isSearchRoute', isSearchRoute)
-      return isSearchRoute ? true : false
+      console.log("route: ", this.$route);
+      const routeArray = ["view-contract-id", "ViewPage", "gallery", "view"];
+      const isSearchRoute = routeArray.includes(this.$route.name);
+      console.log("isSearchRoute", isSearchRoute);
+      return isSearchRoute ? true : false;
     },
-    headerContrastMode(){
-      console.group('headercontrastmode');
-      const isLightUi = this.contrastMode === 'light'
-      console.log('uiMode', this.uiMode)
-      console.log('isLightUi', isLightUi)
-      console.log('this.contrastMode', this.contrastMode)
-      
+    headerContrastMode() {
+      console.group("headercontrastmode");
+      const isLightUi = this.contrastMode === "light";
+      console.log("uiMode", this.uiMode);
+      console.log("isLightUi", isLightUi);
+      console.log("this.contrastMode", this.contrastMode);
+
       // header items should be light if
       // - (has light ui background) AND ui is FULL
       // - has dark ui and ui is NOT full
       // const condition1 = this.uiMode === 'full'
       // const condition2 = this.contrastMode === 'light' && this.uiMode !== 'full';
       // const headerContrastMode = this.contrastMode === 'dark' ? 'dark': 'light';
-      const headerContrastMode = this.uiMode === 'full' ? 'dark' : this.contrastMode
-      console.log('headerContrastMode', headerContrastMode)
+      const headerContrastMode =
+        this.uiMode === "full" ? "dark" : this.contrastMode;
+      console.log("headerContrastMode", headerContrastMode);
       console.groupEnd();
-      return headerContrastMode
+      return headerContrastMode;
     },
-    logoContrastMode(){
-      const logoContrastMode = (this.uiMode === 'full' && this.headerContrastMode === 'dark') ? 'light' : 'dark';
-      console.log('logoContrastMode', logoContrastMode)
-      return 'dark'
+    logoContrastMode() {
+      const logoContrastMode =
+        this.uiMode === "full" && this.headerContrastMode === "dark"
+          ? "light"
+          : "dark";
+      console.log("logoContrastMode", logoContrastMode);
+      return "dark";
     },
 
     hasWallet() {
-      const walletAddress = this.$store.state.ui.walletAddress
+      const walletAddress = this.$store.state.ui.walletAddress;
 
       // return this.$store.state.ui.hasWallet
-      return walletAddress ? true : false
+      return walletAddress ? true : false;
     },
     walletAddress() {
-      return this.$store.state.ui.walletAddress
+      return this.$store.state.ui.walletAddress;
     },
     showSearch() {
-      return this.$store.state.ui.showSearch
+      return this.$store.state.ui.showSearch;
     },
     activeContractId() {
-      return this.$store.state.ui.activeContractId
+      return this.$store.state.ui.activeContractId;
     },
     // showAccount() {
     //   // console.log('this', this.$modal)
@@ -340,65 +345,66 @@ export default {
     //   return walletAddress ? true : false
     // },
     iconStrokeColor() {
-      return this.$store.state.ui.uiMode === 'minimal' ? 'dark' : 'light'
+      return this.$store.state.ui.uiMode === "minimal" ? "dark" : "light";
     },
   },
   methods: {
     connectWallet,
     ...mapMutations({
-      setShowAccount: 'ui/setShowAccount',
-      setShowSearch: 'ui/setShowSearch',
-      toggleHiddenUi: 'ui/toggleHiddenUi',
+      setShowAccount: "ui/setShowAccount",
+      setShowSearch: "ui/setShowSearch",
+      toggleHiddenUi: "ui/toggleHiddenUi",
+      setWalletChain: "ui/setWalletChain",
     }),
 
     // setTheme,
     ...mapActions({
-      showStatusModal: 'mintFormStore/showStatusModal',
+      showStatusModal: "mintFormStore/showStatusModal",
     }),
     clearActiveContractId(value) {
-      this.$store.commit('ui/clearActiveContractId', value)
-      this.$store.commit('mintFormStore/clearActiveContractId', value)
+      this.$store.commit("ui/clearActiveContractId", value);
+      this.$store.commit("mintFormStore/clearActiveContractId", value);
     },
 
     setWallet(value) {
-      console.log('value', value)
-      this.$store.commit('ui/setWallet', value)
+      console.log("value", value);
+      this.$store.commit("ui/setWallet", value);
     },
     setWalletStatus(value) {
-      console.log('value', value)
-      this.$store.commit('ui/setWalletStatus', value)
+      console.log("value", value);
+      this.$store.commit("ui/setWalletStatus", value);
     },
     setProvider(value) {
-      console.log('value', value)
-      this.$store.commit('ui/setWalletProvider', value)
+      console.log("value", value);
+      this.$store.commit("ui/setWalletProvider", value);
     },
     setNetworkName(value) {
-      console.log('value', value)
-      this.$store.commit('ui/setNetworkName', value)
+      console.log("value", value);
+      this.$store.commit("ui/setNetworkName", value);
     },
 
     handleModal() {
-      this.$modal.show('account-modal')
+      this.$modal.show("account-modal");
     },
     handleChainModal() {
-      this.$modal.show('chain-modal')
+      this.$modal.show("chain-modal");
     },
     async shallShowStatusModal() {
       if (process.client) {
-        const shouldShow = await this.showStatusModal()
+        const shouldShow = await this.showStatusModal();
         // console.log('SHOULD: ', shouldShow)
         if (shouldShow) {
-          this.$modal.show('status-modal')
-          this.showIt = true
+          this.$modal.show("status-modal");
+          this.showIt = true;
         } else {
-          this.$modal.hide('status-modal')
-          this.showIt = true
+          this.$modal.hide("status-modal");
+          this.showIt = true;
         }
-        return null
+        return null;
       } else {
-        return null
+        return null;
       }
     },
   },
-}
+};
 </script>

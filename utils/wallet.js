@@ -5,54 +5,55 @@
  */
 
 const connectWallet = async (props) => {
-  const { setWallet, setNetworkName, setWalletStatus } = props
-  console.log('setprops is', props)
-  let provider, net
+  const { setWallet, setWalletChain, setNetworkName, setWalletStatus } = props;
+  console.log("setprops is", props);
+  let provider, net;
   // Try to connect Metamask
 
-  if (typeof window.ethereum !== 'undefined') {
+  if (typeof window.ethereum !== "undefined") {
     // Get web3 instance
-    provider = window.ethereum
+    provider = window.ethereum;
     // console.log('provider: ', provider)
 
     try {
       // Request account access
-      const accts = await provider.enable()
+      const accts = await provider.enable();
       // setWeb3(new Web3(provider));
-      console.log('accts', accts)
-      provider.autoRefreshOnNetworkChange = false
+      console.log("accts", accts);
+      provider.autoRefreshOnNetworkChange = false;
       if (!accts[0]) {
-        console.log('error', provider)
-        throw 'missing account'
+        console.log("error", provider);
+        throw "missing account";
       }
       // setAccount(accts[0])
-      setWallet(accts[0])
+      setWalletChain("eth");
+      setWallet(accts[0]);
 
       // Listen for change of account
       if (provider && provider.on) {
-        provider.on('accountsChanged', (accts) => {
+        provider.on("accountsChanged", (accts) => {
           // setAccount(accts[0])
-          setWallet(accts[0])
-        })
+          setWallet(accts[0]);
+        });
       }
       // Get network
-      net = provider.networkVersion
-      setConnectedNetwork(net, setNetworkName)
+      net = provider.networkVersion;
+      setConnectedNetwork(net, setNetworkName);
 
       // Listen for change of network
       if (provider && provider.on) {
-        provider.on('networkChanged', function (net) {
-          setConnectedNetwork(net)
-        })
+        provider.on("networkChanged", function (net) {
+          setConnectedNetwork(net);
+        });
       }
     } catch (error) {
       // User denied account access...
-      console.log('denied. ERROR: ', error)
-      console.log('setWalletStatus: ', setWalletStatus)
-      setWalletStatus('denied')
+      console.log("denied. ERROR: ", error);
+      console.log("setWalletStatus: ", setWalletStatus);
+      setWalletStatus("denied");
     }
   }
-}
+};
 
 // const setAccount = (account) => {
 //   console.log('setting account...')
@@ -70,36 +71,36 @@ const connectWallet = async (props) => {
 
 // Set the connected network
 const setConnectedNetwork = (net, setNetworkName) => {
-  const connectedNetwork = Number(net)
+  const connectedNetwork = Number(net);
   switch (connectedNetwork) {
     case 1:
       // setNetworkClass('main-network')
-      setNetworkName('main')
-      break
+      setNetworkName("main");
+      break;
     case 4:
       // setNetwork("Rinkeby Test Network");
       // setNetworkClass('rinkeby-network')
-      setNetworkName('rinkeby')
-      break
+      setNetworkName("rinkeby");
+      break;
     default:
       // setNetwork("Private network");
       // setNetworkClass('private-network')
-      setNetworkName('private')
+      setNetworkName("private");
   }
-}
+};
 
 /**
  * Account link
  * creates a link to user account
  */
 const handleAccountLink = () => {
-  const accountElement = document.getElementById('footerAccountElement')
+  const accountElement = document.getElementById("footerAccountElement");
   if (accountElement && accountElement.innerHTML);
-  console.log('account id is: ', accountElement.innerHTML)
+  console.log("account id is: ", accountElement.innerHTML);
   window.open(
     `https://opensea.io/accounts/${accountElement.innerHTML}`,
-    '_blank'
-  )
-}
+    "_blank"
+  );
+};
 
-export { connectWallet, handleAccountLink, setConnectedNetwork }
+export { connectWallet, handleAccountLink, setConnectedNetwork };
