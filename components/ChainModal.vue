@@ -37,7 +37,7 @@
           </a>
           <a class="chainOption chainFlow" @click="connectEthereum">
             <h3>Flow</h3>
-            <p>Connect using your Flow identity</p>
+            <p>Connect using your <br />Flow identity</p>
           </a>
         </div>
       </div>
@@ -83,38 +83,52 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .chainSelect{
-  width: 100%;
-  /* margin: 1rem; */
+  
+  margin: 1rem 2rem;
   display: grid;
   grid-template-columns: 50% 50%;
   grid-column-gap: 0;
   grid-row-gap: 0;
+    
+  > .chainOption{
+    border: 1px solid var(--line-color, #eee);
+    background: var(--line-color, #eee);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background .2s ease-out;
+    h3{
+      margin: 0;
+      font-variation-settings: 'wght' 800;
+      color: var(--fill-color, #111);
+    }
+     p{
+      flex-basis: 70%;
+      text-align: center;
+      font-size: .875rem;
+      opacity: .75;
+      margin: 0;
+    }
+    &:first-child{
+      border-radius: .5rem 0 0 .5rem;
+      border-right: none;;
+    }
+    &:last-child{
+      border-radius: 0 .5rem .5rem 0;
+    }
+
+    &:hover{
+      background: var(--fill-color, #111);
+      h3, p{
+        color: var(--light-color, #111);
+      }
+    }
+  }
 }
-.chainSelect > .chainOption{
-  border: 1px solid var(--line-color, #eee);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  cursor: pointer;
-}
-.chainSelect > .chainOption:hover{
-  background: var(--fill-color, #111);
-}
-.chainSelect > .chainOption p{
-  flex-basis: 70%;
-  text-align: center;
-  font-size: .875rem;
-  opacity: .75;
-}
-.chainSelect > .chainOption:first-child{
-  border-radius: .5rem 0 0 .5rem;
-  border-right: none;;
-}
-.chainSelect > .chainOption:last-child{
-  border-radius: 0 .5rem .5rem 0;
-}
+
 </style>

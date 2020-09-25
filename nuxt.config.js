@@ -12,6 +12,14 @@ export default {
   env: {
     // baseUrl: process.env.BASE_URL || 'http://localhost:3000'
   },
+  /**
+   * this brings in environment variables to public and private nuxt references
+   */
+  publicRuntimeConfig: {
+    network: 'rinkeby',
+    infuraUrlRinkeby: process.env.INFURA_URL_RINKEBY,
+    infuraUrlMain: process.env.INFURA_URL_RINKEBY,
+  },
   /*
    ** Headers of the page
    ** See https://nuxtjs.org/api/configuration-head
@@ -27,14 +35,14 @@ export default {
         content: process.env.npm_package_description || "",
       },
     ],
-    // link: [
-    //   { rel: 'icon', type: 'image/x-icon', href: '@/favicon.ico' },
-    //   {
-    //     rel: 'stylesheet',
-    //     href:
-    //       'https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap',
-    //   },
-    // ],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '@/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap',
+      },
+    ],
     script: [
       {
         src: "https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js",

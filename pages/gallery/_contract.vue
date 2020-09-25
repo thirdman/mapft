@@ -1,6 +1,6 @@
 <template>
   <div class="pageContainer">
-    <Header />
+    <!-- <Header /> -->
     <section id="gallery" class>
       <div class="tertiary">
         <label>Gallery Contract</label>
@@ -30,6 +30,7 @@
           <h3><IconError /> assets Loaded</h3>
         </div>
         <client-only>
+          
           <GalleryList
             :displayMode="galleryDisplayMode"
             v-if="galleryStatus === 'loaded'"

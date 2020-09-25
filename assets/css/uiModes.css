@@ -1,6 +1,25 @@
+
+#body.minimal .pageContainer,
+#body.none .pageContainer {
+  padding-top: var(--header-height-minimal, 2.5rem);
+}
+
+/*
+  Full OVERRIDES
+*/
+header.full.w3-top {
+  position: absolute;
+  z-index: 100;
+}
+#body.full{
+  --header-height: var(--header-height-full, 80px);
+}
 /*
   MINIMAL OVERRIDES
 */
+#body.minimal{
+  --header-height: var(--header-height-minimal, 2rem);
+}
 header.minimal.w3-top {
   position: absolute;
   z-index: 100;
@@ -152,6 +171,9 @@ footer.minimal .corpLink > span.defaultCorpMessage {
 */
 #body .pageContainer {
   /* min-height: 100vh; */
+}
+#body.minimal{
+  --header-height: var(--header-height-minimal, 2rem);
 }
 
 header.none.w3-top {

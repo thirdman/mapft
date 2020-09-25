@@ -11,7 +11,7 @@
           <span class="logoPosition">
             <IconLogo
               :fillClass="
-                uiMode === 'full' && contrastMode === 'dark' ? 'light' : 'dark'
+                headerContrastMode
               "
             />
           </span>
@@ -294,7 +294,29 @@ export default {
       console.log('isSearchRoute', isSearchRoute)
       return isSearchRoute ? true : false
     },
-    
+    headerContrastMode(){
+      console.group('headercontrastmode');
+      const isLightUi = this.contrastMode === 'light'
+      console.log('uiMode', this.uiMode)
+      console.log('isLightUi', isLightUi)
+      console.log('this.contrastMode', this.contrastMode)
+      
+      // header items should be light if
+      // - (has light ui background) AND ui is FULL
+      // - has dark ui and ui is NOT full
+      // const condition1 = this.uiMode === 'full'
+      // const condition2 = this.contrastMode === 'light' && this.uiMode !== 'full';
+      // const headerContrastMode = this.contrastMode === 'dark' ? 'dark': 'light';
+      const headerContrastMode = this.uiMode === 'full' ? 'dark' : this.contrastMode
+      console.log('headerContrastMode', headerContrastMode)
+      console.groupEnd();
+      return headerContrastMode
+    },
+    logoContrastMode(){
+      const logoContrastMode = (this.uiMode === 'full' && this.headerContrastMode === 'dark') ? 'light' : 'dark';
+      console.log('logoContrastMode', logoContrastMode)
+      return 'dark'
+    },
 
     hasWallet() {
       const walletAddress = this.$store.state.ui.walletAddress

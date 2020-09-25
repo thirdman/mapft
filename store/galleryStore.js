@@ -51,7 +51,7 @@ export const mutations = {
     state.galleryFilter = undefined
   },
   getItems(state, params) {
-    console.log('getItems params', params)
+    // console.log('getItems params', params)
     console.log('getItems state:', state)
     // console.log('getItems this:', this)
     const network = this.$config.network
@@ -60,6 +60,8 @@ export const mutations = {
         ? this.$config.infuraUrlMain
         : this.$config.infuraUrlRinkeby
     this.commit('galleryStore/setGalleryStatus', 'loading')
+    console.log('network', network)
+    console.log('infuraUrl', infuraUrl)
     const provider = new Web3.providers.HttpProvider(infuraUrl)
     const seaport = new OpenSeaPort(provider, {
       networkName: network === 'rinkeby' ? Network.Rinkeby : Network.Main,
@@ -92,7 +94,7 @@ export const mutations = {
         }
       })
       .catch((error) => {
-        console.error(error)
+        console.error('gallery error: ', error)
         state.galleryStatus = 'error'
         return false
       })

@@ -59,9 +59,9 @@
 import { mapGetters } from 'vuex'
 export default {
   computed: {
-    // ...mapGetters({
-    //   contrastMode: 'ui/contrastMode',
-    // }),
+    ...mapGetters({
+      contrastMode: 'ui/contrastMode',
+    }),
   },
 }
 </script>

@@ -5,17 +5,12 @@
     <!--  VUE MINT FORM SECTION-->
     <section id="flow" class="">
       <div class="tertiary">
-        <!-- <h2>Mint Tokens</h2>
+        <h2>Flow  Test</h2>
         <div class="aside">
-          <p>Mint NFT tokens using your deployed custom contract.</p>
-        </div> -->
+          <p>Testing out hte flow</p>
+        </div>
       </div>
       <div class="primary">
-        
-          <!-- <div>
-            <h1>Flow Beta</h1>
-          </div> -->
-        
           <div v-if="!loggedIn">
             <label>logged out</label>
             <Button @click="fcl.authenticate" class="" size="large"

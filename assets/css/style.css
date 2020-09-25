@@ -9,6 +9,7 @@
 
 :root {
   --header-height: 80px;
+  --header-height-full: 80px;
   --header-height-minimal: 2.5rem;
   --primary-color: #fff;
   --secondary-color: #ff5917;
@@ -82,10 +83,6 @@ body {
   height: 100%;
   min-height: 100%;
   line-height: 1.5;
-  /* display: flex; */
-  /* min-height: 100vh; */
-  /* flex-direction: column; */
-
   font-family: 'Inter', 'Manrope', 'Roboto', 'helvetica', sans-serif;
   font-size: 16px;
   word-spacing: 1px;
@@ -100,8 +97,10 @@ body {
   font-variation-settings: 'wght' 400;
   color: var(--text-color, #111);
 }
+/*DEFAULTS*/
 body {
   transition: background 0.5s ease-out;
+  --header-height: var(--header-height-full, 80px);
 }
 body * {
   box-sizing: border-box;
@@ -132,10 +131,7 @@ a.asButton {
 
 /*THEME*/
 
-#body.minimal .pageContainer,
-#body.none .pageContainer {
-  padding-top: var(--header-height-minimal, 2.5rem);
-}
+
 #body.greyscale {
   --background-color: #eee;
   --fill-color: #ddd;

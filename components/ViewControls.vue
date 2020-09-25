@@ -1,5 +1,13 @@
 <template>
   <div class="viewControls">
+    <div class="instructions  threeD" v-if="(fileType === 'glb' || fileType === 'gltf ')">
+      <label>3D INTERACTION</label>
+      <ul class="help">
+        <li>Click & Drag to rotate</li>
+        <li>Scroll (Pinch) to zoom.</li>
+        <li>Arrow buttons (Two finger drag) to move.</li>
+      </ul>
+    </div>
     <div
       class="threeDControls"
       v-if="displaySettings && (fileType === 'glb' || fileType === 'gltf ')"
@@ -39,17 +47,10 @@
         </div>
       </div>
       </div>
-      <hr />
-      <div class="instructions">
-        <label>INTERACTION</label>
-
-        <ul class="help">
-          <li>Click & drag to rotate model.</li>
-          <li>Scroll (pinch) while hovering to zoom.</li>
-          <li>Arrow buttons to move.</li>
-        </ul>
-      </div>
+      
+      
     </div>
+    
     <div class="triggerPosition">
       <button class="btn iconButton" @click="toggleDisplay">
         <IconSettings :strokeClass="contrastMode" />
@@ -58,13 +59,15 @@
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .viewControls {
   position: sticky;
   left: 1rem;
-  bottom: 3rem;
+  // bottom: 3rem;
+  top: 0;
   z-index: 1000;
   font-size: 0.875rem;
+  padding-top: .5rem;
 }
 #body.none .viewControls {
   position: fixed;
@@ -84,6 +87,26 @@
   width: 12rem;
 }
 .triggerPosition {
+}
+.instructions{
+      border: 1px solid var(--line-color, #eee);
+    padding: .25rem;
+  ul{
+    padding: .25rem 0;
+    margin: 0;
+    list-style-type: none;
+    font-size: .75rem;
+    li{
+      padding: 0;
+      padding-left: .75rem;
+      &:before{
+        padding: .1rem;
+        content: '\2192';
+        position: absolute;
+        left: 0;
+      }
+    }
+  }
 }
 </style>
 
