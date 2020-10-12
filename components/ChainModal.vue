@@ -24,75 +24,64 @@
           />
         </button>
       </div>
-   
-   
 
-      <div class="modalSection" >
+      <div class="modalSection">
         <label>Select Chain</label>
-        
+
         <div class="chainSelect">
           <a class="chainOption chainEthereum" @click="connectEthereum">
             <h3>Ethereum</h3>
             <p>Connect using your Ethereum wallet (MetaMask etc)</p>
           </a>
-          <a class="chainOption chainFlow" @click="connectEthereum">
+          <a class="chainOption chainFlow" @click="connectFlow">
             <h3>Flow</h3>
             <p>Connect using your <br />Flow identity</p>
           </a>
         </div>
       </div>
-      
     </div>
   </modal>
 </template>
 
 <script>
-import { mapMutations, mapGetters } from 'vuex'
-import * as fcl from '@onflow/fcl'
+import { mapMutations, mapGetters } from "vuex";
+import * as fcl from "@onflow/fcl";
 export default {
-  name: 'ChainModal',
+  name: "ChainModal",
   data() {
     return {
       // showAddInterface: false,
       // customContractId: '',
-    }
+    };
   },
   computed: {
     ...mapGetters({
-      contrastMode: 'ui/contrastMode'
-      
+      contrastMode: "ui/contrastMode",
     }),
-
-    
-    
   },
   methods: {
-    ...mapMutations({
-      
-      
-    }),
-    connectFlow(){
+    ...mapMutations({}),
+    connectFlow() {
       fcl.authenticate();
-      this.$modal.hide('chain-modal')
+      this.$modal.hide("chain-modal");
     },
-    connectEthereum(){
-      fcl.authenticate();
-      this.$modal.hide('chain-modal')
-    }
+    connectEthereum() {
+      alert("nope!");
+      this.$modal.hide("chain-modal");
+    },
   },
-}
+};
 </script>
 
 <style lang="scss">
-.chainSelect{
-  
+.chainSelect {
   margin: 1rem 2rem;
   display: grid;
   grid-template-columns: 50% 50%;
   grid-column-gap: 0;
   grid-row-gap: 0;
-    
-  > .chainOption{
+
+  > .chainOption {
     border: 1px solid var(--line-color, #eee);
     background: var(--line-color, #eee);
     display: flex;
@@ -101,34 +90,34 @@ export default {
     justify-content: center;
     padding: 1rem;
     cursor: pointer;
-    transition: background .2s ease-out;
-    h3{
+    transition: background 0.2s ease-out;
+    h3 {
       margin: 0;
-      font-variation-settings: 'wght' 800;
+      font-variation-settings: "wght" 800;
       color: var(--fill-color, #111);
     }
-     p{
+    p {
       flex-basis: 70%;
       text-align: center;
-      font-size: .875rem;
-      opacity: .75;
+      font-size: 0.875rem;
+      opacity: 0.75;
       margin: 0;
     }
-    &:first-child{
-      border-radius: .5rem 0 0 .5rem;
-      border-right: none;;
+    &:first-child {
+      border-radius: 0.5rem 0 0 0.5rem;
+      border-right: none;
     }
-    &:last-child{
-      border-radius: 0 .5rem .5rem 0;
+    &:last-child {
+      border-radius: 0 0.5rem 0.5rem 0;
     }
 
-    &:hover{
+    &:hover {
       background: var(--fill-color, #111);
-      h3, p{
+      h3,
+      p {
         color: var(--light-color, #111);
       }
     }
   }
 }
-
 </style>

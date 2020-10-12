@@ -77,7 +77,7 @@
 
       <div class="profile">
         <client-only>
-          <div class="modaltest">
+          <div class="modaltest" v-if="hasChainSelect">
             <Button size="small" mode="secondary" @click="handleChainModal"
               >connect</Button
             >
@@ -282,6 +282,7 @@ export default {
   computed: {
     ...mapGetters({
       uiMode: "ui/uiMode",
+      hasChainSelect: "ui/hasChainSelect",
       contrastMode: "ui/contrastMode",
       hideUi: "ui/hideUi",
       devMode: "ui/devMode",

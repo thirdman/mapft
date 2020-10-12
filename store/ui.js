@@ -20,7 +20,8 @@ const themeArray = [
 
 export const state = () => ({
   network: "rinkeby",
-  walletChain: "",
+  walletChain: "ethereum",
+  hasChainSelect: false,
   hasWallet: false,
   walletAddress: null,
   walletStatus: "",
@@ -58,6 +59,7 @@ export const getters = {
   devMode: (state) => state.devMode,
   statusModalMode: (state) => state.statusModalMode,
   hasWallet: (state) => state.hasWallet,
+  hasChainSelect: (state) => state.hasChainSelect,
   walletChain: (state) => state.walletChain,
   walletAddress: (state) => state.walletAddress,
   walletNetwork: (state) => state.walletNetwork,
@@ -185,6 +187,9 @@ export const mutations = {
   },
   setDevMode(state, value) {
     state.devMode = value;
+  },
+  setHasChainSelect(state, value) {
+    state.hasChainSelect = value;
   },
   setStatusModalMode(state, value) {
     console.log("setStatusModalMode", value);

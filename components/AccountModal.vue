@@ -248,6 +248,25 @@
           </button>
         </div>
       </div>
+      <div class="row devSettings contentRow modalSection" v-if="isDevAddress">
+        <div class="column">Allow Chain Select:</div>
+        <div class="column">
+          <button
+            class="btn small"
+            :class="chainSelectClass(!hasChainSelect)"
+            @click="setHasChainSelect(false)"
+          >
+            No
+          </button>
+          <button
+            class="btn small"
+            :class="chainSelectClass(hasChainSelect)"
+            @click="setHasChainSelect(true)"
+          >
+            Yes
+          </button>
+        </div>
+      </div>
     </div>
   </modal>
 </template>
@@ -269,6 +288,7 @@ export default {
       uiMode: "ui/uiMode",
       contrastMode: "ui/contrastMode",
       uiTheme: "ui/uiTheme",
+      hasChainSelect: "ui/hasChainSelect",
       statusModalMode: "ui/statusModalMode",
       activeContractId: "ui/activeContractId",
       activeContractName: "ui/activeContractName",
@@ -293,6 +313,7 @@ export default {
       setUiMode: "ui/setUiMode",
       setUiTheme: "ui/setUiTheme",
       setWalletChain: "ui/setWalletChain",
+      setHasChainSelect: "ui/setHasChainSelect",
     }),
 
     clearActiveContractId(value) {
@@ -306,6 +327,9 @@ export default {
       this.$store.commit("ui/setDevMode", value);
     },
     devModeClass(state) {
+      return state ? "active" : "inactive";
+    },
+    chainSelectClass(state) {
       return state ? "active" : "inactive";
     },
     accountLink() {
@@ -432,6 +456,19 @@ export default {
 }
 .devSettings {
   border-top: 1px solid var(--ui-color, #111);
+  position: relative;
+}
+.devSettings:before {
+  content: "DEV WALLETS ONLY";
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 0 0.5rem;
+  background: red;
+  font-weight: 800;
+  border-radius: 0;
+  font-variation-settings: "wght" 600;
+  font-size: 0.675rem;
 }
 .actions > button {
   margin: 0.25rem;

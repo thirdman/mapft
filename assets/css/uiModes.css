@@ -1,4 +1,3 @@
-
 #body.minimal .pageContainer,
 #body.none .pageContainer {
   padding-top: var(--header-height-minimal, 2.5rem);
@@ -11,13 +10,13 @@ header.full.w3-top {
   position: absolute;
   z-index: 100;
 }
-#body.full{
+#body.full {
   --header-height: var(--header-height-full, 80px);
 }
 /*
   MINIMAL OVERRIDES
 */
-#body.minimal{
+#body.minimal {
   --header-height: var(--header-height-minimal, 2rem);
 }
 header.minimal.w3-top {
@@ -31,7 +30,7 @@ header.minimal .headerRow {
 }
 header.minimal .navItem {
   font-weight: 500;
-  font-variation-settings: 'wght' 500;
+  font-variation-settings: "wght" 500;
   line-height: calc(var(--header-height-minimal, 2.5rem) - 1px);
   font-size: 0.875rem;
   padding: 0;
@@ -52,7 +51,7 @@ header.minimal .headerRow .brand {
 }
 header.minimal .headerRow .brand .brandname {
   font-size: 1rem;
-  font-variation-settings: 'wght' 500;
+  font-variation-settings: "wght" 500;
 }
 header.minimal .headerRow .brand .subtitle {
   display: none;
@@ -116,7 +115,7 @@ header.minimal .headerRow .profile .minimalIcon {
   justify-content: center;
   flex-shrink: 0;
   position: absolute;
-  right: 1rem;
+  right: 2rem;
 }
 header.minimal .headerRow .profile #accountWrap {
   background: transparent;
@@ -172,7 +171,7 @@ footer.minimal .corpLink > span.defaultCorpMessage {
 #body .pageContainer {
   /* min-height: 100vh; */
 }
-#body.minimal{
+#body.minimal {
   --header-height: var(--header-height-minimal, 2rem);
 }
 
@@ -198,7 +197,7 @@ header.none.hideUi .headerRow .profile {
 
 header.none .navItem {
   font-weight: 500;
-  font-variation-settings: 'wght' 500;
+  font-variation-settings: "wght" 500;
   line-height: calc(var(--header-height-minimal, 2.5rem) - 1px);
   font-size: 0.875rem;
   padding: 0;
@@ -219,7 +218,7 @@ header.none .headerRow .brand {
 }
 header.none .headerRow .brand .brandname {
   font-size: 1rem;
-  font-variation-settings: 'wght' 500;
+  font-variation-settings: "wght" 500;
 }
 header.none .headerRow .brand .subtitle {
   display: none;
