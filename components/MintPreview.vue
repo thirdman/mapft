@@ -76,6 +76,7 @@
     <div
       id="previewThumbnailContainer"
       class="previewThumbnailContainer shadow"
+      v-if="showThumbnailField"
     >
       <label>Thumbnail</label>
       <div id="outputThumbnail" class="previewThumbnail">
@@ -87,23 +88,24 @@
 
 <style></style>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      previewMode: 'infinft',
-    }
+      previewMode: "infinft",
+    };
   },
 
   computed: {
     ...mapGetters({
-      previewData: 'mintFormStore/previewData',
+      previewData: "mintFormStore/previewData",
+      showThumbnailField: "mintFormStore/showThumbnailField",
     }),
     // previewData() {
     // return this.$store.state.mintFormStore.previewData
     // },
   },
-}
+};
 // ...mapGetters({
 // previewData: 'mintFormStore/previewData',
 // }),

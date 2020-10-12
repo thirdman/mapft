@@ -24,6 +24,16 @@
           > -->
 
         <div v-if="loggedIn">
+          <div v-if="user && !user.identity">
+            <Button
+              @click="fcl.unauthenticate"
+              class="fill"
+              :fill="true"
+              size="medium"
+              mode="secondary"
+              >Disconnect</Button
+            >
+          </div>
           <div class="userProfile shadow" v-if="user && user.identity">
             <img
               class="userProfileAvatar"

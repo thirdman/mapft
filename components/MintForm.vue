@@ -2,8 +2,8 @@
   <div
     id="mintForm"
     class="form create column shadow"
-    :class="mintStatus"
-    style="flex-basis: 100%;"
+    :class="`${mintStatus} ${uiMode}`"
+    style="flex-basis: 100%"
   >
     <!-- <button class="btn" @click="handleStatusModal(true)">test status modal</button> -->
     <!-- STATUS SECTION-->
@@ -68,7 +68,7 @@
               max="99"
               required
               placeholder="Eg. 0x1235..."
-              style="text-transform: uppercase;"
+              style="text-transform: uppercase"
               v-model="temporaryContractId"
             />
             <div>
@@ -92,8 +92,8 @@
           Load Contract
         </button>
       </div>
-      <div class="ctaWrap" style="padding: 0;">
-        <p style="font=size: 0.875rem; margin: 0 0 0.5rem;">
+      <div class="ctaWrap" style="padding: 0">
+        <p style="font=size: 0.875rem; margin: 0 0 0.5rem">
           Don't have a contract ID yet?
         </p>
         <p>
@@ -127,6 +127,22 @@
     </div>
     <!-- SECTION TO IMAGE FIELDSET-->
     <div class="fieldset imageContent formContent" id="fieldsetImage">
+      <div class="formItem">
+        <client-only>
+          <file-pond
+            name="test"
+            ref="pond"
+            label-idle="Drop files here..."
+            :disabled="uploadStatus === 'uploading'"
+            :allow-multiple="false"
+            :files="uploadFiles"
+            @init="handleFilePondInit"
+            :onaddfile="handleAddFile"
+          />
+          <!-- accepted-file-types="image/jpeg, image/png" -->
+          <!-- server="/api" -->
+        </client-only>
+      </div>
       <div class="formItem required">
         <label>File Upload</label>
         <label class="file">
@@ -137,7 +153,7 @@
             @change="handleOpenFile"
           />
           <span class="file-custom">
-            <span id="fileLabelText">{{ fileName || 'Select...' }}</span>
+            <span id="fileLabelText">{{ fileName || "Select..." }}</span>
           </span>
         </label>
         <!--
@@ -210,7 +226,7 @@
       <div class="divider"></div>
       <div class="formItem optional">
         <label>Thumbnail</label>
-        <p style="font-size: 0.75rem; line-height: 1rem;" class="betaElement">
+        <p style="font-size: 0.75rem; line-height: 1rem" class="betaElement">
           BETA: Applies when non-image files are used. Appears on Opensea list
           previews.
         </p>
@@ -578,7 +594,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
             </div>
           </div>
         </div> -->
-        <div class="row" style="padding-bottom: 1rem;">
+        <div class="row" style="padding-bottom: 1rem">
           <Button class="w3-black btn" @click="setShowNewMetaField(true)"
             >New Meta Field</Button
           >
@@ -610,9 +626,9 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
     <div
       class="fieldset actionContent formContent"
       id="fieldsetAction"
-      style="padding-top: 0.5rem;"
+      style="padding-top: 0.5rem"
     >
-      <h1 class="w3-xlarge" style="max-width: 1000px; margin: auto;">
+      <h1 class="w3-xlarge" style="max-width: 1000px; margin: auto">
         <button
           id="h"
           class="w3-button w3-block w3-padding-large w3-black w3-margin-bottom"
@@ -676,6 +692,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
 import {
   openFile,
   openThumbnail,
+  processUpload,
   startUploadProcess,
   startUploadThumbnailProcess,
   personalSignFiles,
@@ -684,33 +701,41 @@ import {
   removePinFromIPFS,
   getMimeType,
   dataURLtoFile,
-} from '../utils/files.js'
-import { mintThatShit } from '../utils/web3Mint.js'
-import { mapFields } from 'vuex-map-fields'
-import { mapMutations, mapGetters } from 'vuex'
-import { ValidationProvider, extend } from 'vee-validate'
-import { required, min, max, email } from 'vee-validate/dist/rules'
-import VueCropper from 'vue-cropperjs'
-import 'cropperjs/dist/cropper.css'
-const imageTypes = ['jpg', 'png', 'gif']
+} from "../utils/files.js";
+import { mintThatShit } from "../utils/web3Mint.js";
+import { mapFields } from "vuex-map-fields";
+import { mapMutations, mapGetters } from "vuex";
+import { ValidationProvider, extend } from "vee-validate";
+import vueFilePond from "vue-filepond";
 
-extend('min', {
+import { required, min, max, email } from "vee-validate/dist/rules";
+import VueCropper from "vue-cropperjs";
+import "cropperjs/dist/cropper.css";
+import "filepond/dist/filepond.min.css";
+// import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+// const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
+
+const FilePond = vueFilePond();
+const imageTypes = ["jpg", "png", "gif"];
+
+extend("min", {
   // (value) => {
   ...min,
   // return value.length >= 3
-})
-extend('max', {
+});
+extend("max", {
   ...max,
-})
-extend('required', {
+});
+extend("required", {
   ...required,
-  message: 'This field is required',
-})
+  message: "This field is required",
+});
 
 export default {
   components: {
     ValidationProvider,
     VueCropper,
+    FilePond,
   },
   head() {
     return {
@@ -723,199 +748,234 @@ export default {
       //     src: 'arweaveFinal.js',
       //   },
       // ],
-    }
+    };
   },
   data() {
     return {
       // These are the validation arrays
       errors: [],
       classes: [],
-    }
+      uploadFiles: [],
+    };
   },
   computed: {
     ...mapGetters({
       // ui
-      hasWallet: 'ui/hasWallet',
-      devMode: 'ui/devMode',
-      contrastMode: 'ui/contrastMode',
-      statusModalMode: 'ui/statusModalMode',
-      activeContractId: 'ui/activeContractId',
+      hasWallet: "ui/hasWallet",
+      devMode: "ui/devMode",
+      uiMode: "ui/uiMode",
+      contrastMode: "ui/contrastMode",
+      statusModalMode: "ui/statusModalMode",
+      activeContractId: "ui/activeContractId",
       // showEditContract: 'mintFormStore/showEditContract',
       // mint form ...,
-      mintedData: 'mintFormStore/mintedData',
-      metaFieldsObj: 'mintFormStore/metaFieldsObj',
-      canMint: 'mintFormStore/canMint',
-      mintStatus: 'mintFormStore/mintStatus',
-      mintStatusMessage: 'mintFormStore/mintStatusMessage',
-      mintTransactionId: 'mintFormStore/mintTransactionId',
-      uploadStatus: 'mintFormStore/uploadStatus',
-      uploadStatusTitle: 'mintFormStore/uploadStatusTitle',
-      ipfsStatus: 'mintFormStore/ipfsStatus',
-      arweaveStatus: 'mintFormStore/arweaveStatus',
-      fileIpfsHash: 'mintFormStore/fileIpfsHash',
-      fileArweaveHash: 'mintFormStore/fileArweaveHash',
-      thumbnailUploadStatus: 'mintFormStore/thumbnailUploadStatus',
-      thumbnailIpfsStatus: 'mintFormStore/thumbnailIpfsStatus',
-      thumbnailArweaveStatus: 'mintFormStore/thumbnailArweaveStatus',
-      thumbnailIpfsHashDefault: 'mintFormStore/thumbnailIpfsHashDefault',
-      uploadThumbnailStatusTitle: 'mintFormStore/uploadThumbnailStatusTitle',
-      thumbnailSource: 'mintFormStore/thumbnailSource',
+      mintedData: "mintFormStore/mintedData",
+      metaFieldsObj: "mintFormStore/metaFieldsObj",
+      canMint: "mintFormStore/canMint",
+      mintStatus: "mintFormStore/mintStatus",
+      mintStatusMessage: "mintFormStore/mintStatusMessage",
+      mintTransactionId: "mintFormStore/mintTransactionId",
+      uploadStatus: "mintFormStore/uploadStatus",
+      uploadStatusTitle: "mintFormStore/uploadStatusTitle",
+      ipfsStatus: "mintFormStore/ipfsStatus",
+      arweaveStatus: "mintFormStore/arweaveStatus",
+      fileIpfsHash: "mintFormStore/fileIpfsHash",
+      fileArweaveHash: "mintFormStore/fileArweaveHash",
+      thumbnailUploadStatus: "mintFormStore/thumbnailUploadStatus",
+      thumbnailIpfsStatus: "mintFormStore/thumbnailIpfsStatus",
+      thumbnailArweaveStatus: "mintFormStore/thumbnailArweaveStatus",
+      thumbnailIpfsHashDefault: "mintFormStore/thumbnailIpfsHashDefault",
+      uploadThumbnailStatusTitle: "mintFormStore/uploadThumbnailStatusTitle",
+      thumbnailSource: "mintFormStore/thumbnailSource",
     }),
 
     showEditContract() {
       if (this.$store.state.ui.activeContractId) {
-        return false
+        return false;
       } else {
-        return this.$store.state.mintFormStore.showEditContract
+        return this.$store.state.mintFormStore.showEditContract;
       }
     },
     showThumbnailField() {
-      return this.$store.state.mintFormStore.showThumbnailField
+      return this.$store.state.mintFormStore.showThumbnailField;
     },
     showNewMetaField() {
-      return this.$store.state.mintFormStore.showNewMetaField
+      return this.$store.state.mintFormStore.showNewMetaField;
     },
     fileName() {
-      return this.$store.state.mintFormStore.fileName
+      return this.$store.state.mintFormStore.fileName;
     },
     fileType() {
-      return this.$store.state.mintFormStore.fileType
+      return this.$store.state.mintFormStore.fileType;
     },
 
     metaFieldsJson() {
-      return this.$store.state.mintFormStore.metaFieldsJson
+      return this.$store.state.mintFormStore.metaFieldsJson;
     },
-    ...mapFields('mintFormStore', [
-      'temporaryContractId',
-      'authorName',
-      'title',
-      'description',
-      'editions',
-      'series',
-      'royaltyFee',
+    ...mapFields("mintFormStore", [
+      "temporaryContractId",
+      "authorName",
+      "title",
+      "description",
+      "editions",
+      "series",
+      "royaltyFee",
     ]),
   },
 
   methods: {
     ...mapMutations({
-      setArweaveStatus: 'mintFormStore/setArweaveStatus',
-      setIpfsStatus: 'mintFormStore/setIpfsStatus',
-      setIpfsHash: 'mintFormStore/setIpfsHash',
-      setArweaveHash: 'mintFormStore/setArweaveHash',
-      setShowEditContract: 'mintFormStore/setShowEditContract',
-      setThumbnailUploadStatus: 'mintFormStore/setThumbnailUploadStatus',
-      setThumbnailSource: 'mintFormStore/setThumbnailSource',
+      setArweaveStatus: "mintFormStore/setArweaveStatus",
+      setIpfsStatus: "mintFormStore/setIpfsStatus",
+      setIpfsHash: "mintFormStore/setIpfsHash",
+      setArweaveHash: "mintFormStore/setArweaveHash",
+      setShowEditContract: "mintFormStore/setShowEditContract",
+      setThumbnailUploadStatus: "mintFormStore/setThumbnailUploadStatus",
+      setThumbnailSource: "mintFormStore/setThumbnailSource",
     }),
     handleAccountModal() {
-      this.$modal.show('account-modal')
+      this.$modal.show("account-modal");
     },
     handleStatusModal(newState) {
-      console.log('this', this)
-      this.$store.commit('mintFormStore/setShowStatusModal', newState)
+      console.log("this", this);
+      this.$store.commit("mintFormStore/setShowStatusModal", newState);
       if (newState === true) {
         // this.$modal.show('status-modal')
       } else {
         //  this.$modal.hide('status-modal')
       }
     },
+    handleFilePondInit: function () {
+      console.log("FilePond has initialized");
+      console.log("this.$refs.pond", this.$refs.pond);
+      // FilePond instance methods are available on `this.$refs.pond`
+    },
+    handleAddFile: function (error, file) {
+      console.log("error", error);
+      console.log("file", file);
+      console.log("this", this);
+      if (!error) {
+        console.log("fileloaded", file);
+        const fileName = file.filename;
+        const fileType = fileName.split(".").pop().toLowerCase();
+        const fileExtension = file.fileExtension;
+        console.log("fileName", fileName);
+        console.log("fileType", fileType);
+        console.log("fileExtension", fileExtension);
+        this.renderImage(
+          fileType,
+          window.URL.createObjectURL(file.file),
+          "output"
+        );
+        this.setFileInfo({ fileName, fileType });
+        this.toggleThumbnail(fileType);
+        console.log("would trigger upload process", this.triggerUploadProcess);
+        processUpload({
+          mode: "file",
+          context: this,
+          file: file.file,
+          inputElement: file,
+        });
+        // return triggerUploadProcess()
+      } else {
+        this.setUploadStatus({ mode: "file", status: "noFile" });
+        console.error("error: ", error);
+      }
+    },
     setActiveContractId(value) {
-      this.$store.commit('ui/setActiveContractId', value)
+      this.$store.commit("ui/setActiveContractId", value);
     },
     clearActiveContractId(value) {
-      this.$store.commit('ui/clearActiveContractId', value)
+      this.$store.commit("ui/clearActiveContractId", value);
     },
-    // setShowEditContract(newState) {
-    //   console.log('setShowEditContract', newState)
-    //   this.$store.commit('mintFormStore/setShowEditContract', newState)
-    // },
     setUploadStatus(statusData) {
-      console.log('setUploadStatus(statusData) ', statusData)
-      this.$store.commit('mintFormStore/setUploadStatus', statusData)
+      console.log("setUploadStatus(statusData) ", statusData);
+      this.$store.commit("mintFormStore/setUploadStatus", statusData);
     },
-
     removeMetaField(id) {
-      console.log('removeMetaField id', id)
-      this.$store.commit('mintFormStore/removeMetaField', id)
+      console.log("removeMetaField id", id);
+      this.$store.commit("mintFormStore/removeMetaField", id);
     },
     addMetaField(obj) {
       if (!obj) {
-        console.error('no obj supplied')
-        return null
+        console.error("no obj supplied");
+        return null;
       }
-      this.$store.commit('mintFormStore/addMetaField', obj)
+      this.$store.commit("mintFormStore/addMetaField", obj);
     },
     setShowNewMetaField(newState) {
-      console.log('setting setShowNewMetaField to', newState)
-      this.$store.commit('mintFormStore/setShowNewMetaField', newState)
+      console.log("setting setShowNewMetaField to", newState);
+      this.$store.commit("mintFormStore/setShowNewMetaField", newState);
     },
+
     setShowThumbnailField(newState) {
-      console.log('setting setShowThumbnailField to', newState)
-      this.$store.commit('mintFormStore/setShowThumbnailField', newState)
+      console.log("setting setShowThumbnailField to", newState);
+      this.$store.commit("mintFormStore/setShowThumbnailField", newState);
     },
     setFileInfo(fileName, fileType) {
-      this.$store.commit('mintFormStore/setFileInfo', fileName, fileType)
+      this.$store.commit("mintFormStore/setFileInfo", fileName, fileType);
     },
     setMintStatus(status) {
-      this.$store.commit('mintFormStore/setMintStatus', status)
+      this.$store.commit("mintFormStore/setMintStatus", status);
     },
 
     renderImage(fileType, src, parent) {
-      let read
-      const previewTypes = ['video', 'threeD']
-      console.log('file type is: ', fileType)
+      let read;
+      const previewTypes = ["video", "threeD"];
+      console.log("file type is: ", fileType);
       switch (fileType) {
-        case 'glb':
-          read = document.createElement('model-viewer')
-          read.setAttribute('auto-rotate', '')
-          read.setAttribute('camera-controls', '')
-          read.className = 'tokenImage3d'
-          break
-        case 'mp4':
-        case 'mov':
-          read = document.createElement('video')
-          read.setAttribute('loop', '')
-          read.setAttribute('controls', '')
+        case "glb":
+          read = document.createElement("model-viewer");
+          read.setAttribute("auto-rotate", "");
+          read.setAttribute("camera-controls", "");
+          read.className = "tokenImage3d";
+          break;
+        case "mp4":
+        case "mov":
+          read = document.createElement("video");
+          read.setAttribute("loop", "");
+          read.setAttribute("controls", "");
           // commented out this to stop large files trying to load
           // read.setAttribute('autoplay', '');
-          read.className = 'tokenImage'
-          break
-        case 'pdf':
-        case 'mp3':
-          read = document.createElement('div')
-          ;(read.className = 'unknownTokenImage'),
+          read.className = "tokenImage";
+          break;
+        case "pdf":
+        case "mp3":
+          read = document.createElement("div");
+          (read.className = "unknownTokenImage"),
             (read.innerText =
-              'No preview available, use thumbnail to define one.')
-          break
+              "No preview available, use thumbnail to define one.");
+          break;
         default:
-          read = document.createElement('img')
-          read.className = 'tokenImage'
+          read = document.createElement("img");
+          read.className = "tokenImage";
       }
-      read.src = src
-      var output = document.getElementById(parent)
-      console.log('output element:', output)
-      output.innerHTML = ''
-      output.appendChild(read)
+      read.src = src;
+      var output = document.getElementById(parent);
+      console.log("output element:", output);
+      output.innerHTML = "";
+      output.appendChild(read);
     },
     handleOpenFile(event, blah) {
-      return openFile(event, this)
+      return openFile(event, this);
     },
     handleOpenThumbnail(file, blah) {
-      let input = file.target
-      const fileInput = input.files[0]
+      let input = file.target;
+      const fileInput = input.files[0];
 
       if (!fileInput) {
         // This happens is someone hits cancel on the file select dialog.
-        this.setThumbnailUploadStatus({ mode: 'thumbnail', status: 'noFile' })
-        return
+        this.setThumbnailUploadStatus({ mode: "thumbnail", status: "noFile" });
+        return;
       }
 
-      const fileName = fileInput.name
-      const fileType = fileName.split('.').pop().toLowerCase()
-      console.log('THUMBANIL file, fileTYpe', fileName, fileType)
-      const cropImageElement = document.getElementById('cropImage')
-      console.log('cropImageElement', cropImageElement)
-      const urlElement = window.URL.createObjectURL(fileInput)
-      this.setThumbnailSource(urlElement)
+      const fileName = fileInput.name;
+      const fileType = fileName.split(".").pop().toLowerCase();
+      console.log("THUMBANIL file, fileTYpe", fileName, fileType);
+      const cropImageElement = document.getElementById("cropImage");
+      console.log("cropImageElement", cropImageElement);
+      const urlElement = window.URL.createObjectURL(fileInput);
+      this.setThumbnailSource(urlElement);
 
       // const thumbnailDisplayElement = document.getElementById(
       //   'previewThumbnailContainer'
@@ -938,110 +998,111 @@ export default {
       // return openThumbnail(event, this)
     },
     handleApplyCrop(event) {
-      console.log('apply crop', event)
+      console.log("apply crop", event);
 
-      const thumbnailElement = document.getElementById('outputThumbnailImage')
-      const outputElement = document.getElementById('output')
-      const previewImageElement = document.getElementById('output').firstChild
-      console.log('outputElement', outputElement)
-      console.log('previewImageElement', previewImageElement)
+      const thumbnailElement = document.getElementById("outputThumbnailImage");
+      const outputElement = document.getElementById("output");
+      const previewImageElement = document.getElementById("output").firstChild;
+      console.log("outputElement", outputElement);
+      console.log("previewImageElement", previewImageElement);
       if (thumbnailElement && thumbnailElement.src) {
-        const newImage = thumbnailElement.src
-        console.log('newImage', newImage)
-        console.log('THIS WOULD TRIGGER THE THUMBNAIL UPLOAD')
-        const mimeType = getMimeType(newImage)
-        console.log('mimetype', mimeType)
-        const fileExtension = mimeType.replace('image/', '')
-        console.log('fileExtension', fileExtension)
-        const fileName = `thumbnail.${fileExtension}`
-        const thumbnailAsFile = dataURLtoFile(newImage, fileName)
-        console.log('thumbnailAsFile', thumbnailAsFile)
+        const newImage = thumbnailElement.src;
+        console.log("newImage", newImage);
+        console.log("THIS WOULD TRIGGER THE THUMBNAIL UPLOAD");
+        const mimeType = getMimeType(newImage);
+        console.log("mimetype", mimeType);
+        const fileExtension = mimeType.replace("image/", "");
+        console.log("fileExtension", fileExtension);
+        const fileName = `thumbnail.${fileExtension}`;
+        const thumbnailAsFile = dataURLtoFile(newImage, fileName);
+        console.log("thumbnailAsFile", thumbnailAsFile);
         // startThumbnailUploadProcess(thumbnailAsFile)
-        startUploadThumbnailProcess(thumbnailAsFile, this, 'thumbnail')
+        startUploadThumbnailProcess(thumbnailAsFile, this, "thumbnail");
 
-        this.destroyCropper()
+        this.destroyCropper();
 
         // setClass('cropContainer', "hidden", "visible");
       } else {
-        console.error('no crop image')
+        console.error("no crop image");
       }
     },
     destroyCropper() {
-      const cropper = this.$refs.cropper
-      const cropImageElement = document.getElementById('cropImage')
+      const cropper = this.$refs.cropper;
+      const cropImageElement = document.getElementById("cropImage");
 
-      alert('remember to destroy cropper')
+      alert("remember to destroy cropper");
       if (
         cropImageElement &&
-        cropImageElement.classList.contains('cropper-hidden')
+        cropImageElement.classList.contains("cropper-hidden")
       ) {
-        cropImageElement.src = ''
-        cropImageElement.cropper.destroy()
+        cropImageElement.src = "";
+        cropImageElement.cropper.destroy();
       }
     },
     handleCropResult(croppedImage) {
-      // console.log('croppedImage', croppedImage)
-      const thumbnailElement = document.getElementById('outputThumbnailImage')
-      // console.log('thumbnailElement', thumbnailElement)
-      thumbnailElement.src = croppedImage
+      const thumbnailElement = document.getElementById("outputThumbnailImage");
+
+      if (thumbnailElement) {
+        thumbnailElement.src = croppedImage;
+      }
     },
     crop(event) {
-      console.log(event.detail.x)
+      console.log(event.detail.x);
     },
     cropEnd(event) {
       // console.log('this', this)
       // console.log('this.$refs.cropper', this.$refs.cropper)
-      const cropper = this.$refs.cropper
+      const cropper = this.$refs.cropper;
       if (!cropper) {
-        return null
+        return null;
       }
       const cropResult = cropper.getCroppedCanvas({
         width: 500,
         height: 500,
-      })
-      const image = cropResult.toDataURL('image/png')
-      this.handleCropResult(image)
+      });
+      const image = cropResult.toDataURL("image/png");
+      this.handleCropResult(image);
     },
     cropReady: function (item) {
-      console.log('ready: ')
+      console.log("ready: ");
       // console.log('this', this)
       // console.log('this.$refs.cropper', this.$refs.cropper)
-      const cropper = this.$refs.cropper
+      const cropper = this.$refs.cropper;
       if (!cropper) {
-        return null
+        return null;
       }
       const cropResult = cropper.getCroppedCanvas({
         width: 500,
         height: 500,
-      })
-      const image = cropResult.toDataURL('image/png')
-      this.handleCropResult(image)
+      });
+      const image = cropResult.toDataURL("image/png");
+      this.handleCropResult(image);
     },
 
     toggleThumbnail(fileType) {
-      console.log('deciding to toggle thumbnail fileType: ', fileType)
-      const setShowThumbnailField = this.setShowThumbnailField
-      const isImage = imageTypes.includes(fileType)
-      setShowThumbnailField(!isImage)
+      console.log("deciding to toggle thumbnail fileType: ", fileType);
+      const setShowThumbnailField = this.setShowThumbnailField;
+      const isImage = imageTypes.includes(fileType);
+      setShowThumbnailField(!isImage);
     },
     handleMint() {
-      const state = this.$store.state.mintFormStore
-      mintThatShit(event, state, this)
+      const state = this.$store.state.mintFormStore;
+      mintThatShit(event, state, this);
     },
 
     handlePinThumbnailFiletoIPFS(file) {
-      pinThumbnailFileToIPFS(file, this)
+      pinThumbnailFileToIPFS(file, this);
     },
     triggerUploadProcess() {
-      const inputElement = document.getElementById('file')
-      startUploadProcess(inputElement, this, 'file')
+      const inputElement = document.getElementById("file");
+      startUploadProcess(inputElement, this, "file");
     },
     triggerUploadThumbnailProcess() {
-      const inputElement = document.getElementById('thumbnailFile')
-      startUploadThumbnailProcess(inputElement, this, 'thumbnail')
+      const inputElement = document.getElementById("thumbnailFile");
+      startUploadThumbnailProcess(inputElement, this, "thumbnail");
     },
     test() {
-      console.log('test axios', axios)
+      console.log("test axios", axios);
     },
 
     // ...mapActions({
@@ -1053,5 +1114,5 @@ export default {
     pinThumbnailFileToIPFS,
     removePinFromIPFS,
   },
-}
+};
 </script>

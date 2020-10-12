@@ -1,10 +1,10 @@
-'use strict'
+"use strict";
 // Must have axios available as global
 //const ArUpload_URL = 'http://localhost:3535'
-const ArUpload_URL = 'https://arweave.rocks'
+const ArUpload_URL = "https://arweave.rocks";
 
-const url = `${ArUpload_URL}/up`
-const checkUrl = `${ArUpload_URL}/check`
+const url = `${ArUpload_URL}/up`;
+const checkUrl = `${ArUpload_URL}/check`;
 
 /**
  * Will check upload status of a file or folder
@@ -20,8 +20,8 @@ const checkUrl = `${ArUpload_URL}/check`
 async function ArUpload_checkUploadStatus(id) {
   const resp = await axios.post(checkUrl, {
     ArweaveTx: id,
-  })
-  return resp.data
+  });
+  return resp.data;
 }
 
 /**
@@ -40,43 +40,95 @@ async function ArUpload_checkUploadStatus(id) {
  * @param {*} pubkey
  * @param {*} signature
  */
-async function ArUpload_upload(fileInput, eth_signature = '') {
-  var data = new FormData()
-  console.log(fileInput.files)
+async function ArUpload_upload(fileInput, eth_signature = "") {
+  var data = new FormData();
+  console.log(fileInput.files);
   if (fileInput.files.length < 1) {
-    throw new Error('No files')
+    throw new Error("No files");
   }
 
   if (fileInput.files.length === 1) {
-    data.append('file', fileInput.files[0], fileInput.files[0].name)
+    data.append("file", fileInput.files[0], fileInput.files[0].name);
   }
 
   if (fileInput.files.length > 1) {
     for (var i = 0; i < fileInput.files.length; i++) {
-      var path = fileInput.files[i].webkitRelativePath
+      var path = fileInput.files[i].webkitRelativePath;
       // trim any leading basepath. hope no-one has \/ in it :)
       path =
-        path.indexOf('/') !== -1 ? path.substr(path.indexOf('/') + 1) : path
+        path.indexOf("/") !== -1 ? path.substr(path.indexOf("/") + 1) : path;
 
-      data.append('file', fileInput.files[i], path)
+      data.append("file", fileInput.files[i], path);
     }
   }
 
-  data.append('eth_signature', eth_signature)
+  data.append("eth_signature", eth_signature);
 
   const axOpts = {
-    maxContentLength: 'Infinity',
+    maxContentLength: "Infinity",
     headers: {
-      'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+      "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
     },
-  }
+  };
   // setStatusUploadingArweave("file");
   // Post with axios.
   return axios.post(url, data, axOpts).then(function (response) {
-    console.log('ArweaveTx: ', response.data.ArweaveTx)
+    console.log("ArweaveTx: ", response.data.ArweaveTx);
     // setStatusUploadedArweave("file");
-    return response.data
-  })
+    return response.data;
+  });
+}
+
+/**
+ * ArUpload_uploadFile
+ * Uploads a file. -> for component drag/drop
+ *
+ * Passing the file output of the upload component.
+ *
+ * Optionally pass eth_signature, which would be result of a personal sign
+ * operation on a hash of the file(s) data. ( see getSignatureData below )
+ *
+ * Returns an object { ArweaveTx }
+ *
+ * ArweaveTx is string id of the file, or folder.
+ *
+ * @param {*} file
+ * @param {*} pubkey
+ * @param {*} signature
+ */
+async function ArUpload_uploadFile(file, eth_signature = "") {
+  var data = new FormData();
+
+  if (!file) {
+    throw new Error("No files");
+  }
+  console.log("ArUpload_upload file", file, file.name);
+  data.append("file", file, file.name);
+
+  // if (fileInput.files.length > 1) {
+  //   for (var i = 0; i < fileInput.files.length; i++) {
+  //     var path = fileInput.files[i].webkitRelativePath;
+  //     // trim any leading basepath. hope no-one has \/ in it :)
+  //     path =
+  //       path.indexOf("/") !== -1 ? path.substr(path.indexOf("/") + 1) : path;
+
+  //     data.append("file", fileInput.files[i], path);
+  //   }
+  // }
+
+  data.append("eth_signature", eth_signature);
+
+  const axOpts = {
+    maxContentLength: "Infinity",
+    headers: {
+      "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+    },
+  };
+  // Post with axios.
+  return axios.post(url, data, axOpts).then(function (response) {
+    console.log("ArweaveTx: ", response.data.ArweaveTx);
+    return response.data;
+  });
 }
 
 /**
@@ -85,20 +137,37 @@ async function ArUpload_upload(fileInput, eth_signature = '') {
  * @param {*} fileInput
  */
 async function ArUpload_getSigningData(fileInput) {
-  var digest
+  var digest;
 
   if (fileInput.files.length < 1) {
-    throw new Error('No files')
+    throw new Error("No files");
   } else if (fileInput.files.length == 1) {
-    const ab = await fileInput.files[0].arrayBuffer()
-    digest = await ArUpload_deepHash(ab)
-    return `ETH-Personal-Sign-File:${ArUpload_buf2hex(digest)}`
+    const ab = await fileInput.files[0].arrayBuffer();
+    digest = await ArUpload_deepHash(ab);
+    return `ETH-Personal-Sign-File:${ArUpload_buf2hex(digest)}`;
   } else {
     const fileBufs = await Promise.all(
       Array.from(fileInput.files).map((x) => x.arrayBuffer())
-    )
-    digest = await ArUpload_deepHash(fileBufs)
-    return `ETH-Personal-Sign-Folder:${ArUpload_buf2hex(digest)}`
+    );
+    digest = await ArUpload_deepHash(fileBufs);
+    return `ETH-Personal-Sign-Folder:${ArUpload_buf2hex(digest)}`;
+  }
+}
+
+/**
+ * Gets the message to be signed using ( personalSign ) by hashing the contents of the file(s)
+ *
+ * @param {*} file
+ */
+async function ArUploadFile_getSigningData(file) {
+  var digest;
+
+  if (!file) {
+    throw new Error("No file");
+  } else if (file) {
+    const ab = await file.arrayBuffer();
+    digest = await ArUpload_deepHash(ab);
+    return `ETH-Personal-Sign-File:${ArUpload_buf2hex(digest)}`;
   }
 }
 
@@ -108,90 +177,90 @@ async function ArUpload_getSigningData(fileInput) {
  * @param {*} file
  */
 async function ArUploadThumbnail_getSigningData(file) {
-  var digest
+  var digest;
 
   if (!file) {
-    throw new Error('No file')
+    throw new Error("No file");
   } else if (file) {
-    const ab = await file.arrayBuffer()
-    digest = await ArUpload_deepHash(ab)
-    return `ETH-Personal-Sign-File:${ArUpload_buf2hex(digest)}`
+    const ab = await file.arrayBuffer();
+    digest = await ArUpload_deepHash(ab);
+    return `ETH-Personal-Sign-File:${ArUpload_buf2hex(digest)}`;
   }
 }
 
 function ArUpload_buf2hex(buffer) {
   // buffer is an ArrayBuffer
   return Array.prototype.map
-    .call(new Uint8Array(buffer), (x) => ('00' + x.toString(16)).slice(-2))
-    .join('')
+    .call(new Uint8Array(buffer), (x) => ("00" + x.toString(16)).slice(-2))
+    .join("");
 }
 
 // Below is ar_deephash algorithim.
 
 function ArUpload_stringToBuffer(str) {
-  return new TextEncoder().encode(str)
+  return new TextEncoder().encode(str);
 }
 
 function ArUpload_concatBuffers(buffers) {
-  let total_length = 0
+  let total_length = 0;
 
   for (let i = 0; i < buffers.length; i++) {
-    total_length += buffers[i].byteLength
+    total_length += buffers[i].byteLength;
   }
 
-  let temp = new Uint8Array(total_length)
-  let offset = 0
+  let temp = new Uint8Array(total_length);
+  let offset = 0;
 
-  temp.set(new Uint8Array(buffers[0]), offset)
-  offset += buffers[0].byteLength
+  temp.set(new Uint8Array(buffers[0]), offset);
+  offset += buffers[0].byteLength;
 
   for (let i = 1; i < buffers.length; i++) {
-    temp.set(new Uint8Array(buffers[i]), offset)
-    offset += buffers[i].byteLength
+    temp.set(new Uint8Array(buffers[i]), offset);
+    offset += buffers[i].byteLength;
   }
 
-  return temp
+  return temp;
 }
 
 async function ArUpload_deepHash(data) {
   if (Array.isArray(data)) {
     const tag = ArUpload_concatBuffers([
-      ArUpload_stringToBuffer('list'),
+      ArUpload_stringToBuffer("list"),
       ArUpload_stringToBuffer(data.length.toString()),
-    ])
-    console.log(`Digest list: ${tag}`)
+    ]);
+    console.log(`Digest list: ${tag}`);
     return await ArUpload_deepHashChunks(
       data,
-      await crypto.subtle.digest('SHA-384', tag)
-    )
+      await crypto.subtle.digest("SHA-384", tag)
+    );
   }
 
   const tag = ArUpload_concatBuffers([
-    ArUpload_stringToBuffer('blob'),
+    ArUpload_stringToBuffer("blob"),
     ArUpload_stringToBuffer(data.byteLength.toString()),
-  ])
+  ]);
 
-  console.log(`Digesting blob: ${tag}`)
+  console.log(`Digesting blob: ${tag}`);
 
   const taggedHash = ArUpload_concatBuffers([
-    await crypto.subtle.digest('SHA-384', tag),
-    await crypto.subtle.digest('SHA-384', data),
-  ])
+    await crypto.subtle.digest("SHA-384", tag),
+    await crypto.subtle.digest("SHA-384", data),
+  ]);
 
-  return await crypto.subtle.digest('SHA-384', taggedHash)
+  return await crypto.subtle.digest("SHA-384", taggedHash);
 }
 
 async function ArUpload_deepHashChunks(chunks, acc) {
   if (chunks.length < 1) {
-    return acc
+    return acc;
   }
 
   const hashPair = ArUpload_concatBuffers([
     acc,
     await ArUpload_deepHash(chunks[0]),
-  ])
-  const newAcc = await crypto.subtle.digest('SHA-384', hashPair)
-  return await ArUpload_deepHashChunks(chunks.slice(1), newAcc)
+  ]);
+  const newAcc = await crypto.subtle.digest("SHA-384", hashPair);
+  return await ArUpload_deepHashChunks(chunks.slice(1), newAcc);
 }
 
 /**
@@ -247,29 +316,29 @@ async function ArUpload_deepHashChunks(chunks, acc) {
  * @param {*} pubkey
  * @param {*} signature
  */
-async function ArUpload_thumbnailUpload(thumbnailFile, eth_signature = '') {
-  console.log('starting ArUpload_thumbnailUpload')
-  var data = new FormData()
+async function ArUpload_thumbnailUpload(thumbnailFile, eth_signature = "") {
+  console.log("starting ArUpload_thumbnailUpload");
+  var data = new FormData();
 
   if (!thumbnailFile) {
-    throw new Error('No thumbnailFile')
+    throw new Error("No thumbnailFile");
   }
 
-  data.append('file', thumbnailFile, 'thumbnail.png')
-  data.append('eth_signature', eth_signature)
+  data.append("file", thumbnailFile, "thumbnail.png");
+  data.append("eth_signature", eth_signature);
 
   const axOpts = {
-    maxContentLength: 'Infinity',
+    maxContentLength: "Infinity",
     headers: {
-      'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+      "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
     },
-  }
+  };
   // setStatusUploadingArweave('thumbnail')
   // Post with axios.
   return axios.post(url, data, axOpts).then(function (response) {
-    console.log('ArUpload_thumbnailUpload post complete: ', response)
-    console.log('ArUpload_thumbnailUpload tx: ', response.data.ArweaveTx)
+    console.log("ArUpload_thumbnailUpload post complete: ", response);
+    console.log("ArUpload_thumbnailUpload tx: ", response.data.ArweaveTx);
     // setStatusUploadedArweave('thumbnail')
-    return response.data
-  })
+    return response.data;
+  });
 }
