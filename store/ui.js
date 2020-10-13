@@ -37,7 +37,7 @@ export const state = () => ({
   usedContracts: [],
   devMode: false,
   statusModalMode: "fixed",
-  uiMode: "full",
+  uiMode: "minimal",
   uiTheme: "teal",
   contrastMode: "light",
   hideUi: true, // used in 'none' uiMode

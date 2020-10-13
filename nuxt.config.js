@@ -16,7 +16,7 @@ export default {
    * this brings in environment variables to public and private nuxt references
    */
   publicRuntimeConfig: {
-    network: 'rinkeby',
+    network: "rinkeby",
     infuraUrlRinkeby: process.env.INFURA_URL_RINKEBY,
     infuraUrlMain: process.env.INFURA_URL_RINKEBY,
   },
@@ -36,11 +36,11 @@ export default {
       },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '@/favicon.ico' },
+      { rel: "icon", type: "image/x-icon", href: "@/favicon.ico" },
       {
-        rel: 'stylesheet',
+        rel: "stylesheet",
         href:
-          'https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap',
+          "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
       },
     ],
     script: [
@@ -103,7 +103,7 @@ export default {
     "@nuxtjs/axios",
     "@nuxtjs/pwa",
     // Doc: https://github.com/nuxt/content
-    "@nuxt/content",
+    // "@nuxt/content",
     // 'vue-ethereum/nuxt',
   ],
   /*
@@ -131,7 +131,6 @@ export default {
     // extend(config, ctx) {
     // ...
     // },
-    friendlyErrors: false
+    friendlyErrors: false,
   },
-
 };
