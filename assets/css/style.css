@@ -1544,7 +1544,7 @@ ul.heroList {
   background: rgba(0, 0, 0, 0.05);
   position: relative;
 }
-.preview .previewImage:after {
+/* .preview .previewImage:after {
   content: "Preview image will appear here";
   position: absolute;
   left: 50%;
@@ -1557,7 +1557,7 @@ ul.heroList {
   opacity: 0.5;
   text-align: center;
   z-index: 0;
-}
+} */
 .preview .previewImage img {
   max-width: 100%;
   z-index: 1;
@@ -1829,6 +1829,7 @@ ul.heroList {
 }
 .form .fieldset {
   max-width: 700px;
+  padding: 0.5rem 0;
 }
 .form .fieldset#fieldsetContractView {
   margin: -1rem;
@@ -1836,7 +1837,7 @@ ul.heroList {
   background: var(--ui-color);
   color: var(--background-color);
   /* color: #fff !important; */
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
 }
 .form .fieldset#fieldsetContractView .col-66 {
   text-align: left;
@@ -1892,6 +1893,9 @@ ul.heroList {
   display: flex;
   flex-direction: column;
   position: relative;
+}
+.formItem.block {
+  display: block;
 }
 .formItem.betaElement {
   border: 1px solid #ccc;
@@ -2190,6 +2194,20 @@ MODAL
   z-index: 2;
   position: relative;
 }
+.tokenImage.empty {
+  width: 100%;
+  height: 10rem;
+  background: var(--ui-color, #111) url(../icons/filecheck.svg) center 2rem
+    no-repeat;
+  z-index: 2;
+  position: relative;
+  color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.75rem;
+}
 .unknownTokenImage {
   width: 100%;
   height: 10rem;
@@ -2298,7 +2316,7 @@ MODAL
 .loadingWrap {
   display: flex;
   width: 100%;
-  align-times: center;
+  align-items: center;
   justify-content: center;
   padding: 1rem;
 }

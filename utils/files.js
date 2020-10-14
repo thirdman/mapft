@@ -75,7 +75,7 @@ const openThumbnail = async (file, context) => {
 const processUpload = async (props) => {
   let fileArweaveHash;
   const { mode = "file", file, inputElement, context } = props;
-  console.log("props: ", props);
+  console.log("processUpload props: ", props);
 
   const {
     setUploadStatus,
@@ -97,10 +97,10 @@ const processUpload = async (props) => {
     );
     console.log(`Got Signature: ${signature}`);
 
-    console.log(`Starting upload process`);
+    console.log(`Starting upload process (mode: ${mode})`);
     setUploadStatus({ mode: mode, status: "uploading", text: "" });
 
-    const ipfsPromise = pinFileToIPFS(file, context)
+    const ipfsPromise = pinFileToIPFS(file, context, mode)
       .then((fileIpfsHash) => {
         console.log("uploaded: ", fileIpfsHash);
         const ipfsRemovePromise = removePinFromIPFS(fileIpfsHash).catch((e) => {
@@ -133,7 +133,7 @@ const processUpload = async (props) => {
       });
 
     await arweavePromise;
-    setArweaveStatus({ mode: "file", status: "uploaded" });
+    setArweaveStatus({ mode: mode, status: "uploaded" });
   } catch (e) {
     // catches all errors.
     // setStatusError("file", `Error: ${e.message}`)
@@ -146,7 +146,7 @@ const processUpload = async (props) => {
     return;
   }
   console.log("fileIpfsHash", fileIpfsHash);
-  setUploadStatus({ mode: "file", status: "ready" });
+  setUploadStatus({ mode: mode, status: "ready" });
 };
 
 /**
@@ -166,6 +166,7 @@ const startUploadProcess = async (inputElement, context) => {
     setArweaveHash,
     setArweaveStatus,
   } = context;
+  alert("here");
   console.log("context", context);
   try {
     var signature;
@@ -179,7 +180,7 @@ const startUploadProcess = async (inputElement, context) => {
     console.log(`Starting upload process`);
     setUploadStatus({ mode: "file", status: "uploading", text: "" });
 
-    const ipfsPromise = pinFileToIPFS(input.files[0], context)
+    const ipfsPromise = pinFileToIPFS(input.files[0], context, mode)
       .then((fileIpfsHash) => {
         console.log("uploaded: ", fileIpfsHash);
         const ipfsRemovePromise = removePinFromIPFS(fileIpfsHash).catch((e) => {
@@ -345,11 +346,11 @@ const personalSignFiles = async (message) => {
  * TODO: abstract keys
  * TODO: ccombine into one function with thumbnail
  */
-const pinFileToIPFS = async (file, context) => {
+const pinFileToIPFS = async (file, context, mode = "file") => {
   const { setIpfsStatus, setIpfsHash } = context;
   console.log("starting pinFileToIPFS. Does axios exist?... ", axios);
   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-  setIpfsStatus({ mode: "file", status: "uploading" });
+  setIpfsStatus({ mode: mode, status: "uploading" });
   if (!file) {
     console.error("no file");
     return false;
@@ -370,15 +371,13 @@ const pinFileToIPFS = async (file, context) => {
     })
     .then(function (response) {
       console.log("IPFS: done: ", response);
-      // setStatusUploadedIpfs('file')
-      setIpfsStatus({ mode: "file", status: "uploaded" });
+      setIpfsStatus({ mode: mode, status: "uploaded" });
       console.log(response.data.IpfsHash);
-      setIpfsHash({ mode: "file", hash: response.data.IpfsHash });
-      // fileIPFSHash = response.data.IpfsHash
+      setIpfsHash({ mode: mode, hash: response.data.IpfsHash });
       return response.data.IpfsHash;
     })
     .catch(function (error) {
-      setIpfsStatus({ mode: "file", status: "error" });
+      setIpfsStatus({ mode: mode, status: "error" });
       console.log("IPFS: error: ", error);
       console.error(error);
       throw error;

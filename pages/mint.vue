@@ -13,9 +13,16 @@
       <div class="primary">
         <client-only>
           <div v-if="!walletAddress" class="noAccess">
-            <IconError size="large" className="large" />
-            <h4>Wallet Not Connected.</h4>
-            <p>Connect an ethereum wallet to mint tokens</p>
+            <div style="font-size: 56px">&#129300;</div>
+            <div class="row">
+              <div clas="column">
+                <IconError size="large" className="large" />
+              </div>
+              <div clas="column">
+                <h4>Wallet Not Connected.</h4>
+                <p>Connect an ethereum wallet to mint tokens</p>
+              </div>
+            </div>
             <Button
               size="large"
               mode="primary"

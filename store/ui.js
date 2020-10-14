@@ -153,6 +153,7 @@ export const mutations = {
       usedContractsArray.push(value);
       state.usedContracts = usedContractsArray;
     }
+    console.log("usedContractsArray", usedContractsArray);
   },
   removeUsedContractId(state, value) {
     console.log("state: ", state);

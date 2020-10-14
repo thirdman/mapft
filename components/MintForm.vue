@@ -108,9 +108,9 @@
       id="fieldsetContractView"
       v-if="!showEditContract"
     >
-      <label>Active Contract ID</label>
       <div class="row">
         <div class="column col-66">
+          <label>Active Contract ID</label>
           <div id="userContractAddress">{{ activeContractId }}</div>
         </div>
         <div class="column col-33">
@@ -125,25 +125,42 @@
         </div>
       </div>
     </div>
-    <!-- SECTION TO IMAGE FIELDSET-->
-    <div class="fieldset imageContent formContent" id="fieldsetImage">
-      <div class="formItem">
+
+    <!-- SECTION FOR IMAGE FIELDSET-->
+    <div
+      class="fieldset imageContent formContent"
+      id="fieldsetImage"
+      v-if="activeContractId"
+    >
+      <div class="formItem block">
+        <label>Token File</label>
         <client-only>
-          <file-pond
+          <FileUpload
+            mode="file"
+            :arweaveStatus="arweaveStatus"
+            :ipfsStatus="ipfsStatus"
+            :setUploadStatus="setUploadStatus"
+            :allowMultiple="false"
+            :files="uploadFiles || []"
+            :handleAddFile="handleAddFile"
+            :onRequestSave="onRequestSave"
+            :onRequestClear="onRequestClear"
+          />
+          <!-- <file-pond
             name="test"
             ref="pond"
-            label-idle="Drop files here..."
+            label-idle="Drop files here or click..."
             :disabled="uploadStatus === 'uploading'"
             :allow-multiple="false"
             :files="uploadFiles"
             @init="handleFilePondInit"
             :onaddfile="handleAddFile"
-          />
+          /> -->
           <!-- accepted-file-types="image/jpeg, image/png" -->
           <!-- server="/api" -->
         </client-only>
       </div>
-      <div class="formItem required">
+      <!-- <div class="formItem required">
         <label>File Upload</label>
         <label class="file">
           <input
@@ -156,7 +173,8 @@
             <span id="fileLabelText">{{ fileName || "Select..." }}</span>
           </span>
         </label>
-        <!--
+      </div> -->
+      <!--
               <label>Folder upload (eg. 3D files)</label>
                 
                 <input type='file' webkitdirectory mozdirectory onchange='openFile(event)' class="file">
@@ -170,7 +188,6 @@
                   </div>
                 </div>
         -->
-      </div>
     </div>
     <!-- UPLOAD STATUS -->
     <UploadStatus
@@ -236,7 +253,16 @@
             :src="`https://gateway.pinata.cloud/ipfs/${thumbnailIpfsHashDefault}`"
           />
         </div> -->
-
+        <FileUpload
+          mode="thumbnail"
+          :arweaveStatus="thumbnailArweaveStatus"
+          :ipfsStatus="thumbnailIpfsStatus"
+          :allowMultiple="false"
+          :handleAddFile="handleAddThumbnail"
+          :onRequestSave="onRequestSave"
+          :onRequestClear="onRequestClear"
+        />
+        <div>thumbnailSource: {{ thumbnailSource }}</div>
         <label class="file">
           <input
             type="file"
@@ -305,7 +331,11 @@
       </div> -->
     </div>
     <!-- TOKEN META FIELDSET -->
-    <div class="fieldset metaContent formContent" id="fieldsetMeta">
+    <div
+      class="fieldset metaContent formContent"
+      id="fieldsetMeta"
+      v-if="activeContractId"
+    >
       <div class="divider"></div>
 
       <ValidationProvider rules="required">
@@ -735,7 +765,7 @@ export default {
   components: {
     ValidationProvider,
     VueCropper,
-    FilePond,
+    // FilePond,
   },
   head() {
     return {
@@ -787,6 +817,7 @@ export default {
       thumbnailIpfsHashDefault: "mintFormStore/thumbnailIpfsHashDefault",
       uploadThumbnailStatusTitle: "mintFormStore/uploadThumbnailStatusTitle",
       thumbnailSource: "mintFormStore/thumbnailSource",
+      showThumbnailField: "mintFormStore/showThumbnailField",
     }),
 
     showEditContract() {
@@ -796,9 +827,7 @@ export default {
         return this.$store.state.mintFormStore.showEditContract;
       }
     },
-    showThumbnailField() {
-      return this.$store.state.mintFormStore.showThumbnailField;
-    },
+
     showNewMetaField() {
       return this.$store.state.mintFormStore.showNewMetaField;
     },
@@ -832,6 +861,7 @@ export default {
       setShowEditContract: "mintFormStore/setShowEditContract",
       setThumbnailUploadStatus: "mintFormStore/setThumbnailUploadStatus",
       setThumbnailSource: "mintFormStore/setThumbnailSource",
+      setFileInfo: "mintFormStore/setFileInfo",
     }),
     handleAccountModal() {
       this.$modal.show("account-modal");
@@ -850,6 +880,25 @@ export default {
       console.log("this.$refs.pond", this.$refs.pond);
       // FilePond instance methods are available on `this.$refs.pond`
     },
+
+    onRequestSave: function (props) {
+      console.log("request save called");
+      const { id, name, folder, file, target, mode } = props;
+      console.log("onRequestSave was called", id, name, folder, file, target);
+      if (!file) {
+        return;
+      }
+    },
+    onRequestClear: function (mode, file) {
+      console.log("request clear called with file: ", mode, file);
+      if (mode === "file") {
+        this.unRenderImage(mode, file);
+        this.setUploadStatus({ mode: mode, status: "" });
+      }
+      if (mode === "thumbnail") {
+        this.setThumbnailSource("");
+      }
+    },
     handleAddFile: function (error, file) {
       console.log("error", error);
       console.log("file", file);
@@ -862,6 +911,7 @@ export default {
         console.log("fileName", fileName);
         console.log("fileType", fileType);
         console.log("fileExtension", fileExtension);
+
         this.renderImage(
           fileType,
           window.URL.createObjectURL(file.file),
@@ -875,6 +925,8 @@ export default {
           context: this,
           file: file.file,
           inputElement: file,
+        }).catch((error) => {
+          alert(error);
         });
         // return triggerUploadProcess()
       } else {
@@ -882,6 +934,33 @@ export default {
         console.error("error: ", error);
       }
     },
+    handleAddThumbnail: function (error, file) {
+      if (error) {
+        this.setUploadStatus({ mode: "thumbnail", status: "noFile" });
+        console.error("error: ", error);
+        return;
+      }
+      console.log("file", file);
+      const fileName = file.filename;
+      const fileType = fileName.split(".").pop().toLowerCase();
+      const fileExtension = file.fileExtension;
+
+      const cropImageElement = document.getElementById("cropImage");
+      console.log("cropImageElement", cropImageElement);
+      const urlElement = window.URL.createObjectURL(file.file);
+      console.log("thumbnail urlElement", urlElement);
+      this.setThumbnailSource(urlElement);
+
+      processUpload({
+        mode: "thumbnail",
+        context: this,
+        file: file.file,
+        inputElement: file,
+      }).catch((error) => {
+        alert(error);
+      });
+    },
+
     setActiveContractId(value) {
       this.$store.commit("ui/setActiveContractId", value);
     },
@@ -947,8 +1026,9 @@ export default {
               "No preview available, use thumbnail to define one.");
           break;
         default:
-          read = document.createElement("img");
-          read.className = "tokenImage";
+          read = document.createElement("div");
+          read.innerText = "Non Image File";
+          read.className = "tokenImage empty";
       }
       read.src = src;
       var output = document.getElementById(parent);
@@ -956,21 +1036,30 @@ export default {
       output.innerHTML = "";
       output.appendChild(read);
     },
+    unRenderImage(mode, parent = "output") {
+      var output = document.getElementById(parent);
+      console.log("output: ", output);
+      if (output) {
+        output.innerHTML = "";
+      }
+      if (mode === "file") {
+        this.setIpfsStatus("");
+        this.setArweaveStatus("");
+      }
+    },
+
     handleOpenFile(event, blah) {
       return openFile(event, this);
     },
     handleOpenThumbnail(file, blah) {
-      let input = file.target;
-      const fileInput = input.files[0];
-
-      if (!fileInput) {
-        // This happens is someone hits cancel on the file select dialog.
+      // let input = file.target;
+      if (!file) {
         this.setThumbnailUploadStatus({ mode: "thumbnail", status: "noFile" });
-        return;
       }
-
-      const fileName = fileInput.name;
+      const fileName = file.filename;
       const fileType = fileName.split(".").pop().toLowerCase();
+      const fileExtension = file.fileExtension;
+
       console.log("THUMBANIL file, fileTYpe", fileName, fileType);
       const cropImageElement = document.getElementById("cropImage");
       console.log("cropImageElement", cropImageElement);
