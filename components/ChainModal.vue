@@ -66,7 +66,7 @@ export default {
       this.$modal.hide("chain-modal");
     },
     connectEthereum() {
-      alert("nope!");
+      alert("This funciton is incomplete!");
       this.$modal.hide("chain-modal");
     },
   },

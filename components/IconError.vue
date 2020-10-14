@@ -1,6 +1,6 @@
 <template>
   <svg
-    :class="strokeClass"
+    :class="`${strokeClass} ${className}`"
     xmlns="http://www.w3.org/2000/svg"
     class="icon icon-tabler icon-tabler-alert-triangle"
     width="24"
@@ -33,10 +33,14 @@
 .icon.brand {
   stroke: var(--fill-color, #ccc);
 }
+.icon.large {
+  width: 48px;
+  height: 48px;
+}
 </style>
 <script>
 //https://tablericons.com/
 export default {
-  props: ['strokeClass'],
-}
+  props: ["strokeClass", "className"],
+};
 </script>
