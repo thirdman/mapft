@@ -22,10 +22,10 @@
     "vue": "^2.6.12",
     "vue-js-modal": "^2.0.0-rc.6",
     "vue-router": "^3.2.0",
-    "vuetify": "^2.2.11",
-    "ethereum-ens": "^0.8.0"
+    "vuetify": "^2.2.11"
   },
   "devDependencies": {
+    "ethereum-ens": "^0.8.0",
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@onflow/dev-wallet": "0.0.10",
