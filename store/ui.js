@@ -6,6 +6,7 @@ import {
   readImageLink,
 } from "../utils/web3Read";
 import { getContrast } from "../utils/theme";
+import { resolveEns } from "../utils/wallet";
 const themeArray = [
   "lemon",
   "sand",
@@ -17,7 +18,9 @@ const themeArray = [
   "teal",
   "charcoal",
 ];
-
+// import ens from "ethereum-ens";
+// const ens = require("ethereum-ens");
+// console.log("ens", ens);
 export const state = () => ({
   network: "rinkeby",
   walletChain: "ethereum",
@@ -27,6 +30,7 @@ export const state = () => ({
   walletStatus: "",
   walletProvider: null,
   walletNetwork: null,
+  ensName: "",
   activeContractId: "",
   activeContractName: "",
   activeContractSymbol: "",
@@ -64,6 +68,7 @@ export const getters = {
   walletAddress: (state) => state.walletAddress,
   walletNetwork: (state) => state.walletNetwork,
   walletStatus: (state) => state.walletStatus,
+  ensName: (state) => state.ensName,
   showSearch: (state) => state.showSearch,
   viewData: (state) => state.viewData,
   viewStatus: (state) => state.viewStatus,
@@ -84,6 +89,10 @@ export const getters = {
   isDevAddress: (state) => {
     const isDevAddress = state.devAddresses.includes(state.walletAddress);
     return isDevAddress;
+  },
+  walletName: (state) => {
+    const walletName = state.ensName || state.walletAddress;
+    return walletName;
   },
 };
 export const mutations = {
@@ -133,7 +142,14 @@ export const mutations = {
     console.log(account ? "setting account true" : "settings account false");
     state.hasWallet = account ? true : false;
     state.walletAddress = account ? account : null;
+    // this.dispatch("ui/resolveEns", account);
+    resolveEns(account);
   },
+  setEnsName(state, value) {
+    console.log("setting ens name, ", value);
+    state.ensName = value;
+  },
+
   setWalletStatus(state, value) {
     console.log("setting wallet status", value);
     state.walletStatus = value;
@@ -270,6 +286,13 @@ export const mutations = {
 };
 
 export const actions = {
+  // resolveEns(dispatch, address) {
+  //   console.log("resolve", address);
+  //   console.log("ens", ens);
+  //   console.log("this", address, walletProvider);
+  //   const walletProvider = dispatch.walletProvider;
+  //   var ens = new ENS(walletProvider);
+  // },
   doSearch() {
     console.log("doSearch");
   },

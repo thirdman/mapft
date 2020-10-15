@@ -176,16 +176,18 @@ SEARCH*/
 #searchRow {
   display: flex;
   width: 100%;
-  background: rgba(0, 0, 0, 0.1);
-  position: sticky;
+  /* background: rgba(0, 0, 0, 0.1); */
+  position: relative;
   top: 0;
   z-index: 1;
-  border-bottom: 2px solid var(--ui-color);
+  /* border-bottom: 2px solid var(--ui-color); */
   height: 100px;
   padding-top: 10px;
   padding-bottom: 10px;
 }
-
+#searchRow.sticky {
+  position: sticky;
+}
 #searchRow .form.entry {
   display: block;
   margin: 0 auto;

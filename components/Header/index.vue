@@ -139,7 +139,7 @@
                     class="user profileElement"
                     v-if="hasWallet"
                   >
-                    <span class="accountAddress">{{ walletAddress }}</span>
+                    <span class="accountAddress">{{ walletName }}</span>
                     <button @click="handleModal" class="btn iconButton">
                       <IconSettings :strokeClass="contrastMode" />
                     </button>
@@ -286,8 +286,11 @@ export default {
       contrastMode: "ui/contrastMode",
       hideUi: "ui/hideUi",
       devMode: "ui/devMode",
+      walletAddress: "ui/walletAddress",
       walletStatus: "ui/walletStatus",
       walletChain: "ui/walletChain",
+      walletName: "ui/walletName",
+      ensName: "ui/ensName",
     }),
     isSearchRoute() {
       console.log("route: ", this.$route);
@@ -330,9 +333,7 @@ export default {
       // return this.$store.state.ui.hasWallet
       return walletAddress ? true : false;
     },
-    walletAddress() {
-      return this.$store.state.ui.walletAddress;
-    },
+
     showSearch() {
       return this.$store.state.ui.showSearch;
     },

@@ -1,11 +1,19 @@
 // import Vuex from 'vuex'
+// import ens from "ethereum-ens";
 
+var ENS = require("ethereum-ens");
 /**
  * CONNECT WALLET
  */
 
 const connectWallet = async (props) => {
-  const { setWallet, setWalletChain, setNetworkName, setWalletStatus } = props;
+  const {
+    setWallet,
+    setWalletChain,
+    setNetworkName,
+    setWalletStatus,
+    setEnsName,
+  } = props;
   console.log("setprops is", props);
   let provider, net;
   // Try to connect Metamask
@@ -45,6 +53,11 @@ const connectWallet = async (props) => {
         provider.on("networkChanged", function (net) {
           setConnectedNetwork(net);
         });
+      }
+      if (provider && accts[0]) {
+        console.log("provider is:", provider);
+        console.log("web3 is:", window.ethereum);
+        resolveEns(accts[0], provider, setEnsName);
       }
     } catch (error) {
       // User denied account access...
@@ -103,4 +116,31 @@ const handleAccountLink = () => {
   );
 };
 
-export { connectWallet, handleAccountLink, setConnectedNetwork };
+/**
+ * Resolve ens
+ *
+ */
+const resolveEns = (address, provider, setEnsName) => {
+  console.log("resolveEns:", address, provider);
+  if (address && provider) {
+    var ens = new ENS(provider);
+    console.log("ens", ens);
+
+    // var ensResult = new ens(provider);
+    // console.log("ensThing", ensResult);
+    return ens
+      .reverse(address)
+      .name()
+      .then((ensName) => {
+        console.log("got it", ensName);
+        setEnsName(ensName);
+        return ensName;
+      })
+      .catch((error) => {
+        console.error(error);
+        return null;
+      });
+  }
+};
+
+export { connectWallet, handleAccountLink, setConnectedNetwork, resolveEns };

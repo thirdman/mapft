@@ -3,8 +3,8 @@
     id="deployForm"
     class="form create column shadow"
     :class="deployStatus === 'error' ? 'error' : ''"
-    style="flex-basis: 100%;"
   >
+    <!-- style="flex-basis: 100%;" -->
     <DeployStatusInformation v-if="deployStatus !== 'ready'" />
     <!-- <div class="deployStatusWrap" v-if="deployStatus !== 'ready'">
       <div id="deployStatus" class="statusElement">
@@ -58,7 +58,7 @@
               max="99"
               required
               placeholder="Eg. ETH"
-              style="text-transform: uppercase;"
+              style="text-transform: uppercase"
               v-model="symbol"
             />
             <div>
@@ -112,15 +112,11 @@
           <div class="column columnHeader"><label>ID</label></div>
           <div class="column columnHeader"><label>TYPE</label></div>
           <div class="column columnHeader">
-            <label>
-              REQUIRED
-            </label>
+            <label> REQUIRED </label>
           </div>
           <div class="column columnHeader"><label>Help Text</label></div>
           <div class="column columnHeader btn-column">
-            <label style="min-width: 80px; display: inline-block;"
-              >&nbsp;</label
-            >
+            <label style="min-width: 80px; display: inline-block">&nbsp;</label>
           </div>
         </div>
         <div v-for="(item, index) in metaTemplatesObj" :key="index">
@@ -139,7 +135,7 @@
           />
         </div>
         <!-- META TEMPLATE -->
-        <div id="newMetaTemplate" class="hidden" style="padding-top: 1rem;">
+        <div id="newMetaTemplate" class="hidden" style="padding-top: 1rem">
           <div class="divider"></div>
           <div class="formItem">
             <h6>New Meta Template</h6>
@@ -234,7 +230,7 @@
               </div>
             </div>
 
-            <div style="padding-top: 1rem;">
+            <div style="padding-top: 1rem">
               <button
                 class="w3-black btn btn-large"
                 onClick="addMetaTemplate()"
@@ -291,9 +287,9 @@
       <div
         class="fieldset actionContent formContent"
         id="fieldsetAction"
-        style="padding-top: 0.5rem;"
+        style="padding-top: 0.5rem"
       >
-        <h1 class="w3-xlarge" style="max-width: 1000px; margin: auto;">
+        <h1 class="w3-xlarge" style="max-width: 1000px; margin: auto">
           <button
             id="h"
             class="w3-button w3-block w3-padding-large w3-black w3-margin-bottom"
@@ -319,20 +315,20 @@
 </style>
 
 <script>
-import { mapFields } from 'vuex-map-fields'
-import { mapMutations, mapGetters, mapActions } from 'vuex'
-import { ValidationProvider, extend } from 'vee-validate'
-import { required, min, email } from 'vee-validate/dist/rules'
+import { mapFields } from "vuex-map-fields";
+import { mapMutations, mapGetters, mapActions } from "vuex";
+import { ValidationProvider, extend } from "vee-validate";
+import { required, min, email } from "vee-validate/dist/rules";
 
-extend('min', {
+extend("min", {
   // (value) => {
   ...min,
   // return value.length >= 3
-})
-extend('required', {
+});
+extend("required", {
   ...required,
-  message: 'This field is required',
-})
+  message: "This field is required",
+});
 
 export default {
   // name: 'DeployForm',
@@ -344,64 +340,64 @@ export default {
       // These are the validation arrays
       errors: [],
       classes: [],
-    }
+    };
   },
   computed: {
     ...mapGetters({
       //UI
-      devMode: 'ui/devMode',
-      activeContractId: 'ui/activeContractId',
-      activeContractName: 'ui/activeContractName',
-      activeContractSymbol: 'ui/activeContractSymbol',
+      devMode: "ui/devMode",
+      activeContractId: "ui/activeContractId",
+      activeContractName: "ui/activeContractName",
+      activeContractSymbol: "ui/activeContractSymbol",
       // DEPLOY
-      canDeploy: 'deployFormStore/canDeploy',
-      deployStatus: 'deployFormStore/deployStatus',
-      deployStatusMessage: 'deployFormStore/deployStatusMessage',
+      canDeploy: "deployFormStore/canDeploy",
+      deployStatus: "deployFormStore/deployStatus",
+      deployStatusMessage: "deployFormStore/deployStatusMessage",
     }),
     showNewMetaTemplate() {
-      return this.$store.state.deployFormStore.showNewMetaTemplate
+      return this.$store.state.deployFormStore.showNewMetaTemplate;
     },
     metaTemplatesJson() {
-      return this.$store.state.deployFormStore.metaTemplatesJson
+      return this.$store.state.deployFormStore.metaTemplatesJson;
     },
     metaTemplatesObj() {
-      return JSON.parse(this.$store.state.deployFormStore.metaTemplatesJson)
+      return JSON.parse(this.$store.state.deployFormStore.metaTemplatesJson);
     },
     // The `mapFields` function takes an array of
     // field names and generates corresponding
     // computed properties with getter and setter
     // functions for accessing the Vuex store.
-    ...mapFields('deployFormStore', ['name', 'symbol', 'another']),
+    ...mapFields("deployFormStore", ["name", "symbol", "another"]),
   },
 
   methods: {
     addMetaTemplate(obj) {
       if (!obj) {
-        console.error('no obj supplied')
-        return null
+        console.error("no obj supplied");
+        return null;
       }
-      this.$store.commit('deployFormStore/addMetaTemplate', obj)
+      this.$store.commit("deployFormStore/addMetaTemplate", obj);
     },
     setShowNewMetaTemplate(newState) {
-      console.log('setting setShowNewMetaTemplate to', newState)
-      this.$store.commit('deployFormStore/setShowNewMetaTemplate', newState)
+      console.log("setting setShowNewMetaTemplate to", newState);
+      this.$store.commit("deployFormStore/setShowNewMetaTemplate", newState);
     },
     handleDeploy2() {
       // this is to pass through context. Probably can be refctored
-      const state = this.$store.state.mintFormStore
-      this.$store.dispatch('deployFormStore/handleDeploy', event, state, this)
+      const state = this.$store.state.mintFormStore;
+      this.$store.dispatch("deployFormStore/handleDeploy", event, state, this);
     },
     ...mapMutations({
-      setDeployStatus: 'deployFormStore/setDeployStatus',
-      resetDeployForm: 'deployFormStore/resetDeployForm',
-      removeMetaTemplate: 'deployFormStore/removeMetaTemplate',
+      setDeployStatus: "deployFormStore/setDeployStatus",
+      resetDeployForm: "deployFormStore/resetDeployForm",
+      removeMetaTemplate: "deployFormStore/removeMetaTemplate",
     }),
     ...mapActions({
-      handleDeploy: 'deployFormStore/handleDeploy',
-      setContractData: 'deployFormStore/setContractData',
+      handleDeploy: "deployFormStore/handleDeploy",
+      setContractData: "deployFormStore/setContractData",
     }),
   },
-}
+};
 </script>
 <!-- 
 export default {

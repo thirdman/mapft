@@ -32,6 +32,7 @@
                   setWalletStatus,
                   setWalletChain,
                   setNetworkName,
+                  setEnsName,
                 })
               "
             >
@@ -81,13 +82,14 @@
                   setWalletStatus,
                   setWalletChain,
                   setNetworkName,
+                  setEnsName,
                 })
               "
             >
               Connect
             </Button>
           </div>
-          <div v-if="walletAddress">
+          <div v-if="walletAddress" class="row">
             <DeployForm />
           </div>
         </div>
@@ -126,6 +128,7 @@ export default {
       setShowAccount: "ui/setShowAccount",
       setShowSearch: "ui/setShowSearch",
       setWallet: "ui/setWallet",
+      setEnsName: "ui/setEnsName",
       setWalletStatus: "ui/setWalletStatus",
       setNetworkName: "ui/setNetworkName",
       setWalletChain: "ui/setWalletChain",

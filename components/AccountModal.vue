@@ -35,7 +35,7 @@
           <h4>User Settings</h4>
         </div>
         <div class="subtitle row contentRow between">
-          <div class="column">{{ walletAddress }}</div>
+          <div class="column">{{ walletName }}</div>
           <Button
             @click="handleDisconnect"
             size="small"
@@ -284,6 +284,8 @@ export default {
   },
   computed: {
     ...mapGetters({
+      walletAddress: "ui/walletAddress",
+      walletName: "ui/walletName",
       isDevAddress: "ui/isDevAddress",
       uiMode: "ui/uiMode",
       contrastMode: "ui/contrastMode",
@@ -294,10 +296,6 @@ export default {
       activeContractName: "ui/activeContractName",
       activeContractSymbol: "ui/activeContractSymbol",
     }),
-
-    walletAddress() {
-      return this.$store.state.ui.walletAddress;
-    },
 
     usedContracts() {
       return this.$store.state.ui.usedContracts;

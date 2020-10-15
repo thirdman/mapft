@@ -2,69 +2,75 @@
   <div class="pageContainer">
     <Header />
 
-    <div id="searchRow" class="row searchRow" v-if="showSearch">
-      <div class="form entry">
-        <div class="w3-row row">
-          <div class="formItem column col-50">
-            <label for="searchContractId">Art Contract</label>
-            <!-- <input
-              id="ww"
-              type="string"
-              class="hero"
-              placeholder="0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
-              @change="setSearchParams"
-            />-->
-            <input
-              name="Contract Id"
-              oldId="ww"
-              id="searchContractId"
-              class="hero"
-              type="string"
-              max="99"
-              required
-              placeholder="0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
-              v-model="searchContractId"
-            />
-          </div>
+    <section id="read" class="read" v-if="viewStatus === 'ready'">
+      <div id="searchRow" class="row searchRow" v-if="showSearch">
+        <div class="form entry">
+          <div class="w3-row row">
+            <div class="formItem column col-66">
+              <label for="searchContractId">Contract Address</label>
+              <input
+                name="Contract Id"
+                oldId="ww"
+                id="searchContractId"
+                class="hero"
+                type="string"
+                max="99"
+                required
+                placeholder="0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
+                v-model="searchContractId"
+              />
+            </div>
 
-          <div class="formItem column col-50">
-            <label for="searchTokenId">Token ID</label>
-            <input
-              name="Token Id"
-              oldId="w"
-              id="searchTokenId"
-              type="number"
-              min="1"
-              class="hero small"
-              placeholder="1"
-              v-model="searchTokenId"
-            />
-          </div>
+            <div class="formItem column col-50">
+              <label for="searchTokenId">Token ID</label>
+              <input
+                name="Token Id"
+                oldId="w"
+                id="searchTokenId"
+                type="number"
+                min="1"
+                class="hero small"
+                placeholder="1"
+                v-model="searchTokenId"
+              />
+            </div>
 
-          <div class="formItem column col-66">
-            <label>&nbsp;</label>
-            <button
+            <div class="formItem column col-66">
+              <label>&nbsp;</label>
+              <!-- <button
               id="xx"
               type="submit"
               class="w3-black btn-large"
               @click="doTest"
             >
-              <!-- onClick='toggleVisibility("searchRow", "hidden")' -->
               READ
-            </button>
+            </button> -->
+              <Button
+                class="dark"
+                size="large"
+                type="submit"
+                :fill="true"
+                :disabled="false"
+                @click="doTest"
+                >Load</Button
+              >
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <section id="read" class="read showMeta borderBottom">
+    </section>
+    <section
+      id="read"
+      class="read showMeta borderBottom"
+      v-if="viewStatus !== 'ready'"
+    >
       <div class="tertiary">
         <h2 id="metadata2" class="theTitle">
-          {{ (viewData && viewData.title) || tempViewItem.title || '' }}
+          {{ (viewData && viewData.title) || tempViewItem.title || "" }}
         </h2>
-        <label style="display: block;">Creator</label>
+        <label style="display: block">Creator</label>
         <h5 id="metadata3" class="theAuthor">
-          {{ (viewData && viewData.authorName) || '' }}
+          {{ (viewData && viewData.authorName) || "" }}
         </h5>
         <label>Description</label>
         <div id="metadata4" class="aside">
@@ -72,7 +78,7 @@
             {{
               (viewData && viewData.description) ||
               tempViewItem.description ||
-              ''
+              ""
             }}
           </p>
         </div>
@@ -92,7 +98,7 @@
               <div class="previewWrap">
                 <img
                   :src="tempViewItem.imageUrlThumbnail"
-                  style="width: 100%; height: auto;"
+                  style="width: 100%; height: auto"
                   class="previewImage"
                 />
                 <div class="previewLoading">
@@ -104,7 +110,7 @@
             </div>
             <div
               class="column col-100 imageColumn"
-              style="padding-bottom: 4rem;"
+              style="padding-bottom: 4rem"
               v-if="viewData"
             >
               <RenderItem
@@ -222,11 +228,11 @@
 </template>
 
 <script>
-import { mapFields } from 'vuex-map-fields'
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapFields } from "vuex-map-fields";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: 'ViewPage',
+  name: "ViewPage",
   data() {
     // nothing to see here
   },
@@ -234,35 +240,40 @@ export default {
     // console.log('created client')
     // console.log('this', this)
     if (process.client) {
-      const asyncTokenId = this.$route.query.id
-      const asyncContractId = this.$route.query.contract
+      const asyncTokenId = this.$route.query.id;
+      const asyncContractId = this.$route.query.contract;
       console.log(
-        'asyncTokenId && asyncContractId',
+        "asyncTokenId && asyncContractId",
         asyncTokenId,
         asyncContractId
-      )
+      );
       if (!asyncTokenId || !asyncContractId) {
-        this.$store.commit('ui/setViewStatus', 'ready')
-        this.$store.commit('ui/setShowSearch', true)
-        return null
+        console.log("here");
+        this.$store.commit("ui/setViewStatus", "ready");
+        this.$store.commit("ui/setShowSearch", true);
+        this.$store.commit("ui/setSearchParams", {
+          tokenId: asyncTokenId,
+          contractId: asyncContractId,
+        });
+        return null;
       }
       if (asyncTokenId && asyncContractId) {
-        console.log('setting params...')
-        this.$store.commit('ui/setSearchParams', {
+        console.log("setting params...");
+        this.$store.commit("ui/setSearchParams", {
           tokenId: asyncTokenId,
           contractId: asyncContractId,
-        })
-        this.$store.dispatch('ui/handleSearch', {
+        });
+        this.$store.dispatch("ui/handleSearch", {
           tokenId: asyncTokenId,
           contractId: asyncContractId,
-        })
+        });
         //   if (process.client) {
         // }
       }
     }
     if (process.server) {
       // const { req, res, beforeNuxtRender } = context
-      console.log('created server')
+      console.log("created server");
       // console.log('this.$scopedSlots', this.$scopedSlots)
     }
   },
@@ -275,72 +286,72 @@ export default {
     //   tokenId: undefined,
     //   contractId: undefined,
     // })
-    this.$store.commit('ui/setViewData', undefined)
+    this.$store.commit("ui/setViewData", undefined);
   },
   asyncData(context) {
     // console.log('async context.route', context.route)
   },
   computed: {
     ...mapGetters({
-      showSearch: 'ui/showSearch',
-      contrastMode: 'ui/contrastMode',
-      searchData: 'ui/searchData',
-      viewData: 'ui/viewData',
-      viewStatus: 'ui/viewStatus',
-      walletAddress: 'ui/walletAddress',
-      tempViewItem: 'ui/tempViewItem',
+      showSearch: "ui/showSearch",
+      contrastMode: "ui/contrastMode",
+      searchData: "ui/searchData",
+      viewData: "ui/viewData",
+      viewStatus: "ui/viewStatus",
+      walletAddress: "ui/walletAddress",
+      tempViewItem: "ui/tempViewItem",
     }),
     tokenId: (context) => {
-      return context.$route && context.$route.query.id
+      return context.$route && context.$route.query.id;
     },
     contractId: (context) => {
-      // console.log('context.$route', context.$route)
-      return context.$route && context.$route.query.contract
+      return context.$route && context.$route.query.contract;
     },
     isOwner() {
-      const tempWalletAddress =
-        this.$store.state.ui.walletAddress &&
-        this.$store.state.ui.walletAddress.toLowerCase()
-      const tempOwnerAddress =
-        this.$store.state.ui.viewData &&
-        this.$store.state.ui.viewData.ownerAddress.toLowerCase()
+      if (viewData) {
+        console.log("viewData", viewData, walletAddress);
+        const tempWalletAddress = walletAddress && walletAddress.toLowerCase();
+        const tempOwnerAddress =
+          viewData && viewData.ownerAddress.toLowerCase();
 
-      return (
-        tempWalletAddress &&
-        tempOwnerAddress &&
-        tempWalletAddress === tempOwnerAddress
-      )
+        return (
+          tempWalletAddress &&
+          tempOwnerAddress &&
+          tempWalletAddress === tempOwnerAddress
+        );
+      } else {
+        return false;
+      }
     },
-    ...mapFields('ui', ['searchContractId', 'searchTokenId']),
+    ...mapFields("ui", ["searchContractId", "searchTokenId"]),
   },
   methods: {
     ...mapMutations({
-      setShowSearch: 'ui/setShowSearch',
+      setShowSearch: "ui/setShowSearch",
       // handleSearch: 'ui/handleSearch',
       // doSearch: 'ui/doSearch',
-      setSearchParams: 'ui/setSearchParams',
+      setSearchParams: "ui/setSearchParams",
     }),
     getTokenId() {
-      console.log('this', this)
+      console.log("this", this);
     },
     doTest() {
-      console.log(this)
-      this.$store.dispatch('ui/handleSearch')
+      console.log(this);
+      this.$store.dispatch("ui/handleSearch");
     },
   },
   actions: {
     ...mapActions({
-      handleSearch: 'ui/handleSearch',
+      handleSearch: "ui/handleSearch",
     }),
   },
-}
+};
 </script>
 
 <style>
-
 .ownerBox {
   font-weight: bold;
-  font-variation-settings: 'wght' 600;
+  font-variation-settings: "wght" 600;
 }
 .previewWrap {
   width: 100%;
