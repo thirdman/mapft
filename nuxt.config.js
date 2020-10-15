@@ -78,7 +78,7 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
-    { src: "~/plugins/localStorage.js", ssr: false },
+    // { src: "~/plugins/localStorage.js", ssr: false },
     { src: "~plugins/vue-js-modal.js" }, // mode: 'client'
     // { src: '~plugins/web3Load.js' },
     // { src: '~plugins/arweaveFinal.js' },
