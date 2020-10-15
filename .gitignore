@@ -109,3 +109,4 @@ sw.*
 *.swp
 
 #vscode
+static/sw.js
