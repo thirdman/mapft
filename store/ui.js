@@ -46,8 +46,9 @@ export const state = () => ({
   contrastMode: "light",
   hideUi: true, // used in 'none' uiMode
   devAddresses: [
-    "0x03f0d81c9a73930b8034553fc54152cbd6958d0b",
-    "0xd1c248d1c9879dc3b5a846d4dccc5b7aa8fbf432",
+    "0x03f0d81c9a73930b8034553fc54152cbd6958d0b", // gareth
+    "0xd1c248d1c9879dc3b5a846d4dccc5b7aa8fbf432", // gareth
+    "0x63a9dbCe75413036B2B778E670aaBd4493aAF9F3", //natealex
   ],
   // SEARCH FIELDS
   searchContractId: "",
