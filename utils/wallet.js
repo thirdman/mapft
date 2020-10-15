@@ -1,7 +1,6 @@
 // import Vuex from 'vuex'
-// import ens from "ethereum-ens";
 
-var ENS = require("ethereum-ens");
+// var ENS = require("ethereum-ens");
 /**
  * CONNECT WALLET
  */
@@ -122,25 +121,25 @@ const handleAccountLink = () => {
  */
 const resolveEns = (address, provider, setEnsName) => {
   console.log("resolveEns:", address, provider);
-  if (address && provider) {
-    var ens = new ENS(provider);
-    console.log("ens", ens);
+  // if (address && provider) {
+  //   var ens = new ENS(provider);
+  //   console.log("ens", ens);
 
-    // var ensResult = new ens(provider);
-    // console.log("ensThing", ensResult);
-    return ens
-      .reverse(address)
-      .name()
-      .then((ensName) => {
-        console.log("got it", ensName);
-        setEnsName(ensName);
-        return ensName;
-      })
-      .catch((error) => {
-        console.error(error);
-        return null;
-      });
-  }
+  //   // var ensResult = new ens(provider);
+  //   // console.log("ensThing", ensResult);
+  //   return ens
+  //     .reverse(address)
+  //     .name()
+  //     .then((ensName) => {
+  //       console.log("got it", ensName);
+  //       setEnsName(ensName);
+  //       return ensName;
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       return null;
+  //     });
+  // }
 };
 
 export { connectWallet, handleAccountLink, setConnectedNetwork, resolveEns };
