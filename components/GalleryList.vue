@@ -2,13 +2,13 @@
   <div id="galleryList">
     <div class="sets">
       <label>Filter:</label>
-      <span class="filterContent">{{ galleryFilter }}</span>
+      <span class="filterContent" v-if="galleryFilter">{{ galleryFilter }}</span>
       <span v-if="!filteredSets(galleryAssets)">No sets</span>
-      <div v-if="galleryFilter">
-        <Button class="btn small" @click="clearGalleryFilter"
-          >Clear Filter</Button
+      <span v-if="galleryFilter" class="filterClear">
+        <Button class="btn iconButton" fill @click="clearGalleryFilter"
+          ><IconClose size="small" :strokeClass="contrastMode"/></Button
         >
-      </div>
+      </span>
       <div class="pillWrap" v-if="!galleryFilter">
         <div
           v-for="(item, index) in filteredSets(galleryAssets)"
@@ -99,6 +99,16 @@
 }
 .sets .filterContent {
   font-size: 0.875rem;
+  border-radius: 1rem;
+  padding: 0 .5rem;
+  border: 1px solid var(--line-color, #eee);
+}
+.sets .filterClear{
+  display: inline-flex;
+  margin-left: .5rem;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
 }
 .galleryGrid {
   display: grid;
@@ -260,6 +270,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      contrastMode: "ui/contrastMode",
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
       galleryFilter: 'galleryStore/galleryFilter',
