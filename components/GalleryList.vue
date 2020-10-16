@@ -73,7 +73,7 @@
               />
             </div>
             <div class="otherMeta">
-              <div class="pill" v-if="displayMode !== 'compact'">
+              <div class="pill" v-if="displayMode !== 'compact'" @click="(event) => handlePillClick(event, getTrait(item.traits, 'exhibition'))" >
                 {{ getTrait(item.traits, 'exhibition') }}
               </div>
             </div>
@@ -90,7 +90,7 @@
   width: 100%;
 }
 .sets {
-  padding: 1rem 0;
+  padding: 1rem 0 .25rem;
   border-bottom: 1px solid var(--line-color);
   margin-bottom: 1rem;
 }
@@ -107,10 +107,10 @@
   grid-row-gap: 2rem;
 }
 .galleryGrid.compact {
-  grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 11rem));
 }
 .galleryGrid.expanded {
-  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 25rem));
   /* grid-column-gap: 2rem;
   grid-row-gap: 2rem; */
 }
@@ -198,6 +198,10 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  padding-top: .5rem;;
+}
+.pillWrap .pill:first-child{
+  margin-left: 0;
 }
 .pill {
   background: var(--ui-color, #111);
@@ -235,7 +239,7 @@
 .list .gallerylistItem .galleryListItemContent {
   flex-basis: 50%;
   height: 100%;
-  padding: 0.25rem 0.25rem 0.5rem;
+  padding: 0rem 0.25rem 0.5rem 0.5rem ;
   flex-direction: column;
 }
 .expanded .gallerylistItem .fileType,
@@ -286,6 +290,13 @@ export default {
         path: `/view/${contractId}/${tokenId}`,
         // query: { id: tokenId, contract: contractId },
       })
+    },
+    handlePillClick(event, value){
+      console.log('event', event);
+      
+      event.stopPropagation()
+      this.filterGallery(value)
+      this.$store.commit('galleryStore/filterGallery', value)
     },
     getFileType(traits) {
       // console.log('traits', traits)

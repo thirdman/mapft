@@ -11,17 +11,17 @@
         >Natealex Test</nuxt-link
       >
     </div>
-    <!-- <div>
+    <div>
       <nuxt-link
-        to="/gallery/0x9bc9014fe8f22cff11157959829907605ad382ec"
+        to="/gallery/0x5056A51f6f48D9D9808300C242142acD2C855377"
         :class="
-          galleryContractId === '0x9bc9014fe8f22cff11157959829907605ad382ec'
+          galleryContractId === '0x5056A51f6f48D9D9808300C242142acD2C855377'
             ? 'active'
             : 'notActive'
         "
-        >Gareth Test</nuxt-link
+        >File type tests</nuxt-link
       >
-    </div> -->
+    </div>
     <div>
       <nuxt-link
         to="/gallery/0xfbaf740d8823af28562faaef6f6a95cd9d244110"

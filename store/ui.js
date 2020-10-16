@@ -55,7 +55,7 @@ export const state = () => ({
   searchTokenId: "",
   // VIEW DATA
   viewData: "",
-  viewData2: "",
+  viewData2: "", // to refactor out.
   viewStatus: "",
 });
 
