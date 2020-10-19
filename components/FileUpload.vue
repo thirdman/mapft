@@ -50,6 +50,7 @@ export default {
     server: { type: Object },
     // ipfsStatus: { type: String },
     // arweaveStatus: { type: String },
+    fileTypes: { type: Array, default: () => ["jpg", "png", "gif"] },
     allowMultiple: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     // files: { type: Array },

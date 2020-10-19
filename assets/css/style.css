@@ -1882,6 +1882,9 @@ ul.heroList {
   border: 2px solid var(--ui-color);
   min-height: 20rem;
 }
+.form .formContent {
+  padding: 1rem 0 2rem;
+}
 
 .form.entry input.hero {
   width: calc(100% - 1rem);
@@ -2304,6 +2307,12 @@ MODAL
 .cropContainer {
   border: 2px solid var(--ui-color, #111);
   margin-bottom: 1rem;
+}
+.cropContainer.visible {
+  display: block;
+}
+.cropContainer.notVisible {
+  display: none;
 }
 .cropImage {
   display: block;

@@ -172,16 +172,29 @@
             </p>
 
             <h5>alpha submission</h5>
-
             <div class="result previewImage shadow">
-              <client-only>
-                <ModelViewer
+                <!-- <ModelViewer
                   class="tokenImage3d preview"
                   src="https://gateway.pinata.cloud/ipfs/QmNk7UcVuLDXZ3zxs12LZmqpxn8oriQWj9QzwFTAin3nHE"
                   alt="example"
                 >
-                </ModelViewer>
+                </ModelViewer> -->
+              <client-only>
+                <RenderItem
+                :item="giantSwanData"
+                :fileType="giantSwanData.fileType"
+                :src="giantSwanData.fileIpfsUrl"
+                mode="preview"
+                :data="giantSwanData"
+              />
               </client-only>
+              <!-- <ModelViewer
+                  class="tokenImage3d preview"
+                  src="https://gateway.pinata.cloud/ipfs/QmNk7UcVuLDXZ3zxs12LZmqpxn8oriQWj9QzwFTAin3nHE"
+                  alt="example"
+                  :data="giantSwanData"
+                >
+                </ModelViewer> -->
             </div>
 
             <h5>view piece in marketplace</h5>
@@ -571,6 +584,22 @@
 <script>
 export default {
   name: 'alphaPage',
+  data(){
+    return {
+      giantSwanData: {
+        title:"Another", 
+      authorName:"Giant Swan",
+      description:"",
+      edition:1,
+      fileArweaveHash:"qj1t_-_lVlWYCBGI3KEthDHkVWdlgMa-atx3JIACNzw",
+      fileIpfsHash:"QmNk7UcVuLDXZ3zxs12LZmqpxn8oriQWj9QzwFTAin3nHE",
+      editions:1,exhibition:"",fileType:"glb", 
+      artistAddress:"", 
+      royaltyFee:10,ownerAddress:"",fileArweaveUrl:"",fileIpfsUrl:"https://gateway.pinata.cloud/ipfs/QmNk7UcVuLDXZ3zxs12LZmqpxn8oriQWj9QzwFTAin3nHE",
+      thumbnailUrl:""
+      }
+    }
+  }
 }
 </script>
 

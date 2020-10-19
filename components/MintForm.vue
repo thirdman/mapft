@@ -188,13 +188,13 @@
                   </div>
                 </div>
         -->
-    </div>
     <!-- UPLOAD STATUS -->
     <UploadStatus
       :title="uploadStatusTitle"
       :arweaveStatus="arweaveStatus"
       :ipfsStatus="ipfsStatus"
     />
+    </div>
     <!-- <div class="row uploadStatusWrap statusBox formContent shadow">
       <div id="uploadStatus">
         <div class="status-box">
@@ -243,8 +243,8 @@
       <div class="divider"></div>
       <div class="formItem optional">
         <label>Thumbnail</label>
-        <p style="font-size: 0.75rem; line-height: 1rem" class="betaElement">
-          BETA: Applies when non-image files are used. Appears on Opensea list
+        <p style="line-height: 1rem" class="betaElement help">
+          Applies when non-image files are used. Appears on Opensea list
           previews.
         </p>
         <!-- <div v-if="thumbnailIpfsHashDefault">
@@ -262,8 +262,8 @@
           :onRequestSave="onRequestSave"
           :onRequestClear="onRequestClear"
         />
-        <div>thumbnailSource: {{ thumbnailSource }}</div>
-        <label class="file">
+        
+        <!-- <label class="file">
           <input
             type="file"
             id="thumbnailFile"
@@ -273,7 +273,7 @@
           <span class="file-custom">
             <span id="thumbnailFileLabelText">Select...</span>
           </span>
-        </label>
+        </label> -->
         <div class="itemHelp">
           <div class="helpIcon"><IconHelp :strokeClass="contrastMode" /></div>
           <div class="helpContent">
@@ -289,7 +289,7 @@
         :arweaveStatus="thumbnailArweaveStatus"
         :ipfsStatus="thumbnailIpfsStatus"
       />
-      <div class="cropContainer" id="cropContainer">
+      <div class="cropContainer" id="cropContainer" style='max-width: 300px' :class="showCropper ? 'visible' : 'notVisible'">
         <vue-cropper
           ref="cropper"
           :src="thumbnailSource"
@@ -337,7 +337,9 @@
       v-if="activeContractId"
     >
       <div class="divider"></div>
-
+<div class="formItem">
+        <h6>Required Data</h6>
+      </div>
       <ValidationProvider rules="required">
         <div
           class="formItem required"
@@ -632,9 +634,6 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       </div>
     </div>
 
-    <!-- ACTIONS -->
-    <div class="divider"></div>
-
     <div class="devContent" v-if="devMode">
       <div>fileIpfsHash: {{ fileIpfsHash }}</div>
       <div>fileArweaveHash: {{ fileArweaveHash }}</div>
@@ -653,6 +652,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         <button @click="setMintStatus('completed')">completed</button>
       </div>
     </div>
+    <!-- ACTIONS -->
     <div
       class="fieldset actionContent formContent"
       id="fieldsetAction"
@@ -818,6 +818,7 @@ export default {
       uploadThumbnailStatusTitle: "mintFormStore/uploadThumbnailStatusTitle",
       thumbnailSource: "mintFormStore/thumbnailSource",
       showThumbnailField: "mintFormStore/showThumbnailField",
+      showCropper: "mintFormStore/showCropper",
     }),
 
     showEditContract() {
@@ -990,6 +991,7 @@ export default {
     setShowThumbnailField(newState) {
       console.log("setting setShowThumbnailField to", newState);
       this.$store.commit("mintFormStore/setShowThumbnailField", newState);
+      this.$store.commit("mintFormStore/setShowCropper", newState);
     },
     setFileInfo(fileName, fileType) {
       this.$store.commit("mintFormStore/setFileInfo", fileName, fileType);
@@ -1096,18 +1098,12 @@ export default {
       console.log("previewImageElement", previewImageElement);
       if (thumbnailElement && thumbnailElement.src) {
         const newImage = thumbnailElement.src;
-        console.log("newImage", newImage);
-        console.log("THIS WOULD TRIGGER THE THUMBNAIL UPLOAD");
         const mimeType = getMimeType(newImage);
-        console.log("mimetype", mimeType);
         const fileExtension = mimeType.replace("image/", "");
-        console.log("fileExtension", fileExtension);
         const fileName = `thumbnail.${fileExtension}`;
         const thumbnailAsFile = dataURLtoFile(newImage, fileName);
-        console.log("thumbnailAsFile", thumbnailAsFile);
-        // startThumbnailUploadProcess(thumbnailAsFile)
         startUploadThumbnailProcess(thumbnailAsFile, this, "thumbnail");
-
+        this.$store.commit("mintFormStore/setShowCropper", false);
         this.destroyCropper();
 
         // setClass('cropContainer', "hidden", "visible");
@@ -1118,7 +1114,8 @@ export default {
     destroyCropper() {
       const cropper = this.$refs.cropper;
       const cropImageElement = document.getElementById("cropImage");
-
+      console.log('cropperref', cropper)
+      console.log('cropImageElement', cropImageElement)
       alert("remember to destroy cropper");
       if (
         cropImageElement &&

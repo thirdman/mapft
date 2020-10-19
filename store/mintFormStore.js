@@ -51,6 +51,7 @@ export const state = () => ({
   showStatusModal: false,
   showEditContract: true,
   showThumbnailField: false,
+  showCropper: true,
   showNewMetaField: false,
   uploadStatus: null,
   uploadStatusTitle: "",
@@ -201,6 +202,9 @@ export const mutations = {
   setShowThumbnailField(state, newState) {
     console.log("setShowThumbnailField newstate", newState);
     state.showThumbnailField = newState;
+  },
+  setShowCropper(state, value) {
+    state.showCropper = value;
   },
   setShowNewMetaField(state, newState) {
     state.showNewMetaField = newState;

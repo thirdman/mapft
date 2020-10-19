@@ -51,6 +51,100 @@
     </section>
 
 
+    <!-- About Container -->
+    <section id="about" class="about markerNot borderBottom">
+      <div class="tertiary">
+        <h2>About</h2>
+        <div class="aside">
+          <p>
+            InfiNFT is a token minting platform that allows users to create NFTs
+            with fully on-chain metadata. Files are stored on Arweave and IPFS.
+          </p>
+        </div>
+      </div>
+      <div class="w3-container primary">
+        <div class style="max-width: 700px;">
+          <p>
+            InfiNFT is a token minting platform that allows users to create
+            their own NFTs with fully on-chain metadata.
+          </p>
+          <p>
+            Our focus on token integrity will ensure that your creations will be
+            around as long as the blockchain underpinning them.
+          </p>
+          <h3>NFT Freedom</h3>
+          <p>
+            We are NFT fans and want to see users pushing the boundaries of
+            what can be achieved.
+          </p>
+          <p>
+            InfiNFT gives creators a simple way to deploy your own NFT contract,
+            and then use it to mint NFT tokens as you see fit.
+          </p>
+
+          <h3>Data Redundancy</h3>
+          <p>
+            Due to size limitations with Ethereum, NFT file data is stored on
+            both the Arweave blockchain and IPFS. Both file hashes from these
+            storage platforms are written to the NFT during minting.
+          </p>
+          <p>
+            We believe this redundant storage, especially when paired with
+            on-chain metadata, provides an extremely robust token solution with
+            the goal of being everlasting.
+          </p>
+          <h3>ERC721 Compliant</h3>
+          <p>
+            Any NFT minted through our platform is fully ERC721 compliant, and
+            is tradeable via marketplaces such as OpenSea.
+          </p>
+          <h3>Costs</h3>
+          <p>
+            Costs associated with permanently storing files are factored into
+            the minting price. While these are usually minimal, this allows you
+            to be sure images and content will be around forever.
+          </p>
+          <h3>Example Data</h3>
+          <div>
+            <p>
+              This example below shows us reading core data directly from a
+              token's ID on the contract (via etherscan)
+            </p>
+            <img
+              src="~/assets/images/coreMetadata.png"
+              style="border: 2px solid #111; width: 100%; max-width: 1000px;"
+              class="w3-margin-top shadow"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="secondary">
+        <div class="aside help">
+          <h6>Why is on-chain important?</h6>
+          <p>
+            With on-chain data, you no longer have to rely on services such as
+            Google, Amazon, or other meta storage options to remain serving your
+            meta data source.
+          </p>
+          <h6>Join the converstion</h6>
+          <a
+            href="https://twitter.com/nft4ever"
+            class="iconButton"
+            target="_blank"
+          >
+            <div class="iconWrap twitter"></div>
+          </a>
+          <a
+            class="iconButton"
+            href="https://discord.gg/WPpD2X5"
+            target="_blank"
+          >
+            <div class="iconWrap discord"></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <Footer />
   </div>
 </template>

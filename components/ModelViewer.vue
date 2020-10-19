@@ -10,11 +10,12 @@
         </div>
         <div class="loadingMeta">{{ loadingMeta }}</div>
       </div>
+      
       <model-gltf
         class="modelViewer"
         v-if="
-          viewData &&
-          (viewData.fileType === 'glb' || viewData.fileType === 'gltf')
+          modelData() &&
+          (modelData().fileType === 'glb' || modelData().fileType === 'gltf')
         "
         :rotation="rotation"
         backgroundColor="#ffffff"
@@ -22,19 +23,19 @@
         :lights="allLights"
         @on-load="onLoadModel"
         @on-progress="handleProgress"
-        :src="`https://gateway.pinata.cloud/ipfs/${viewData.fileIpfsHash}`"
+        :src="`https://gateway.pinata.cloud/ipfs/${modelData().fileIpfsHash}`"
       ></model-gltf>
       <!-- @on-click="onClick" -->
       <model-obj
         class="modelViewer"
-        v-if="viewData && viewData.fileType === 'obj'"
+        v-if="modelData() && modelData().fileType === 'obj'"
         :rotation="rotation"
         :lights="allLights"
         backgroundColor="#ffffff"
         :backgroundAlpha="0"
         @on-load="onLoadModel"
         @on-progress="handleProgress"
-        :src="`https://gateway.pinata.cloud/ipfs/${viewData.fileIpfsHash}`"
+        :src="`https://gateway.pinata.cloud/ipfs/${modelData().fileIpfsHash}`"
       ></model-obj>
     </div>
   </client-only>
@@ -111,7 +112,7 @@ import { humanFileSize } from '../utils/misc'
 export default {
   components: { ModelObj, ModelGltf },
 
-  props: ['src', 'alt', 'autoPlay', 'loop', 'autoRotate'],
+  props: ['src', 'alt', 'autoPlay', 'loop', 'autoRotate', "data"],
   data() {
     return {
       isActive: false,
@@ -132,8 +133,15 @@ export default {
       rotation: 'lightStore/rotation',
       isRotating: 'lightStore/isRotating',
     }),
+    
   },
   methods: {
+    modelData(){
+      console.log("this", this.viewData)
+      console.log("this.$props.data", this.$props.data)
+      const dataToReturn = this.$props.data || this.viewData
+      return dataToReturn
+    },
     onClick(data) {
       // console.log('data', data)
       if (!data) {

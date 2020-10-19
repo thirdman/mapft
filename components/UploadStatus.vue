@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="help" v-if="!title">No file selected</div>
-    <div class="row uploadStatusWrap statusBox formContent shadow" v-if="title">
+    <div class="row uploadStatusWrap statusBox shadow" v-if="title">
       <div id="uploadStatus">
         <div class="status-box">
           <span id="file-status-box-icon"></span>
