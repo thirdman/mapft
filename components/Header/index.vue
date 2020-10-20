@@ -186,9 +186,13 @@
     <client-only>
       <account-modal />
       <div style="opacity: 0; visibility: 0; z-index: -1">
+        <!-- This is hacky and surely theres a better way. In the interests 
+        of getting smoething to the public, i'm gonna leave like this for the moment -->
         {{ shallShowStatusModal ? "yes" : "" }}
       </div>
+        <!-- {{ shallShowCropperModal ? "yes" : "" }} -->
       <status-modal />
+      <cropper-modal />
       <chain-modal />
     </client-only>
   </header>
@@ -259,6 +263,7 @@ export default {
   mounted() {
     mounted: () => {
       this.$refs.modal.show();
+      
     };
   },
   created() {
@@ -266,6 +271,8 @@ export default {
       // handle client side
       // console.log('created client')
       // console.log('this.$scopedSlots', this.$scopedSlots)
+      console.log('MOUNTED modal refs', this.$modal)
+      // this.$modal.show("cropper-modal");
     }
     if (process.server) {
       // const { req, res, beforeNuxtRender } = context
@@ -362,6 +369,7 @@ export default {
     // setTheme,
     ...mapActions({
       showStatusModal: "mintFormStore/showStatusModal",
+      showCropperModal: "mintFormStore/showCropperModal",
     }),
     clearActiveContractId(value) {
       this.$store.commit("ui/clearActiveContractId", value);
@@ -391,6 +399,9 @@ export default {
     handleChainModal() {
       this.$modal.show("chain-modal");
     },
+    handleCropperModal() {
+      this.$modal.show("cropper-modal");
+    },
     async shallShowStatusModal() {
       if (process.client) {
         const shouldShow = await this.showStatusModal();
@@ -401,6 +412,23 @@ export default {
         } else {
           this.$modal.hide("status-modal");
           this.showIt = true;
+        }
+        return null;
+      } else {
+        return null;
+      }
+    },
+    async shallShowCropperModal() {
+      if (process.client) {
+        alert('isClient')
+        // const shouldShow = await this.showCropperModal();
+        const shouldShow = true;
+        if (shouldShow) {
+          this.$modal.show("cropper-modal");
+          // this.showIt = true;
+        } else {
+          this.$modal.hide("cropper-modal");
+          // this.showIt = true;
         }
         return null;
       } else {

@@ -2307,6 +2307,8 @@ MODAL
 .cropContainer {
   border: 2px solid var(--ui-color, #111);
   margin-bottom: 1rem;
+  width: 300px;
+  height: 300px;
 }
 .cropContainer.visible {
   display: block;

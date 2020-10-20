@@ -289,7 +289,7 @@
         :arweaveStatus="thumbnailArweaveStatus"
         :ipfsStatus="thumbnailIpfsStatus"
       />
-      <div class="cropContainer" id="cropContainer" style='max-width: 300px' :class="showCropper ? 'visible' : 'notVisible'">
+      <div class="cropContainer" id="cropContainer" style='max-width: 300px' :class="showCropper ? 'visible' : 'visible'">
         <vue-cropper
           ref="cropper"
           :src="thumbnailSource"
@@ -638,6 +638,8 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       <div>fileIpfsHash: {{ fileIpfsHash }}</div>
       <div>fileArweaveHash: {{ fileArweaveHash }}</div>
       <div class="divider" />
+      <button @click="setShowThumbnailField(true)">show thumb</button>
+      <button @click="handleCropperModal(true)">show Cropper</button>
       <button @click="test">test info</button>
       <div class="row">
         <button @click="setMintStatus('confirming')">set confirming</button>
@@ -650,6 +652,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
           set error
         </button>
         <button @click="setMintStatus('completed')">completed</button>
+        
       </div>
     </div>
     <!-- ACTIONS -->
@@ -672,6 +675,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         Reset Form
       </button>
     </div>
+    
   </div>
 </template>
 
@@ -863,9 +867,13 @@ export default {
       setThumbnailUploadStatus: "mintFormStore/setThumbnailUploadStatus",
       setThumbnailSource: "mintFormStore/setThumbnailSource",
       setFileInfo: "mintFormStore/setFileInfo",
+      // setShowCropper: "mintFormStore/setShowCropper",
     }),
     handleAccountModal() {
       this.$modal.show("account-modal");
+    },
+    handleCropperModal() {
+      this.$modal.show("cropper-modal");
     },
     handleStatusModal(newState) {
       console.log("this", this);
@@ -941,6 +949,7 @@ export default {
         console.error("error: ", error);
         return;
       }
+      alert('thumbnail added');
       console.log("file", file);
       const fileName = file.filename;
       const fileType = fileName.split(".").pop().toLowerCase();

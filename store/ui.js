@@ -24,7 +24,7 @@ const themeArray = [
 export const state = () => ({
   network: "rinkeby",
   walletChain: "ethereum",
-  hasChainSelect: true,
+  hasChainSelect: false,
   hasWallet: false,
   walletAddress: null,
   walletStatus: "",

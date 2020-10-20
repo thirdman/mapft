@@ -62,14 +62,15 @@ export const state = () => ({
   fileIpfsHash: "",
   thumbnailIpfsStatus: "",
   thumbnailIpfsHash: "",
-  thumbnailIpfsHashDefault: "QmQw1qUqKnZSLUZEbtQqyWtqv7KeMzdZZ4ixJfEksdcaL9",
+  // thumbnailIpfsHashDefault: "QmQw1qUqKnZSLUZEbtQqyWtqv7KeMzdZZ4ixJfEksdcaL9",
+  thumbnailIpfsHashDefault: "QmawLNCbgvpqYvLSF9nvzbJacSuxF5taSdidfGVST8rG1F",
   arweaveStatus: "",
   fileArweaveHash: "",
   thumbnailArweaveStatus: "",
   thumbnailArweaveHash: "",
   thumbnailSource:
-    "https://gateway.pinata.cloud/ipfs/QmQw1qUqKnZSLUZEbtQqyWtqv7KeMzdZZ4ixJfEksdcaL9",
-
+    "https://gateway.pinata.cloud/ipfs/QmawLNCbgvpqYvLSF9nvzbJacSuxF5taSdidfGVST8rG1F",
+  cropOutputSource: "",
   // fileHash: '',
   fileName: "",
   fileType: "",
@@ -118,7 +119,9 @@ export const getters = {
   // uploadThumbnailStatus: (state) => state.uploadThumbnailStatus,
   uploadThumbnailStatusTitle: (state) => state.uploadThumbnailStatusTitle,
   showThumbnailField: (state) => state.showThumbnailField,
+  showCropper: (state) => state.showCropper,
   thumbnailSource: (state) => state.thumbnailSource,
+  cropOutputSource: (state) => state.cropOutputSource,
   metaFieldsObj: (state) => {
     return JSON.parse(state.metaFieldsJson);
   },
@@ -292,6 +295,9 @@ export const mutations = {
   setThumbnailSource(state, value) {
     state.thumbnailSource = value;
   },
+  setCropOutputSource(state, value) {
+    state.cropOutputSource = value;
+  },
   setThumbnailUploadStatus(state, data) {
     const { mode = "file", status, text = "" } = data;
     state.uploadThumbnailStatus = status;
@@ -438,5 +444,12 @@ export const actions = {
 
     console.log("shouldshow: ", shouldShow);
     return modalMode === "fixed" && shouldShow ? true : false;
+  },
+  showCropperModal: (context) => {
+    const state = context.rootState.mintFormStore;
+    const { showCropper, showThumbnailField } = state;
+    const shouldShow = showCropper && showThumbnailField ? true : false;
+    console.log("should show cropper? ", shouldShow);
+    return shouldShow;
   },
 };

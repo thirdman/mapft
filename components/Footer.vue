@@ -20,7 +20,7 @@
         </a>
       </div>
       <div class="column options">
-        <div class="optionsRow">
+        <div class="optionsRow" v-if="uiMode === 'full'">
           <label>UI Theme</label>
           <div class="buttonGroup themeGroup">
             <div class="swatch lemon" @click="setUiTheme('lemon')">

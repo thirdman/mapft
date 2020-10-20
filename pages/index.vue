@@ -42,7 +42,7 @@
             
           </div>
           <br />
-          <nuxt-link to="/flow" class="btn hero asButton">Flow Test »</nuxt-link>
+          <nuxt-link to="/flow" class="btn hero asButton" v-if="hasChainSelect">Flow Test »</nuxt-link>
         </div>
       </div>
       <div class="secondary">
@@ -155,6 +155,7 @@ export default {
   computed: {
     ...mapGetters({
       contrastMode: 'ui/contrastMode',
+      hasChainSelect: 'ui/hasChainSelect'
     }),
   },
 }
