@@ -1,47 +1,31 @@
 <template>
+  
   <div
-    id="mintForm"
-    class="form create column shadow"
-    :class="`${mintStatus} ${uiMode}`"
+    
+    class="column"
     style="flex-basis: 100%"
   >
-    <!-- <button class="btn" @click="handleStatusModal(true)">test status modal</button> -->
-    <!-- STATUS SECTION-->
-    <StatusInformation
-      displayMode="inline"
-      :title="mintStatus || 'Confirmation Required'"
-      :status="mintStatus"
-      :message="
-        mintStatusMessage ||
-        'Please confirm this transaction in your Web3 wallet (eg. MetaMask)'
-      "
-      :mintTransactionId="mintTransactionId"
-      v-if="
-        mintStatus === 'confirming' ||
-        mintStatus === 'working' ||
-        mintStatus === 'stillWorking' ||
-        mintStatus === 'stillWorkingMore' ||
-        mintStatus === 'checkTransaction' ||
-        mintStatus === 'error'
-      "
-    />
-    <div id="mintStatusWrap" class="mintStatusWrap">
-      {{ mintStatus }}
-      <div class>
-        <div id="mintStatus" class="statusElement">
-          {{ mintStatusMessage }}
-          <div
-            id="mintAddressLabel"
-            style="
-              font-size: 0.75rem;
-              font-weight: bold;
-              font-variation-settings: 'wght' 800;
-            "
-          ></div>
+    <div class="contractSection">
+        <!-- SECTION TO DISPLAY ACTIVE CONTRACT-->
+    <div
+      class="fieldset formContent"
+      id="fieldsetContractView"
+      v-if="!showEditContract"
+    >
+          <label>Active Contract ID</label>
+      <div class="row">
+        <div class="column col-66">
+          <div id="userContractAddress">{{ activeContractId }}</div>
         </div>
-        <!-- <span id="status-box-icon" class="status-icon status-active"></span> -->
-        <!-- <div id="mintTransactionLabel" style="font-size: 0.75rem;"></div> -->
-        <MintedInformation v-if="mintStatus === 'completed'" />
+        <div class="column col-33">
+          <button
+            class="btn iconButton"
+            id="editUserContractButton"
+            @click="handleAccountModal(true)"
+          >
+            <IconEdit strokeClass="light" />
+          </button>
+        </div>
       </div>
     </div>
 
@@ -101,39 +85,69 @@
         </p>
       </div>
     </div>
-
-    <!-- SECTION TO DISPLAY ACTIVE CONTRACT-->
+    </div>
     <div
-      class="fieldset formContent"
-      id="fieldsetContractView"
-      v-if="!showEditContract"
-    >
-      <div class="row">
-        <div class="column col-66">
-          <label>Active Contract ID</label>
-          <div id="userContractAddress">{{ activeContractId }}</div>
+    id="mintForm"
+    class="form create column shadow"
+    :class="`${mintStatus} ${uiMode}`"
+    
+  >
+    <!-- <button class="btn" @click="handleStatusModal(true)">test status modal</button> -->
+    <!-- STATUS SECTION-->
+    <StatusInformation
+      displayMode="inline"
+      :title="mintStatus || 'Confirmation Required'"
+      :status="mintStatus"
+      :message="
+        mintStatusMessage ||
+        'Please confirm this transaction in your Web3 wallet (eg. MetaMask)'
+      "
+      :mintTransactionId="mintTransactionId"
+      v-if="
+        mintStatus === 'confirming' ||
+        mintStatus === 'working' ||
+        mintStatus === 'stillWorking' ||
+        mintStatus === 'stillWorkingMore' ||
+        mintStatus === 'checkTransaction' ||
+        mintStatus === 'error'
+      "
+    />
+    <div id="mintStatusWrap" class="mintStatusWrap">
+      {{ mintStatus }}
+      <div class>
+        <div id="mintStatus" class="statusElement">
+          {{ mintStatusMessage }}
+          <div
+            id="mintAddressLabel"
+            style="
+              font-size: 0.75rem;
+              font-weight: bold;
+              font-variation-settings: 'wght' 800;
+            "
+          ></div>
         </div>
-        <div class="column col-33">
-          <button
-            class="btn iconButton"
-            id="editUserContractButton"
-            @click="handleAccountModal(true)"
-          >
-            <!-- @click="setShowEditContract(true)" -->
-            <IconSettings strokeClass="light" />
-          </button>
-        </div>
+        <!-- <span id="status-box-icon" class="status-icon status-active"></span> -->
+        <!-- <div id="mintTransactionLabel" style="font-size: 0.75rem;"></div> -->
+        <MintedInformation v-if="mintStatus === 'completed'" />
       </div>
     </div>
+
+
+  
 
     <!-- SECTION FOR IMAGE FIELDSET-->
     <div
       class="fieldset imageContent formContent"
       id="fieldsetImage"
       v-if="activeContractId"
-    >
+    > 
+      <div class="sectionNumber">1.</div>
+      <div class="formItem">
+        <h6>Token File</h6>
+      </div>
       <div class="formItem block">
-        <label>Token File</label>
+        <label>Upload</label>
+        <FormItemHelp required="true" message="This is the primary file associated with the token. Usually an image, this will be used for previews unkess a thumbnail image is set." />
         <client-only>
           <FileUpload
             mode="file"
@@ -146,18 +160,6 @@
             :onRequestSave="onRequestSave"
             :onRequestClear="onRequestClear"
           />
-          <!-- <file-pond
-            name="test"
-            ref="pond"
-            label-idle="Drop files here or click..."
-            :disabled="uploadStatus === 'uploading'"
-            :allow-multiple="false"
-            :files="uploadFiles"
-            @init="handleFilePondInit"
-            :onaddfile="handleAddFile"
-          /> -->
-          <!-- accepted-file-types="image/jpeg, image/png" -->
-          <!-- server="/api" -->
         </client-only>
       </div>
       <!-- <div class="formItem required">
@@ -195,56 +197,18 @@
       :ipfsStatus="ipfsStatus"
     />
     </div>
-    <!-- <div class="row uploadStatusWrap statusBox formContent shadow">
-      <div id="uploadStatus">
-        <div class="status-box">
-          <span id="file-status-box-icon"></span>
-          <span id="file-status-box-subtitle" class="subtitle">{{
-            uploadStatusTitle || 'No file selected'
-          }}</span>
-        </div>
-        <div
-          id="file-status-subtitle-ipfs"
-          class="subtitle statusRow"
-          :class="ipfsStatus"
-          v-if="ipfsStatus"
-        >
-          <div
-            class="status-icon"
-            :class="ipfsStatus === 'uploaded' ? 'complete' : ''"
-          ></div>
-          {{ ipfsStatus === 'uploading' ? 'Saving to IPFS...' : ipfsStatus }}
-        </div>
-        <div
-          id="file-status-subtitle-arweave"
-          class="subtitle statusRow"
-          :class="arweaveStatus"
-          v-if="arweaveStatus"
-        >
-          <div
-            class="status-icon"
-            :class="arweaveStatus === 'uploaded' ? 'complete' : ''"
-          ></div>
-          {{
-            arweaveStatus === 'uploading'
-              ? 'Saving to Arweave...'
-              : arweaveStatus
-          }}
-        </div>
-      </div>
-    </div> -->
-
+    
     <!-- THUMBNAIL SECTION -->
     <div
       id="thumbnailFormElement"
-      class="formContent"
+      class="formContent fieldset"
       v-if="showThumbnailField"
     >
-      <div class="divider"></div>
+      
       <div class="formItem optional">
         <label>Thumbnail</label>
         <p style="line-height: 1rem" class="betaElement help">
-          Applies when non-image files are used. Appears on Opensea list
+          Applies when non-image files are used. Appears on Opensea and gallery list
           previews.
         </p>
         <!-- <div v-if="thumbnailIpfsHashDefault">
@@ -336,8 +300,9 @@
       id="fieldsetMeta"
       v-if="activeContractId"
     >
-      <div class="divider"></div>
-<div class="formItem">
+      <!-- <div class="divider"></div> -->
+      <div class="sectionNumber">2.</div>
+      <div class="formItem">
         <h6>Required Data</h6>
       </div>
       <ValidationProvider rules="required">
@@ -425,11 +390,6 @@
               oldId="c"
               v-model="description"
             ></textarea>
-            <!--
-          onBlur="validateMintForm(event)"
-            onChange='updatePreview(event, "artistNote");validateMintForm(event)'
-          <span class="validity shadow hidden" id="artistNoteMessage"></span>
-            -->
           </div>
           <div>
             <span class="validationMessage">{{ errors && errors[0] }}</span>
@@ -461,15 +421,6 @@
               oldId="f"
               v-model="editions"
             />
-            <!--
-            onChange='updatePreview(event, "editionsCount");validateMintForm(event)'
-              onBlur="validateMintForm(event)"
-              
-            <span
-              class="validity shadow hidden"
-              id="editionsCountMessage"
-            ></span>
-            -->
           </div>
           <div>
             <span class="validationMessage">{{ errors && errors[0] }}</span>
@@ -481,9 +432,15 @@
           />
         </div>
       </ValidationProvider>
-
+    </div>
+    <div
+      class="fieldset metaContent formContent"
+      id="fieldsetMetaOptional"
+      v-if="activeContractId"
+    >
       <!-- OPTIONAL SECTION -->
-      <div class="divider"></div>
+      <!-- <div class="divider"></div> -->
+      <div class="sectionNumber">3.</div>
       <div class="formItem">
         <h6>Optional Data</h6>
       </div>
@@ -559,9 +516,15 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
           :value="fileType"
         />
       </div>
-
+    </div>
+    <div
+      class="fieldset customContent formContent"
+      id="fieldsetCustomFields"
+      v-if="activeContractId"
+    >
       <!-- CUSTOM FIELDS-->
-      <div class="divider"></div>
+      <!-- <div class="divider"></div> -->
+      <div class="sectionNumber">4.</div>
       <div class="formItem" v-if="devMode">
         <h6>Custom Meta Data</h6>
         <div class="help">
@@ -632,12 +595,13 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
           >
         </div>
       </div>
+      
     </div>
 
-    <div class="devContent" v-if="devMode">
+    <div class="devContent fieldset" v-if="devMode">
       <div>fileIpfsHash: {{ fileIpfsHash }}</div>
       <div>fileArweaveHash: {{ fileArweaveHash }}</div>
-      <div class="divider" />
+      <!-- <div class="divider" /> -->
       <button @click="setShowThumbnailField(true)">show thumb</button>
       <button @click="handleCropperModal(true)">show Cropper</button>
       <button @click="test">test info</button>
@@ -675,7 +639,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         Reset Form
       </button>
     </div>
-    
+    </div>
   </div>
 </template>
 

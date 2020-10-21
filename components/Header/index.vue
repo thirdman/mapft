@@ -18,7 +18,7 @@
           </button>
           <div class="toggleTooltip">Toggle menu options</div>
         </div>
-        <span class="chainname">{{ walletChain }}</span>
+        <span class="chainname" v-if="hasChainSelect">{{ walletChain }}</span>
         <span class="brandname">INFINFT</span>
         <span class="subtitle">by NFT42</span>
         <div class="wedgeWrap">

@@ -5,7 +5,7 @@
     :adaptive="true"
     :min-width="200"
     :min-height="200"
-    :scrollable="false"
+    :scrollable="true"
     :reset="true"
     width="60%"
     height="auto"

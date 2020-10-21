@@ -1503,7 +1503,7 @@ ul.heroList {
   flex-basis: 66%;
   flex-shrink: 1;
   flex-grow: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .row .previewColumn {
   flex-basis: 34%;
@@ -1827,19 +1827,18 @@ ul.heroList {
 .form {
   background: var(--fill-color, #fff);
 }
-.form .fieldset {
-  max-width: 700px;
-  padding: 0.5rem 0;
+
+/* CONTRACT SETION */
+.contractSection {
+  margin-right: 1rem;
 }
-.form .fieldset#fieldsetContractView {
-  margin: -1rem;
+.contractSection #fieldsetContractView {
   margin-bottom: 1rem;
   background: var(--ui-color);
   color: var(--background-color);
-  /* color: #fff !important; */
-  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+  padding: 0.5rem;
 }
-.form .fieldset#fieldsetContractView .col-66 {
+.contractSection #fieldsetContractView .col-66 {
   text-align: left;
   flex-grow: false;
   overflow: hidden;
@@ -1852,21 +1851,30 @@ ul.heroList {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.form .fieldset#fieldsetContractView .col-33 {
+.contractSection #fieldsetContractView .col-33 {
   text-align: right;
   padding: 2px;
 }
-.form .fieldset#fieldsetContractView .btn.light {
+.contractSection #fieldsetContractView .btn.light {
   border-radius: 0;
   color: var(--ui-color);
   font-size: 0.875rem;
   background: var(--background-color) !important;
 }
 
-.form .fieldset#fieldsetfView label,
-.form .fieldset#fieldsetContractView .row {
-  padding-left: 1rem;
+/* GENERAL FIELDSETS */
+.form .fieldset {
+  max-width: 700px;
+  position: relative;
+  padding: 1rem;
+  border-top: 1px solid var(--ui-color, #111);
 }
+.form .fieldset:first-child,
+.form .fieldset.imageContent {
+  border-top: none;
+  /* margin-top: 2.5rem; */
+}
+
 .form .fieldset.hidden {
   display: none;
 }
@@ -1875,7 +1883,6 @@ ul.heroList {
 }
 .form.entry,
 .form.create {
-  padding: 1rem;
   border: 2px solid var(--ui-color);
 }
 .form.create {
@@ -1883,12 +1890,23 @@ ul.heroList {
   min-height: 20rem;
 }
 .form .formContent {
-  padding: 1rem 0 2rem;
 }
 
 .form.entry input.hero {
   width: calc(100% - 1rem);
   text-align: center;
+}
+.sectionNumber {
+  position: absolute;
+  left: 0rem;
+  top: 0rem;
+  background: var(--ui-color, #111);
+  color: var(--background-color, #eee);
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .formItem {
@@ -2307,8 +2325,8 @@ MODAL
 .cropContainer {
   border: 2px solid var(--ui-color, #111);
   margin-bottom: 1rem;
-  width: 300px;
-  height: 300px;
+  width: 360px;
+  height: 360px;
 }
 .cropContainer.visible {
   display: block;

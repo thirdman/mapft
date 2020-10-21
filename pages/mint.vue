@@ -49,11 +49,13 @@
         <div class="aside help">
           <h6>Minting NFT Tokens</h6>
           <p>
-            Non image-based tokens (eg. audio) will use the thumbnal field for
-            iamge previews.
+            Use the contract id generated in the deploy form to create your own tokens.
           </p>
           <p>
-            Batch minting occurs automatically up to the Total Editions entered.
+            File sizes are limited to 50Mb.
+          </p>
+          <p>
+            Batch minting (editions) occurs automatically up to the Total Editions entered.
             A maximum of 10 tokens can be batch minted at one time.
           </p>
         </div>

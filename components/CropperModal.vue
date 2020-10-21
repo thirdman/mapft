@@ -16,7 +16,7 @@
       <div class="modalSection">
       <label>Crop Thumbnail</label>
       
-      <div class="cropContainer" id="cropContainer" style='max-width: 300px'>
+      <div class="cropContainer" id="cropContainer" :class="cropStatus">
         <vue-cropper
           ref="cropper"
           :src="thumbnailSource"
@@ -24,11 +24,15 @@
           :aspectRatio="1 / 1"
           :viewMode="2"
           v-if="thumbnailSource"
+          autoCropArea="0.95"
           @crop="crop"
           @ready="cropReady"
           @cropend="cropEnd"
         >
         </vue-cropper>
+        <div class="cropLoadingWrap" v-if="cropStatus === 'loading'">
+          <Loading size="large" />
+        </div>
       </div>
       <Button
         class="dark"
@@ -53,6 +57,11 @@ export default {
   components: {
     VueCropper,
    
+  },
+  data() {
+    return {
+      cropStatus: "loading",
+    }
   },
   computed: {
     // devMode() {
@@ -105,6 +114,7 @@ export default {
         height: 500,
       });
       const image = cropResult.toDataURL("image/png");
+      this.cropStatus = "ready"
       this.handleCropResult(image);
     },
     handleApplyCrop(event) {
@@ -143,31 +153,29 @@ export default {
 }
 </script>
 
-<style>
-.row.between {
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
+<style lang="scss">
 
-.vm--overlay {
-  background: var(--ui-color, #111);
-  opacity: 0.6;
-}
-.vm--modal {
-  box-shadow: 4px 4px 0px -2px var(--ui-color),
-    0 20px 60px -2px rgba(27, 33, 58, 0.4);
-}
-.top-right {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  z-index: 20;
-}
-
-.modal-content {
-  background: var(--background-color, #eee);
-  color: var(--ui-color, #111);
-  border: 2px solid var(--ui-color, #111);
+.cropContainer{
+  position: relative;
+  &.loading{
+    .cropLoadingWrap{
+      opacity: .7;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--fill-color, #111);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+    }
+  }
+  &.ready{
+    .cropLoadingWrap{
+      display: none;
+    }
+  }
 }
 </style>
