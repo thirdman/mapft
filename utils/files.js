@@ -251,22 +251,19 @@ const startUploadThumbnailProcess = async (thumbnailFile, context, mode) => {
   console.log("startUploadThumbnailProcess context: ", context);
   let fileArweaveHash;
   const theFile = thumbnailFile;
-  const input = document.getElementById("thumbnailFile");
-  const doIt = false;
+  // const input = document.getElementById("thumbnailFile");
+  // const doIt = false;
   let hash = undefined;
   const {
-    setUploadStatus,
     setThumbnailUploadStatus,
     personalSignFiles,
-    // pinFiletoIPFS,
-    // pinThumbnailFileToIPFS,
-    removePinFromIPFS,
-    fileIpfsHash,
-    thumbnailIpfsStatus,
-    thumbnailIpfsHash,
-    setArweaveHash,
+    // showCropper
+    // fileIpfsHash,
+    // thumbnailIpfsStatus,
+    // thumbnailIpfsHash,
+    // setArweaveHash,
     setArweaveStatus,
-    thumbnailArweaveStatus,
+    // thumbnailArweaveStatus,
   } = context;
   let thumbnailArweaveHash;
   console.log("THUMBNAIL UPLOAD context", context);
@@ -278,7 +275,7 @@ const startUploadThumbnailProcess = async (thumbnailFile, context, mode) => {
     );
     console.log(`Got ${mode} Signature: ${signature}`);
     // disable people from selecting another file.
-    input.disabled = true;
+    // input.disabled = true;
     console.log(`Starting thumbnail upload process`);
     setThumbnailUploadStatus({ mode: mode, status: "uploading", text: "" });
 
@@ -319,14 +316,12 @@ const startUploadThumbnailProcess = async (thumbnailFile, context, mode) => {
       status: "error",
       text: `Error: ${e.message}`,
     });
-    input.disabled = false;
+
     return;
   }
-  console.log("fileIpfsHash", fileIpfsHash);
 
   console.log("done here");
   setThumbnailUploadStatus({ mode: mode, status: "ready" });
-  input.disabled = false;
 };
 
 const personalSignFiles = async (message) => {

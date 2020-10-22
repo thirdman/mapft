@@ -253,7 +253,7 @@
         :arweaveStatus="thumbnailArweaveStatus"
         :ipfsStatus="thumbnailIpfsStatus"
       />
-      <div class="cropContainer" id="cropContainer" style='max-width: 300px' :class="showCropper ? 'visible' : 'visible'">
+      <!-- <div class="cropContainer" id="cropContainer" style='max-width: 300px' :class="showCropper ? 'visible' : 'visible'">
         <vue-cropper
           ref="cropper"
           :src="thumbnailSource"
@@ -266,9 +266,7 @@
           @cropend="cropEnd"
         >
         </vue-cropper>
-        <!-- <img id="cropImage" class="cropImage" alt :src="thumbnailSource" /> -->
       </div>
-
       <Button
         class="dark"
         size="large"
@@ -276,23 +274,8 @@
         :disabled="false"
         @click="handleApplyCrop"
         >Apply</Button
-      >
-      <!-- <div class="row thumbnailStatusWrap statusBox formContent shadow">
-        <div id="thumbnailStatus">
-          <div class="status-box">
-            <span id="thumbnail-status-box-icon"></span>
-            <span id="thumbnail-status-box-subtitle" class="subtitle">{{
-              uploadThumbnailStatusTitle
-            }}</span>
-          </div>
-          <div id="thumbnail-status-subtitle-ipfs" class="subtitle">
-            {{ thumbnailIpfsStatus }}Saving to IPFS...
-          </div>
-          <div id="thumbnail-status-subtitle-arweave" class="subtitle">
-            {{ thumbnailArweaveStatus }}Saving to Arweave...
-          </div>
-        </div>
-      </div> -->
+      > -->
+      
     </div>
     <!-- TOKEN META FIELDSET -->
     <div
@@ -707,8 +690,8 @@ import { ValidationProvider, extend } from "vee-validate";
 import vueFilePond from "vue-filepond";
 
 import { required, min, max, email } from "vee-validate/dist/rules";
-import VueCropper from "vue-cropperjs";
-import "cropperjs/dist/cropper.css";
+// import VueCropper from "vue-cropperjs";
+// import "cropperjs/dist/cropper.css";
 import "filepond/dist/filepond.min.css";
 // import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 // const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
@@ -732,7 +715,7 @@ extend("required", {
 export default {
   components: {
     ValidationProvider,
-    VueCropper,
+    // VueCropper,
     // FilePond,
   },
   head() {
@@ -892,7 +875,7 @@ export default {
         );
         this.setFileInfo({ fileName, fileType });
         this.toggleThumbnail(fileType);
-        console.log("would trigger upload process", this.triggerUploadProcess);
+        
         processUpload({
           mode: "file",
           context: this,
@@ -908,12 +891,21 @@ export default {
       }
     },
     handleAddThumbnail: function (error, file) {
+      const oldWay = false
       if (error) {
         this.setUploadStatus({ mode: "thumbnail", status: "noFile" });
         console.error("error: ", error);
         return;
       }
-      alert('thumbnail added');
+      if(file){
+        console.log('file', file)
+        const urlElement = window.URL.createObjectURL(file.file);
+        this.setThumbnailSource(urlElement);
+        this.$store.commit("mintFormStore/setShowCropper", true);
+        this.$modal.show("cropper-modal");
+        
+      }
+      if(oldWay){
       console.log("file", file);
       const fileName = file.filename;
       const fileType = fileName.split(".").pop().toLowerCase();
@@ -933,6 +925,7 @@ export default {
       }).catch((error) => {
         alert(error);
       });
+      }
     },
 
     setActiveContractId(value) {
@@ -964,7 +957,7 @@ export default {
     setShowThumbnailField(newState) {
       console.log("setting setShowThumbnailField to", newState);
       this.$store.commit("mintFormStore/setShowThumbnailField", newState);
-      this.$store.commit("mintFormStore/setShowCropper", newState);
+      
     },
     setFileInfo(fileName, fileType) {
       this.$store.commit("mintFormStore/setFileInfo", fileName, fileType);
@@ -1139,7 +1132,6 @@ export default {
     },
 
     toggleThumbnail(fileType) {
-      console.log("deciding to toggle thumbnail fileType: ", fileType);
       const setShowThumbnailField = this.setShowThumbnailField;
       const isImage = imageTypes.includes(fileType);
       setShowThumbnailField(!isImage);

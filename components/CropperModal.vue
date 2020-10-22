@@ -24,7 +24,7 @@
           :aspectRatio="1 / 1"
           :viewMode="2"
           v-if="thumbnailSource"
-          autoCropArea="0.95"
+          :autoCropArea="0.95"
           @crop="crop"
           @ready="cropReady"
           @cropend="cropEnd"
@@ -51,6 +51,19 @@
 import { mapMutations, mapGetters, mapActions } from 'vuex'
 import VueCropper from "vue-cropperjs";
 import "cropperjs/dist/cropper.css";
+import {
+  openFile,
+  openThumbnail,
+  processUpload,
+  startUploadProcess,
+  startUploadThumbnailProcess,
+  personalSignFiles,
+  pinFiletoIPFS,
+  pinThumbnailFileToIPFS,
+  removePinFromIPFS,
+  getMimeType,
+  dataURLtoFile,
+} from "../utils/files.js";
 
 export default {
   name: 'CropperModal',
@@ -72,17 +85,26 @@ export default {
       showCropper: 'mintFormStore/showCropper',
       thumbnailSource: "mintFormStore/thumbnailSource",
       cropOutputSource: "mintFormStore/cropOutputSource",
+      
     }),
   },
   methods: {
-    // ...mapMutations({
-    //   // setCropperModalMode: 'ui/setCropperModalMode',
-    // }),
+    personalSignFiles,
+    pinThumbnailFileToIPFS,
+    removePinFromIPFS,
+    ...mapMutations({
+      setThumbnailUploadStatus: "mintFormStore/setThumbnailUploadStatus",
+      setArweaveStatus: "mintFormStore/setArweaveStatus",
+      setArweaveHash: "mintFormStore/setArweaveHash",
+      setIpfsStatus: "mintFormStore/setIpfsStatus",
+      setIpfsHash: "mintFormStore/setIpfsHash",
+    }),
     ...mapActions({
       showCropperModal: 'mintFormStore/showCropperModal',
     }),
-    handleCropperModal(newState) {
-        this.$store.commit('mintFormStore/setShowCropper', newState)
+    handleModal(newState) {
+      console.log('this.$modal', this.$modal)
+      this.$modal.hide("cropper-modal");
     },
     crop(event) {
       console.log(event.detail.x);
@@ -119,23 +141,30 @@ export default {
     },
     handleApplyCrop(event) {
       console.log("apply crop", event);
-
+      
+      const tempContext = {
+        setThumbnailUploadStatus: this.setThumbnailUploadStatus,
+        personalSignFiles: this.personalSignFiles,
+        setArweaveStatus: this.setArweaveStatus,
+        setArweaveHash: this.setArweaveHash,
+        setIpfsStatus: this.setIpfsStatus,
+        setIpfsHash: this.setIpfsHash,
+        showCropper: this.showCropper
+      }
+      
       const thumbnailElement = document.getElementById("outputThumbnailImage");
       const outputElement = document.getElementById("output");
       const previewImageElement = document.getElementById("output").firstChild;
-      console.log("outputElement", outputElement);
-      console.log("previewImageElement", previewImageElement);
       if (thumbnailElement && thumbnailElement.src) {
         const newImage = thumbnailElement.src;
         const mimeType = getMimeType(newImage);
         const fileExtension = mimeType.replace("image/", "");
         const fileName = `thumbnail.${fileExtension}`;
         const thumbnailAsFile = dataURLtoFile(newImage, fileName);
-        startUploadThumbnailProcess(thumbnailAsFile, this, "thumbnail");
         this.$store.commit("mintFormStore/setShowCropper", false);
-        this.destroyCropper();
-
-        // setClass('cropContainer', "hidden", "visible");
+        this.$modal.hide('cropper-modal')
+        startUploadThumbnailProcess(thumbnailAsFile, tempContext, "thumbnail");
+      
       } else {
         console.error("no crop image");
       }
