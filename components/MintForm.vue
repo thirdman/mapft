@@ -221,6 +221,7 @@
           mode="thumbnail"
           :arweaveStatus="thumbnailArweaveStatus"
           :ipfsStatus="thumbnailIpfsStatus"
+          :labelIdle="thumbnailUploadLabel"
           :allowMultiple="false"
           :handleAddFile="handleAddThumbnail"
           :onRequestSave="onRequestSave"
@@ -737,6 +738,7 @@ export default {
       errors: [],
       classes: [],
       uploadFiles: [],
+      thumbnailUploadLabel: `Drag & Drop your file or <span class="filepond--label-action"> Browse </span>`
     };
   },
   computed: {

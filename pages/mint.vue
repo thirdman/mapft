@@ -118,6 +118,16 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { connectWallet, handleAccountLink } from "../utils/wallet";
 export default {
   name: "MintPage",
+   head: {
+    title: 'InfiNFT: Mint Tokens',
+    meta: [
+      {
+        hid: 'description',
+        name: 'description',
+        content: 'Mint your own custom NFT tokens'
+      }
+    ],
+   },
   computed: {
     ...mapGetters({
       hasWallet: "ui/hasWallet",

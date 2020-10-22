@@ -9,6 +9,7 @@
         :disabled="disabled"
         :allow-multiple="allowMultiple"
         :files="files"
+        :labelIdle="labelIdle"
         @init="handleFilePondInit"
         :onaddfile="handleAddFile"
         :onupdatefiles="handleUpdateFiles"
@@ -47,6 +48,7 @@ const imageTypes = ["jpg", "png", "gif"];
 export default {
   props: {
     mode: { type: String, default: "file" },
+    labelIdle: {type: String, default: "Drag & Drop your file or <span class='filepond--label-action'> Browse </span>"},
     server: { type: Object },
     // ipfsStatus: { type: String },
     // arweaveStatus: { type: String },
