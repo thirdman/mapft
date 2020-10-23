@@ -129,6 +129,17 @@ a.asButton {
   color: var(--danger-color, red);
 }
 
+p.xsmall {
+  font-size: 0.675rem;
+  margin: 0;
+}
+.clamp {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 10rem;
+}
+
 /*THEME*/
 
 #body.greyscale {
@@ -1996,6 +2007,7 @@ ul.heroList {
 }
 .formItem .itemHelp .helpContent p {
   line-height: 1.4;
+  margin-bottom: 0;
 }
 .formItem .helpIcon:hover ~ .helpContent {
   display: block;
@@ -2316,6 +2328,8 @@ MODAL
 
 .dataSection .formItem {
   padding-left: 2rem;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .metaList {
 }

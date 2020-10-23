@@ -91,11 +91,11 @@
         <div slot="content">
           <div class="formItem">
             <label>File IPFS Hash</label>
-            <div>{{fileIpfsHash}}</div>
+            <p class="xsmall clamp" >{{fileIpfsHash}}</p>
           </div>
           <div class="formItem">
             <label>File Arweave Hash</label>
-            <div >{{fileArweaveHash}}</div>
+            <p class="xsmall clamp" >{{fileArweaveHash}}</p>
           </div>
         </div>
       </ToggleSection>
@@ -104,11 +104,11 @@
         <div slot="content">
           <div class="formItem">
             <label>Thumbnail IPFS hash</label>
-            <div>{{thumbnailIpfsHash}}</div>
+            <p class="xsmall clamp" >{{thumbnailIpfsHash}}</p>
           </div>
           <div class="formItem">
             <label>Thumbnail Arweave Hash</label>
-            <div >{{thumbnailArweaveHash}}</div>
+            <p class="xsmall clamp" >{{thumbnailArweaveHash}}</p>
           </div>
         </div>
       </ToggleSection>
