@@ -224,6 +224,7 @@ export const mutations = {
   },
   setArweaveStatus(state, data) {
     const { mode = "file", status } = data;
+    console.log("setArweaveStatus mode: ", mode);
     if (mode === "thumbnail") {
       state.thumbnailArweaveStatus = status;
     } else {

@@ -840,7 +840,8 @@ export default {
     },
 
     onRequestSave: function (props) {
-      console.log("request save called");
+      alert("request save called");
+
       const { id, name, folder, file, target, mode } = props;
       console.log("onRequestSave was called", id, name, folder, file, target);
       if (!file) {
@@ -900,33 +901,31 @@ export default {
         return;
       }
       if(file){
-        console.log('file', file)
         const urlElement = window.URL.createObjectURL(file.file);
         this.setThumbnailSource(urlElement);
         this.$store.commit("mintFormStore/setShowCropper", true);
         this.$modal.show("cropper-modal");
-        
       }
       if(oldWay){
-      console.log("file", file);
-      const fileName = file.filename;
-      const fileType = fileName.split(".").pop().toLowerCase();
-      const fileExtension = file.fileExtension;
+        console.log("file", file);
+        const fileName = file.filename;
+        const fileType = fileName.split(".").pop().toLowerCase();
+        const fileExtension = file.fileExtension;
 
-      const cropImageElement = document.getElementById("cropImage");
-      console.log("cropImageElement", cropImageElement);
-      const urlElement = window.URL.createObjectURL(file.file);
-      console.log("thumbnail urlElement", urlElement);
-      this.setThumbnailSource(urlElement);
+        const cropImageElement = document.getElementById("cropImage");
+        console.log("cropImageElement", cropImageElement);
+        const urlElement = window.URL.createObjectURL(file.file);
+        console.log("thumbnail urlElement", urlElement);
+        this.setThumbnailSource(urlElement);
 
-      processUpload({
-        mode: "thumbnail",
-        context: this,
-        file: file.file,
-        inputElement: file,
-      }).catch((error) => {
-        alert(error);
-      });
+        processUpload({
+          mode: "thumbnail",
+          context: this,
+          file: file.file,
+          inputElement: file,
+        }).catch((error) => {
+          alert(error);
+        });
       }
     },
 

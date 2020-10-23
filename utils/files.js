@@ -3,7 +3,7 @@ const axios = require("axios").default;
 
 /**
  * OPEN FILE
- * starts the file uplaad process for the MAIN file
+ * starts the file upload process for the MAIN file
  */
 const openFile = async (file, context) => {
   const {
@@ -247,21 +247,24 @@ const startUploadProcess = async (inputElement, context) => {
  * THUMBANIL FILE UPLOAD PROCESS
  * THis is the thumbnail file
  */
-const startUploadThumbnailProcess = async (thumbnailFile, context, mode) => {
+const startUploadThumbnailProcess = async (
+  thumbnailFile,
+  context,
+  mode = "thumbnail"
+) => {
   console.log("startUploadThumbnailProcess context: ", context);
   let fileArweaveHash;
   const theFile = thumbnailFile;
-  // const input = document.getElementById("thumbnailFile");
-  // const doIt = false;
   let hash = undefined;
   const {
     setThumbnailUploadStatus,
     personalSignFiles,
+    setIpfsStatus,
     // showCropper
     // fileIpfsHash,
     // thumbnailIpfsStatus,
     // thumbnailIpfsHash,
-    // setArweaveHash,
+    setArweaveHash,
     setArweaveStatus,
     // thumbnailArweaveStatus,
   } = context;
@@ -273,10 +276,8 @@ const startUploadThumbnailProcess = async (thumbnailFile, context, mode) => {
     signature = await personalSignFiles(
       await ArUploadThumbnail_getSigningData(theFile)
     );
-    console.log(`Got ${mode} Signature: ${signature}`);
-    // disable people from selecting another file.
-    // input.disabled = true;
-    console.log(`Starting thumbnail upload process`);
+    console.log(`Got *${mode}* Signature: ${signature}`);
+
     setThumbnailUploadStatus({ mode: mode, status: "uploading", text: "" });
 
     const ipfsPromise = pinThumbnailFileToIPFS(theFile, context).catch((e) => {
@@ -298,9 +299,11 @@ const startUploadThumbnailProcess = async (thumbnailFile, context, mode) => {
     setArweaveStatus({ mode: mode, status: "uploading" });
     const arweavePromise = ArUpload_thumbnailUpload(theFile, signature).then(
       (x) => {
+        console.log("x", x);
         thumbnailArweaveHash = x.ArweaveTx;
-        // return arweaveThumbnailStatusCheckLoop(fileArweaveHash)
-        return fileArweaveHash;
+        setArweaveStatus({ mode: mode, status: "uploaded" });
+        setArweaveHash({ mode: mode, hash: thumbnailArweaveHash });
+        return thumbnailArweaveHash;
       }
     );
 
@@ -406,7 +409,7 @@ const pinThumbnailFileToIPFS = async (sourceFile, context) => {
     .then(function (response) {
       console.log("IPFS: done: ", response);
       setIpfsStatus({ mode: mode, status: "uploaded" });
-      console.log(response.data.IpfsHash);
+      console.log("IPFS hash: ", response.data.IpfsHash);
       setIpfsHash({ mode: "thumbnail", hash: response.data.IpfsHash });
       return response.data.IpfsHash;
     })

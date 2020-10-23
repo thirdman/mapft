@@ -1509,12 +1509,13 @@ ul.heroList {
   flex-basis: 34%;
   flex-shrink: 1;
   flex-grow: 0;
-  min-height: 20rem;
-  border: 2px solid var(--ui-color);
-
-  padding: 0.5rem;
   position: sticky;
   top: calc(80px - 2px);
+}
+.row .previewColumn .previewWrap {
+  min-height: 20rem;
+  border: 2px solid var(--ui-color);
+  padding: 0.5rem;
   padding-bottom: 2rem;
   margin-left: -2px;
   border-left: 2px solid var(--ui-color, #111);
@@ -1522,7 +1523,7 @@ ul.heroList {
   color: var(--ui-color, #111);
   margin-top: -1rem;
 }
-.row .previewColumn:before {
+.row .previewColumn .previewWrap:before {
   position: absolute;
   left: -2px;
   top: -1.25rem;
@@ -2326,7 +2327,8 @@ MODAL
   border: 2px solid var(--ui-color, #111);
   margin-bottom: 1rem;
   width: 360px;
-  height: 360px;
+  /* height: 360px; */
+  height: auto;
 }
 .cropContainer.visible {
   display: block;
@@ -2605,7 +2607,7 @@ CUSTOM FILE inputINPUTS
   position: relative;
   display: inline-block;
   cursor: pointer;
-  height: 5rem;
+  height: 3rem;
   width: 100%;
   opacity: 1;
   z-index: 0;
