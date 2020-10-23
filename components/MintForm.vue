@@ -112,7 +112,7 @@
         mintStatus === 'error'
       "
     />
-    <div id="mintStatusWrap" class="mintStatusWrap">
+    <!-- <div id="mintStatusWrap" class="mintStatusWrap">
       {{ mintStatus }}
       <div class>
         <div id="mintStatus" class="statusElement">
@@ -126,11 +126,10 @@
             "
           ></div>
         </div>
-        <!-- <span id="status-box-icon" class="status-icon status-active"></span> -->
-        <!-- <div id="mintTransactionLabel" style="font-size: 0.75rem;"></div> -->
+        
         <MintedInformation v-if="mintStatus === 'completed'" />
       </div>
-    </div>
+    </div> -->
 
 
   
@@ -139,7 +138,7 @@
     <div
       class="fieldset imageContent formContent"
       id="fieldsetImage"
-      v-if="activeContractId"
+      v-if="activeContractId && !shouldHideForm()"
     > 
       <div class="sectionNumber">1.</div>
       <div class="formItem">
@@ -202,7 +201,7 @@
     <div
       id="thumbnailFormElement"
       class="formContent fieldset"
-      v-if="showThumbnailField"
+      v-if="showThumbnailField &&  !shouldHideForm()"
     >
       
       <div class="formItem optional">
@@ -282,7 +281,7 @@
     <div
       class="fieldset metaContent formContent"
       id="fieldsetMeta"
-      v-if="activeContractId"
+      v-if="activeContractId && !shouldHideForm()"
     >
       <!-- <div class="divider"></div> -->
       <div class="sectionNumber">2.</div>
@@ -420,7 +419,7 @@
     <div
       class="fieldset metaContent formContent"
       id="fieldsetMetaOptional"
-      v-if="activeContractId"
+      v-if="activeContractId  && !shouldHideForm()"
     >
       <!-- OPTIONAL SECTION -->
       <!-- <div class="divider"></div> -->
@@ -504,7 +503,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
     <div
       class="fieldset customContent formContent"
       id="fieldsetCustomFields"
-      v-if="activeContractId"
+      v-if="activeContractId  && !shouldHideForm()"
     >
       <!-- CUSTOM FIELDS-->
       <!-- <div class="divider"></div> -->
@@ -818,6 +817,19 @@ export default {
       setFileInfo: "mintFormStore/setFileInfo",
       // setShowCropper: "mintFormStore/setShowCropper",
     }),
+    shouldHideForm() {
+      const activeArray = [
+        'confirming',
+        'working',
+        'stillWorking',
+        'stillWorkingMore',
+        'checkTransaction',
+        'completed',
+      ];
+      const currentStatus = this.mintStatus
+      const isWorking = activeArray.includes(currentStatus)
+      return isWorking
+    },
     handleAccountModal() {
       this.$modal.show("account-modal");
     },

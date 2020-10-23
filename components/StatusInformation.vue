@@ -18,7 +18,7 @@
       </button>
     </div>
 
-    <h3>{{ title || mintStatusTitle }}</h3>
+    <h3>{{ mintStatusTitle || title}}</h3>
     <div class="statusRow">
       <div class="statusIcon iconPostion">
         <Loading
@@ -39,6 +39,9 @@
         />
       </div>
       <p class="statusMessage">{{ mintStatusMessage }}</p>
+      <div class="loadingPuppy shadow" v-if="showPuppy()">
+        <img src="~/assets/images/puppy.gif" alt="excited puppy"/> 
+        </div>
     </div>
     <span id="status-box-icon" class="status-icon status-active"></span>
 
@@ -114,6 +117,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+.statusRow .loadingPuppy{
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border: 2px solid #111;
+  border-radius: 80px;
+  overflow: hidden;
+  margin-left: 1rem;
+}
+.statusRow .loadingPuppy img{
+  object-fit: cover;
+  object-position: center center;
+  width: 100%;
+  height: 100%;
+
 }
 .transactionInfo {
   border-top: 1px solid var(--line-color, #ccc);
@@ -140,6 +160,7 @@ export default {
       mintStatusMessage: 'mintFormStore/mintStatusMessage',
       statusModalMode: 'ui/statusModalMode',
     }),
+   
     etherscanLink() {
       console.log('walletNetwork', this.walletNetwork)
       console.log('mintTransactionId', this.mintTransactionId)
@@ -162,6 +183,19 @@ export default {
     ...mapActions({
       showStatusModal: 'mintFormStore/showStatusModal',
     }),
+     showPuppy() {
+      const puppyArray = [
+        'waiting',
+        'working',
+        'stillWorking',
+        'stillWorkingMore'
+      ];
+      const currentStatus = this.mintStatus
+      console.log('currentStatus: ', this.mintStatus)
+      const isWorking = puppyArray.includes(currentStatus)
+      console.log('isWorking: ', isWorking)
+        return isWorking
+    },
     handleStatusModal(newState) {
       if (newState) {
         // this.$store.commit('mintFormStore/setShowStatusModal', newState)

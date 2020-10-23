@@ -242,8 +242,8 @@ export const mutations = {
     }
   },
   setArweaveHash(state, data) {
-    console.log("setArweaveHash", data);
     const { mode = "file", hash } = data;
+    console.log("setArweaveHash", data);
     if (mode === "thumbnail") {
       state.thumbnailArweaveHash = hash;
     } else {
