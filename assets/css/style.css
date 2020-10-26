@@ -63,8 +63,10 @@
   --teal-mode: dark;
 
   --charcoal-color: hsl(330, 7%, 20%);
-  --charcoal-dark-color: hsl(330, 35%, 7%);
-  --charcoal-light-color: hsl(330, 10%, 8%);
+  --charcoal-dark-color: hsl(330, 25%, 7%);
+  /* --charcoal-light-color: hsl(330, 10%, 8%); */
+  --charcoal-light-color: hsl(330, 2%, 50%);
+
   --charcoal-fill-color: #484848;
   --charcoal-ui-color: hsl(330, 4%, 7%);
   --charcoal-text-color: #c0c0c0;
@@ -1914,11 +1916,13 @@ ul.heroList {
   top: 0rem;
   background: var(--ui-color, #111);
   color: var(--background-color, #eee);
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.75rem;
+  font-variation-settings: "wght" 700;
 }
 
 .formItem {

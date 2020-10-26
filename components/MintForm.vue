@@ -12,7 +12,7 @@
       id="fieldsetContractView"
       v-if="!showEditContract"
     >
-          <label>Active Contract ID</label>
+      <label>Active Contract ID</label>
       <div class="row">
         <div class="column col-66">
           <div id="userContractAddress">{{ activeContractId }}</div>

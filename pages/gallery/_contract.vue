@@ -3,13 +3,7 @@
     <Header />
     <section id="gallery" class>
       <div class="tertiary">
-        <label>Gallery Contract</label>
-        <div
-          class="help"
-          style="width: 10rem; overflow: hidden; text-overflow: ellipsis;"
-        >
-          <span>{{ galleryContractId }}</span>
-        </div>
+        
         <div>
           <label>Featured Galleries</label>
           <GalleriesMenu :galleryContractId="galleryContractId" />
@@ -39,6 +33,13 @@
       </div>
 
       <div class="secondary">
+        <label>Gallery Contract</label>
+        <div
+          class="help"
+          style="width: 10rem; overflow: hidden; text-overflow: ellipsis;"
+        >
+          <span>{{ galleryContractId }}</span>
+        </div>
         <label>Display</label>
         <div class="buttonGroup uiMode" :class="contrastMode">
           <button

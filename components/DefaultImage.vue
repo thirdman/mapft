@@ -1,11 +1,17 @@
 <template>
   <div class="defaultImage" :class="contentType(fileType)">
-    <!-- <img :src="item.fileIpfsUrl" /> -->
-    <span>{{ contentType(fileType) }}</span>
+    <span v-if="contentType(fileType) !== 'image'">{{ contentType(fileType) }}</span>
+     <img
+          class="defaultImageImg"
+          style="width: auto; height: 4rem;"
+          src="~/assets/images/defaultImageTransparent.png"
+          alt="logo"
+          v-if="contentType(fileType) === 'image'"
+        />
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .defaultImage {
   width: 6rem;
   height: 4rem;
@@ -13,6 +19,15 @@
   align-items: center;
   justify-content: center;
   background: var(--fill-color, rgba(255, 255, 255, 0.1));
+  &.image{
+    width: 100%;
+    height: 100%;
+  }
+}
+.defaultImage .defaultImageImg{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .defaultImage span {
   font-size: 0.75rem;

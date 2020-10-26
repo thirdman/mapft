@@ -276,7 +276,7 @@ export default {
     }
     if (process.server) {
       // const { req, res, beforeNuxtRender } = context
-      console.log("created server");
+      // console.log("created server");
       // console.log('this.$scopedSlots', this.$scopedSlots)
     }
   },
@@ -300,19 +300,13 @@ export default {
       ensName: "ui/ensName",
     }),
     isSearchRoute() {
-      console.log("route: ", this.$route);
       const routeArray = ["view-contract-id", "ViewPage", "gallery", "view"];
       const isSearchRoute = routeArray.includes(this.$route.name);
-      console.log("isSearchRoute", isSearchRoute);
       return isSearchRoute ? true : false;
     },
     headerContrastMode() {
-      console.group("headercontrastmode");
       const isLightUi = this.contrastMode === "light";
-      console.log("uiMode", this.uiMode);
-      console.log("isLightUi", isLightUi);
-      console.log("this.contrastMode", this.contrastMode);
-
+      
       // header items should be light if
       // - (has light ui background) AND ui is FULL
       // - has dark ui and ui is NOT full
@@ -321,8 +315,6 @@ export default {
       // const headerContrastMode = this.contrastMode === 'dark' ? 'dark': 'light';
       const headerContrastMode =
         this.uiMode === "full" ? "dark" : this.contrastMode;
-      console.log("headerContrastMode", headerContrastMode);
-      console.groupEnd();
       return headerContrastMode;
     },
     logoContrastMode() {

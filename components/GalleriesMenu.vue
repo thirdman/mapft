@@ -62,17 +62,28 @@
 <style>
 .galleriesMenu {
   margin-bottom: 1rem;
+  border: 1px solid var(--line-color, #eee);
 }
-
+.galleriesMenu a{
+  display: block;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-color, #eee);
+  padding: .25rem .5rem .25rem .25rem;
+}
 .galleriesMenu .nuxt-link-active {
   width: 100%;
   display: block;
-  padding: 2px;
+  /* padding: 2px; */
   background: var(--ui-color, #eee);
   color: var(--background-color, #eee);
-  border-radius: 3px;
+  border-bottom: 1px solid var(--ui-color, #111);
+  /* border-radius: 3px; */
   text-decoration: none;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
 }
 .galleriesMenu .nuxt-link-active:after {
   content: ">";

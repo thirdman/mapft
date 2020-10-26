@@ -92,10 +92,12 @@
           <div class="formItem">
             <label>File IPFS Hash</label>
             <p class="xsmall clamp" >{{fileIpfsHash}}</p>
+            <a :href="`https://ipfs.io/ipfs/${fileIpfsHash}`" target="_blank" v-if="fileIpfsHash"><IconExternalLink size="small" /></a>
           </div>
           <div class="formItem">
             <label>File Arweave Hash</label>
             <p class="xsmall clamp" >{{fileArweaveHash}}</p>
+            <a :href="`https://ipfs.io/ipfs/${fileArweaveHash}`" target="_blank" v-if="fileArweaveHash"><IconExternalLink size="small" /></a>
           </div>
         </div>
       </ToggleSection>
@@ -103,12 +105,14 @@
         <span slot="header">Thumbnail Meta</span>
         <div slot="content">
           <div class="formItem">
-            <label>Thumbnail IPFS hash</label>
+            <label>Thumbnail IPFS hash </label>
             <p class="xsmall clamp" >{{thumbnailIpfsHash}}</p>
+            <a :href="`https://ipfs.io/ipfs/${thumbnailIpfsHash}`" target="_blank" v-if="thumbnailArweaveHash"><IconExternalLink size="small" /></a>
           </div>
           <div class="formItem">
             <label>Thumbnail Arweave Hash</label>
             <p class="xsmall clamp" >{{thumbnailArweaveHash}}</p>
+            <a :href="`https://arweave.rocks/${thumbnailArweaveHash}`" target="_blank" v-if="thumbnailArweaveHash"><IconExternalLink size="small" /></a>
           </div>
         </div>
       </ToggleSection>

@@ -1,589 +1,591 @@
 var abiART = [
   {
     inputs: [
-      { internalType: 'string', name: '_name', type: 'string' },
-      { internalType: 'string', name: '_symbol', type: 'string' },
-      { internalType: 'address', name: 'factoryAddress', type: 'address' },
-      { internalType: 'address', name: 'contractCreator', type: 'address' },
+      { internalType: "string", name: "_name", type: "string" },
+      { internalType: "string", name: "_symbol", type: "string" },
+      { internalType: "address", name: "factoryAddress", type: "address" },
+      { internalType: "address", name: "contractCreator", type: "address" },
     ],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'constructor',
+    stateMutability: "nonpayable",
+    type: "constructor",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
-        internalType: 'address',
-        name: 'owner',
-        type: 'address',
+        internalType: "address",
+        name: "owner",
+        type: "address",
       },
       {
         indexed: true,
-        internalType: 'address',
-        name: 'approved',
-        type: 'address',
+        internalType: "address",
+        name: "approved",
+        type: "address",
       },
       {
         indexed: true,
-        internalType: 'uint256',
-        name: 'tokenId',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
       },
     ],
-    name: 'Approval',
-    type: 'event',
+    name: "Approval",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
-        internalType: 'address',
-        name: 'owner',
-        type: 'address',
+        internalType: "address",
+        name: "owner",
+        type: "address",
       },
       {
         indexed: true,
-        internalType: 'address',
-        name: 'operator',
-        type: 'address',
+        internalType: "address",
+        name: "operator",
+        type: "address",
       },
-      { indexed: false, internalType: 'bool', name: 'approved', type: 'bool' },
+      { indexed: false, internalType: "bool", name: "approved", type: "bool" },
     ],
-    name: 'ApprovalForAll',
-    type: 'event',
+    name: "ApprovalForAll",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'tokenID',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "tokenID",
+        type: "uint256",
       },
       {
         indexed: false,
-        internalType: 'string',
-        name: 'exhibition',
-        type: 'string',
+        internalType: "string",
+        name: "exhibition",
+        type: "string",
       },
       {
         indexed: false,
-        internalType: 'string',
-        name: 'fileType',
-        type: 'string',
+        internalType: "string",
+        name: "fileType",
+        type: "string",
       },
     ],
-    name: 'NewArtAddtData',
-    type: 'event',
+    name: "NewArtAddtData",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'tokenID',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "tokenID",
+        type: "uint256",
       },
       {
         indexed: false,
-        internalType: 'string',
-        name: 'fileIPFSHash',
-        type: 'string',
+        internalType: "string",
+        name: "fileIPFSHash",
+        type: "string",
       },
       {
         indexed: false,
-        internalType: 'string',
-        name: 'fileArweaveHash',
-        type: 'string',
+        internalType: "string",
+        name: "fileArweaveHash",
+        type: "string",
       },
     ],
-    name: 'NewArtImageRefs',
-    type: 'event',
+    name: "NewArtImageRefs",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'tokenID',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "tokenID",
+        type: "uint256",
       },
       {
         indexed: false,
-        internalType: 'string',
-        name: 'artistName',
-        type: 'string',
+        internalType: "string",
+        name: "artistName",
+        type: "string",
       },
       {
         indexed: false,
-        internalType: 'string',
-        name: 'artTitle',
-        type: 'string',
+        internalType: "string",
+        name: "artTitle",
+        type: "string",
       },
       {
         indexed: false,
-        internalType: 'string',
-        name: 'artistNote',
-        type: 'string',
+        internalType: "string",
+        name: "artistNote",
+        type: "string",
       },
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'editionNumber',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "editionNumber",
+        type: "uint256",
       },
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'totalCap',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "totalCap",
+        type: "uint256",
       },
     ],
-    name: 'NewArtMetadata',
-    type: 'event',
+    name: "NewArtMetadata",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'tokenID',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "tokenID",
+        type: "uint256",
       },
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'royaltyFee',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "royaltyFee",
+        type: "uint256",
       },
       {
         indexed: false,
-        internalType: 'address',
-        name: 'artistAddress',
-        type: 'address',
+        internalType: "address",
+        name: "artistAddress",
+        type: "address",
       },
     ],
-    name: 'NewArtRoyaltyInfo',
-    type: 'event',
+    name: "NewArtRoyaltyInfo",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
-        internalType: 'address',
-        name: 'previousOwner',
-        type: 'address',
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
       },
       {
         indexed: true,
-        internalType: 'address',
-        name: 'newOwner',
-        type: 'address',
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
       },
     ],
-    name: 'OwnershipTransferred',
-    type: 'event',
+    name: "OwnershipTransferred",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'from', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'to', type: 'address' },
+      { indexed: true, internalType: "address", name: "from", type: "address" },
+      { indexed: true, internalType: "address", name: "to", type: "address" },
       {
         indexed: true,
-        internalType: 'uint256',
-        name: 'tokenId',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
       },
     ],
-    name: 'Transfer',
-    type: 'event',
+    name: "Transfer",
+    type: "event",
   },
   {
     constant: false,
     inputs: [
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
     ],
-    name: 'approve',
+    name: "approve",
     outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: 'artistWalletAddress',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    name: "artistWalletAddress",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
-    inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    inputs: [{ internalType: "address", name: "owner", type: "address" }],
+    name: "balanceOf",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: false,
     inputs: [
-      { internalType: 'string', name: 'fileIPFSHash', type: 'string' },
-      { internalType: 'string', name: 'fileArweaveHash', type: 'string' },
-      { internalType: 'string', name: 'thumbnailHash', type: 'string' },
-      { internalType: 'string', name: 'artistName', type: 'string' },
-      { internalType: 'string', name: 'artTitle', type: 'string' },
-      { internalType: 'string', name: 'artistNote', type: 'string' },
-      { internalType: 'string', name: 'exhibition', type: 'string' },
-      { internalType: 'uint256', name: 'royaltyFee', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalCap', type: 'uint256' },
-      { internalType: 'string', name: 'fileType', type: 'string' },
+      { internalType: "string", name: "fileIPFSHash", type: "string" },
+      { internalType: "string", name: "fileArweaveHash", type: "string" },
+      { internalType: "string", name: "thumbnailHash", type: "string" },
+      { internalType: "string", name: "artistName", type: "string" },
+      { internalType: "string", name: "artTitle", type: "string" },
+      { internalType: "string", name: "artistNote", type: "string" },
+      { internalType: "string", name: "exhibition", type: "string" },
+      { internalType: "uint256", name: "royaltyFee", type: "uint256" },
+      { internalType: "uint256", name: "totalCap", type: "uint256" },
+      { internalType: "string", name: "fileType", type: "string" },
     ],
-    name: 'createArt',
+    name: "createArt",
     outputs: [],
     payable: true,
-    stateMutability: 'payable',
-    type: 'function',
+    stateMutability: "payable",
+    type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: 'factoryAddressRef',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    name: "factoryAddressRef",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: 'fileArweaveReferenceURL',
-    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    name: "fileArweaveReferenceURL",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: 'fileIPFSReferenceURL',
-    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    name: "fileIPFSReferenceURL",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
-    inputs: [{ internalType: 'uint256', name: 'tokenID', type: 'uint256' }],
-    name: 'getAdditionalMetadata',
+    inputs: [{ internalType: "uint256", name: "tokenID", type: "uint256" }],
+    name: "getAdditionalMetadata",
     outputs: [
-      { internalType: 'string', name: 'exhibitionByID', type: 'string' },
-      { internalType: 'string', name: 'fileTypeByID', type: 'string' },
-      { internalType: 'string', name: 'thumbnailHashByID', type: 'string' },
+      { internalType: "string", name: "exhibitionByID", type: "string" },
+      { internalType: "string", name: "fileTypeByID", type: "string" },
+      { internalType: "string", name: "thumbnailHashByID", type: "string" },
     ],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
-    inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
+    name: "getApproved",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
-    inputs: [{ internalType: 'uint256', name: 'tokenID', type: 'uint256' }],
-    name: 'getCoreMetadata',
+    inputs: [{ internalType: "uint256", name: "tokenID", type: "uint256" }],
+    name: "getCoreMetadata",
     outputs: [
-      { internalType: 'string', name: 'fileIPFSHashByID', type: 'string' },
-      { internalType: 'string', name: 'fileArweaveHashByID', type: 'string' },
-      { internalType: 'string', name: 'artistNameByID', type: 'string' },
-      { internalType: 'string', name: 'artTitleByID', type: 'string' },
-      { internalType: 'string', name: 'artistNoteByID', type: 'string' },
-      { internalType: 'uint256', name: 'editionNumberByID', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalEditionsByID', type: 'uint256' },
+      { internalType: "string", name: "fileIPFSHashByID", type: "string" },
+      { internalType: "string", name: "fileArweaveHashByID", type: "string" },
+      { internalType: "string", name: "artistNameByID", type: "string" },
+      { internalType: "string", name: "artTitleByID", type: "string" },
+      { internalType: "string", name: "artistNoteByID", type: "string" },
+      { internalType: "uint256", name: "editionNumberByID", type: "uint256" },
+      { internalType: "uint256", name: "totalEditionsByID", type: "uint256" },
     ],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
-    inputs: [{ internalType: 'uint256', name: 'tokenID', type: 'uint256' }],
-    name: 'getImageLink',
+    inputs: [{ internalType: "uint256", name: "tokenID", type: "uint256" }],
+    name: "getImageLink",
     outputs: [
-      { internalType: 'string', name: 'fileIPFSURL', type: 'string' },
-      { internalType: 'string', name: 'fileArweaveURL', type: 'string' },
-      { internalType: 'string', name: 'thumbnailURL', type: 'string' },
+      { internalType: "string", name: "fileIPFSURL", type: "string" },
+      { internalType: "string", name: "fileArweaveURL", type: "string" },
+      { internalType: "string", name: "thumbnailURL", type: "string" },
     ],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
-    inputs: [{ internalType: 'uint256', name: 'tokenID', type: 'uint256' }],
-    name: 'getRoyaltyData',
+    inputs: [{ internalType: "uint256", name: "tokenID", type: "uint256" }],
+    name: "getRoyaltyData",
     outputs: [
-      { internalType: 'address', name: 'artistAddress', type: 'address' },
-      { internalType: 'uint256', name: 'royaltyFeeByID', type: 'uint256' },
+      { internalType: "address", name: "artistAddress", type: "address" },
+      { internalType: "uint256", name: "royaltyFeeByID", type: "uint256" },
     ],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
     inputs: [
-      { internalType: 'address', name: 'owner', type: 'address' },
-      { internalType: 'address', name: 'operator', type: 'address' },
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "address", name: "operator", type: "address" },
     ],
-    name: 'isApprovedForAll',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    name: "isApprovedForAll",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: 'isOwner',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    name: "isOwner",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: 'name',
-    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    name: "name",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: 'owner',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    name: "owner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
-    inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
+    name: "ownerOf",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: false,
     inputs: [],
-    name: 'renounceOwnership',
+    name: "renounceOwnership",
     outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     constant: false,
     inputs: [
-      { internalType: 'address', name: 'from', type: 'address' },
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
     ],
-    name: 'safeTransferFrom',
+    name: "safeTransferFrom",
     outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     constant: false,
     inputs: [
-      { internalType: 'address', name: 'from', type: 'address' },
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
-      { internalType: 'bytes', name: '_data', type: 'bytes' },
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
+      { internalType: "bytes", name: "_data", type: "bytes" },
     ],
-    name: 'safeTransferFrom',
+    name: "safeTransferFrom",
     outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     constant: false,
     inputs: [
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'bool', name: 'approved', type: 'bool' },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "bool", name: "approved", type: "bool" },
     ],
-    name: 'setApprovalForAll',
+    name: "setApprovalForAll",
     outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     constant: true,
-    inputs: [{ internalType: 'bytes4', name: 'interfaceId', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    inputs: [{ internalType: "bytes4", name: "interfaceId", type: "bytes4" }],
+    name: "supportsInterface",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: 'symbol',
-    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    name: "symbol",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: 'tokenReferenceURI',
-    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    name: "tokenReferenceURI",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
-    inputs: [{ internalType: 'uint256', name: 'tokenID', type: 'uint256' }],
-    name: 'tokenURI',
-    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    inputs: [{ internalType: "uint256", name: "tokenID", type: "uint256" }],
+    name: "tokenURI",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: 'totalArtPieces',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    name: "totalArtPieces",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     payable: false,
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     constant: false,
     inputs: [
-      { internalType: 'address', name: 'from', type: 'address' },
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
     ],
-    name: 'transferFrom',
+    name: "transferFrom",
     outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     constant: false,
-    inputs: [{ internalType: 'address', name: 'newOwner', type: 'address' }],
-    name: 'transferOwnership',
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+    name: "transferOwnership",
     outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     constant: false,
-    inputs: [{ internalType: 'address', name: 'newAddress', type: 'address' }],
-    name: 'updateArtistAddress',
+    inputs: [{ internalType: "address", name: "newAddress", type: "address" }],
+    name: "updateArtistAddress",
     outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     constant: false,
     inputs: [
-      { internalType: 'string', name: 'newIPFSURL', type: 'string' },
-      { internalType: 'string', name: 'newArweaveURL', type: 'string' },
+      { internalType: "string", name: "newIPFSURL", type: "string" },
+      { internalType: "string", name: "newArweaveURL", type: "string" },
     ],
-    name: 'updateLinks',
+    name: "updateLinks",
     outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     constant: false,
-    inputs: [{ internalType: 'string', name: 'newURI', type: 'string' }],
-    name: 'updateURI',
+    inputs: [{ internalType: "string", name: "newURI", type: "string" }],
+    name: "updateURI",
     outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
-]
+];
 
 const mintThatShit = (event, state, rootContext) => {
-  const doIt = true
-  const context = rootContext.$store
-  const { setMintStatus } = context
-  const network = context.$config.network
+  const doIt = true;
+  const context = rootContext.$store;
+  const network = context.$config.network;
   const infuraUrl =
-    network === 'main'
+    network === "main"
       ? context.$config.infuraUrlMain
-      : context.$config.infuraUrlRinkeby
+      : context.$config.infuraUrlRinkeby;
 
   const useThumbnailDefault =
-    state.fileType === 'glb' ||
-    state.fileType === 'gltf' ||
-    state.fileType === 'mp3'
+    state.fileType === "glb" ||
+    state.fileType === "gltf" ||
+    state.fileType === "mp3";
 
-  console.log('state', state)
+  console.log("state", state);
   // MAP STATE INTO EXISTING MIT FORM VARIABLES
-  const artTitle = state.title
-  const artistName = state.authorName
-  const imageName = state.title || state.fileName
-  const artistNote = state.description
-  const exhibition = state.series || ' '
-  const royaltyFee = state.royaltyFee
-  const totalCap = state.editions
-  const fileType = state.fileType
-  const fileIPFSHash = state.fileIpfsHash
-  const fileArweaveHash = state.fileArweaveHash
+  const artTitle = state.title;
+  const artistName = state.authorName;
+  const imageName = state.title || state.fileName;
+  const artistNote = state.description;
+  const exhibition = state.series || " ";
+  const royaltyFee = state.royaltyFee;
+  const totalCap = state.editions;
+  const fileType = state.fileType;
+  const fileIPFSHash = state.fileIpfsHash;
+  const fileArweaveHash = state.fileArweaveHash;
   const thumbnailIPFSHash =
     state.thumbnailIpfsHash ||
-    (useThumbnailDefault && state.thumbnailIpfsHashDefault)
-  const thumbnailArweaveHash = state.thumbnailArweaveHash
-  const userContractAddress = state.activeContractId
-  console.log('isNan(royaltyfee)', isNaN(royaltyFee))
-  console.log('royaltyFee', royaltyFee)
-  const isValidRoyalty = !Number.isNaN(royaltyFee)
+    (useThumbnailDefault && state.thumbnailIpfsHashDefault);
+  const thumbnailArweaveHash = state.thumbnailArweaveHash;
+  const userContractAddress = state.activeContractId;
+  console.log("isNan(royaltyfee)", isNaN(royaltyFee));
+  console.log("MINT: royaltyFee", royaltyFee);
+  const isValidRoyalty = !Number.isNaN(royaltyFee);
 
-  console.log('isValidRoyalty', isValidRoyalty)
-  console.log('MINT fileIPFSHash: ', fileIPFSHash)
-  console.log('MINT thumbnailIPFSHash: ', thumbnailIPFSHash)
-  console.log('MINT thumbnailArweaveHash: ', thumbnailArweaveHash)
-  const thumbnailHashToUse = thumbnailIPFSHash || fileIPFSHash || ''
+  console.log("MINT isValidRoyalty", isValidRoyalty);
+  console.log("MINT fileIPFSHash: ", fileIPFSHash);
+  console.log("MINT thumbnailIPFSHash: ", thumbnailIPFSHash);
+  console.log("MINT thumbnailArweaveHash: ", thumbnailArweaveHash);
+  // const thumbnailHashToUse = thumbnailIPFSHash || fileIPFSHash || "";
+  const thumbnailHashToUse = thumbnailArweaveHash || fileArweaveHash || "";
+
+  console.log("MINT thumbnailHashToUse: ", thumbnailHashToUse);
 
   if (
     !artTitle ||
@@ -596,8 +598,7 @@ const mintThatShit = (event, state, rootContext) => {
     !fileType ||
     !userContractAddress
   ) {
-    console.error('missing variable')
-    console.log({
+    console.error("missing variable... ", {
       artTitle,
       artistName,
       imageName,
@@ -607,10 +608,11 @@ const mintThatShit = (event, state, rootContext) => {
       totalCap,
       fileType,
       userContractAddress,
-    })
-    return null
+    });
+
+    return null;
   }
-  console.log('MiNT this data should be: ', {
+  console.log("MiNT this data should be: ", {
     fileIPFSHash,
     fileArweaveHash,
     thumbnailHashToUse,
@@ -621,7 +623,7 @@ const mintThatShit = (event, state, rootContext) => {
     royaltyFee,
     totalCap,
     fileType,
-  })
+  });
   // artistName = document.getElementById('a');
   // imageName = document.getElementById('b');
   // artistNote = document.getElementById('c');
@@ -630,23 +632,21 @@ const mintThatShit = (event, state, rootContext) => {
   // totalCap = document.getElementById('f');
   // fileType = document.getElementById('g');
   // mintButton = document.getElementById('h');
-  // setMintStatus('confirming')
-  console.log('context: ', context)
-  context.commit('mintFormStore/setMintStatus', 'confirming')
+  console.log("context: ", context);
+  context.commit("mintFormStore/setMintStatus", "confirming");
   if (doIt) {
-    var contractART = web3.eth.contract(abiART).at(userContractAddress)
-    console.log('active contract: ', contractART)
+    var contractART = web3.eth.contract(abiART).at(userContractAddress);
+    console.log("active contract: ", contractART);
     if (!contractART) {
-      console.error('no contractART')
-      return null
+      console.error("no contractART");
+      return null;
     }
 
     if (!thumbnailHashToUse) {
-      console.error('no thumbnailHashtouse')
-      return null
+      console.error("no thumbnailHashtouse");
+      return null;
     }
-    // setMintStatus('confirming')
-    context.commit('mintFormStore/setMintStatus', 'confirming')
+    context.commit("mintFormStore/setMintStatus", "confirming");
     contractART.createArt(
       fileIPFSHash,
       fileArweaveHash,
@@ -660,74 +660,77 @@ const mintThatShit = (event, state, rootContext) => {
       fileType,
       { value: 5000000000000000 },
       (err, result) => {
-        console.log('contractART.createArt result', result)
-        const mintTransactionId = result
+        console.log("contractART.createArt result", result);
+        const mintTransactionId = result;
         const mintTransactionLabel = document.getElementById(
-          'mintTransactionLabel'
-        )
+          "mintTransactionLabel"
+        );
         if (mintTransactionLabel) {
-          mintTransactionLabel.innerHTML = `Transaction: ${mintTransactionId}`
+          mintTransactionLabel.innerHTML = `Transaction: ${mintTransactionId}`;
         }
         // setMintStatus('working')
-        context.commit('mintFormStore/setMintTransactionId', mintTransactionId)
-        context.commit('mintFormStore/setMintStatus', 'working')
+        context.commit("mintFormStore/setMintTransactionId", mintTransactionId);
+        context.commit("mintFormStore/setMintStatus", "working");
         if (err) {
           // setMintStatus('error', err)
-          context.commit('mintFormStore/setMintStatus', 'error', err)
-          console.error(err)
+          context.commit("mintFormStore/setMintStatus", "error", err);
+          console.error(err);
         }
         if (!err) {
-          console.log('got to recursive: ', recursiveMintQuery)
+          console.log("got to recursive: ", recursiveMintQuery);
           recursiveMintQuery(60, mintTransactionId, context)
             .then((completedTransaction) => {
-              console.log('done, completedTransaction = ', completedTransaction)
+              console.log(
+                "done, completedTransaction = ",
+                completedTransaction
+              );
               if (completedTransaction.status === true) {
                 // setMintStatus('completed')
-                context.commit('mintFormStore/setMintStatus', 'completed')
+                context.commit("mintFormStore/setMintStatus", "completed");
 
                 // toggleClass('completedMintContent', 'hidden')
-                const newAddress = completedTransaction.logs[0].address
-                const newTokenTopics = completedTransaction.logs[0].topics
-                const newTokenIdHex = newTokenTopics && newTokenTopics[3]
-                console.log('newTokenIdHex', newTokenIdHex)
-                const newTokenId = decodeHexSequence(newTokenIdHex)
-                console.log('newTokenId', newTokenId)
+                const newAddress = completedTransaction.logs[0].address;
+                const newTokenTopics = completedTransaction.logs[0].topics;
+                const newTokenIdHex = newTokenTopics && newTokenTopics[3];
+                console.log("newTokenIdHex", newTokenIdHex);
+                const newTokenId = decodeHexSequence(newTokenIdHex);
+                console.log("newTokenId", newTokenId);
                 const mintAddressLabel = document.getElementById(
-                  'mintAddressLabel'
-                )
+                  "mintAddressLabel"
+                );
 
-                console.log('mintAddressLabel', mintAddressLabel)
-                console.log('newAddress = ', newAddress)
-                console.log('network = ', network)
+                console.log("mintAddressLabel", mintAddressLabel);
+                console.log("newAddress = ", newAddress);
+                console.log("network = ", network);
                 const mintedData = {
                   contractId: newAddress,
                   tokenId: newTokenId,
                   network: network,
-                }
+                };
 
-                context.commit('mintFormStore/setMintedData', mintedData)
+                context.commit("mintFormStore/setMintedData", mintedData);
                 // mintAddressLabel.innerHTML = "newAddress";
               } else {
                 context.commit(
-                  'mintFormStore/setMintStatus',
-                  'error',
-                  'Something went wrong. Transaction was returned but completedTransaction.status was not true'
-                )
+                  "mintFormStore/setMintStatus",
+                  "error",
+                  "Something went wrong. Transaction was returned but completedTransaction.status was not true"
+                );
                 // setMintStatus(
                 //   'error',
                 //   'Something went wrong. Transaction was returned but completedTransaction.status was not true'
                 // )
                 console.error(
-                  'something went wrong. Transaction was returned but completedTransaction.status was not true'
-                )
+                  "something went wrong. Transaction was returned but completedTransaction.status was not true"
+                );
               }
             })
-            .catch((error) => console.error(error))
+            .catch((error) => console.error(error));
         }
       }
-    )
+    );
   }
-}
+};
 
 /**
  * RECURSIVE MINT TRANSACTION QUERY
@@ -742,39 +745,39 @@ function recursiveMintQuery(num, txHash, context) {
   function decide(asyncResult, hash) {
     // process async result and decide what to do
     // do something with asyncResult
-    console.log('asyncResult: ', asyncResult, hash)
-    const isObject = typeof asyncResult === 'object'
+    console.log("asyncResult: ", asyncResult, hash);
+    const isObject = typeof asyncResult === "object";
     // console.log("isObject: ",  isObject);
 
     if (isObject) {
       // if an object is reuturned, then the transaction is completed!
-      return asyncResult
+      return asyncResult;
     }
-    if (asyncResult === 0) console.log('ignition')
+    if (asyncResult === 0) console.log("ignition");
     // decide if further recursion needed
     if (asyncResult < 55) {
       // setMintStatus('stillWorking')
-      context.commit('mintFormStore/setMintStatus', 'stillWorking')
+      context.commit("mintFormStore/setMintStatus", "stillWorking");
     }
     if (asyncResult < 50) {
       // setMintStatus('stillWorkingMore')
-      context.commit('mintFormStore/setMintStatus', 'stillWorkingMore')
+      context.commit("mintFormStore/setMintStatus", "stillWorkingMore");
     }
     if (asyncResult < 5) {
       // setMintStatus('checkTransaction')
-      context.commit('mintFormStore/setMintStatus', 'checkTransaction')
+      context.commit("mintFormStore/setMintStatus", "checkTransaction");
     }
     // if( asyncResult < 0)
     //     return "lift off"; // all done
     // if nothing is returned, try again....
-    return recursiveMintQuery(num - 1, txHash, context) // not all done, recurse
+    return recursiveMintQuery(num - 1, txHash, context); // not all done, recurse
   }
 
   // return a promise resolved by doing something async and deciding what to do with it
   // to be clear the returned promise is the one returned by .then
   return getTransactionStatus(num, txHash, context).then((num, hash) =>
     decide(num, hash)
-  )
+  );
 }
 
 /**
@@ -783,38 +786,38 @@ function recursiveMintQuery(num, txHash, context) {
  */
 function getTransactionStatus(num, txHash, context) {
   // something async returning a promise
-  const intervalTime = 1700
-  console.log('context', context)
-  const network = context.$config.network
+  const intervalTime = 1700;
+  console.log("context", context);
+  const network = context.$config.network;
   const infuraUrl =
-    network === 'main'
+    network === "main"
       ? context.$config.infuraUrlMain
-      : context.$config.infuraUrlRinkeby
+      : context.$config.infuraUrlRinkeby;
 
-  const newWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl))
-  console.log('getTransactionStatus num txHash: ', num, txHash)
+  const newWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
+  console.log("getTransactionStatus num txHash: ", num, txHash);
   return new Promise((resolve, reject) => {
-    console.log(' in promise num, txHash', num, txHash)
+    console.log(" in promise num, txHash", num, txHash);
     const getIt = () => {
       newWeb3.eth
         .getTransactionReceipt(txHash)
         .then((hash) => {
-          console.log('hash is: ', hash)
-          console.log('txHash is: ', txHash)
+          console.log("hash is: ", hash);
+          console.log("txHash is: ", txHash);
           if (hash === null) {
-            resolve(num)
+            resolve(num);
           } else {
-            console.log('hash exists!: ', hash)
-            resolve(hash)
+            console.log("hash exists!: ", hash);
+            resolve(hash);
           }
         })
         .catch((error) => {
-          console.log(error)
-          reject(error)
-        })
-    }
-    setTimeout(getIt, intervalTime)
-  })
+          console.log(error);
+          reject(error);
+        });
+    };
+    setTimeout(getIt, intervalTime);
+  });
 }
 
 /**
@@ -823,15 +826,15 @@ function getTransactionStatus(num, txHash, context) {
  */
 
 function dataURLtoFile(dataurl, filename) {
-  var arr = dataurl.split(','),
+  var arr = dataurl.split(","),
     mime = arr[0].match(/:(.*?);/)[1],
     bstr = atob(arr[1]),
     n = bstr.length,
-    u8arr = new Uint8Array(n)
+    u8arr = new Uint8Array(n);
   while (n--) {
-    u8arr[n] = bstr.charCodeAt(n)
+    u8arr[n] = bstr.charCodeAt(n);
   }
-  return new File([u8arr], filename, { type: mime })
+  return new File([u8arr], filename, { type: mime });
 }
 
 /**
@@ -840,10 +843,10 @@ function dataURLtoFile(dataurl, filename) {
  */
 function getMimeType(dataUrl) {
   const mimeType = dataUrl.substring(
-    dataUrl.indexOf(':') + 1,
-    dataUrl.indexOf(';')
-  ) // => image/png
-  return mimeType
+    dataUrl.indexOf(":") + 1,
+    dataUrl.indexOf(";")
+  ); // => image/png
+  return mimeType;
 }
 
 /**
@@ -851,8 +854,8 @@ function getMimeType(dataUrl) {
  * returns the usable token id from transaction
  */
 function decodeHexSequence(hash) {
-  const result = parseInt(hash.substring(2, hash.length), 16)
-  return result
+  const result = parseInt(hash.substring(2, hash.length), 16);
+  return result;
 }
 
-export { mintThatShit, getTransactionStatus }
+export { mintThatShit, getTransactionStatus };

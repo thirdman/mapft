@@ -1,4 +1,4 @@
-import createPersistedState from 'vuex-persistedstate'
+import createPersistedState from "vuex-persistedstate";
 
 // export default ({ store }) => {
 //   createPersistedState({
@@ -22,21 +22,22 @@ export default async ({ app, store, $axios, isHMR }) => {
     // gets replaced with original state received from server. So, we've to skip HMR.
     // Also nuxtReady event fires for HMR as well, which results multiple registration of
     // vuex-persistedstate plugin
-    if (isHMR) return
+    if (isHMR) return;
     createPersistedState({
-      key: 'infinft',
+      key: "infinft",
 
       // An array of any paths to partially persist the state.
       // Paths are using dots to indicate nestedness.
       paths: [
-        'ui.walletAddress',
-        'ui.usedContracts',
-        'ui.devMode',
-        'ui.uiMode',
-        'ui.uiTheme',
-        'ui.statusModalMode',
-        'ui.activeContractId',
+        "ui.walletAddress",
+        "ui.usedContracts",
+        "ui.devMode",
+        "ui.uiMode",
+        "ui.uiTheme",
+        "ui.statusModalMode",
+        "ui.activeContractId",
+        "mintFormStore.activeContractId",
       ],
-    })(store) // vuex plugins can be connected to store, even after creation
+    })(store); // vuex plugins can be connected to store, even after creation
   }
-}
+};

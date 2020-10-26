@@ -43,7 +43,7 @@
               class="galleryItemImage"
               v-if="item.imageUrlThumbnail || item.imagePreviewUrl"
             />
-            <DefaultImage v-if="!item.imageUrlThumbnail" />
+            <DefaultImage v-if="!item.imageUrlThumbnail"/>
           </div>
           <div class="galleryListItemContent">
             <label>
@@ -241,6 +241,7 @@
 .expanded .gallerylistItem .galleryImageWrap,
 .list .gallerylistItem .galleryImageWrap {
   flex-basis: 50%;
+  height: 100%;
 }
 .compact .gallerylistItem .galleryListItemContent {
   padding-top: 0.25rem;
