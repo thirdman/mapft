@@ -28,7 +28,7 @@
     >
       <div v-for="(item, index) in galleryAssets" :key="index">
         <a
-          v-bind:key="index"
+          v-bind:key="`galleryItem${index}`"
           class="gallerylistItem"
           @click="handleLink(item, galleryContractId)"
         >
@@ -40,6 +40,7 @@
                   ? item.imageUrlThumbnail
                   : item.imagePreviewUrl
               "
+              @error="imageLoadError(index)"
               class="galleryItemImage"
               v-if="item.imageUrlThumbnail || item.imagePreviewUrl"
             />
@@ -283,6 +284,9 @@ export default {
       filterGallery: 'galleryStore/filterGallery',
       clearGalleryFilter: 'galleryStore/clearGalleryFilter',
     }),
+    imageLoadError (index) {
+      console.log(`Image failed to load, ${index}`);
+    },
     handleLink(item, contractId) {
       const tokenId = item.tokenId
       const tempItem = {
@@ -296,7 +300,7 @@ export default {
       }
       // console.log('this.$store', this.$store)
       this.$store.commit('ui/setTempViewItem', tempItem)
-
+    
       this.$router.push({
         // path: `/VIEW/${error}`,
         path: `/view/${contractId}/${tokenId}`,

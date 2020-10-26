@@ -133,16 +133,24 @@
         </div>
 
         <div id="readContent" class="output">
+          <!-- {{tempViewItem.imageUrlThumbnail}} | {{viewStatus}} |  {{viewData && viewData.fileIpfsHash  ? " has view data" : " no view data"}} -->
           <div class="row readContentRow">
             <div
               class="column col-100 imageColumn"
-              v-if="!viewData && tempViewItem && viewStatus !== 'error'"
+              v-if="(!viewData || viewData && !viewData.fileIpfsHash) && viewStatus !== 'error'"
             >
-              <div class="previewWrap">
+              <div class="imageLoadingWrap">
                 <img
-                  :src="tempViewItem.imageUrlThumbnail"
+                  src="~/assets/images/defaultImageTransparent.png"
                   style="width: 100%; height: auto;"
                   class="previewImage"
+                  v-if="!tempViewItem.imageUrlThumbnail"
+                />
+                <img
+                  :src="tempViewItem && tempViewItem.imageUrlThumbnail"
+                  style="width: 100%; height: auto;"
+                  class="previewImage"
+                  v-if="tempViewItem && tempViewItem.imageUrlThumbnail"
                 />
                 <div class="previewLoading">
                   <div class="previewLoadingPill">
@@ -157,7 +165,7 @@
             </div>
 
             <!-- error no content -->
-            <div class="column col-100 imageColumn" v-if="!viewData && viewStatus === 'error'">
+            <div class="column col-100 imageColumn" v-if="!viewData.fileIpfsHash && viewStatus === 'error'">
               <div class="errorWrap">
                 <h4>No data</h4>
                 <p>
@@ -187,7 +195,9 @@
                 </div>
               </div>
             </div>
-            <div class="column col-100 imageColumn" style="padding-bottom: 4rem;" v-if="viewData">
+            <div class="column col-100 imageColumn" style="padding-bottom: 4rem;" v-if="viewData && viewData.fileIpfsHash"
+            
+            >
               <RenderItem
                 :item="viewData"
                 :fileType="viewData.fileType"
@@ -315,6 +325,10 @@ export default {
       'mounted this.$store.state.ui.viewData',
       this.$store.state.ui.viewData
     )
+    console.log(
+      'viewData.fileIpfsHash',
+      this.$store.state.ui.viewData.fileIpfsHash
+    )
     //&& !this.$store.state.ui.viewData
     if (process.client) {
       console.log('mounted client and no viewData')
@@ -346,7 +360,9 @@ export default {
     }
   },
   destroyed() {
-    this.$store.commit('ui/setViewData', undefined)
+    this.$store.commit('ui/setViewData', {})
+    this.$store.commit('ui/setTempViewItem', {})
+    console.log('View page destroyed')
   },
 
   async asyncData({ params }) {
@@ -442,7 +458,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .loadingPlaceholder {
   padding: 0.5rem 0;
 }
@@ -507,42 +523,48 @@ export default {
   font-weight: bold;
   font-variation-settings: 'wght' 600;
 }
-.previewWrap {
-  width: 100%;
-  height: 100%;
-  position: relative;
+.previewColumn{
+  /* border: 1px solid lime;
+  width: 100%; */
+}
+#read{
+  .imageLoadingWrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .previewImage {
+      width: 100%;
+      height: auto;
+    }
+    .previewLoading {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .previewLoadingPill {
+      display: inline-flex;
+      border-radius: 2rem;
+      height: 3rem;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+      background: var(--fill-color, #ccc);
+      align-items: center;
+      justify-content: center;
+      min-width: 10rem;
+      padding: 0 2rem;
+    }
+  }
 }
-.previewImage {
-  width: 100%;
-  height: auto;
-}
-.previewLoading {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 10;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.previewLoadingPill {
-  display: inline-flex;
-  border-radius: 2rem;
-  height: 3rem;
-
-  background: var(--fill-color, #ccc);
-  align-items: center;
-  justify-content: center;
-  min-width: 10rem;
-  padding: 0 2rem;
-}
-
 .primaryMeta {
   border: 1px solid var(--line-color, #111);
 }
