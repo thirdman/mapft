@@ -584,6 +584,12 @@
 <script>
 export default {
   name: 'alphaPage',
+  head: {
+    title: 'infiNFT Alpha Series',
+    // meta: [
+    //   { hid: 'description', name: 'description', content: 'View a cool nft' },
+    // ],
+  },
   data(){
     return {
       giantSwanData: {

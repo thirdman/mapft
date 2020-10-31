@@ -344,7 +344,7 @@ export const mutations = {
     state.mintStatusMessage = message;
   },
   setMintedData(state, data) {
-    console.log("stting minted data: ", data);
+    console.log("setting minted data: ", data);
     state.mintedData = data;
   },
   removeMetaField(state, id) {

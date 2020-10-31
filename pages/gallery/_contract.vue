@@ -91,6 +91,12 @@ import { mapMutations, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'GalleryPage',
+  head: {
+    title: 'InfiNFT Gallery',
+    // meta: [
+    //   { hid: 'description', name: 'description', content: 'View a cool nft' },
+    // ],
+  },
   created() {
     // console.log('created client')
     // console.log('this.$router', this.$router)

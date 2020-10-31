@@ -1,7 +1,7 @@
 <template>
   <div
     id="deployForm"
-    class="form create column shadow"
+    class="form createNOT deploy column shadow"
     :class="deployStatus === 'error' ? 'error' : ''"
   >
     <!-- style="flex-basis: 100%;" -->
@@ -284,6 +284,7 @@
         </div>
       </div>
 
+    </div>
       <div
         class="fieldset actionContent formContent"
         id="fieldsetAction"
@@ -303,7 +304,6 @@
           Reset Form
         </Button>
       </div>
-    </div>
   </div>
 </template>
 

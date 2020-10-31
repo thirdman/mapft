@@ -92,7 +92,6 @@
     :class="`${mintStatus} ${uiMode}`"
     
   >
-    <!-- <button class="btn" @click="handleStatusModal(true)">test status modal</button> -->
     <!-- STATUS SECTION-->
     <StatusInformation
       displayMode="inline"
@@ -112,8 +111,8 @@
         mintStatus === 'error'
       "
     />
-    <!-- <div id="mintStatusWrap" class="mintStatusWrap">
-      {{ mintStatus }}
+    <div id="mintStatusWrap" class="mintStatusWrap">
+      <!-- {{ mintStatus }}
       <div class>
         <div id="mintStatus" class="statusElement">
           {{ mintStatusMessage }}
@@ -127,9 +126,9 @@
           ></div>
         </div>
         
+      </div> -->
         <MintedInformation v-if="mintStatus === 'completed'" />
-      </div>
-    </div> -->
+    </div>
 
 
   
@@ -503,7 +502,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
     <div
       class="fieldset customContent formContent"
       id="fieldsetCustomFields"
-      v-if="activeContractId  && !shouldHideForm()"
+      v-if="devMode && activeContractId  && !shouldHideForm()"
     >
       <!-- CUSTOM FIELDS-->
       <!-- <div class="divider"></div> -->

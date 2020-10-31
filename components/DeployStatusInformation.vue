@@ -78,6 +78,7 @@
 
     <div id="completedContent" v-if="deployStatus === 'completed'">
       <h4>New Contract Deployed</h4>
+      <div class="contractInfo">
       <div class="row">
         <div class="column">
           <label>Name</label>
@@ -91,13 +92,14 @@
 
       <label>Deployed Address</label>
       <div>{{ activeContractId }}</div>
+      </div>
       <p class="help">
         This address is your deployed contract, and is saved locally in your
         user settings. Copy it for safekeeping, and use it to create NFT tokens
         in the Mint section.
       </p>
     </div>
-    <div class="row" v-if="deployStatus === 'completed'">
+    <div class="row actions" v-if="deployStatus === 'completed'">
       <Button size="large" :fill="false" @click="handleModal" mode="primary">
         View Settings
       </Button>
@@ -114,7 +116,7 @@
   </div>
 </template>
 
-<style>
+<style lang="scss"> 
 .statusInformation {
   position: relative;
   background: var(--fill-color, #111);
@@ -177,6 +179,14 @@
   align-items: center;
   font-size: 0.75rem;
 }
+
+.contractInfo{
+  border: 1px solid var(--line-color, #111);
+  padding: .5rem;
+  .row{
+    border-bottom: 1px solid var(--line-color, #111);
+  }
+}
 </style>
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
@@ -225,7 +235,6 @@ export default {
     }),
     handleStatusModal(newState) {
       if (newState) {
-        // this.$store.commit('mintFormStore/setShowStatusModal', newState)
         this.$store.commit('ui/setStatusModalMode', 'fixed')
         // this.$modal.show('status-modal')
       } else {
@@ -235,6 +244,7 @@ export default {
       }
     },
     handleModal() {
+      this.$store.commit('deployFormStore/resetDeployForm')
       this.$modal.show('account-modal')
     },
   },

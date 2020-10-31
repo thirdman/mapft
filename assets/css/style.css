@@ -674,14 +674,15 @@ GRID LINES
   text-align: left;
   outline: none;
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   color: var(--text-color, #eee);
 }
 .collapsible.active,
 .collapsible:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  /* background-color: rgba(0, 0, 0, 0.05); */
+  background-color: var(--line-color, rgba(0, 0, 0, 0.05));
 }
 .collapsible .iconWrap {
 }
@@ -1333,6 +1334,12 @@ ul.heroList {
   font-size: 0.675rem;
   margin-left: 0.25rem;
   letter-spacing: -0.035rem;
+}
+.networkItem {
+  font-size: 0.675rem;
+  margin-left: 0.25rem;
+  letter-spacing: -0.035rem;
+  text-transform: uppercase;
 }
 #body.main #footerWalletLabel::after {
   content: "MAIN NETWORK";
@@ -2209,6 +2216,9 @@ input.hero {
   display: inline-block;
 }
 
+.form.deploy.column {
+  flex-basis: 100%;
+}
 /**
 MODAL
 */

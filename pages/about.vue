@@ -14,7 +14,14 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head: {
+    title: 'About InfinNFT',
+    // meta: [
+    //   { hid: 'description', name: 'description', content: 'View a cool nft' },
+    // ],
+  }
+}
 </script>
 
 <style></style>

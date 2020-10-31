@@ -2,13 +2,13 @@
   <modal
     name="account-modal"
     class="account-modal"
-    :adaptive="true"
+    :adaptive="false"
     :min-width="200"
     :min-height="200"
     :scrollable="true"
     :reset="true"
     width="60%"
-    height="auto"
+    height="80%"
     :focus-trap="true"
     :clickToClose="true"
   >
@@ -115,10 +115,11 @@
             >
           </div>
         </div>
-      </div>
-      <div class="modalSection">
-        <label>Previously Used Contracts</label>
-        <div v-for="(item, index) in usedContracts" :key="index">
+      
+        <ToggleSection :colorMode="contrastMode">
+          <span slot="header">Previously Used Contracts</span>
+          <div slot="content">
+            <div v-for="(item, index) in usedContracts" :key="index">
           <div class="row between contractRow">
             <span class="column col-66">{{ item }}</span>
             <!-- <div class="column" v-if="item === activeContractId">
@@ -142,6 +143,30 @@
             </div>
           </div>
         </div>
+          </div>
+        </ToggleSection>
+        <!-- <label>Previously Used Contracts</label>
+        <div v-for="(item, index) in usedContracts" :key="index">
+          <div class="row between contractRow">
+            <span class="column col-66">{{ item }}</span>
+            <div class="column col-33 actions" v-if="item !== activeContractId">
+              <button class="btn inactive" @click="setActiveContractId(item)">
+                Select
+              </button>
+              <div class="removeItem">
+                <button
+                  @click="removeUsedContractId(index)"
+                  class="btn inactive"
+                >
+                  <span>Remove</span>
+                </button>
+              </div>
+            </div>
+            <div class="column col-33" v-if="item === activeContractId">
+              <div class="activeTag">ACTIVE</div>
+            </div>
+          </div>
+        </div> -->
       </div>
 
       <div class="settings-content modalSection" v-if="walletAddress">

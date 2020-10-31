@@ -152,6 +152,12 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+  head: {
+    title: 'InfiNFT - A NFT platform with a focus on extendability, flexibility, and on-chain data.',
+    // meta: [
+    //   { hid: 'description', name: 'description', content: 'View a cool nft' },
+    // ],
+  },
   computed: {
     ...mapGetters({
       contrastMode: 'ui/contrastMode',

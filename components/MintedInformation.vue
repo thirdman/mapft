@@ -1,5 +1,22 @@
 <template>
   <div class="mintedInformation" :class="statusModalMode">
+    <div class="closeButtonWrap">
+      <button
+        class="btn iconButton"
+        @click="
+          setStatusModalMode(statusModalMode === 'fixed' ? 'inline' : 'fixed')
+        "
+      >
+        <IconContract
+          :strokeClass="contrastMode"
+          v-if="statusModalMode === 'fixed'"
+        />
+        <IconExpand
+          :strokeClass="contrastMode"
+          v-if="statusModalMode === 'inline'"
+        />
+      </button>
+    </div>
     <h3>{{ mintStatusTitle }}</h3>
     <div id="completedMintContent">
       <p>
@@ -7,20 +24,47 @@
         Opensea.
       </p>
       <div>
-        <nuxt-link :to="`/gallery/${activeContractId}`">View Gallery</nuxt-link>
+        <nuxt-link :to="`/gallery/${activeContractId}`" class="asButton">View Gallery</nuxt-link>
         <nuxt-link
           :to="`/view/${activeContractId}/${mintedData && mintedData.tokenId}`"
+          class="asButton"
           >View Token</nuxt-link
         >
       </div>
     </div>
-    <div v-if="fakeMintedData" class="help">
+    <div v-if="devMode && fakeMintedData" class="help ">
       <div>Contract: {{ fakeMintedData.contractId }}</div>
       <div>Token: {{ fakeMintedData.tokenId }}</div>
       <div>Network: {{ fakeMintedData.network }}</div>
     </div>
-
-    <div class="transactionInfo" v-if="openseaLink">
+    <div v-if="!devMode && mintedData" class="help ">
+      <div>Contract: {{ mintedData.contractId }}</div>
+      <div>Token: {{ mintedData.tokenId }}</div>
+      <div>Network: {{ mintedData.network }}</div>
+    </div>
+    <ToggleSection v-if="openseaLink">
+      <span slot="header">Transaction Meta</span>
+      <div slot="content">
+        <div class="formItem">
+          <label>Opensea Link</label>
+          <a :href="openseaLink" class="etherscanLink" target="blank">
+        <IconExternalLink strokeClass="dark" />
+        {{ openseaLink }}
+      </a>
+        </div>
+        <div class="formItem" v-if="etherscanLink">
+          <label>Transaction</label>
+          
+           <a :href="etherscanLink" class="etherscanLink" target="blank">
+          <IconExternalLink
+            :strokeClass="statusModalMode === 'fixed' ? 'dark' : 'dark'"
+          />
+          {{ etherscanLink }}
+        </a>
+        </div>
+      </div>
+    </ToggleSection>
+    <!-- <div class="transactionInfo" v-if="openseaLink">
       <label class="mintTransactionLabel">OPENSEA</label>
       <div>
         <a :href="openseaLink" class="etherscanLink" target="blank">
@@ -39,27 +83,20 @@
           {{ etherscanLink }}
         </a>
       </div>
-    </div>
+    </div> -->
 
-    <div class="actions">
-      <button
+    <div class="row actions">
+      <Button size="large" :fill="false"  mode="primary"
         id="resetMintButton"
-        class="w3-button w3-block w3-padding-large w3-black w3-margin-bottom"
         @click="resetMintForm"
       >
         Reset
-      </button>
-      <button
-        class="btn hollow"
-        @click="handleCompletedModal"
-        style="margin-top: 0.5rem;"
-      >
-        <IconContract strokeClass="dark" />
-        <span>minimise dialog</span>
-      </button>
-      <button class="btn hollow" @click="setMintStatus('ready')">
-        <span>set ready</span>
-      </button>
+      </Button>
+      
+      
+      <Button class="btn hollow" @click="setMintStatus('ready')" v-if="devMode">
+        <span>set as ready</span>
+      </Button>
     </div>
   </div>
 </template>
@@ -139,6 +176,8 @@ export default {
   },
   computed: {
     ...mapGetters({
+      contrastMode: 'ui/contrastMode',
+      devMode: 'ui/devMode',
       walletNetwork: 'ui/walletNetwork',
       activeContractId: 'ui/activeContractId',
       statusModalMode: 'ui/statusModalMode',

@@ -1,7 +1,7 @@
 <template>
   <div
     class="dataSection toggleSection"
-    :class="isActive ? 'active' : 'notActive'"
+    :class="`${isActive ? 'active' : 'notActive'} ${colorMode}`"
   >
     <div class="toggleHeader">
       <button
@@ -11,7 +11,8 @@
         @click="toggleActive"
       >
         <span class="iconWrap expand">
-          <IconChevron :strokeClass="iconStrokeColor" />
+          <IconChevron 
+          :strokeClass="`${colorMode === 'light' ? 'ui' : 'dark'}`" />
         </span>
         <slot name="header"></slot>
       </button>
@@ -22,9 +23,15 @@
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .dataSection {
   border: 1px solid var(--line-color, #111);
+}
+.dataSection.light {
+  color: var(--ui-color, #111);
+  .collapsible{
+    color: var(--ui-color, #111);
+  }
 }
 .dataSection + .dataSection {
   border-top: none;
@@ -51,6 +58,7 @@ export default {
       isActive: false,
     }
   },
+  props: ['colorMode'],
   computed: {
     // isActive: () => {
     //   return false

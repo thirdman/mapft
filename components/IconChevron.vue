@@ -31,6 +31,9 @@
 #IconChevron.icon.brand {
   stroke: var(--fill-color, #ccc);
 }
+#IconChevron.icon.ui {
+  stroke: var(--ui-color, #111);
+}
 </style>
 <script>
 // https://tablericons.com/

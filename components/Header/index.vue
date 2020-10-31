@@ -82,6 +82,9 @@
               >connect</Button
             >
           </div>
+          <div class="networkItem" v-if="devMode && walletAddress && uiMode !== 'full'">
+            {{walletNetwork}}
+          </div>
           <div class="minimalIcon" v-if="hasWallet && uiMode === 'minimal'">
             <button @click="handleModal" class="btn iconButton">
               <IconUser :strokeClass="contrastMode" />
@@ -123,7 +126,7 @@
                   </button>
                 </div>
               </div>
-
+              
               <div class="accountItem" v-if="hasWallet && uiMode !== 'minimal'">
                 <div class="itemIcon">
                   <button @click="handleModal" class="btn iconButton">
@@ -293,6 +296,7 @@ export default {
       contrastMode: "ui/contrastMode",
       hideUi: "ui/hideUi",
       devMode: "ui/devMode",
+      walletNetwork: "ui/walletNetwork",
       walletAddress: "ui/walletAddress",
       walletStatus: "ui/walletStatus",
       walletChain: "ui/walletChain",
