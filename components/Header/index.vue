@@ -82,7 +82,7 @@
               >connect</Button
             >
           </div>
-          <div class="networkItem" v-if="devMode && walletAddress && uiMode !== 'full'">
+          <div class="networkItem networkName" v-if="walletAddress && uiMode !== 'full'">
             {{walletNetwork}}
           </div>
           <div class="minimalIcon" v-if="hasWallet && uiMode === 'minimal'">

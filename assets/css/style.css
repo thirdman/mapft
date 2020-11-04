@@ -1159,6 +1159,20 @@ ul.heroList {
   border-radius: 0.25rem;
   padding: 0 0.25rem;
 }
+.headerRow .networkName {
+  position: absolute;
+  display: inline-flex;
+  right: 5rem;
+  top: 0.95rem;
+  text-transform: uppercase;
+  background: var(--fill-color, #eee);
+  color: var(--text-color, #eee);
+  border-radius: 0.25rem;
+  padding: 0 0.25rem;
+}
+.rinkeby .headerRow .networkName {
+  background: red;
+}
 .headerRow .brand:hover .logoPosition {
   transform: rotate(180deg);
 }
@@ -1537,7 +1551,7 @@ ul.heroList {
   border: 2px solid var(--ui-color);
   padding: 0.5rem;
   padding-bottom: 2rem;
-  margin-left: -2px;
+  margin-left: 2px;
   border-left: 2px solid var(--ui-color, #111);
   background: var(--background-color, #fff);
   color: var(--ui-color, #111);
@@ -1545,7 +1559,7 @@ ul.heroList {
 }
 .row .previewColumn .previewWrap:before {
   position: absolute;
-  left: -2px;
+  left: 2px;
   top: -1.25rem;
   content: "preview";
   background: var(--ui-color, #111);
@@ -1564,6 +1578,9 @@ ul.heroList {
   min-height: 10rem;
   background: rgba(0, 0, 0, 0.05);
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 /* .preview .previewImage:after {
   content: "Preview image will appear here";
@@ -1887,7 +1904,7 @@ ul.heroList {
 .form .fieldset {
   max-width: 700px;
   position: relative;
-  padding: 1rem;
+  padding: 1.5rem 1rem 1rem;
   border-top: 1px solid var(--ui-color, #111);
 }
 .form .fieldset:first-child,
@@ -1930,6 +1947,20 @@ ul.heroList {
   justify-content: center;
   font-size: 0.75rem;
   font-variation-settings: "wght" 700;
+}
+.sectionTitle {
+  position: absolute;
+  left: 1.25rem;
+  top: 0rem;
+  background: var(--ui-color, #111);
+  color: var(--background-color, #eee);
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-variation-settings: "wght" 700;
+  padding: 0 0.25rem 0 0;
 }
 
 .formItem {

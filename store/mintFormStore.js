@@ -64,12 +64,13 @@ export const state = () => ({
   thumbnailIpfsHash: "",
   // thumbnailIpfsHashDefault: "QmQw1qUqKnZSLUZEbtQqyWtqv7KeMzdZZ4ixJfEksdcaL9",
   thumbnailIpfsHashDefault: "QmawLNCbgvpqYvLSF9nvzbJacSuxF5taSdidfGVST8rG1F",
+  thumbnailArweaveHashDefault: "isQRjzHIlqNmYW0KtboDm2gtJjg3dhRb_iV7sW8f_3g",
   arweaveStatus: "",
   fileArweaveHash: "",
   thumbnailArweaveStatus: "",
   thumbnailArweaveHash: "",
   thumbnailSource:
-    "https://gateway.pinata.cloud/ipfs/QmawLNCbgvpqYvLSF9nvzbJacSuxF5taSdidfGVST8rG1F",
+    "https://arweave.rocks/isQRjzHIlqNmYW0KtboDm2gtJjg3dhRb_iV7sW8f_3g",
   cropOutputSource: "",
   // fileHash: '',
   fileName: "",
@@ -114,6 +115,7 @@ export const getters = {
   fileArweaveHash: (state) => state.fileArweaveHash,
   thumbnailIpfsHash: (state) => state.thumbnailIpfsHash,
   thumbnailIpfsHashDefault: (state) => state.thumbnailIpfsHashDefault,
+  thumbnailArweaveHashDefault: (state) => state.thumbnailArweaveHashDefault,
   thumbnailArweaveHash: (state) => state.thumbnailArweaveHash,
   thumbnailUploadStatus: (state) => state.thumbnailUploadStatus,
   // uploadThumbnailStatus: (state) => state.uploadThumbnailStatus,
@@ -160,7 +162,7 @@ export const getters = {
       editions,
       series,
       royaltyFee,
-      thumbnailIpfsHashDefault,
+      thumbnailArweaveHashDefault,
     } = state;
 
     return {
@@ -175,7 +177,7 @@ export const getters = {
       editions,
       series,
       royaltyFee,
-      thumbnailIpfsHashDefault,
+      thumbnailArweaveHashDefault,
     };
   },
   getField,

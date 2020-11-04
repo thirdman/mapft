@@ -572,7 +572,8 @@ const mintThatShit = (event, state, rootContext) => {
   const thumbnailIPFSHash =
     state.thumbnailIpfsHash ||
     (useThumbnailDefault && state.thumbnailIpfsHashDefault);
-  const thumbnailArweaveHash = state.thumbnailArweaveHash;
+  const thumbnailArweaveHash =
+    state.thumbnailArweaveHash || state.thumbnailArweaveHashDefault;
   const userContractAddress = state.activeContractId;
   console.log("isNan(royaltyfee)", isNaN(royaltyFee));
   console.log("MINT: royaltyFee", royaltyFee);

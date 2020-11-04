@@ -140,7 +140,7 @@
       v-if="activeContractId && !shouldHideForm()"
     > 
       <div class="sectionNumber">1.</div>
-      <div class="formItem">
+      <div class="sectionTitle">
         <h6>Token File</h6>
       </div>
       <div class="formItem block">
@@ -209,12 +209,7 @@
           Applies when non-image files are used. Appears on Opensea and gallery list
           previews.
         </p>
-        <!-- <div v-if="thumbnailIpfsHashDefault">
-          <img
-            class="defaultThumbnail"
-            :src="`https://gateway.pinata.cloud/ipfs/${thumbnailIpfsHashDefault}`"
-          />
-        </div> -->
+        
         <FileUpload
           mode="thumbnail"
           :arweaveStatus="thumbnailArweaveStatus"
@@ -284,7 +279,7 @@
     >
       <!-- <div class="divider"></div> -->
       <div class="sectionNumber">2.</div>
-      <div class="formItem">
+      <div class="sectionTitle">
         <h6>Required Data</h6>
       </div>
       <ValidationProvider rules="required">
@@ -423,7 +418,7 @@
       <!-- OPTIONAL SECTION -->
       <!-- <div class="divider"></div> -->
       <div class="sectionNumber">3.</div>
-      <div class="formItem">
+      <div class="sectionTitle">
         <h6>Optional Data</h6>
       </div>
       <ValidationProvider rules>
@@ -507,14 +502,14 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       <!-- CUSTOM FIELDS-->
       <!-- <div class="divider"></div> -->
       <div class="sectionNumber">4.</div>
-      <div class="formItem" v-if="devMode">
+      <div class="sectionTitle">
         <h6>Custom Meta Data</h6>
+      </div>
+      <div class="formItem" v-if="devMode">
         <div class="help">
           Add your own meta data. Initial fields are generated using templates
           created in your deploy contract.
         </div>
-      </div>
-      <div class="formItem" v-if="devMode">
         <div v-for="(item, index) in metaFieldsObj" v-bind:key="index">
           <transition-group name="list" tag="div">
             <MetaFieldEdit
@@ -766,6 +761,7 @@ export default {
       thumbnailIpfsStatus: "mintFormStore/thumbnailIpfsStatus",
       thumbnailArweaveStatus: "mintFormStore/thumbnailArweaveStatus",
       thumbnailIpfsHashDefault: "mintFormStore/thumbnailIpfsHashDefault",
+      thumbnailArweaveHashDefault: "mintFormStore/thumbnailArweaveHashDefault",
       uploadThumbnailStatusTitle: "mintFormStore/uploadThumbnailStatusTitle",
       thumbnailSource: "mintFormStore/thumbnailSource",
       showThumbnailField: "mintFormStore/showThumbnailField",
@@ -1005,10 +1001,13 @@ export default {
             (read.innerText =
               "No preview available, use thumbnail to define one.");
           break;
-        default:
-          read = document.createElement("div");
-          read.innerText = "Non Image File";
-          read.className = "tokenImage empty";
+        // default:
+        //   read = document.createElement("div");
+        //   read.innerText = "Non Image File";
+        //   read.className = "tokenImage empty";
+        default: 
+          read = document.createElement("img");
+          read.className = "tokenImage";
       }
       read.src = src;
       var output = document.getElementById(parent);

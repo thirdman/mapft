@@ -12,7 +12,7 @@
           :class="previewData.fileName ? 'hasImage' : 'noImage'"
         >
           <img
-            :src="`https://gateway.pinata.cloud/ipfs/${previewData.thumbnailIpfsHashDefault}`"
+            :src="`https://arweave.rocks/${previewData.thumbnailArweaveHashDefault}`"
             v-if="!previewData.fileName"
           />
         </div>
@@ -97,7 +97,7 @@
           <div class="formItem">
             <label>File Arweave Hash</label>
             <p class="xsmall clamp" >{{fileArweaveHash}}</p>
-            <a :href="`https://ipfs.io/ipfs/${fileArweaveHash}`" target="_blank" v-if="fileArweaveHash"><IconExternalLink size="small" /></a>
+            <a :href="`https://arweave.rocks/${fileArweaveHash}`" target="_blank" v-if="fileArweaveHash"><IconExternalLink size="small" /></a>
           </div>
         </div>
       </ToggleSection>
