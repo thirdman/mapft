@@ -4,7 +4,7 @@ import { removeFromArrayById } from "./../utils/misc";
 import { OpenSeaPort, Network } from "opensea-js";
 import { getTrait } from "./../utils/assets";
 export const state = () => ({
-  galleryContractId: "0xa0AfEDcC9446fD1F41706EaA4931512bDb2efAe7",
+  galleryContractId: "",
   galleryAssets: undefined,
   filteredAssets: [],
   galleryAssetCount: undefined,

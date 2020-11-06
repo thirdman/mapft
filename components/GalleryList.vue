@@ -42,17 +42,6 @@
               "
               :thumbnail="item && item.imageUrlThumbnail"
               />
-            <!-- <img
-              :src="
-                displayMode === 'compact'
-                  ? item.imageUrlThumbnail
-                  : item.imagePreviewUrl
-              "
-              @error="imageLoadError(index)"
-              class="galleryItemImage"
-              v-if="item.imageUrlThumbnail || item.imagePreviewUrl"
-            /> -->
-            
             <DefaultImage v-if="!item.imageUrlThumbnail || item.imageUrlThumbnail === 'https://storage.opensea.io'"/>
           </div>
           <div class="galleryListItemContent">
@@ -186,7 +175,8 @@
   letter-spacing: unset;
   font-variation-settings: 'wght' 500;
 }
-.galleryImageWrap {
+
+.galleryImageWrap, {
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;

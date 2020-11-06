@@ -51,7 +51,7 @@
       
     </div>
     
-    <div class="triggerPosition">
+    <div class="triggerPosition" v-if="contentType(fileType) === 'threed'">
       <button class="btn iconButton" @click="toggleDisplay">
         <IconSettings :strokeClass="contrastMode" />
       </button>
@@ -155,6 +155,28 @@ export default {
         z: 0,
       }
       cancelAnimationFrame(this.noRotate)
+    },
+    
+    contentType: (fileType) => {
+      switch (fileType) {
+        case 'glb':
+        case 'obj':
+        case 'gltf':
+          return 'threed'
+          break
+        case 'mp4':
+        case 'mov':
+          return 'video'
+          break
+        case 'mp3':
+          return 'audio'
+          break
+        case 'pdf':
+          return 'pdf'
+          break
+        default:
+          return 'image'
+      }
     },
   },
 }

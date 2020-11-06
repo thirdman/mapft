@@ -135,7 +135,8 @@ p.small,
 div.small {
   font-size: 0.75rem;
 }
-p.xsmall {
+p.xsmall,
+div.xsmall {
   font-size: 0.675rem;
   margin: 0;
 }
@@ -144,6 +145,9 @@ p.xsmall {
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 10rem;
+}
+.clamp.wide {
+  max-width: 100%;
 }
 
 /*THEME*/
@@ -800,7 +804,7 @@ section > .tertiary {
   flex-shrink: 0;
   flex-grow: 0;
   padding: 0.5rem 1rem;
-  position: sticky;
+  /* position: sticky; */
   top: 80px;
 }
 .tertiary h2,

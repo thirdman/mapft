@@ -204,7 +204,7 @@
           </ToggleSection>
 
           <ToggleSection>
-            <span slot="header">Owner Info</span>
+            <span slot="header">Owner</span>
             <div slot="content">
               <div class="formItem">
                 <label>Owned By:</label>

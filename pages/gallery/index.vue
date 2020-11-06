@@ -8,11 +8,14 @@
         <div>
           <label>Featured Galleries</label>
           <GalleriesMenu :galleryContractId="galleryContractId" />
+          <label>User Contracts</label>
+          <GalleriesUserMenu />
         </div>
       </div>
       <div class="primary">
         <h4>User Gallery</h4>
-        <div class="loadContractRow">
+        <div class="loadContractRow row">
+          <div class="column col-66">
           <input
             name="Contract Id"
             id="galleryContractId"
@@ -23,12 +26,19 @@
             placeholder="0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
             v-model="galleryContractId"
           />
-          <button class="w3-button w3-black" @click="handleLoad">
-            Load assets
-          </button>
+          </div>
+          <div class="col-33 column">
+          <Button size="medium" @click="handleLoad">
+            Load Gallery
+          </Button>
+          <Button size="medium" @click="handleLoad">
+            Load Active
+          </Button>
+          </div>
         </div>
-        <h4>Example Galleries</h4>
+        <h4>Featured Galleries</h4>
         <GalleriesMenu />
+        
         <h4>Elsewhere</h4>
         <figure>
           <img src="~/static/images/alpha.jpg" width="200px" />
@@ -109,11 +119,18 @@ export default {
   flex-basis: auto;
   padding: 1rem 0;
   flex-direction: row;
-
   justify-content: flex-start;
   align-items: center;
+  background: var(--line-color, #eee);
+  border-radius: .5rem;
+  padding: .5rem;
 }
-
+.loadContractRow input{
+  width: 100%;
+}
+.loadContractRow button{
+  margin-left: .5rem;
+}
 figure {
   margin: 0.25rem;
   background: var(--line-color, rgba(0, 0, 0, 0.05));

@@ -12,18 +12,18 @@
       id="fieldsetContractView"
       v-if="!showEditContract"
     >
-      <label>Active Contract ID</label>
+      <label>Active Contract </label>
       <div class="row">
         <div class="column col-66">
           <div id="userContractAddress">{{ activeContractId }}</div>
         </div>
         <div class="column col-33">
           <button
-            class="btn iconButton"
+            class="btn"
             id="editUserContractButton"
             @click="handleAccountModal(true)"
           >
-            <IconEdit strokeClass="light" />
+            <IconEdit strokeClass="light" size="small" />
           </button>
         </div>
       </div>
@@ -195,7 +195,9 @@
       :arweaveStatus="arweaveStatus"
       :ipfsStatus="ipfsStatus"
     />
-    <Button @click="setShowThumbnailField(!showThumbnailField)">{{showThumbnailField ? "Hide" : 'Show'}} Thumbnail Upload</Button>
+    <Button 
+    size="small"
+    @click="setShowThumbnailField(!showThumbnailField)">{{showThumbnailField ? "Hide" : 'Show'}} Thumbnail Upload</Button>
     </div>
     
     <!-- THUMBNAIL SECTION -->

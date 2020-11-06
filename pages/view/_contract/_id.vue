@@ -282,7 +282,7 @@
           </ToggleSection>
 
           <ToggleSection v-if="viewData">
-            <span slot="header">Owner Info</span>
+            <span slot="header">Owner </span>
             <div slot="content">
               <div class="formItem">
                 <label>Owned By:</label>
@@ -550,8 +550,12 @@ export default {
     justify-content: center;
     
     .previewImage {
-      width: 100%;
-      height: auto;
+      // width: 100%;
+      // height: auto;
+      // width: unset;
+      height: 100%;
+      object-fit: contain;
+      // max-height: 80vh;
     }
     .previewLoading {
       position: absolute;

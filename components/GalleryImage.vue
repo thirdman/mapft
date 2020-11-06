@@ -1,35 +1,34 @@
 <template>
-  
-          <div class="galleryImageWrap">
-            <transition name="fade" appear>
-            <img
-              :src="src"
-              @error="imageLoadError()"
-              @load="imageLoad()"
-              class="galleryItemImage"
-              v-if="!notFound"
-            />
-            </transition>
-            <transition name="fade" appear>
-            <DefaultImage v-if="notFound"/>
-            </transition>
-          </div>
-      
+  <div class="galleryImageWrapInner">
+    <transition name="fade" appear>
+    <img
+      :src="src"
+      @error="imageLoadError()"
+      @load="imageLoad()"
+      class="galleryItemImage"
+      v-if="!notFound"
+    />
+    </transition>
+    <transition name="fade" appear>
+    <DefaultImage v-if="notFound"/>
+    </transition>
+  </div>
 </template>
 
 <style>
-/* 
-.galleryImageWrap {
+.galleryImageWrapInner {
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
+  height: 100%; 
   flex-basis: 80%;
   flex-shrink: 0;
   flex-grow: 1;
   overflow: hidden;
 }
+/* 
 .galleryImageWrap img {
   width: 100%;
   height: 100%;
@@ -74,10 +73,9 @@ export default {
       // console.log(`GalleryImage failed to load, ${index}`);
       // console.log('this.thumbnail', this.thumbnail)
       // console.log('this.src', this.src)
-      console.log('error')
+      console.log('image load error')
       this.notFound = true
       this.isLoaded = false
-      
     },
     imageLoad () {
       console.log('load')

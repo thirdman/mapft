@@ -20,7 +20,7 @@
           tabindex="0"
         >
           <IconClose
-            :strokeClass="contrastMode === 'dark' ? 'light' : 'dark'"
+            :strokeClass="contrastMode === 'dark' ? 'dark' : 'dark'"
           />
         </button>
       </div>
