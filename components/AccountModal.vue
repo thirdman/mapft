@@ -8,7 +8,7 @@
     :scrollable="true"
     :reset="true"
     width="60%"
-    height="80%"
+    height="auto"
     :focus-trap="true"
     :clickToClose="true"
   >

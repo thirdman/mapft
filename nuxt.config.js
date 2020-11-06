@@ -53,6 +53,9 @@ export default {
       {
         src: "/arweaveFinal.js",
       },
+      {
+        src: "https://cdn.rawgit.com/daishihmr/vox.js/1.0.1/build/vox.min.js",
+      },
       // {
       //   src: "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js",
       //   type: "module",

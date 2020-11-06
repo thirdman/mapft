@@ -131,6 +131,10 @@ a.asButton {
   color: var(--danger-color, red);
 }
 
+p.small,
+div.small {
+  font-size: 0.75rem;
+}
 p.xsmall {
   font-size: 0.675rem;
   margin: 0;
@@ -2372,7 +2376,7 @@ MODAL
 }
 
 .dataSection .formItem {
-  padding-left: 2rem;
+  /* padding-left: 2rem; */
   padding-top: 0;
   padding-bottom: 0;
 }

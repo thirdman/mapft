@@ -215,15 +215,16 @@
             <div slot="content">
               <div class="formItem">
                 <label>Edition</label>
-                <div>{{ viewData.edition }} of {{ viewData.editions }}</div>
+                <div class="small">{{ viewData.edition }} of {{ viewData.editions }}</div>
               </div>
               <div class="formItem">
                 <label>File Type</label>
-                <div id="metadata7">{{ viewData.fileType }}</div>
+                <div class="small" id="metadata7">{{ viewData.fileType }}</div>
+                <div class="small" >{{ getHumanSize() }}</div>
               </div>
               <div class="formItem">
                 <label>Exhibition</label>
-                <div id="metadata8">{{ viewData.exhibition }}</div>
+                <div class="small" id="metadata8">{{ viewData.exhibition }}</div>
                 <br />
               </div>
             </div>
@@ -244,17 +245,24 @@
                       tokenId
                     "
                     target="_blank"
-                    class="outLink"
-                  >View on Opensea</a>
+                    class="metaLink"
+                  ><IconExternalLink size="small" />View on Opensea</a>
                 </div>
               </div>
               <div class="formItem">
                 <label>IPFS</label>
-                <div id="link0" class="w3-small">{{ viewData.fileIpfsHash }}</div>
+                <div id="link0" class="w3-small ">
+                  <a :href="`https://arweave.rocks/${viewData.fileIpfsHash}`" target="_blank" v-if="viewData.fileIpfsHash" class="metaLink" ><IconExternalLink size="small" />
+                  {{ viewData.fileIpfsHash }}
+                  </a>
+                </div>
               </div>
               <div class="formItem">
                 <label>Arweave</label>
-                <div id="link1" class="w3-small">{{ viewData.fileArweaveHash }}</div>
+                <div id="link1" class="w3-small ">
+                  <a :href="`https://arweave.rocks/${viewData.fileArweaveHash}`" target="_blank" v-if="viewData.fileArweaveHash" class="metaLink"><IconExternalLink size="small" />
+                  {{ viewData.fileArweaveHash }}</a>
+                </div>
               </div>
             </div>
           </ToggleSection>
@@ -298,6 +306,7 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { humanFileSize } from '../../../utils/misc'
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
   name: 'ViewPageParams',
@@ -449,6 +458,9 @@ export default {
       this.$store.commit('ui/setViewData', undefined)
       $nuxt._router.push(`/view/${this.contractId}/${newTokenId}`)
     },
+    getHumanSize(size){
+      return "23"
+    }
   },
   actions: {
     ...mapActions({
@@ -575,4 +587,19 @@ export default {
 .metaItem:last-child {
   border-bottom: none;
 }
+.metaLink{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  text-decoration: none;
+  // border-bottom: 1px dashed var(--fill-color, #eee);
+}
+.metaLink .icon{
+  display: inline-block;
+  margin-right: .25rem;
+  flex-shrink: 0;
+  
+}
+
 </style>

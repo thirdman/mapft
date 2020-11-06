@@ -584,7 +584,7 @@ const mintThatShit = (event, state, rootContext) => {
   console.log("MINT thumbnailIPFSHash: ", thumbnailIPFSHash);
   console.log("MINT thumbnailArweaveHash: ", thumbnailArweaveHash);
   // const thumbnailHashToUse = thumbnailIPFSHash || fileIPFSHash || "";
-  const thumbnailHashToUse = thumbnailArweaveHash || fileArweaveHash || "";
+  const thumbnailHashToUse = thumbnailArweaveHash;
 
   console.log("MINT thumbnailHashToUse: ", thumbnailHashToUse);
 

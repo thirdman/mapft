@@ -34,7 +34,15 @@
         >
           <!-- <a class="itemLink" @click="handleLink(item.tokenId, galleryContractId)"> -->
           <div class="galleryImageWrap">
-            <img
+            <GalleryImage 
+              :src="
+                displayMode === 'compact'
+                  ? item.imageUrlThumbnail
+                  : item.imagePreviewUrl
+              "
+              :thumbnail="item && item.imageUrlThumbnail"
+              />
+            <!-- <img
               :src="
                 displayMode === 'compact'
                   ? item.imageUrlThumbnail
@@ -43,8 +51,9 @@
               @error="imageLoadError(index)"
               class="galleryItemImage"
               v-if="item.imageUrlThumbnail || item.imagePreviewUrl"
-            />
-            <DefaultImage v-if="!item.imageUrlThumbnail"/>
+            /> -->
+            
+            <DefaultImage v-if="!item.imageUrlThumbnail || item.imageUrlThumbnail === 'https://storage.opensea.io'"/>
           </div>
           <div class="galleryListItemContent">
             <label>

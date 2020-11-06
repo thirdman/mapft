@@ -159,6 +159,7 @@
             :onRequestClear="onRequestClear"
           />
         </client-only>
+        
       </div>
       <!-- <div class="formItem required">
         <label>File Upload</label>
@@ -194,6 +195,7 @@
       :arweaveStatus="arweaveStatus"
       :ipfsStatus="ipfsStatus"
     />
+    <Button @click="setShowThumbnailField(!showThumbnailField)">{{showThumbnailField ? "Hide" : 'Show'}} Thumbnail Upload</Button>
     </div>
     
     <!-- THUMBNAIL SECTION -->

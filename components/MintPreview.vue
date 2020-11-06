@@ -91,13 +91,14 @@
         <div slot="content">
           <div class="formItem">
             <label>File IPFS Hash</label>
-            <p class="xsmall clamp" >{{fileIpfsHash}}</p>
-            <a :href="`https://ipfs.io/ipfs/${fileIpfsHash}`" target="_blank" v-if="fileIpfsHash"><IconExternalLink size="small" /></a>
+            <p class="xsmall clamp" ><a :href="`https://ipfs.io/ipfs/${fileIpfsHash}`" target="_blank" v-if="fileIpfsHash" style="display: inline-block"><IconExternalLink size="small" /></a>
+            {{fileIpfsHash}}</p>
           </div>
           <div class="formItem">
             <label>File Arweave Hash</label>
-            <p class="xsmall clamp" >{{fileArweaveHash}}</p>
-            <a :href="`https://arweave.rocks/${fileArweaveHash}`" target="_blank" v-if="fileArweaveHash"><IconExternalLink size="small" /></a>
+            <p class="xsmall clamp" >
+            <a :href="`https://arweave.rocks/${fileArweaveHash}`" target="_blank" v-if="fileArweaveHash" style="display: inline-block"><IconExternalLink size="small" /></a>
+            {{fileArweaveHash}}</p>
           </div>
         </div>
       </ToggleSection>

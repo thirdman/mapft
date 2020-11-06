@@ -4,8 +4,12 @@
     :class="`${contentType(fileType)} ${mode}`"
     v-if="item && item.fileIpfsUrl"
   >
-  
+    <div v-if="notFound">
+      not found
+      </div>
     <img
+      @load="onLoad"
+      @error="imageLoadError"
       :src="item.fileIpfsUrl"
       v-if="contentType(fileType) === 'image'"
       id="result"
@@ -16,6 +20,15 @@
         :src="item.fileIpfsUrl"
         :mode="mode"
         :data="data"
+      />
+    </client-only>
+    <client-only>
+      <VoxelViewer
+        v-if="contentType(fileType) === 'voxel'"
+        :src="item.fileIpfsUrl"
+        :mode="mode"
+        :data="data"
+        model="~/assets/models/chicken.vox"
       />
     </client-only>
 
@@ -98,6 +111,7 @@ export default {
   data() {
     return {
       isActive: false,
+      notFound: false,
     }
   },
   computed: {},
@@ -106,8 +120,12 @@ export default {
       switch (fileType) {
         case 'glb':
         case 'obj':
+        
         case 'gltf':
           return 'threed'
+        break
+        case 'vox':
+          return 'voxel'
           break
         case 'mp4':
         case 'mov':
@@ -127,6 +145,13 @@ export default {
           return 'image'
       }
     },
+    onLoad: (event) => {
+      console.log('file loaded, thing:', event)
+      
+    },
+    imageLoadError: (event) => {
+      this.notFound = true;
+    }
   },
 }
 </script>

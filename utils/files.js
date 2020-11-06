@@ -31,10 +31,6 @@ const openFile = async (file, context) => {
   renderImage(fileType, window.URL.createObjectURL(fileInput), "output");
 
   setFileInfo({ fileName, fileType });
-
-  // document.getElementById('fileLabelText').innerHTML = fileName
-  // document.getElementById('g').value = fileType
-
   toggleThumbnail(fileType);
   triggerUploadProcess();
   // startUploadProcess()

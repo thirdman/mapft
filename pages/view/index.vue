@@ -123,7 +123,7 @@
           </div>
         </div>
       </div>
-      <div class="secondary">
+      <div class="secondary" v-if="viewData && viewData.ownerAddress">
         <div class="aside help">&nbsp;</div>
         <div class="column col-66 metaColumn" v-if="viewData">
           <div class="galleryLinkWrap">
@@ -136,7 +136,7 @@
             <div slot="content">
               <div class="formItem">
                 <label>Edition</label>
-                <div>{{ viewData.edition }} of {{ viewData.editions }}</div>
+                <div class="w3-small">{{ viewData.edition }} of {{ viewData.editions }}</div>
               </div>
               <div class="formItem">
                 <label>File Type</label>
@@ -209,7 +209,7 @@
               <div class="formItem">
                 <label>Owned By:</label>
                 <div id="owner0" class="w3-small" v-if="!isOwner">
-                  <Address :address="viewData.ownerAddress" :fill="true" />
+                  <Address :address="viewData && viewData.ownerAddress" :fill="true" />
                 </div>
                 <div v-if="isOwner" class="ownerBox">YOU</div>
                 <div v-if="isOwner" class="ownerGift">
@@ -237,7 +237,7 @@ export default {
     // nothing to see here
   },
   created() {
-    // console.log('created client')
+    console.log('created client')
     // console.log('this', this)
     if (process.client) {
       const asyncTokenId = this.$route.query.id;
@@ -258,18 +258,22 @@ export default {
         return null;
       }
       if (asyncTokenId && asyncContractId) {
-        console.log("setting params...");
+        console.log("setting params...", asyncTokenId, asyncContractId);
         this.$store.commit("ui/setSearchParams", {
           tokenId: asyncTokenId,
           contractId: asyncContractId,
         });
-        this.$store.dispatch("ui/handleSearch", {
-          tokenId: asyncTokenId,
-          contractId: asyncContractId,
-        });
+        
+          this.$store.dispatch("ui/handleSearch", {
+            tokenId: asyncTokenId,
+            contractId: asyncContractId,
+          });
+        
         //   if (process.client) {
         // }
       }
+        // do something cool
+
     }
     if (process.server) {
       // const { req, res, beforeNuxtRender } = context
@@ -308,11 +312,11 @@ export default {
       return context.$route && context.$route.query.contract;
     },
     isOwner() {
-      if (viewData) {
-        console.log("viewData", viewData, walletAddress);
-        const tempWalletAddress = walletAddress && walletAddress.toLowerCase();
+      if (this.viewData) {
+        // console.log("viewData", this.viewData, this.walletAddress);
+        const tempWalletAddress = this.walletAddress && this.walletAddress.toLowerCase();
         const tempOwnerAddress =
-          viewData && viewData.ownerAddress.toLowerCase();
+          this.viewData && this.viewData.ownerAddress.toLowerCase();
 
         return (
           tempWalletAddress &&

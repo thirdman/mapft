@@ -298,13 +298,14 @@ export const actions = {
     console.log("doSearch");
   },
   async handleSearch(dispatch, commit) {
-    console.log("handleSearch", commit, dispatch);
+    console.log("handleSearch");
     const { state } = dispatch;
     this.commit("ui/setViewStatus", "loading");
     const params = {
       contractId: state.searchContractId,
       tokenId: parseInt(state.searchTokenId),
     };
+
     if (!params.tokenId) {
       console.error("no token id");
       return null;
@@ -312,13 +313,14 @@ export const actions = {
 
     // const imageLink = await readImageLink(params, this)
     // console.log('imageLink', imageLink)
+    this.commit("ui/setViewStatus", "loading");
     await readThatShit(params, this).then((result) => {
-      console.log("viewResult result", result);
-      this.commit("ui/setViewStatus", "loading");
+      console.log("readthatshit viewResult result", result);
       if (!result.ownerAddress) {
         console.log("no data?");
         return this.commit("ui/setViewStatus", "error");
       } else {
+        console.log("has owneraddress", result.ownerAddress); // substitute for if data exists
         this.commit("ui/setViewData", result);
         this.commit("ui/setViewStatus", "loaded");
       }

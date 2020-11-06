@@ -60,9 +60,11 @@
       </div>
 
       <div class="search" v-if="isSearchRoute">
-        <button @click="setShowSearch(!showSearch)" class="btn iconButton">
+        <nuxt-link to="/view" >
           <IconSearch :strokeClass="contrastMode" />
-        </button>
+        </nuxt-link>
+        <!-- <button @click="setShowSearch(!showSearch)" class="btn iconButton">
+        </button> -->
         <div class="wedgeWrap">
           <svg
             xmlns="http://www.w3.org/2000/svg"
