@@ -299,7 +299,7 @@
         </div>
       </div>
     </section>
-    {{this.tempViewItem.imagePreviewUrl}}
+    {{`${this.previewImage}`}}
     <Footer />
   </div>
 </template>
