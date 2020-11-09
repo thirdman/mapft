@@ -309,7 +309,8 @@ import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { humanFileSize } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
-const BASE_URL = "http://localhost:3333"
+// const BASE_URL = "http://localhost:3333"
+const BASE_URL = "https://infinft-flow-git-flow.thirdman.vercel.app"
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
   name: 'ViewPageParams',
@@ -346,7 +347,7 @@ export default {
       console.log('before mount setting data');
       this.test = "mounted"
       this.description = this.tempViewItem.description;
-      this.previewImage = this.tempViewItem.imagePreviewUrl
+      // this.previewImage = this.tempViewItem.imagePreviewUrl
       this.title = this.tempViewItem.title && `InfiNFT: ${this.tempViewItem.title}`
       console.log('before mount ', this)
     }
