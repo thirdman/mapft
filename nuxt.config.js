@@ -25,10 +25,13 @@ export default {
    ** See https://nuxtjs.org/api/configuration-head
    */
   head: {
-    title: process.env.npm_package_name || "",
+    title: "InfiNFT",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
+      { hid: "og:type", name: "og:type", content: "website" },
+      { hid: "og:title", name: "og:title", content: "InfiNFT" },
       {
         hid: "description",
         name: "description",

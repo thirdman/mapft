@@ -299,6 +299,7 @@
         </div>
       </div>
     </section>
+    {{this.tempViewItem.imagePreviewUrl}}
     <Footer />
   </div>
 </template>
@@ -307,33 +308,59 @@
 import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { humanFileSize } from '../../../utils/misc'
+import ogImage from '~/assets/images/default3d.png';
+const BASE_URL = "http://localhost:3333"
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
   name: 'ViewPageParams',
-
-  head: {
-    title: 'View NFT',
-    // meta: [
-    //   { hid: 'description', name: 'description', content: 'View a cool nft' },
-    // ],
-    script: [
-      // {
-      //   src: 'https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js',
-      //   type: 'module',
-      // },
-      // {
-      //   nomodule: true,
-      //   src:
-      //     'https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js',
-      // },
-    ],
+  data() {
+    return {
+      title: 'View NFT',
+      description: 'A NFT on InfiNFT',
+      // previewImage: `${BASE_URL}_nuxt/assets/images/default3d.png`
+      previewImage: `${BASE_URL}${ogImage}`
+    }
   },
-
+  head() {
+    return {
+      title: this.title,
+      meta: [
+        { hid: 'og:description', name: 'og:description', content: this.description },
+        { hid: 'description', name: 'description', content: this.description },
+        { hid: "og:title", name: "og:title", content: this.title },
+        {
+          hid: "og:image",
+          property: "og:image",
+          // content: (meta && meta.mainImage) || mainImage,
+          // content: `${require(`~/assets/images/default3d.png`)}`,
+          content: this.previewImage,
+        },
+        
+      ],
+    }
+  },
+  beforeMount() {
+    console.log("before create", this.tempViewItem)
+    // SET THE DATA FOR META
+    if(this.tempViewItem){
+      console.log('before mount setting data');
+      this.test = "mounted"
+      this.description = this.tempViewItem.description;
+      this.previewImage = this.tempViewItem.imagePreviewUrl
+      this.title = this.tempViewItem.title && `InfiNFT: ${this.tempViewItem.title}`
+      console.log('before mount ', this)
+    }
+  },
   mounted() {
     console.log(
       'mounted this.$store.state.ui.viewData',
       this.$store.state.ui.viewData
     )
+    console.log(
+      'mounted this',
+      this
+    )
+    
     console.log(
       'viewData.fileIpfsHash',
       this.$store.state.ui.viewData.fileIpfsHash

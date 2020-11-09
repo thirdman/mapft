@@ -238,6 +238,7 @@ export const mutations = {
       state.viewData = {};
     }
     if (data) {
+      console.log("setting viewdata: ", data);
       state.viewData = data;
     }
   },
