@@ -10,6 +10,7 @@
           <label>Elsewhere</label>
           <GalleriesElsewhere :galleryContractId="galleryContractId" />
         </div>
+      <div><Button @click="handleRefresh()">Refresh Assets</Button></div>
       </div>
 
       <div class="primary">
@@ -136,6 +137,12 @@ export default {
       getItems: 'galleryStore/getItems',
       setGalleryDisplayMode: 'galleryStore/setGalleryDisplayMode',
     }),
+    handleRefresh() {
+      console.log('refresh');
+        this.$store.commit('galleryStore/getItems', {
+        contractId: this.$route.params.contract,
+      })
+    }
   },
 }
 </script>

@@ -50,6 +50,9 @@ export const mutations = {
     state.galleryFilter = undefined;
   },
   getItems(state, params) {
+    console.log("get Items", params);
+    console.log("get Items, contractAddress", state.galleryContractId);
+
     const network = this.$config.network;
     const infuraUrl =
       network === "main"
