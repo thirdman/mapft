@@ -309,19 +309,20 @@ import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { humanFileSize } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
-// const BASE_URL = "http://localhost:3333"
-const BASE_URL = "https://infinft-flow-git-flow.thirdman.vercel.app"
+const BASE_URL = "http://localhost:3333"
+// const BASE_URL = "https://infinft-flow-git-flow.thirdman.vercel.app"
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
   name: 'ViewPageParams',
-  data() {
-    return {
-      title: 'View NFT',
-      description: 'A NFT on InfiNFT',
-      // previewImage: `${BASE_URL}_nuxt/assets/images/default3d.png`
-      previewImage: `${BASE_URL}${ogImage}`
-    }
-  },
+  // data() {
+  //   return {
+  //     title: 'View NFT',
+  //     description: 'A NFT on InfiNFT',
+  //     // previewImage: `${BASE_URL}_nuxt/assets/images/default3d.png`
+  //     previewImage: `${BASE_URL}${ogImage}`,
+  //     previewUrl:`${BASE_URL}${ogImage}`,
+  //   }
+  // },
   head() {
     return {
       title: this.title,
@@ -334,7 +335,7 @@ export default {
           property: "og:image",
           // content: (meta && meta.mainImage) || mainImage,
           // content: `${require(`~/assets/images/default3d.png`)}`,
-          content: this.previewImage,
+          content: this.previewUrl || this.previewImage,
         },
         
       ],
@@ -353,18 +354,14 @@ export default {
     }
   },
   mounted() {
-    console.log(
-      'mounted this.$store.state.ui.viewData',
-      this.$store.state.ui.viewData
-    )
-    console.log(
-      'mounted this',
-      this
-    )
+    // console.log(
+    //   'mounted this.$store.state.ui.viewData',
+    //   this.$store.state.ui.viewData
+    // )
     
     console.log(
-      'viewData.fileIpfsHash',
-      this.$store.state.ui.viewData.fileIpfsHash
+      'this',
+      this
     )
     //&& !this.$store.state.ui.viewData
     if (process.client) {
@@ -391,8 +388,9 @@ export default {
       })
     }
     if (process.server) {
+      console.log('VIEW server mount. Context:', context)
       // const { req, res, beforeNuxtRender } = context
-      console.log('created server')
+      // console.log('created server')
       // console.log('this.$scopedSlots', this.$scopedSlots)
     }
   },
@@ -402,15 +400,35 @@ export default {
     console.log('View page destroyed')
   },
 
-  async asyncData({ params }) {
+  async asyncData(context) {
+    const { params, $axios } = context
     //  console.log('process.env', process.env)
-
     const options = {
       contractId: params.contract,
       tokenId: parseInt(params.id),
     }
+    
+    const theUrl = `https://rinkeby-api.opensea.io/api/v1/asset/${params.contract}/${params.id}/`
     console.log('async options', options)
-    // console.log('async this', this)
+    console.log('async theUrl', theUrl)
+    
+    const { data } = await $axios.get(theUrl);
+    // console.log('async data: ', data)
+    
+    // title: 'View NFT',
+    //   description: 'A NFT on InfiNFT',
+    //   // previewImage: `${BASE_URL}_nuxt/assets/images/default3d.png`
+    //   previewImage: `${BASE_URL}${ogImage}`,
+    //   previewUrl:`${BASE_URL}${ogImage}`,
+
+    const tempData = {
+      title: `InfiNFT: ${data.name}` || "InfiiNFT: View Token",
+      description: data.description || "",
+      previewImage: `${BASE_URL}${ogImage}`,
+      previewUrl: data.image_preview_url
+    }
+    console.log('async tempData', tempData)
+    return tempData;
     // console.log('async Web3', Web3)
     // if (!Web3) {
     //   console.log('no Web3')

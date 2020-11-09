@@ -160,9 +160,9 @@ export default {
       }
     },
 
-    async asyncData({ params }) {
+    async asyncData(context) {
     //  console.log('process.env', process.env)
-
+    const { params } = context
     const options = {
       contractId: params.contract,
       tokenId: parseInt(params.id),
