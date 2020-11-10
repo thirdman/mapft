@@ -19,6 +19,7 @@ export default {
     network: "rinkeby",
     infuraUrlRinkeby: process.env.INFURA_URL_RINKEBY,
     infuraUrlMain: process.env.INFURA_URL_RINKEBY,
+    baseUrl: process.env.BASE_URL,
   },
   /*
    ** Headers of the page
@@ -36,6 +37,16 @@ export default {
         hid: "description",
         name: "description",
         content: process.env.npm_package_description || "",
+      },
+      {
+        hid: "og:description",
+        name: "og:description",
+        content: process.env.npm_package_description,
+      },
+      {
+        hid: "og-image",
+        name: "og:image",
+        content: "/images/preview.jpg",
       },
     ],
     link: [

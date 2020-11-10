@@ -1,5 +1,6 @@
 {
   "name": "infinft-flow",
+  "description": "InfiNFT is a token minting platform that allows users to create their own NFTs with fully on-chain metadata. ",
   "version": "0.1.0",
   "private": true,
   "engines": {
