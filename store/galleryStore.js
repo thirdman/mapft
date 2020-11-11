@@ -102,6 +102,10 @@ export const mutations = {
       });
     console.log("setId", params, params.setId);
     if (params.setId) {
+      this.$store.commit(
+        "galleryStore/setGalleryContractId",
+        this.$route.params.contract
+      );
       this.commit("galleryStore/filterGallery", params.setId);
     }
   },

@@ -2,7 +2,8 @@
   <figure class="audioItem">
     <div class="audioVisual">
       <div class="visualIcon">
-        <IconAudio strokeClass="light" />
+        <img :src="thumbnailSrc" class="audioPreviewImg" v-if="thumbnailSrc" />
+        <IconAudio strokeClass="light" v-if="!thumbnailSrc" />
       </div>
       <div class="visualTitle">
         <h6>{{ title }}</h6>
@@ -13,7 +14,6 @@
       Your browser does not support the
       <code>audio</code> element.
     </audio>
-    {{thumbnailSrc}}
   </figure>
 </template>
 
@@ -46,6 +46,7 @@
   border-bottom: 1px solid rgba(30, 30, 30, 0.45);
 }
 .visualIcon {
+  position: relative;
   padding: 1rem;
   flex-basis: 6rem;
   display: flex;
@@ -55,6 +56,15 @@
   /* // margin-right: 1px; */
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(30, 30, 30, 0.85);
+  min-height: 6rem;
+  min-width: 6rem;
+}
+.audioPreviewImg{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
 }
 .visualTitle {
   background: rgba(30, 30, 30, 0.85);
@@ -70,6 +80,7 @@
 .audioVisual h5 {
   margin-left: 0.5rem;
 }
+
 </style>
 
 <script>
