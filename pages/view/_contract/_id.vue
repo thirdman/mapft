@@ -2,18 +2,11 @@
   <div class="pageContainer">
     <Header />
 
-    <div id="searchRow" class="row searchRow" v-if="showSearch">
+    <div id="searchRow" class="row searchRow" v-if="showSearch && 1===2">
       <div class="form entry">
         <div class="w3-row row">
           <div class="formItem column col-50">
             <label for="searchContractId">Art Contract</label>
-            <!-- <input
-              id="ww"
-              type="string"
-              class="hero"
-              placeholder="0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
-              @change="setSearchParams"
-            />-->
             <input
               name="Contract Id"
               oldId="ww"
