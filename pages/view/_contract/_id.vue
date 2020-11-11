@@ -109,6 +109,16 @@
               </div>
             </div>
           </div>
+          <div class="metaItem" v-if="viewData && viewData.exhibition">
+            <label>Set</label>
+            <div id="metadata4" class="aside">
+              <p>
+                <nuxt-link :to="`/gallery/${contractId}/${viewData.exhibition}`">
+                {{viewData.exhibition}}
+                </nuxt-link>
+              </p>
+            </div>
+          </div>
         </div>
         <div v-if="viewData" class="pagingNav">
           <!-- :to="`/view/${contractId}/${parseInt(tokenId) - 1}`" -->
@@ -299,7 +309,6 @@
         </div>
       </div>
     </section>
-    {{`${this.previewImage}`}}
     <Footer />
   </div>
 </template>

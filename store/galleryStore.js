@@ -49,7 +49,7 @@ export const mutations = {
   clearGalleryFilter(state, value) {
     state.galleryFilter = undefined;
   },
-  getItems(state, params) {
+  async getItems(state, params) {
     console.log("get Items", params);
     console.log("get Items, contractAddress", state.galleryContractId);
 
@@ -73,9 +73,10 @@ export const mutations = {
       // limit: 10,
       // tokenId: '9', // string | number | null
     });
-    getAssets
+    await getAssets
       .then((result) => {
         console.log("result", result);
+
         // state.galleryAssets = result
         // state.galleryStatus = 'loaded'
 
@@ -99,6 +100,10 @@ export const mutations = {
         state.galleryStatus = "error";
         return false;
       });
+    console.log("setId", params, params.setId);
+    if (params.setId) {
+      this.commit("galleryStore/filterGallery", params.setId);
+    }
   },
   filterGallery(state, setName) {
     const filtered = state.galleryAssets.filter((asset) => {

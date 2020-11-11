@@ -73,12 +73,12 @@ export default {
       // console.log(`GalleryImage failed to load, ${index}`);
       // console.log('this.thumbnail', this.thumbnail)
       // console.log('this.src', this.src)
-      console.log('image load error')
+      // console.log('image load error')
       this.notFound = true
       this.isLoaded = false
     },
     imageLoad () {
-      console.log('load')
+      // console.log('load')
       this.notFound = false
       this.isLoaded = true
     },
