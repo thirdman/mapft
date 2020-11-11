@@ -89,14 +89,21 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
-
+const BASE_URL = "https://infinft-flow.vercel.app"
 export default {
   name: 'GalleryPage',
   head: {
     title: 'InfiNFT Gallery',
-    // meta: [
-    //   { hid: 'description', name: 'description', content: 'View a cool nft' },
-    // ],
+    meta: [
+      { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
+      { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
+      { hid: "og:type", name: "og:type", content: "website" },
+      {
+          hid: "og:image",
+          property: "og:image",
+          content: `${BASE_URL}/images/preview.jpg`
+        },
+    ],
   },
   created() {
     // console.log('created client')

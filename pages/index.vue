@@ -160,10 +160,12 @@ export default {
     }
   },
   head: {
-    title: 'InfiNFT - A NFT platform with a focus on extendability, flexibility, and on-chain data.',
+    title: 'InfiNFT',
     meta: [
-    //   { hid: 'description', name: 'description', content: 'View a cool nft' },
-    {
+      { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
+      { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
+      { hid: "og:type", name: "og:type", content: "website" },
+      {
           hid: "og:image",
           property: "og:image",
           // content: this.previewUrl,

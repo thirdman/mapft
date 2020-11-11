@@ -106,7 +106,7 @@
             <label>Set</label>
             <div id="metadata4" class="aside">
               <p>
-                <nuxt-link :to="`/gallery/${contractId}/${viewData.exhibition}`">
+                <nuxt-link :to="`/gallery/${contractId}/${viewData.exhibition}`" class="asButton">
                 {{viewData.exhibition}}
                 </nuxt-link>
               </p>
