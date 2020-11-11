@@ -104,7 +104,7 @@ export const mutations = {
     if (params.setId) {
       this.$store.commit(
         "galleryStore/setGalleryContractId",
-        this.$route.params.contract
+        params.contractId
       );
       this.commit("galleryStore/filterGallery", params.setId);
     }

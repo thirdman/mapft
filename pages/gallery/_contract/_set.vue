@@ -41,6 +41,15 @@
         >
           <span>{{ galleryContractId }}</span>
         </div>
+        <div>
+        <a 
+          target="_blank" 
+          :href="`https://twitter.com/intent/tweet?url=${getUrl()}&text=${'A gallery on InfiNFT'}&related=nft4ever,nft42`" 
+          class="shareLink asButton full" 
+          >
+            <IconExternalLink strokeClass="contrastMode" size="small" /> Share
+        </a>
+      </div>
         <label>Display</label>
         <div class="buttonGroup uiMode" :class="contrastMode">
           <button
@@ -93,11 +102,12 @@ const BASE_URL = "https://infinft-flow.vercel.app"
 export default {
   name: 'SetPage',
   head: {
-    title: 'InfiNFT Gallery > Set',
+    title: 'InfiNFT Token Set',
     meta: [
       { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
       { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
       { hid: "og:type", name: "og:type", content: "website" },
+      { hid: "og:title", name: "og:title", content: "InfiNFT Gallery Set" },
       {
           hid: "og:image",
           property: "og:image",
@@ -153,7 +163,14 @@ export default {
         this.$store.commit('galleryStore/getItems', {
         contractId: this.$route.params.contract,
       })
-    }
+    },
+    getUrl(){
+      const myUrl = BASE_URL + this.$route.fullPath;
+      const tempUiMode = "minimal";
+      const tempUiTheme = "charcoal";
+      const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
+      return encodeURIComponent(fullUrl);
+    },
   },
 }
 </script>
@@ -171,5 +188,18 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 1rem;
+}
+.shareLink{
+  flex-grow: 0;
+  margin-left: .5rem;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shareLink.full{
+  width: 100%;
+  flex-grow: 1;
+  font-size: .75rem;
 }
 </style>

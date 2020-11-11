@@ -1,6 +1,7 @@
 <template>
   <div id="galleryList">
-    <div class="sets">
+    <div class="setsRow">
+      <div class="sets">
       <label>Filter:</label>
       <span class="filterContent" v-if="galleryFilter">{{ galleryFilter }}</span>
       <span v-if="!filteredSets(galleryAssets)">No sets</span>
@@ -9,17 +10,21 @@
           ><IconClose size="small" :strokeClass="contrastMode"/></Button
         >
       </span>
-      <div class="pillWrap" v-if="!galleryFilter">
-        <div
-          v-for="(item, index) in filteredSets(galleryAssets)"
-          class="pill"
-          @click="filterGallery(item.name)"
-          :key="index"
-        >
-          <span>{{ item.name }}</span>
-          <span>{{ item.count }}</span>
+      
+      
+        <div class="pillWrap" v-if="!galleryFilter">
+          <div
+            v-for="(item, index) in filteredSets(galleryAssets)"
+            class="pill"
+            @click="filterGallery(item.name)"
+            :key="index"
+          >
+            <span>{{ item.name }}</span>
+            <span>{{ item.count }}</span>
+          </div>
         </div>
       </div>
+      
     </div>
     <div
       class="galleryGrid"
@@ -32,7 +37,6 @@
           class="gallerylistItem"
           @click="handleLink(item, galleryContractId)"
         >
-          <!-- <a class="itemLink" @click="handleLink(item.tokenId, galleryContractId)"> -->
           <div class="galleryImageWrap">
             <GalleryImage 
               :src="
@@ -92,6 +96,15 @@
   padding: 1rem 0 .25rem;
   border-bottom: 1px solid var(--line-color);
   margin-bottom: 1rem;
+}
+.setsRow{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.setsRow > a{
+  flex-grow: 0;
 }
 .sets > label {
   font-size: 0.875rem;
@@ -261,6 +274,7 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+const BASE_URL = "https://infinft-flow.vercel.app"
 export default {
   props: ['displayMode'],
   data() {
@@ -367,6 +381,14 @@ export default {
 
       return allSets.sort((a, b) => b.count - a.count)
     },
+    
+    // getUrl(){
+    //   const myUrl = BASE_URL + this.$route.fullPath;
+    //   const tempUiMode = "minimal";
+    //   const tempUiTheme = "charcoal";
+    //   const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
+    //   return encodeURIComponent(fullUrl);
+    // },
   },
 }
 </script>

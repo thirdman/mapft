@@ -63,6 +63,13 @@
             <IconBack strokeClass="contrastMode" />
             <span>Back to gallery</span>
           </nuxt-link>
+          <a 
+            target="_blank" 
+            :href="`https://twitter.com/intent/tweet?url=${getUrl()}&text=${viewData && viewData.title + ' on InfiNFT: ' + viewData.description}&related=nft4ever,nft42`" 
+            class="shareLink asButton" 
+          >
+            <IconExternalLink strokeClass="contrastMode" size="small" />
+          </a>
         </div>
         <div v-if="uiMode !== 'none'" class="primaryMeta">
           <div class="metaItem">
@@ -508,7 +515,15 @@ export default {
     },
     getHumanSize(size){
       return "23"
-    }
+    },
+    getUrl(){
+      const myUrl = BASE_URL + this.$route.fullPath;
+      const tempUiMode = "minimal";
+      const tempUiTheme = "charcoal";
+      const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
+      return encodeURIComponent(fullUrl);
+    },
+     
   },
   actions: {
     ...mapActions({
@@ -651,7 +666,19 @@ export default {
   display: inline-block;
   margin-right: .25rem;
   flex-shrink: 0;
-  
+}
+.shareLink{
+  flex-grow: 0;
+  margin-left: .5rem;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shareLink.full{
+  width: 100%;
+  flex-grow: 1;
+  font-size: .75rem;
 }
 
 </style>
