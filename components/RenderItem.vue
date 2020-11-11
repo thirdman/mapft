@@ -39,6 +39,7 @@
       :src="item.fileIpfsUrl"
       :title="item.title"
       :imageSrc="item.thumbnailUrl"
+      :thumbnailSrc="item.thumbnailUrl"
       :thumbnailHash="item.thumbnailHash"
     />
     <RenderText

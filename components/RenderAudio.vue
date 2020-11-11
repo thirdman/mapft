@@ -13,6 +13,7 @@
       Your browser does not support the
       <code>audio</code> element.
     </audio>
+    {{thumbnailSrc}}
   </figure>
 </template>
 
@@ -74,7 +75,7 @@
 <script>
 // import jsmediatags from 'jsmediatags'
 export default {
-  props: ['src', 'title'],
+  props: ['src', 'title', 'thumbnailSrc'],
   mounted() {
     // console.log('this', this)
     // console.log('this.src', this.src)
