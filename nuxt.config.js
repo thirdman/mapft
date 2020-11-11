@@ -33,21 +33,21 @@ export default {
       { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
       { hid: "og:type", name: "og:type", content: "website" },
       { hid: "og:title", name: "og:title", content: "InfiNFT" },
-      {
-        hid: "description",
-        name: "description",
-        content: process.env.npm_package_description || "",
-      },
-      {
-        hid: "og:description",
-        name: "og:description",
-        content: process.env.npm_package_description,
-      },
-      {
-        hid: "og-image",
-        name: "og:image",
-        content: "/images/preview.jpg",
-      },
+      // {
+      //   hid: "description",
+      //   name: "description",
+      //   content: process.env.npm_package_description || "",
+      // },
+      // {
+      //   hid: "og:description",
+      //   name: "og:description",
+      //   content: process.env.npm_package_description,
+      // },
+      // {
+      //   hid: "og-image",
+      //   name: "og:image",
+      //   content: "/images/preview.jpg",
+      // },
     ],
     link: [
       { rel: "icon", type: "image/x-icon", href: "@/favicon.ico" },

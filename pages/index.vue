@@ -151,12 +151,26 @@
 
 <script>
 import { mapGetters } from 'vuex'
+const BASE_URL = "https://infinft-flow.vercel.app"
 export default {
+  name: 'ViewPageParams',
+  data() {
+    return {
+      previewUrl: `/images/preview.jpg`,
+    }
+  },
   head: {
     title: 'InfiNFT - A NFT platform with a focus on extendability, flexibility, and on-chain data.',
-    // meta: [
+    meta: [
     //   { hid: 'description', name: 'description', content: 'View a cool nft' },
-    // ],
+    {
+          hid: "og:image",
+          property: "og:image",
+          // content: this.previewUrl,
+          content: `${BASE_URL}/images/preview.jpg`
+        },
+    ],
+    
   },
   computed: {
     ...mapGetters({
