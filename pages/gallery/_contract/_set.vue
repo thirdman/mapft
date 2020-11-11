@@ -47,7 +47,7 @@
           :href="`https://twitter.com/intent/tweet?url=${getUrl()}&text=${'A gallery on InfiNFT'}&related=nft4ever,nft42`" 
           class="shareLink asButton full" 
           >
-            <IconExternalLink strokeClass="contrastMode" size="small" /> Share
+            <IconExternalLink :strokeClass="contrastMode" size="small" /> Share
         </a>
       </div>
         <label>Display</label>
@@ -75,19 +75,6 @@
           </button>
         </div>
 
-        <label>Opensea</label>
-        <div
-          class
-          style="width: 10rem; overflow: hidden; text-overflow: ellipsis;"
-          v-if="galleryAssets"
-        >
-          <a
-            :href="'https://opensea.io/assets/' + galleryContractId"
-            target="_blank"
-            class="outLink"
-            >InfiNFT Alpha on Opensea</a
-          >
-        </div>
       </div>
     </section>
 
@@ -141,6 +128,8 @@ export default {
   computed: {
     ...mapFields('galleryStore', ['galleryContractId']),
     ...mapGetters({
+      uiTheme: 'ui/uiTheme',
+      uiMode: 'ui/uiMode',
       contrastMode: 'ui/contrastMode',
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
@@ -166,8 +155,8 @@ export default {
     },
     getUrl(){
       const myUrl = BASE_URL + this.$route.fullPath;
-      const tempUiMode = "minimal";
-      const tempUiTheme = "charcoal";
+      const tempUiMode = this.uiMode || "minimal";
+      const tempUiTheme = this.uiTheme || "charcoal";
       const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },

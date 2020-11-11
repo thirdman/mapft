@@ -68,7 +68,7 @@
             :href="`https://twitter.com/intent/tweet?url=${getUrl()}&text=${viewData && viewData.title + ' on InfiNFT: ' + viewData.description}&related=nft4ever,nft42`" 
             class="shareLink asButton" 
           >
-            <IconExternalLink strokeClass="contrastMode" size="small" />
+            <IconExternalLink :strokeClass="contrastMode" size="small" />
           </a>
         </div>
         <div v-if="uiMode !== 'none'" class="primaryMeta">
@@ -459,6 +459,7 @@ export default {
   computed: {
     ...mapGetters({
       uiMode: 'ui/uiMode',
+      uiTheme: 'ui/uiTheme',
       contrastMode: 'ui/contrastMode',
       showSearch: 'ui/showSearch',
       searchData: 'ui/searchData',
@@ -518,8 +519,8 @@ export default {
     },
     getUrl(){
       const myUrl = BASE_URL + this.$route.fullPath;
-      const tempUiMode = "minimal";
-      const tempUiTheme = "charcoal";
+      const tempUiMode = this.uiMode || "minimal";
+      const tempUiTheme = this.uiTheme || "charcoal";
       const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
