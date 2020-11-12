@@ -1,6 +1,6 @@
 <template>
   <div class="pageContainer">
-    <!-- <Header /> -->
+    <Header />
     <section id="gallery" class>
       <div class="tertiary" >
         
