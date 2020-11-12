@@ -158,16 +158,16 @@ export default {
   mounted(){
     this.$root.$on('handle-rotation', (item, response) => {
         // console.log('LOADED: item, response, ', item, response)
-        console.log('CONNECTED');
         this.remoteStart = item.startRotate;
         this.remoteStop = item.stopRotate;
     })
   },
   destroyed(){
-    this.remoteStop()
-    alert('destroyed')
-    this.remoteStart = undefined;
-    this.remoteStop = undefined;
+    if(this.remoteStop){
+      this.remoteStop()
+      this.remoteStart = undefined;
+      this.remoteStop = undefined;
+    }
   },
   data() {
     return {
