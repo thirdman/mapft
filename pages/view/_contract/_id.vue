@@ -120,11 +120,10 @@
             </div>
           </div>
         </div>
-        <div v-if="viewData" class="pagingNav">
-          <!-- :to="`/view/${contractId}/${parseInt(tokenId) - 1}`" -->
+        
+        <div v-if="viewData && uiMode !== 'none'" class="pagingNav">
           <a @click="navigate(parseInt(tokenId) - 1)" class="galleryLink asButton prev">
             <IconChevron strokeClass="contrastMode" />
-
             <span>Prev</span>
           </a>
           <a @click="navigate(parseInt(tokenId) + 1)" class="galleryLink asButton next transparent">

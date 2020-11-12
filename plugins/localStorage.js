@@ -31,6 +31,7 @@ export default async ({ app, store, $axios, isHMR }) => {
       paths: [
         "ui.walletAddress",
         "ui.usedContracts",
+        "ui.contrastMode",
         "ui.devMode",
         "ui.uiMode",
         "ui.uiTheme",

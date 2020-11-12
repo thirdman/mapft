@@ -100,7 +100,6 @@ export const mutations = {
         state.galleryStatus = "error";
         return false;
       });
-    console.log("setId", params, params.setId);
     if (params.setId) {
       this.commit("galleryStore/setGalleryContractId", params.contractId);
       this.commit("galleryStore/filterGallery", params.setId);

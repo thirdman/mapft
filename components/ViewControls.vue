@@ -14,6 +14,7 @@
     >
       <div class="row itemRow between">
         <span>Lights:</span>
+        <span>
         <button
           @click="toggleLights"
           class="btn small hollow"
@@ -29,6 +30,7 @@
         >
           no
         </button>
+        </span>
       </div>
 
       <!-- <button @click="rotate" class="btn">rotate</button>
@@ -79,7 +81,13 @@
 .threeDControls {
   background: var(--fill-color, #ccc);
   padding: 0.5rem;
-  border-radius: 0.25rem;
+  // border-radius: 0.25rem;
+  position: absolute;
+  left: 2rem;
+  bottom: 2rem;
+  box-shadow: 2px 1px var(--ui-color, #111);
+  min-width: 13rem;
+  border: 1px solid var(--ui-color, #111);
 }
 #body.none .threeDControls {
   position: absolute;
@@ -87,6 +95,7 @@
   width: 12rem;
 }
 .triggerPosition {
+  margin-top: .5rem;
 }
 .instructions{
       border: 1px solid var(--line-color, #eee);
@@ -116,7 +125,7 @@ export default {
   props: ['fileType'],
   data() {
     return {
-      displaySettings: true,
+      displaySettings: false,
     }
   },
   computed: {
