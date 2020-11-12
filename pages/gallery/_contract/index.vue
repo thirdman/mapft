@@ -1,10 +1,10 @@
 <template>
   <div class="pageContainer">
-    <Header />
+    <!-- <Header /> -->
     <section id="gallery" class>
-      <div class="tertiary">
+      <div class="tertiary" >
         
-        <div>
+        <div >
           <label>Featured Galleries</label>
           <GalleriesMenu :galleryContractId="galleryContractId" />
           <label>Elsewhere</label>
@@ -14,26 +14,28 @@
       </div>
 
       <div class="primary">
-        <div v-if="galleryStatus === 'loading'" class="loadingWrap">
-          <Loading
-            message="Retrieving Tokens..."
-            size="large"
-            :fillClass="contrastMode === 'light' ? 'light' : 'dark'"
-          />
-        </div>
-        <div v-if="!galleryAssets && galleryStatus !== 'ready'">
-          <h3><IconError /> assets Loaded</h3>
+        <div>
+          
+            <div v-if="galleryStatus === 'loading'" class="loadingWrap">
+            <Loading
+              message="Retrieving Tokens..."
+              size="large"
+              :fillClass="contrastMode === 'light' ? 'light' : 'dark'"
+            />
+          </div>
+          
         </div>
         <client-only>
-          
+        <div v-if="galleryStatus === 'loaded'">
           <GalleryList
             :displayMode="galleryDisplayMode"
-            v-if="galleryStatus === 'loaded'"
+            
           />
+          </div>
         </client-only>
       </div>
 
-      <div class="secondary">
+      <div class="secondary" >
         <label>Gallery Contract</label>
         <div
           class="help"

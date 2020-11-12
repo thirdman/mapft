@@ -8,7 +8,7 @@ export const state = () => ({
   galleryAssets: undefined,
   filteredAssets: [],
   galleryAssetCount: undefined,
-  galleryStatus: "ready",
+  galleryStatus: "loading",
   galleryDisplayMode: "expanded",
   offset: 0,
   galleryFilter: undefined,

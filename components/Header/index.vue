@@ -282,7 +282,7 @@ export default {
       // handle client side
       // console.log('created client')
       // console.log('this.$scopedSlots', this.$scopedSlots)
-      console.log('MOUNTED modal refs', this.$modal)
+      // console.log('MOUNTED modal refs', this.$modal)
       // this.$modal.show("cropper-modal");
     }
     if (process.server) {
