@@ -44,6 +44,7 @@ export const state = () => ({
   uiMode: "minimal",
   uiTheme: "teal",
   contrastMode: "light",
+  allowRotation: true,
   hideUi: true, // used in 'none' uiMode
   devAddresses: [
     "0x03f0d81c9a73930b8034553fc54152cbd6958d0b", // gareth
@@ -77,6 +78,7 @@ export const getters = {
   hideUi: (state) => state.hideUi,
   uiTheme: (state) => state.uiTheme,
   contrastMode: (state) => state.contrastMode,
+  allowRotation: (state) => state.allowRotation,
   activeContractId: (state) => state.activeContractId,
   activeContractName: (state) => state.activeContractName,
   activeContractSymbol: (state) => state.activeContractSymbol,
@@ -255,6 +257,10 @@ export const mutations = {
     } else {
       state.tempViewItem = data;
     }
+  },
+  setAllowRotation(state, newState) {
+    console.log("setAllowRotation", newState);
+    state.allowRotation = newState;
   },
   // doSearch(state, event) {
   //   console.log('doSearch', state, this)

@@ -13,6 +13,26 @@
       v-if="displaySettings && (fileType === 'glb' || fileType === 'gltf ')"
     >
       <div class="row itemRow between">
+        <span>Allow Rotation:</span>
+        <span>
+        <button
+          @click="setAllowRotation(true)"
+          class="btn small hollow"
+          :class="allowRotation ? 'active' : 'inactive'"
+          style="margin-right: 0.125rem;"
+        >
+          yes
+        </button>
+        <button
+          @click="setAllowRotation(false)"
+          class="btn small hollow"
+          :class="allowRotation ? 'inactive' : 'active'"
+        >
+          no
+        </button>
+        </span>
+      </div>
+      <div class="row itemRow between">
         <span>Lights:</span>
         <span>
         <button
@@ -57,6 +77,14 @@
       <button class="btn iconButton" @click="toggleDisplay">
         <IconSettings :strokeClass="contrastMode" />
       </button>
+      <div class="rotationControl2" v-if="allowRotation && remoteStart">
+        <Button @click="remoteStart" class="transparent"  v-if="!hasRotation" >
+          <IconPlay :strokeClass="contrastMode" size="medium" />
+        </Button>
+        <Button @click="remoteStop" class="transparent" v-if="hasRotation" secondary>
+          <IconPause :strokeClass="contrastMode" size="medium" />
+        </Button>
+      </div>
     </div>
   </div>
 </template>
@@ -96,6 +124,10 @@
 }
 .triggerPosition {
   margin-top: .5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 .instructions{
       border: 1px solid var(--line-color, #eee);
@@ -123,24 +155,45 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
   props: ['fileType'],
+  mounted(){
+    this.$root.$on('handle-rotation', (item, response) => {
+        // console.log('LOADED: item, response, ', item, response)
+        console.log('CONNECTED');
+        this.remoteStart = item.startRotate;
+        this.remoteStop = item.stopRotate;
+    })
+  },
+  destroyed(){
+    this.remoteStop()
+    alert('destroyed')
+    this.remoteStart = undefined;
+    this.remoteStop = undefined;
+  },
   data() {
     return {
       displaySettings: false,
+      remoteStart: undefined,
+      remoteStop: undefined
     }
   },
   computed: {
     ...mapGetters({
+      allowRotation: 'ui/allowRotation',
       contrastMode: 'ui/contrastMode',
       lights: 'lightStore/lights',
       hasLights: 'lightStore/hasLights',
+      hasRotation: 'lightStore/hasRotation',
     }),
   },
   methods: {
     ...mapMutations({
+      setAllowRotation: 'ui/setAllowRotation',
+      toggleRotation: 'lightStore/toggleRotation',
       toggleLights: 'lightStore/toggleLights',
       toggleLight: 'lightStore/toggleLight',
       setDirection1: 'lightStore/setDirection1',
     }),
+    
     toggleDisplay() {
       console.log('this.displaySettings', this.displaySettings)
       this.displaySettings = !this.displaySettings
@@ -149,22 +202,19 @@ export default {
       console.log('loaded model', this)
       this.rotate()
     },
-    rotate() {
-      console.log('startRotate')
-      this.hasRotation = true
-      this.rotation.y += 0.01
-      requestAnimationFrame(this.rotate)
-    },
-    noRotate() {
-      this.hasRotation = false
-      this.rotation = {
-        // x: -Math.PI / 2,
-        x: 0,
-        y: 0,
-        z: 0,
-      }
-      cancelAnimationFrame(this.noRotate)
-    },
+  //  startRotate() {
+  //     console.log('startRotate. ROtation: ', this.rotation)
+  //     if(this.allowRotation){
+  //       this.$store.commit("lightStore/toggleRotation");
+  //       this.storeRotate()
+  //     }
+  //   },
+  //   stopRotate() {
+  //     console.log('stopRotate')
+  //     // const currentRotation = this.rotation;
+  //     this.$store.commit("lightStore/toggleRotation");
+  //     // this.noRotate()
+  //   },
     
     contentType: (fileType) => {
       switch (fileType) {

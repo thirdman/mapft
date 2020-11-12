@@ -139,6 +139,7 @@ header.minimal .headerRow .profile #connectButton {
 .footer.minimal {
   background: transparent;
   color: var(--text-color, #111);
+  margin-top: 0;
 }
 
 .footer.minimal .options label {

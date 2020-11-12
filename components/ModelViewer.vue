@@ -37,6 +37,14 @@
         @on-progress="handleProgress"
         :src="`https://gateway.pinata.cloud/ipfs/${modelData().fileIpfsHash}`"
       ></model-obj>
+      <!-- <div class="rotationControl" v-if="allowRotation">
+        <Button @click="startRotate" class="inactive" v-if="!hasRotation" >
+          <IconPlay strokeClass="dark" size="small" />
+        </Button>
+        <Button @click="stopRotate" class="active" v-if="hasRotation">
+          <IconPause strokeClass="dark" size="small" />
+        </Button>
+      </div> -->
     </div>
   </client-only>
 </template>
@@ -92,6 +100,12 @@
   text-transform: capitalize;
   color: var(--fill-color, #111);
 }
+.rotationControl{
+  position: fixed;
+  bottom: 3rem;;
+  left: 0.5rem;
+  z-index: 99999;
+}
 </style>
 
 <script>
@@ -113,6 +127,13 @@ export default {
   components: { ModelObj, ModelGltf },
 
   props: ['src', 'alt', 'autoPlay', 'loop', 'autoRotate', "data"],
+  created(){
+    const item = this;
+    this.$root.$emit('handle-rotation', item, _)
+  },
+  destroyed(){
+    // this.stopRotate()
+  },
   data() {
     return {
       isActive: false,
@@ -129,16 +150,16 @@ export default {
   computed: {
     ...mapGetters({
       viewData: 'ui/viewData',
+      allowRotation: 'ui/allowRotation',
       allLights: 'lightStore/allLights',
       rotation: 'lightStore/rotation',
       isRotating: 'lightStore/isRotating',
+      hasRotation: 'lightStore/hasRotation',
     }),
     
   },
   methods: {
     modelData(){
-      console.log("this", this.viewData)
-      console.log("this.$props.data", this.$props.data)
       const dataToReturn = this.$props.data || this.viewData
       return dataToReturn
     },
@@ -150,46 +171,67 @@ export default {
       console.log('data.position', data.object.position)
     },
     onLoadModel() {
-      console.log('loaded model', this)
-      // console.log('this.isRotating', this.isRotating)
+      console.log('loaded model')
       this.isLoading = false
-      if (this.isRotating) {
-        console.log('roate it!')
+      this.startRotate()
+    },
+    startRotate() {
+      console.log('startrotate called')
+      if(this.allowRotation){
+        this.$store.commit("lightStore/toggleRotation");
         this.rotate()
       }
     },
+    stopRotate() {
+      console.log('stopRotate called')
+      // const currentRotation = this.rotation;
+      this.$store.commit("lightStore/toggleRotation");
+      // this.noRotate()
+    },
     rotate() {
-      console.log('startRotate')
-      this.hasRotation = true
-      this.rotation.y += 0.01
-      requestAnimationFrame(this.rotate)
+        const currentRotation = this.rotation;
+        const currentRotationY = currentRotation.y;
+        const newRotationY = currentRotationY + 0.005;
+        const newRotation = {
+          ...currentRotation,
+          y: newRotationY,
+        }
+        if(!this.hasRotation){
+          return
+        };
+        if(this.hasRotation){
+          this.$store.commit("lightStore/setRotation", newRotation);
+          requestAnimationFrame(this.rotate)
+      }
     },
     noRotate() {
-      this.hasRotation = false
-      this.rotation = {
+      // this.hasRotation = false
+      cancelAnimationFrame(this.rotate)
+      const newRotation = {
         // x: -Math.PI / 2,
         x: 0,
         y: 0,
         z: 0,
       }
-      cancelAnimationFrame(this.noRotate)
+      this.$store.commit("lightStore/setRotation", newRotation);
+      
     },
     handleProgress(progress) {
-      console.log('progress:', progress)
-      console.log('progress LOADED: ', progress.loaded)
-      console.log('progress TOTAL: ', progress.total)
+      // console.log('progress:', progress)
+      // console.log('progress LOADED: ', progress.loaded)
+      // console.log('progress TOTAL: ', progress.total)
       const loadingPercent = (progress.loaded / progress.total) * 100
-      console.log('loadingPercent: ', loadingPercent)
+      // console.log('loadingPercent: ', loadingPercent)
       const tempFileSize = humanFileSize(progress.total)
 
       if (progress.total > progress.loaded) {
-        console.log('still loading')
+        // console.log('still loading')
         this.fileSize = tempFileSize
         this.isLoading = true
         this.loadingPercent = loadingPercent.toFixed(1)
         this.loadingMeta = 'loading'
       } else {
-        console.log('finished')
+        // console.log('finished')
         // this.isLoading = false
         this.loadingPercent = 100
         this.loadingMeta = 'rendering'
