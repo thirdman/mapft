@@ -50,6 +50,9 @@
         <div class="navItem" v-if="!walletAddress">
           <nuxt-link to="/apply" class="w3-button navLink">Apply</nuxt-link>
         </div>
+        <div class="navItem" v-if="devMode">
+          <nuxt-link to="/svg" class="w3-button navLink">SVG</nuxt-link>
+        </div>
         <div class="wedgeWrap">
           <svg
             xmlns="http://www.w3.org/2000/svg"
