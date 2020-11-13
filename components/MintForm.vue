@@ -90,7 +90,7 @@
     id="mintForm"
     class="form create column shadow"
     :class="`${mintStatus} ${uiMode}`"
-    
+    v-if="activeContractId"
   >
     <!-- STATUS SECTION-->
     <StatusInformation
