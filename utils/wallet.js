@@ -50,6 +50,7 @@ const connectWallet = async (props) => {
       // Listen for change of network
       if (provider && provider.on) {
         provider.on("networkChanged", function (net) {
+          alert("network changed");
           setConnectedNetwork(net);
         });
       }

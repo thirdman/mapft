@@ -53,6 +53,7 @@
         <div class="navItem" v-if="devMode">
           <nuxt-link to="/svg" class="w3-button navLink">SVG</nuxt-link>
         </div>
+        
         <div class="wedgeWrap">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -205,6 +206,7 @@
       <status-modal />
       <cropper-modal />
       <chain-modal />
+      <info-modal />
     </client-only>
   </header>
 </template>
@@ -253,17 +255,9 @@
 </style>
 
 <script>
+
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { connectWallet, handleAccountLink } from "../../utils/wallet.js";
-
-// import { handleLoadStorage } from '../utils/misc.js'
-
-// if (process.server) {
-//     const { req, res, beforeNuxtRender } = context;
-//     console.log('server side: ', beforeNuxtRender)
-//   } else {
-//     console.log('client side: ', process)
-//   }
+import { connectWallet, handleAccountLink, setConnectedNetwork } from "../../utils/wallet.js";
 
 export default {
   // mixins: [myMixin],
@@ -274,8 +268,12 @@ export default {
   mounted() {
     mounted: () => {
       this.$refs.modal.show();
-      
     };
+    if (process.client) {
+      // console.log('header this', this.$route)
+      this.walletCheck();
+      
+    }
   },
   created() {
     if (process.client) {
@@ -375,11 +373,37 @@ export default {
       showStatusModal: "mintFormStore/showStatusModal",
       showCropperModal: "mintFormStore/showCropperModal",
     }),
+    walletCheck(){
+      if(this.$route && this.$route.path === '/mint'){
+        if (typeof window.ethereum !== "undefined") {
+          if(!this.walletNetwork){
+            const newNetwork = this.setNetwork()
+          }
+          // Get web3 instance
+          const provider = window.ethereum;
+          const networkVersion = provider.networkVersion;
+          const siteNetwork = this.$config.network;
+          if(siteNetwork !== networkVersion){
+            this.$nextTick(() => {
+              this.handleNetworkWarning();
+            })
+          }
+        }
+      }
+    },
+    setNetwork(){
+      const provider = window.ethereum;
+      const networkVersion = provider.networkVersion;
+      const siteNetwork = this.$config.network;
+      // console.log('site network: ', siteNetwork)
+      setConnectedNetwork(networkVersion, this.setNetworkName)
+      // console.log('this.networkVersion', this.walletNetwork)
+      return this.walletNetwork;
+    },
     clearActiveContractId(value) {
       this.$store.commit("ui/clearActiveContractId", value);
       this.$store.commit("mintFormStore/clearActiveContractId", value);
     },
-
     setWallet(value) {
       console.log("value", value);
       this.$store.commit("ui/setWallet", value);
@@ -395,6 +419,11 @@ export default {
     setNetworkName(value) {
       console.log("value", value);
       this.$store.commit("ui/setNetworkName", value);
+    },
+    handleNetworkWarning() {
+      console.log('this is the nnetwork warning');
+      console.log('this.$modal', this.$modal)
+      this.$modal.show("info-modal");
     },
 
     handleModal() {
