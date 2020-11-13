@@ -4,6 +4,7 @@
       id="previewWrap"
       class="previewWrap shadow"
       :class="previewMode"
+      v-if="activeContractId"
     >
       <div class="preview">
         <div
@@ -140,6 +141,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      activeContractId: "ui/activeContractId",
       previewData: "mintFormStore/previewData",
       showThumbnailField: "mintFormStore/showThumbnailField",
       fileIpfsHash: "mintFormStore/fileIpfsHash",
