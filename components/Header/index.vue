@@ -383,7 +383,9 @@ export default {
           const provider = window.ethereum;
           const networkVersion = provider.networkVersion;
           const siteNetwork = this.$config.network;
-          if(siteNetwork !== networkVersion){
+          const userNetwork = this.walletNetwork;
+          
+          if(siteNetwork !== userNetwork){
             this.$nextTick(() => {
               this.handleNetworkWarning();
             })

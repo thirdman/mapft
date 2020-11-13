@@ -26,7 +26,7 @@
       </div>
 
       <div class="modalSection">
-        <label>Network Error {{contrastMode}}</label>
+        <label>Network Error</label>
         <p>You are using the <strong style="text-transform: uppercase;">{{this.walletNetwork}}</strong> Ethereum network. Please change to <strong style="text-transform: uppercase;">Rinkeby</strong> network in your ethereum wallet.</p>
       </div>
     </div>
