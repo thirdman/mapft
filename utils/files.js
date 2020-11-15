@@ -341,7 +341,8 @@ const personalSignFiles = async (message) => {
  * TODO: ccombine into one function with thumbnail
  */
 const pinFileToIPFS = async (file, context, mode = "file") => {
-  const { setIpfsStatus, setIpfsHash } = context;
+  const { setIpfsStatus, setIpfsHash, setProgress } = context;
+  // const thisCopy = context; //this is needed for the setting of state inside of the promise return
   console.log("starting pinFileToIPFS. Does axios exist?... ", axios);
   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
   setIpfsStatus({ mode: mode, status: "uploading" });
@@ -362,6 +363,16 @@ const pinFileToIPFS = async (file, context, mode = "file") => {
         pinata_secret_api_key:
           "c64d6fb2448a4cae28ef8e220cf4c86991ea44ce4eab706ae6f02e7a8b3b0fe6",
       },
+      withCredentials: true,
+      onUploadProgress: (ProgressEvent) => {
+        //we mildly fake the percent loaded until the file upload success message is returned from the API
+        // console.log("progress!", ProgressEvent);
+        console.log("Mode: ", mode);
+        setProgress(mode, "ipfs", ProgressEvent);
+        // this.setState({
+        //     percentLoaded: (ProgressEvent.loaded / ProgressEvent.total * 100)
+        // })
+      },
     })
     .then(function (response) {
       console.log("IPFS: done: ", response);
@@ -379,7 +390,7 @@ const pinFileToIPFS = async (file, context, mode = "file") => {
 };
 
 const pinThumbnailFileToIPFS = async (sourceFile, context) => {
-  const { setIpfsStatus, setIpfsHash } = context;
+  const { setIpfsStatus, setIpfsHash, setProgress } = context;
 
   const mode = "thumbnail";
   console.log("starting pinThumbnailFileToIPFS");
@@ -400,6 +411,11 @@ const pinThumbnailFileToIPFS = async (sourceFile, context) => {
         pinata_api_key: "abd0f6e2c70d4402bd20",
         pinata_secret_api_key:
           "c64d6fb2448a4cae28ef8e220cf4c86991ea44ce4eab706ae6f02e7a8b3b0fe6",
+      },
+      withCredentials: true,
+      onUploadProgress: (ProgressEvent) => {
+        // console.log("ProgressEvent: ", ProgressEvent);
+        setProgress({ mode, type: "ipfs", ProgressEvent });
       },
     })
     .then(function (response) {

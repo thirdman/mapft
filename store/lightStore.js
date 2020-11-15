@@ -36,7 +36,7 @@ export const state = () => ({
         color: 0xffffff,
         intensity: 0.2,
       },
-      isActive: true,
+      isActive: false,
     },
     {
       name: "Direction Light 2",
@@ -46,7 +46,7 @@ export const state = () => ({
         color: 0xffffff,
         intensity: 0.15,
       },
-      isActive: true,
+      isActive: false,
     },
   ],
   allLights: [

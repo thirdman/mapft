@@ -194,6 +194,7 @@
       :title="uploadStatusTitle"
       :arweaveStatus="arweaveStatus"
       :ipfsStatus="ipfsStatus"
+      :ipfsProgress="fileIpfsProgress"
     />
     <Button 
     size="small"
@@ -250,6 +251,8 @@
         :title="uploadThumbnailStatusTitle"
         :arweaveStatus="thumbnailArweaveStatus"
         :ipfsStatus="thumbnailIpfsStatus"
+        :ipfsProgress="thumbnailIpfsProgress"
+    
       />
       <!-- <div class="cropContainer" id="cropContainer" style='max-width: 300px' :class="showCropper ? 'visible' : 'visible'">
         <vue-cropper
@@ -735,7 +738,9 @@ export default {
       errors: [],
       classes: [],
       uploadFiles: [],
-      thumbnailUploadLabel: `Drag & Drop your file or <span class="filepond--label-action"> Browse </span>`
+      thumbnailUploadLabel: `Drag & Drop your file or <span class="filepond--label-action"> Browse </span>`,
+      fileIpfsProgress: undefined,
+      // thumbnailIpfsProgress: '6',
     };
   },
   computed: {
@@ -763,7 +768,9 @@ export default {
       fileArweaveHash: "mintFormStore/fileArweaveHash",
       thumbnailUploadStatus: "mintFormStore/thumbnailUploadStatus",
       thumbnailIpfsStatus: "mintFormStore/thumbnailIpfsStatus",
+      thumbnailIpfsProgress: "mintFormStore/thumbnailIpfsProgress",
       thumbnailArweaveStatus: "mintFormStore/thumbnailArweaveStatus",
+      thumbnailArweaveProgress: "mintFormStore/thumbnailArweaveProgress",
       thumbnailIpfsHashDefault: "mintFormStore/thumbnailIpfsHashDefault",
       thumbnailArweaveHashDefault: "mintFormStore/thumbnailArweaveHashDefault",
       uploadThumbnailStatusTitle: "mintFormStore/uploadThumbnailStatusTitle",
@@ -849,7 +856,19 @@ export default {
       console.log("this.$refs.pond", this.$refs.pond);
       // FilePond instance methods are available on `this.$refs.pond`
     },
-
+    setProgress(mode = 'file', type = 'ipfs', ProgressEvent){
+      console.log('progress ProgressEvent', ProgressEvent)
+      if(!ProgressEvent){
+        return
+      }
+      const percentLoaded = (ProgressEvent.loaded / ProgressEvent.total * 100);
+      console.log('percentLoaded', percentLoaded)
+      if(mode === 'file'){
+        this.fileIpfsProgress = percentLoaded;
+      } else {
+        this.thumbnailIpfsProgress = percentLoaded;
+      }
+    },
     onRequestSave: function (props) {
       alert("request save called");
 

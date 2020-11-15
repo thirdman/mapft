@@ -15,7 +15,7 @@
         :href="'https://opensea.io/assets/' + galleryContractId"
         target="_blank"
         class="outLink"
-        >InfiNFT Alpha on Opensea</a
+        ><IconOpensea size="small" :strokeClass="contrastMode" :fillClass="contrastMode" /> InfiNFT Alpha on Opensea</a
       >
     </div>
     <label>ALPHA SERIES</label>
@@ -30,7 +30,13 @@
 }
 </style>
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: ['galleryContractId'],
+  computed: {
+  ...mapGetters({
+      contrastMode: 'ui/contrastMode',
+    })
+  }
 }
 </script>

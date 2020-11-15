@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="UploadStatus">
     <div class="help" v-if="!title">No file selected</div>
     <div class="row uploadStatusWrap statusBox shadow" v-if="title">
       <div id="uploadStatus">
@@ -21,6 +21,11 @@
           ></div>
           {{ ipfsStatus === "uploading" ? "Saving to IPFS..." : ipfsStatus }}
         </div>
+        <ProgressBar
+          :percentage="ipfsProgress"
+          v-if="ipfsProgress"
+          :showNumber="false"
+          />
         <div
           id="file-status-subtitle-arweave"
           class="subtitle statusRow"
@@ -36,16 +41,25 @@
               ? "Saving to Arweave..."
               : arweaveStatus
           }}
+          <ProgressBar
+          :percentage="arweaveProgress"
+          v-if="arweaveProgress"
+          :showNumber="false"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<style></style>
+<style>
+.UploadStatus{
+  margin-top: .5rem;
+}
+</style>
 
 <script>
 export default {
-  props: ["title", "ipfsStatus", "arweaveStatus"],
+  props: ["title", "ipfsStatus", "arweaveStatus", "ipfsProgress", "arweaveProgress"],
 };
 </script>

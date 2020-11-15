@@ -62,6 +62,7 @@ export const state = () => ({
   fileIpfsHash: "",
   thumbnailIpfsStatus: "",
   thumbnailIpfsHash: "",
+  thumbnailIpfsProgress: null,
   // thumbnailIpfsHashDefault: "QmQw1qUqKnZSLUZEbtQqyWtqv7KeMzdZZ4ixJfEksdcaL9",
   thumbnailIpfsHashDefault: "QmawLNCbgvpqYvLSF9nvzbJacSuxF5taSdidfGVST8rG1F",
   thumbnailArweaveHashDefault: "isQRjzHIlqNmYW0KtboDm2gtJjg3dhRb_iV7sW8f_3g",
@@ -69,6 +70,7 @@ export const state = () => ({
   fileArweaveHash: "",
   thumbnailArweaveStatus: "",
   thumbnailArweaveHash: "",
+  thumbnailArweaveProgress: null,
   thumbnailSource:
     "https://arweave.rocks/isQRjzHIlqNmYW0KtboDm2gtJjg3dhRb_iV7sW8f_3g",
   cropOutputSource: "",
@@ -114,9 +116,11 @@ export const getters = {
   fileIpfsHash: (state) => state.fileIpfsHash,
   fileArweaveHash: (state) => state.fileArweaveHash,
   thumbnailIpfsHash: (state) => state.thumbnailIpfsHash,
+  thumbnailIpfsProgress: (state) => state.thumbnailIpfsProgress,
   thumbnailIpfsHashDefault: (state) => state.thumbnailIpfsHashDefault,
   thumbnailArweaveHashDefault: (state) => state.thumbnailArweaveHashDefault,
   thumbnailArweaveHash: (state) => state.thumbnailArweaveHash,
+  thumbnailArweaveProgress: (state) => state.thumbnailArweaveProgress,
   thumbnailUploadStatus: (state) => state.thumbnailUploadStatus,
   // uploadThumbnailStatus: (state) => state.uploadThumbnailStatus,
   uploadThumbnailStatusTitle: (state) => state.uploadThumbnailStatusTitle,
@@ -300,6 +304,29 @@ export const mutations = {
   },
   setCropOutputSource(state, value) {
     state.cropOutputSource = value;
+  },
+  setProgress(state, payload) {
+    const { mode = "file", type = "ipfs", ProgressEvent } = payload;
+    if (!ProgressEvent) {
+      return;
+    }
+    const percentLoaded = (ProgressEvent.loaded / ProgressEvent.total) * 100;
+    console.log("percentLoaded", percentLoaded);
+    if (type === "ipfs") {
+      if (mode === "file") {
+        this.fileIpfsProgress = percentLoaded;
+        state.fileIpfsProgress = percentLoaded;
+      } else {
+        state.thumbnailIpfsProgress = percentLoaded;
+      }
+    }
+    if (type === "arweave") {
+      if (mode === "file") {
+        state.fileArweaveProgress = percentLoaded;
+      } else {
+        state.thumbnailArweaveProgress = percentLoaded;
+      }
+    }
   },
   setThumbnailUploadStatus(state, data) {
     const { mode = "file", status, text = "" } = data;

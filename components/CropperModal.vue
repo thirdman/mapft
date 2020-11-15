@@ -94,6 +94,7 @@ export default {
     removePinFromIPFS,
     ...mapMutations({
       setThumbnailUploadStatus: "mintFormStore/setThumbnailUploadStatus",
+      setProgress: "mintFormStore/setProgress",
       setArweaveStatus: "mintFormStore/setArweaveStatus",
       setArweaveHash: "mintFormStore/setArweaveHash",
       setIpfsStatus: "mintFormStore/setIpfsStatus",
@@ -149,7 +150,8 @@ export default {
         setArweaveHash: this.setArweaveHash,
         setIpfsStatus: this.setIpfsStatus,
         setIpfsHash: this.setIpfsHash,
-        showCropper: this.showCropper
+        showCropper: this.showCropper,
+        setProgress: this.setProgress
       }
       
       const thumbnailElement = document.getElementById("outputThumbnailImage");

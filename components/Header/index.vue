@@ -53,6 +53,9 @@
         <div class="navItem" v-if="devMode">
           <nuxt-link to="/svg" class="w3-button navLink">SVG</nuxt-link>
         </div>
+        <div class="navItem" v-if="devMode">
+          <p class="small" style="color: red; background: rgba(255,255,255,.2); padding: 0.25rem; margin: 0;">Please use Rinkeby Network</p>
+        </div>
         
         <div class="wedgeWrap">
           <svg

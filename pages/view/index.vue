@@ -166,7 +166,7 @@
                     "
                     target="_blank"
                     class="outLink"
-                    >View on Opensea</a
+                    ><IconOpensea />View on Opensea</a
                   >
                 </div>
               </div>
