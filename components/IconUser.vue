@@ -1,9 +1,9 @@
 <template>
   <svg
+    :class="`${strokeClass} ${size}`"
     xmlns="http://www.w3.org/2000/svg"
     id="IconUser"
     class="icon icon-tabler icon-tabler-user"
-    :class="strokeClass"
     width="24"
     height="24"
     viewBox="0 0 24 24"
@@ -36,6 +36,6 @@
 <script>
 // https://tablericons.com/
 export default {
-  props: ['strokeClass'],
+  props: ['strokeClass', 'size'],
 }
 </script>

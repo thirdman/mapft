@@ -12,33 +12,35 @@
       </div>
       <div class="primary">
         <client-only>
-          <div v-if="!walletAddress" class="noAccess">
-            <div style="font-size: 56px">&#129300;</div>
-            <div class="row">
-              <div clas="column">
-                <IconError size="large" className="large" />
-              </div>
-              <div clas="column">
-                <h4>Wallet Not Connected.</h4>
-                <p>Connect an ethereum wallet to mint tokens</p>
+          <transition name="fade" appear>
+          <div v-if="!walletAddress" class="connectPanel shadow">
+            <div class="connectHeader">
+              <div class="connectUserIcon">
+              <IconUser size="large" :strokeClass="contrastMode" />
               </div>
             </div>
-            <Button
-              size="large"
-              mode="primary"
-              @click="
-                connectWallet({
-                  setWallet,
-                  setWalletStatus,
-                  setWalletChain,
-                  setNetworkName,
-                  setEnsName,
-                })
-              "
-            >
-              Connect
-            </Button>
+            <div class="connectBody">
+              <h3>Not Connected</h3>
+              <p >Connect your Ethereum Wallet to use InfiNFT minting</p>
+              <Button
+                fill
+                size="large"
+                mode="primary"
+                @click="
+                  connectWallet({
+                    setWallet,
+                    setWalletStatus,
+                    setWalletChain,
+                    setNetworkName,
+                    setEnsName,
+                  })
+                "
+              >
+                Connect
+              </Button>
+            </div>
           </div>
+          </transition>
           <div v-if="walletAddress" class="row">
             <MintForm />
             <MintPreview />
@@ -111,7 +113,40 @@
   </div>
 </template>
 
-<style></style>
+<style lang="scss">
+.connectPanel{
+  border: 1px solid var(--ui-color, #eee);
+  padding: 0rem 1rem 1rem;
+  margin-top: 50px;
+  // background: var(--fill-color, #ccc);
+  
+  .connectHeader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    position: relative;
+    margin-top: -50px;
+    .connectUserIcon{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+      width: 100px;
+      height: 100px;
+      border-radius: 100px;
+      border: 1px solid var(--ui-color, #eee);
+      background: var(--background-color, #eee);
+    }
+  }
+  .connectBody{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
+</style>
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
@@ -132,6 +167,7 @@ export default {
     ...mapGetters({
       hasWallet: "ui/hasWallet",
       walletAddress: "ui/walletAddress",
+      contrastMode: "ui/contrastMode",
     }),
   },
   methods: {

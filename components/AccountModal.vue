@@ -368,6 +368,7 @@ export default {
     handleDisconnect() {
       this.setWallet(null);
       this.setWalletChain("");
+      this.$modal.hide("account-modal");
     },
     addContract() {
       console.log("adding contract", this.customContractId);

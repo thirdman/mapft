@@ -13,3 +13,11 @@
   width: 32px;
   height: 32px;
 }
+
+.icon.light.xlarge,
+.icon.dark.xlarge,
+.logo.light.xlarge,
+.logo.dark.xlarge {
+  width: 48px;
+  height: 48px;
+}
