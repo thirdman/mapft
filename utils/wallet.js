@@ -85,6 +85,7 @@ const connectWallet = async (props) => {
 // Set the connected network
 const setConnectedNetwork = (net, setNetworkName) => {
   const connectedNetwork = Number(net);
+  console.log("connectedNetwork", connectedNetwork);
   switch (connectedNetwork) {
     case 1:
       // setNetworkClass('main-network')

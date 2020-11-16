@@ -27,7 +27,10 @@
 
       <div class="modalSection">
         <label>Network Error</label>
-        <p>You are using the <strong style="text-transform: uppercase;">{{this.walletNetwork}}</strong> Ethereum network. Please change to <strong style="text-transform: uppercase;">Rinkeby</strong> network in your ethereum wallet.</p>
+        <p v-if="this.walletNetwork === 'private'">
+          Your wallet is connected to a non-standard network Ethereum network. Please change to <strong style="text-transform: uppercase;">Rinkeby</strong> network in your ethereum wallet. Note: Dapper wallet is currently unsupported.
+        </p>
+        <p v-if="this.walletNetwork !== 'private'">You are using the <strong style="text-transform: uppercase;">{{this.walletNetwork}}</strong> Ethereum network. Please change to <strong style="text-transform: uppercase;">Rinkeby</strong> network in your ethereum wallet.</p>
       </div>
     </div>
   </modal>
