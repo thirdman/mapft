@@ -1,46 +1,10 @@
 <template>
   <div
     id="deployForm"
-    class="form createNOT deploy column shadow"
-    :class="deployStatus === 'error' ? 'error' : ''"
+    class="form createNOT deploy column "
+    :class="`${deployStatus === 'error' ? 'error' : ''} ${displayMode === 'inline' ? 'noshadow' : 'shadow'}`"
   >
-    <!-- style="flex-basis: 100%;" -->
     <DeployStatusInformation v-if="deployStatus !== 'ready'" />
-    <!-- <div class="deployStatusWrap" v-if="deployStatus !== 'ready'">
-      <div id="deployStatus" class="statusElement">
-        {{ deployStatusMessage }}
-      </div>
-      <div id="deployTransactionLabel" style="font-size: 0.75rem;"></div>
-      <div
-        id="deployedAddressLabel"
-        style="
-          font-size: 0.75rem;
-          font-weight: bold;
-          font-variation-settings: 'wght' 800;
-        "
-      ></div>
-      <div id="completedContent" v-if="deployStatus === 'completed'" v-if="1===2">
-        <h4>New Contract Deployed</h4>
-        <label>Name</label>
-        <div>{{ activeContractName }}</div>
-        <label>Symbol</label>
-        <div>{{ activeContractSymbol }}</div>
-
-        <label>Deployed Address</label>
-        <div>{{ activeContractId }}</div>
-        <p class="help">
-          Copy this address. Use it to create NFT in the Mint section
-        </p>
-        <button
-          id="resetContractButton"
-          class="w3-button w3-block w3-padding-large w3-black w3-margin-bottom"
-          @click="resetDeployForm"
-        >
-          OK!
-        </button>
-      </div>
-      <div class="divider"></div>
-    </div> -->
     <div class="fieldset metaContent" v-if="deployStatus !== 'completed'">
       <ValidationProvider rules="required|min:3">
         <div
@@ -48,7 +12,7 @@
           :class="classes"
           slot-scope="{ classes, errors }"
         >
-          <label>NFT Symbol</label>
+          <label>Symbol</label>
           <div>
             <input
               name="Symbol"
@@ -335,6 +299,7 @@ export default {
   components: {
     ValidationProvider,
   },
+  props: ['displayMode'],
   data() {
     return {
       // These are the validation arrays

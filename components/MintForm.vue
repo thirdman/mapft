@@ -33,7 +33,7 @@
     <div
       class="fieldset contractContent"
       id="fieldsetContract"
-      v-if="showEditContract"
+      v-if="showEditContract && 1===2"
     >
       <ValidationProvider rules="required">
         <div

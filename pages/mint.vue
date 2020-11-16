@@ -58,11 +58,13 @@
                   <p class="small">Generate New Minting Contract</p>
                 </div>
               </div>
-              <div class="connectBody" v-if="selectedConnectPanel === 'new'">
-                <p >Connect your Ethereum Wallet to use InfiNFT minting</p>
-              </div>
               <div class="connectBody"  v-if="selectedConnectPanel === 'existing'">
                 <LoadContractForm />
+              </div>
+              <div class="connectBody" v-if="selectedConnectPanel === 'new'">
+                <div v-if="walletAddress" class="row NewFormRow">
+                  <DeployForm displayMode="inline" />
+                </div>
               </div>
             </div>
           </transition>
@@ -199,6 +201,10 @@
       padding: 1rem 0;
       align-items: flex-start;
       justify-content: flex-start;
+      .NewFormRow{
+        width: 100%;
+        flex-basis: 100%;
+      }
     }
   }
 }
