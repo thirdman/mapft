@@ -24,7 +24,7 @@
           />
         </button>
       </div>
-      <div class="account-header">
+      <div class="account-header" v-if="walletAddress">
         <div class="row titleRow">
           <div class="userAvatar shadow">
             <IconUser
@@ -223,7 +223,7 @@
           </div>
         </div>
         <div class="row contentRow">
-          <div class="column col-66">UI Theme</div>
+          <div class="column col-66">Color Theme</div>
           <div class="column col-33">
             <div class="buttonGroup themeGroup">
               <div class="swatch lemon" @click="setUiTheme('lemon')">

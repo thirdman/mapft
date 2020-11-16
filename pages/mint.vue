@@ -13,34 +13,61 @@
       <div class="primary">
         <client-only>
           <transition name="fade" appear>
-          <div v-if="!walletAddress" class="connectPanel shadow">
-            <div class="connectHeader">
-              <div class="connectUserIcon">
-              <IconUser size="large" :strokeClass="contrastMode" />
+            <div v-if="!walletAddress" class="connectPanel shadow">
+              <div class="connectHeader">
+                <div class="connectUserIcon shadow">
+                <IconUser size="large" :strokeClass="contrastMode" />
+                </div>
+              </div>
+              <div class="connectBody">
+                <h3>Not Connected</h3>
+                <p >Connect your Ethereum Wallet to use InfiNFT minting</p>
+                <Button
+                  fill
+                  size="large"
+                  mode="primary"
+                  @click="
+                    connectWallet({
+                      setWallet,
+                      setWalletStatus,
+                      setWalletChain,
+                      setNetworkName,
+                      setEnsName,
+                    })
+                  "
+                >
+                  Connect
+                </Button>
               </div>
             </div>
-            <div class="connectBody">
-              <h3>Not Connected</h3>
-              <p >Connect your Ethereum Wallet to use InfiNFT minting</p>
-              <Button
-                fill
-                size="large"
-                mode="primary"
-                @click="
-                  connectWallet({
-                    setWallet,
-                    setWalletStatus,
-                    setWalletChain,
-                    setNetworkName,
-                    setEnsName,
-                  })
-                "
-              >
-                Connect
-              </Button>
-            </div>
-          </div>
           </transition>
+
+          <transition name="fade" appear>
+            <div v-if="walletAddress && !activeContractId" class="connectPanel shadow">
+              <div class="connectSelect row">
+                <div class="column" :class="selectedConnectPanel === 'existing' ? 'selected' : 'notselected' "
+                  @click="setSelectedPanel('existing')"
+                >
+                  <h4>Existing Contract</h4>
+                  <p class="small">Use Existing Minting Contract</p>
+                </div>
+                <div class="column" :class="selectedConnectPanel === 'new' ? 'selected' : 'notselected' "
+                  @click="setSelectedPanel('new')"
+                >
+                  <h4>New Contract</h4>
+                  <p class="small">Generate New Minting Contract</p>
+                </div>
+              </div>
+              <div class="connectBody" v-if="selectedConnectPanel === 'new'">
+                <p >Connect your Ethereum Wallet to use InfiNFT minting</p>
+              </div>
+              <div class="connectBody"  v-if="selectedConnectPanel === 'existing'">
+                <LoadContractForm />
+              </div>
+            </div>
+          </transition>
+
+        
           <div v-if="walletAddress" class="row">
             <MintForm />
             <MintPreview />
@@ -118,7 +145,7 @@
   border: 1px solid var(--ui-color, #eee);
   padding: 0rem 1rem 1rem;
   margin-top: 50px;
-  // background: var(--fill-color, #ccc);
+  background: var(--fill-color, #ccc);
   
   .connectHeader{
     display: flex;
@@ -136,7 +163,7 @@
       height: 100px;
       border-radius: 100px;
       border: 1px solid var(--ui-color, #eee);
-      background: var(--background-color, #eee);
+      background: var(--fill-color, #eee);
     }
   }
   .connectBody{
@@ -144,6 +171,35 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+  .connectSelect{
+    margin-left: -1rem;;
+    margin-right: -1rem;
+    > .column{
+      padding: .25rem;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      border-bottom: 1px solid var(--ui-color);
+      cursor: pointer;
+      p, h4{
+        margin: 0;
+      }
+      &:nth-child(2){
+        border-left: 1px solid var(--ui-color);
+      }
+      &.selected{
+        border-bottom: 1px solid transparent;
+      }
+      &:not(.selected){
+        background: rgba(0,0,0,.05);
+      }
+    }
+    + .connectBody{
+      padding: 1rem 0;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
   }
 }
 </style>
@@ -163,10 +219,16 @@ export default {
       }
     ],
    },
+   data(){
+     return {
+       selectedConnectPanel: 'existing'
+     }
+   },
   computed: {
     ...mapGetters({
       hasWallet: "ui/hasWallet",
       walletAddress: "ui/walletAddress",
+      activeContractId: "ui/activeContractId",
       contrastMode: "ui/contrastMode",
     }),
   },
@@ -181,6 +243,12 @@ export default {
       setNetworkName: "ui/setNetworkName",
       setWalletChain: "ui/setWalletChain",
     }),
+    setSelectedPanel(value){
+      if(!value){
+        return
+      }
+      this.selectedConnectPanel = value
+    }
   },
 };
 </script>

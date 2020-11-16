@@ -53,9 +53,9 @@
         <div class="navItem" v-if="devMode">
           <nuxt-link to="/svg" class="w3-button navLink">SVG</nuxt-link>
         </div>
-        <div class="navItem" v-if="this.$config.network === 'rinkeby'">
+        <!-- <div class="navItem" v-if="this.$config.network === 'rinkeby'">
           <p class="small networkWarning" >Please use Rinkeby Network</p>
-        </div>
+        </div> -->
         
         <div class="wedgeWrap">
           <svg
