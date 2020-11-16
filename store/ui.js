@@ -146,7 +146,7 @@ export const mutations = {
     state.hasWallet = account ? true : false;
     state.walletAddress = account ? account : null;
     // this.dispatch("ui/resolveEns", account);
-    resolveEns(account);
+    // resolveEns(account);
   },
   setEnsName(state, value) {
     console.log("setting ens name, ", value);
