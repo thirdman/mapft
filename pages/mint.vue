@@ -95,7 +95,7 @@
 
     <!--  VUE DEPLOY FORM SECTION-->
     <client-only>
-      <section id="deploy" class="deploy market borderBottom">
+      <section id="deploy" class="deploy market borderBottom" v-if="1==2">
         <div class="tertiary">
           <h2>Artist Contract</h2>
           <div class="aside">

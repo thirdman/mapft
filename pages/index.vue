@@ -37,7 +37,7 @@
             </li>
           </ul>
           <div class="ctaWrap">
-            <nuxt-link to="/mint#deploy" class="btn hero">Get Started »</nuxt-link>
+            <nuxt-link to="/mint" class="btn hero">Get Started »</nuxt-link>
             <a href="#about" class="btn hollow asButton">How it works</a>
             
           </div>
