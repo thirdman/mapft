@@ -1,5 +1,5 @@
 <template>
-  <div class="statusInformation" :class="statusModalMode">
+  <div class="statusInformation" :class="`${statusModalMode} ${deployStatus === 'error' ? 'hasError' : ''}`">
     <div class="closeButtonWrap">
       <button
         class="btn iconButton"
@@ -49,6 +49,16 @@
       </div>
       <p class="statusMessage">{{ deployStatusMessage }}</p>
     </div>
+    <div
+      class="statusRow"
+      v-if="deployStatus !== 'done' || deployStatus !== 'completed'"
+    >
+      <IconError
+          v-if="deployStatus === 'error'"
+          :strokeClass="contrastMode"
+        /><p class="statusMessage" v-if="deployErrorMessage">{{ deployErrorMessage }}</p>
+    </div>
+      
 
     <div
       class="transactionInfo"
@@ -60,9 +70,9 @@
         style="font-size: 0.75rem;"
         class="contentRow"
       >
-        ID: {{ deployTransactionId }}
+        ID: {{ deployTransactionId || 'No transaction yet.' }}
       </div>
-      <div>
+      <div v-if="deployTransactionId">
         <a :href="etherscanLink" class="etherscanLink" target="blank">
           <IconExternalLink :strokeClass="contrastMode" />
           View on etherscan
@@ -121,14 +131,14 @@
   position: relative;
   background: var(--fill-color, #111);
   color: var(--text-color, #111);
-  border-top: 1px solid var(--ui-color, #111);
-}
-.statusInformation {
   padding: 0.5rem;
 }
 .statusMessage {
   margin: 0.5rem 0;
   max-width: 40rem;
+}
+.statusInformation.fixed {
+  border-top: 0px solid transparent;
 }
 .statusInformation.inline {
   padding: 1rem;
@@ -137,6 +147,7 @@
   bottom: 0;
   right: 0;
   z-index: 999;
+  border-top: 1px solid var(--ui-color, #111);
 }
 .statusInformation.fixed .closeButtonWrap {
   position: absolute;
@@ -161,7 +172,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .statusRow .statusIcon {
   flex-basis: 2rem;
@@ -172,6 +183,7 @@
 }
 .transactionInfo {
   /* border-top: 1px solid var(--line-color, #ccc); */
+  border-top: none;
 }
 .etherscanLink {
   display: inline-flex;
@@ -208,6 +220,7 @@ export default {
       deployStatus: 'deployFormStore/deployStatus',
       deployStatusTitle: 'deployFormStore/deployStatusTitle',
       deployStatusMessage: 'deployFormStore/deployStatusMessage',
+      deployErrorMessage: 'deployFormStore/deployErrorMessage',
     }),
     etherscanLink() {
       console.log('walletNetwork', this.walletNetwork)

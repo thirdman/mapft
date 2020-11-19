@@ -17,7 +17,7 @@
 
   --color-danger: #ff5917;
   --color-success: #14b406;
-  --danger-color: #ff5917;
+  --danger-color: #ec0000;
   --success-color: #14b406;
 
   --contrast-mode: light;
@@ -602,7 +602,7 @@ GRID LINES
 
 .error {
   padding: 1rem;
-  background: red;
+  background: var(--danger-color);
   color: #fff;
   display: none;
 }
@@ -1179,7 +1179,7 @@ ul.heroList {
   padding: 0 0.25rem;
 }
 .rinkeby .headerRow .networkName {
-  background: red;
+  background: var(--danger-color, red);
 }
 .headerRow .brand:hover .logoPosition {
   transform: rotate(180deg);
@@ -1352,7 +1352,7 @@ ul.heroList {
 }
 #body.rinkeby #footerWalletLabel::after {
   content: "RINKEBY TEST NETWORK";
-  color: red;
+  color: var(--danger-color, red);
   font-size: 0.675rem;
   margin-left: 0.25rem;
   letter-spacing: -0.035rem;
@@ -1874,6 +1874,11 @@ ul.heroList {
   background: var(--fill-color, #fff);
 }
 
+.form.error,
+.form.hasError {
+  border: 2px solid var(--danger-color, red);
+}
+
 /* CONTRACT SETION */
 .contractSection {
   margin-right: 1rem;
@@ -1920,7 +1925,11 @@ ul.heroList {
   border-top: none;
   /* margin-top: 2.5rem; */
 }
-
+.form .fieldset.error,
+.form .fieldset.hasError {
+  background: #ec0000;
+  border: none;
+}
 .form .fieldset.hidden {
   display: none;
 }
@@ -2177,7 +2186,7 @@ input.hero {
 .form.create#mintForm.error {
   color: initial;
   display: block;
-  border-color: red;
+  border-color: var(--danger-color, red);
 }
 .form.create#deployForm .completedContent,
 .form.create#mintForm .completedContent {

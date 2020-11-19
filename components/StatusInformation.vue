@@ -96,6 +96,13 @@
   top: 0rem;
   right: 0rem;
 }
+.statusInformation.error, .statusInformation.hasError{
+  background: red;
+}
+.statusInformation .error{
+  display: block;
+}
+
 .closeButtonWrap button {
   transform: scale(1);
 }
@@ -109,7 +116,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .statusRow .statusIcon {
   flex-basis: 2rem;

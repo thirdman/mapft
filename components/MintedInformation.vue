@@ -142,7 +142,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .statusRow .statusIcon {
   flex-basis: 2rem;

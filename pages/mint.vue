@@ -123,7 +123,7 @@
             </Button>
           </div>
           <div v-if="walletAddress" class="row">
-            <DeployForm />
+            <DeployForm  />
           </div>
         </div>
         <div class="secondary">
