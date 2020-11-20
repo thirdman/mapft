@@ -44,14 +44,7 @@
           >
             Disconnect
           </Button>
-          <Button
-            @click="handleConnect"
-            size="small"
-            mode="priamry"
-            v-if="!walletAddress"
-          >
-            Connect
-          </Button>
+          
           <!-- <div class="column">
           </div> -->
         </div>
@@ -361,9 +354,6 @@ export default {
     setWallet(value) {
       console.log("value", value);
       this.$store.commit("ui/setWallet", value);
-    },
-    handleConnect() {
-      alert("todo");
     },
     handleDisconnect() {
       this.setWallet(null);

@@ -169,9 +169,11 @@ const deployThatShit = (event, state, context) => {
 
   if (!contractName || !contractSymbol) {
     console.error("missing variable: ", { contractName, contractSymbol });
+    context.commit("deployFormStore/setDeployErrorMessage", {
+      message: "Missing Variable",
+    });
     return null;
   }
-  console.log("contractName, contractSymbol", { contractName, contractSymbol });
 
   if (doIt) {
     // TODO: move these into env variables

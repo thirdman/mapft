@@ -51,6 +51,7 @@ export default {
       switch (fileType) {
         case 'glb':
         case 'obj':
+        case 'usdz':
         case 'gltf':
           return 'threed'
           break
