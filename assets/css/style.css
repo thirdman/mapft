@@ -1552,7 +1552,8 @@ ul.heroList {
   flex-shrink: 1;
   flex-grow: 0;
   position: sticky;
-  top: calc(80px - 2px);
+  top: calc(1rem - 2px);
+  /* top: calc(80px - 2px); */
 }
 .row .previewColumn .previewWrap {
   min-height: 20rem;
@@ -1563,7 +1564,7 @@ ul.heroList {
   border-left: 2px solid var(--ui-color, #111);
   background: var(--background-color, #fff);
   color: var(--ui-color, #111);
-  margin-top: -1rem;
+  margin-top: 1rem;
 }
 .row .previewColumn .previewWrap:before {
   position: absolute;
@@ -1583,6 +1584,7 @@ ul.heroList {
 }
 
 .preview .previewImage {
+  min-width: 10rem;
   min-height: 10rem;
   background: rgba(0, 0, 0, 0.05);
   position: relative;
@@ -1881,10 +1883,9 @@ ul.heroList {
 
 /* CONTRACT SETION */
 .contractSection {
-  margin-right: 1rem;
 }
 .contractSection #fieldsetContractView {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   background: var(--ui-color);
   color: var(--background-color);
   padding: 0.5rem;
@@ -1915,7 +1916,7 @@ ul.heroList {
 
 /* GENERAL FIELDSETS */
 .form .fieldset {
-  max-width: 700px;
+  max-width: 680px;
   position: relative;
   padding: 1.5rem 1rem 1rem;
   border-top: 1px solid var(--ui-color, #111);
@@ -1943,6 +1944,7 @@ ul.heroList {
 .form.create {
   border: 2px solid var(--ui-color);
   min-height: 20rem;
+  margin-right: 0.5rem;
 }
 .form .formContent {
 }

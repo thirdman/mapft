@@ -5,7 +5,7 @@
     class="column"
     style="flex-basis: 100%"
   >
-    <div class="contractSection">
+    <div class="contractSection" v-if="1==2">
         <!-- SECTION TO DISPLAY ACTIVE CONTRACT-->
     <div
       class="fieldset formContent"
@@ -85,6 +85,7 @@
         </p>
       </div>
     </div>
+    
     </div>
     <div
     id="mintForm"
