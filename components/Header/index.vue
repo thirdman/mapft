@@ -6,7 +6,7 @@
     <div class="devModeFlag shadow" v-if="devMode">DEV MODE</div>
     <div class="headerRow w3-row">
       <div class="brand w3-col s2">
-        <span class="logoWrap">
+        <span class="logoWrap" @click="goToHome()">
           <span class="logoBg"></span>
           <span class="logoPosition">
             <IconLogo :fillClass="headerContrastMode" />
@@ -19,8 +19,8 @@
           <div class="toggleTooltip">Toggle menu options</div>
         </div>
         <span class="chainname" v-if="hasChainSelect">{{ walletChain }}</span>
-        <span class="brandname">INFINFT</span>
-        <span class="subtitle">by NFT42</span>
+        <span class="brandname" @click="goToHome()">INFINFT</span>
+        <span class="subtitle" @click="goToHome()">by NFT42</span>
         <div class="wedgeWrap">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -377,11 +377,15 @@ export default {
       setWalletChain: "ui/setWalletChain",
     }),
 
-    // setTheme,
     ...mapActions({
       showStatusModal: "mintFormStore/showStatusModal",
       showCropperModal: "mintFormStore/showCropperModal",
     }),
+    goToHome() {
+      this.$router.push({
+        path: `/`,
+      })
+    },
     walletCheck(){
       if(this.$route && this.$route.path === '/mint'){
         if (typeof window.ethereum !== "undefined") {

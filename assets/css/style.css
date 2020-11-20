@@ -1193,6 +1193,7 @@ ul.heroList {
   font-family: "Inter", "Manrope", "Roboto", "helvetica", sans-serif;
   font-size: 28px;
   letter-spacing: 0.15rem;
+  cursor: pointer;
   /* margin-left: 4rem; */
 }
 .headerRow .brand .logoWrap {
@@ -1205,6 +1206,7 @@ ul.heroList {
   align-items: center;
   justify-content: center;
   margin-right: 0.25rem;
+  cursor: pointer;
 }
 .headerRow .brand .logoBg {
   position: absolute;
