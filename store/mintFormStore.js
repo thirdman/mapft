@@ -200,6 +200,9 @@ export const mutations = {
       state.showEditContract = false;
     }
   },
+  setTempActiveContractId(state, newValue) {
+    state.temporaryContractId = newValue;
+  },
   clearActiveContractId(state, value) {
     state.activeContractId = null;
     state.showEditContract = true;

@@ -122,6 +122,9 @@
               <button class="btn inactive" @click="setActiveContractId(item)">
                 Select
               </button>
+              <button class="btn inactive" @click="goToGallery(item)">
+                View
+              </button>
               <div class="removeItem">
                 <button
                   @click="removeUsedContractId(index)"
@@ -308,6 +311,7 @@ export default {
       uiMode: "ui/uiMode",
       contrastMode: "ui/contrastMode",
       uiTheme: "ui/uiTheme",
+      usedContracts: "ui/usedContracts",
       hasChainSelect: "ui/hasChainSelect",
       statusModalMode: "ui/statusModalMode",
       activeContractId: "ui/activeContractId",
@@ -315,9 +319,6 @@ export default {
       activeContractSymbol: "ui/activeContractSymbol",
     }),
 
-    usedContracts() {
-      return this.$store.state.ui.usedContracts;
-    },
     devMode() {
       return this.$store.state.ui.devMode;
     },
@@ -371,6 +372,11 @@ export default {
     toggleAddInterface(newState) {
       this.showAddInterface = newState;
     },
+    goToGallery(contractId){
+      this.$router.push({
+        path: `/gallery/${contractId}`,
+      })
+    }
   },
 };
 </script>

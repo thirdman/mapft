@@ -59,7 +59,34 @@
           />
         </div>
       </ValidationProvider>
-
+      <div class="row  marginBottom" v-if="usedContracts">
+        <ToggleSection :colorMode="contrastMode">
+          <span slot="header">Previously Used Contracts</span>
+          <div slot="content">
+            <div v-for="(item, index) in usedContracts" :key="index">
+              <div class="row between contractRow">
+                <span class="column col-66">{{ item }}</span>
+                <div class="column col-33 actions" v-if="item !== activeContractId">
+                  <button class="btn inactive" @click="setTempActiveContractId(item)">
+                    Select
+                  </button>
+                  
+                  <button class="btn inactive" @click="setActiveContractId(item)">
+                    Load
+                  </button>
+                  <button class="btn inactive" @click="goToGallery(item)">
+                    View
+                  </button>
+                  
+                </div>
+                <div class="column col-33" v-if="item === activeContractId">
+                  <div class="activeTag">ACTIVE</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ToggleSection>
+      </div>
       <div>
         <Button
           id="loadContractButton"
@@ -121,6 +148,7 @@ export default {
       devMode: "ui/devMode",
       contrastMode: "ui/contrastMode",
       activeContractId: "ui/activeContractId",
+      usedContracts: "ui/usedContracts",
       
     }),
 
@@ -139,6 +167,7 @@ export default {
   methods: {
     ...mapMutations({
       setShowEditContract: "mintFormStore/setShowEditContract",
+      setTempActiveContractId: "mintFormStore/setTempActiveContractId",
     }),
 
     handleAccountModal() {
@@ -149,14 +178,17 @@ export default {
       this.$store.commit("mintFormStore/setShowStatusModal", newState);
     },
     
-    
-    
     setActiveContractId(value) {
       this.$store.commit("ui/setActiveContractId", value);
     },
     clearActiveContractId(value) {
       this.$store.commit("ui/clearActiveContractId", value);
     },
+    goToGallery(contractId){
+      this.$router.push({
+        path: `/gallery/${contractId}`,
+      })
+    }
   },
 };
 </script>

@@ -27,6 +27,10 @@
 .dataSection {
   border: 1px solid var(--line-color, #111);
 }
+.toggleSection{
+  width: 100%;
+  flex-basis: 100%;
+}
 .dataSection.light {
   color: var(--ui-color, #111);
   .collapsible{

@@ -82,6 +82,7 @@ export const getters = {
   activeContractId: (state) => state.activeContractId,
   activeContractName: (state) => state.activeContractName,
   activeContractSymbol: (state) => state.activeContractSymbol,
+  usedContracts: (state) => state.usedContracts,
   tempViewItem: (state) => state.tempViewItem,
   searchData: (state) => {
     return {
