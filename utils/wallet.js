@@ -13,7 +13,7 @@ const connectWallet = async (props) => {
     setWalletStatus,
     setEnsName,
   } = props;
-  console.log("setprops is", props);
+
   let provider, net;
   // Try to connect Metamask
 
@@ -26,7 +26,7 @@ const connectWallet = async (props) => {
       // Request account access
       const accts = await provider.enable();
       // setWeb3(new Web3(provider));
-      console.log("accts", accts);
+
       provider.autoRefreshOnNetworkChange = false;
       if (!accts[0]) {
         console.log("error", provider);

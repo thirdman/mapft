@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "nuxt --port 3333",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "start": "nuxt start --port 3335",
     "dev:wallet": "set PK=bf9db4706c2fdb9011ee7e170ccac492f05427b96ab41d8bf2d8c58443704b76 && fcl-wallet",
     "dev:emulator": "flow emulator start --init --verbose --service-priv-key bf9db4706c2fdb9011ee7e170ccac492f05427b96ab41d8bf2d8c58443704b76 --service-sig-algo ECDSA_P256 --service-hash-algo SHA3_256"
   },
