@@ -3,6 +3,7 @@
     class="w3-top header"
     :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
   >
+  <client-only>
     <div class="devModeFlag shadow" v-if="devMode">DEV MODE</div>
     <div class="headerRow w3-row">
       <div class="brand w3-col s2">
@@ -198,19 +199,20 @@
         </div>
       </div>
     </div>
-    <client-only>
-      <account-modal />
-      <div style="opacity: 0; visibility: 0; z-index: -1">
-        <!-- This is hacky and surely theres a better way. In the interests 
-        of getting smoething to the public, i'm gonna leave like this for the moment -->
-        {{ shallShowStatusModal ? "yes" : "" }}
-      </div>
-        <!-- {{ shallShowCropperModal ? "yes" : "" }} -->
-      <status-modal />
-      <cropper-modal />
-      <chain-modal />
-      <info-modal />
-    </client-only>
+  </client-only>
+  <client-only>
+    <account-modal />
+    <div style="opacity: 0; visibility: 0; z-index: -1">
+      <!-- This is hacky and surely theres a better way. In the interests 
+      of getting smoething to the public, i'm gonna leave like this for the moment -->
+      {{ shallShowStatusModal ? "yes" : "" }}
+    </div>
+      <!-- {{ shallShowCropperModal ? "yes" : "" }} -->
+    <status-modal />
+    <cropper-modal />
+    <chain-modal />
+    <info-modal />
+  </client-only>
   </header>
 </template>
 
