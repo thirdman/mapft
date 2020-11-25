@@ -72,7 +72,7 @@ export const state = () => ({
   thumbnailArweaveHash: "",
   thumbnailArweaveProgress: null,
   thumbnailSource:
-    "https://arweave.rocks/isQRjzHIlqNmYW0KtboDm2gtJjg3dhRb_iV7sW8f_3g",
+    "https://arweave.net/isQRjzHIlqNmYW0KtboDm2gtJjg3dhRb_iV7sW8f_3g",
   cropOutputSource: "",
   // fileHash: '',
   fileName: "",
@@ -131,6 +131,7 @@ export const getters = {
   metaFieldsObj: (state) => {
     return JSON.parse(state.metaFieldsJson);
   },
+  showEditContract: (state) => state.showEditContract,
   getActiveContractId(state, getters, rootState) {
     const activeContractId = rootState.ui.activeContractId;
     return activeContractId;

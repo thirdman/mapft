@@ -109,7 +109,7 @@
           </div>
         </div>
       
-        <ToggleSection :colorMode="contrastMode">
+        <ToggleSection :colorMode="contrastMode" :active="true">
           <span slot="header">Previously Used Contracts</span>
           <div slot="content">
             <div v-for="(item, index) in usedContracts" :key="index">
@@ -234,7 +234,7 @@
               <div class="swatch sand" @click="setUiTheme('sand')">
                 <span class="swatchLabel">Sand</span>
               </div>
-              <div class="swatch grayscale" @click="setUiTheme('grayscale')">
+              <div class="swatch greyscale" @click="setUiTheme('gryscale')">
                 <span class="swatchLabel">Gray</span>
               </div>
               <div class="swatch turquoise" @click="setUiTheme('turquoise')">

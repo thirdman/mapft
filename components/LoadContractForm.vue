@@ -60,7 +60,7 @@
         </div>
       </ValidationProvider>
       <div class="row  marginBottom" v-if="usedContracts">
-        <ToggleSection :colorMode="contrastMode">
+        <ToggleSection :colorMode="contrastMode" :active="true">
           <span slot="header">Previously Used Contracts</span>
           <div slot="content">
             <div v-for="(item, index) in usedContracts" :key="index">
@@ -93,6 +93,7 @@
           fill
           primary
           size="large"
+          :disabled="!temporaryContractId"
           @click="setActiveContractId(temporaryContractId)"
         >
           Load Contract
@@ -149,14 +150,20 @@ export default {
       contrastMode: "ui/contrastMode",
       activeContractId: "ui/activeContractId",
       usedContracts: "ui/usedContracts",
+      // showEditContract: "mintFormStore/showEditContract",
       
     }),
 
     showEditContract() {
-      if (this.$store.state.ui.activeContractId) {
+      console.log('activeContractId: ', this.activeContractId)
+      console.log('showEditContract: ', this.$store.state.mintFormStore.showEditContract)
+      if (this.activeContractId) {
+        console.log('no active contract Id, should NOT show')
         return false;
       } else {
-        return this.$store.state.mintFormStore.showEditContract;
+        console.log('no active contract Id, should NOT show')
+        return true 
+        // this.$store.state.mintFormStore.showEditContract;
       }
     },
 

@@ -261,7 +261,7 @@
               <div class="formItem">
                 <label>IPFS</label>
                 <div id="link0" class="w3-small ">
-                  <a :href="`https://arweave.rocks/${viewData.fileIpfsHash}`" target="_blank" v-if="viewData.fileIpfsHash" class="metaLink" ><IconExternalLink size="small" />
+                  <a :href="`https://ipfs.io/ipfs/${viewData.fileIpfsHash}`" target="_blank" v-if="viewData.fileIpfsHash" class="metaLink" ><IconExternalLink size="small" />
                   {{ viewData.fileIpfsHash }}
                   </a>
                 </div>
@@ -269,7 +269,7 @@
               <div class="formItem">
                 <label>Arweave</label>
                 <div id="link1" class="w3-small ">
-                  <a :href="`https://arweave.rocks/${viewData.fileArweaveHash}`" target="_blank" v-if="viewData.fileArweaveHash" class="metaLink"><IconExternalLink size="small" />
+                  <a :href="`https://arweave.net/${viewData.fileArweaveHash}`" target="_blank" v-if="viewData.fileArweaveHash" class="metaLink"><IconExternalLink size="small" />
                   {{ viewData.fileArweaveHash }}</a>
                 </div>
               </div>

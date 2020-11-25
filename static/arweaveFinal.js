@@ -1,7 +1,7 @@
 "use strict";
 // Must have axios available as global
 //const ArUpload_URL = 'http://localhost:3535'
-const ArUpload_URL = "https://arweave.rocks";
+const ArUpload_URL = "https://arweave.net";
 
 const url = `${ArUpload_URL}/up`;
 const checkUrl = `${ArUpload_URL}/check`;

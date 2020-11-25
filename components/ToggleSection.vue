@@ -59,10 +59,10 @@
 export default {
   data() {
     return {
-      isActive: false,
+      isActive: this.active || false,
     }
   },
-  props: ['colorMode'],
+  props: ['colorMode', 'active'],
   computed: {
     // isActive: () => {
     //   return false

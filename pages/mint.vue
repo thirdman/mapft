@@ -262,6 +262,7 @@ export default {
       walletAddress: "ui/walletAddress",
       activeContractId: "ui/activeContractId",
       contrastMode: "ui/contrastMode",
+      showEditContract: "mintFormStore/showEditContract"
     }),
   },
   methods: {
