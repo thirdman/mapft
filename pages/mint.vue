@@ -1,7 +1,6 @@
 <template>
   <div class="pageContainer">
     <Header />
-
     <!--  VUE MINT FORM SECTION-->
     <section id="mint" class="mint markerNot borderBottom">
       <div class="tertiary">
@@ -256,12 +255,21 @@ export default {
        selectedConnectPanel: 'existing'
      }
    },
+   mounted() {
+     console.log(this.usedContracts)
+     if(this.usedContracts && this.usedContracts.length){
+       this.setSelectedPanel('existing')
+     } else {
+       this.setSelectedPanel('new')
+     }
+   },
   computed: {
     ...mapGetters({
       hasWallet: "ui/hasWallet",
       walletAddress: "ui/walletAddress",
       activeContractId: "ui/activeContractId",
       contrastMode: "ui/contrastMode",
+      usedContracts: "ui/usedContracts",
       showEditContract: "mintFormStore/showEditContract"
     }),
   },

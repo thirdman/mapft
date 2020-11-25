@@ -55,12 +55,12 @@
           <FormItemHelp
             required="true"
             message="Tokens will be minted using this contract. If you do not have one,
-              use the section below to create."
+              use the new contract section."
           />
         </div>
       </ValidationProvider>
-      <div class="row  marginBottom" v-if="usedContracts">
-        <ToggleSection :colorMode="contrastMode" :active="true">
+      <div class="row  marginBottom" v-if="usedContracts && usedContracts.length">
+        <ToggleSection :colorMode="contrastMode" :active="usedContracts && usedContracts.length">
           <span slot="header">Previously Used Contracts</span>
           <div slot="content">
             <div v-for="(item, index) in usedContracts" :key="index">
@@ -158,10 +158,10 @@ export default {
       console.log('activeContractId: ', this.activeContractId)
       console.log('showEditContract: ', this.$store.state.mintFormStore.showEditContract)
       if (this.activeContractId) {
-        console.log('no active contract Id, should NOT show')
+        // console.log('no active contract Id, should NOT show')
         return false;
       } else {
-        console.log('no active contract Id, should NOT show')
+        // console.log('no active contract Id, should NOT show')
         return true 
         // this.$store.state.mintFormStore.showEditContract;
       }
