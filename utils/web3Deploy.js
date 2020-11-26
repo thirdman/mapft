@@ -223,7 +223,8 @@ const deployThatShit = (event, state, context) => {
                   contractData
                 );
               } else {
-                console.error("completedTransaction.status !== true");
+                console.info("NOTE: completedTransaction.status !== true");
+                context.commit("deployFormStore/setDeployStatus", "timeout");
               }
             })
             .catch(function (err) {

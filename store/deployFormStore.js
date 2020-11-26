@@ -36,6 +36,11 @@ const deployStatusMap = {
     title: "Completed",
     text: "Transaction Complete",
   },
+  timeout: {
+    title: "Transaction Pending: timeout",
+    text:
+      "The transaction is taking a long time, likely due to network congestion. Check the etherscan status.",
+  },
   error: {
     title: "Error",
     text: "Error: Something went wrong.",
