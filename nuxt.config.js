@@ -111,14 +111,7 @@ export default {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     "@nuxtjs/eslint-module",
-    "@nuxtjs/google-analytics",
   ],
-
-  googleAnalytics: {
-    // id: 'UA-XXX-X'
-    id: "G-J3N4Y7WJRT",
-  },
-
   /*
    ** Nuxt.js modules
    */
