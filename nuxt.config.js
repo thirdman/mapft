@@ -20,6 +20,8 @@ export default {
     infuraUrlRinkeby: process.env.INFURA_URL_RINKEBY,
     infuraUrlMain: process.env.INFURA_URL_RINKEBY,
     baseUrl: process.env.BASE_URL,
+    ARWEAVE_WALLET_ID: process.env.ARWEAVE_WALLET_ID,
+    ARWEAVE_WALLET_KEY: process.env.ARWEAVE_WALLET_KEY,
   },
   /*
    ** Headers of the page
@@ -97,6 +99,7 @@ export default {
   plugins: [
     { src: "~/plugins/localStorage.js", ssr: false },
     { src: "~plugins/vue-js-modal.js" }, // mode: 'client'
+    // { src: "~plugins/arweaveInit.js" }, // mode: 'client'
     // { src: '~plugins/web3Load.js' },
     // { src: '~plugins/arweaveFinal.js' },
   ],

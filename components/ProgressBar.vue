@@ -1,5 +1,5 @@
 <template>
-  <div class="ProgressBar">
+  <div class="ProgressBar" :class="`fill-${color}`">
     <div v-if="showNumber" class="small">{{percentage}}</div>
     <div class="progressBarOuter">
         <div class="progressBarFill" :style="`width: ${percentage}%`"></div>
@@ -24,6 +24,12 @@
   height: 100%;
   display: block;
   background: var(--ui-color, #111);
+  &.fill-fill{
+    background: var(--fill-color, #111);
+  }
+  &.fill-background{
+    background: var(--background-color, #111);
+  }
 }
 </style>
 
@@ -33,7 +39,7 @@
 
 
 export default {
-  props: ['percentage', 'contrastMode', 'showNumber'],
+  props: ['percentage', 'contrastMode', 'showNumber', 'color'],
   computed: {
     // ...mapGetters({
     // }),

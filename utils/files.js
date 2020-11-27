@@ -147,7 +147,8 @@ const processUpload = async (props) => {
 
 /**
  * FILE UPLOAD PROCESS
- * THis is the main file
+ * THis is the main upload process
+ * Triggers first IPFS, then Arweave.
  */
 const startUploadProcess = async (inputElement, context) => {
   let fileArweaveHash;

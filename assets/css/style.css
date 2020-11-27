@@ -140,6 +140,9 @@ div.xsmall {
   font-size: 0.675rem;
   margin: 0;
 }
+strong {
+  font-variation-settings: "wght" 600;
+}
 .clamp {
   overflow: hidden;
   white-space: nowrap;
