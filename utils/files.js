@@ -70,66 +70,112 @@ const openThumbnail = async (file, context) => {
  */
 const processUpload = async (props) => {
   let fileArweaveHash;
-  const { mode = "file", file, inputElement, context } = props;
-  console.log("processUpload props: ", props);
+  const { mode = "file", file, context } = props;
+  // TOGGLE UPLOADER FUNCTIONS
+  const settings = {
+    ipfs: true,
+    arweave: true,
+    arweaveLegacy: false,
+  };
 
   const {
     setUploadStatus,
     personalSignFiles,
-    pinFiletoIPFS,
-    pinThumbnailFileToIPFS,
     removePinFromIPFS,
     fileIpfsHash,
     setArweaveHash,
     setArweaveStatus,
+    arUploadFile,
+    setProgress,
   } = context;
 
   try {
     var signature;
     setUploadStatus({ mode: mode, status: "confirming", text: "" });
 
-    signature = await personalSignFiles(
-      await ArUploadFile_getSigningData(file)
-    );
-    console.log(`Got Signature: ${signature}`);
+    if (settings.arweaveLegacy) {
+      signature = await personalSignFiles(
+        await ArUploadFile_getSigningData(file)
+      );
+      console.log(`Got Signature: ${signature}`);
+    }
 
     console.log(`Starting upload process (mode: ${mode})`);
-    setUploadStatus({ mode: mode, status: "uploading", text: "" });
 
-    const ipfsPromise = pinFileToIPFS(file, context, mode)
-      .then((fileIpfsHash) => {
-        console.log("uploaded: ", fileIpfsHash);
-        const ipfsRemovePromise = removePinFromIPFS(fileIpfsHash).catch((e) => {
+    // IPFS
+    if (settings.ipfs) {
+      setUploadStatus({ mode: mode, status: "uploading", text: "" });
+      const ipfsPromise = pinFileToIPFS(file, context, mode)
+        .then((fileIpfsHash) => {
+          console.log("uploaded: ", fileIpfsHash);
+          const ipfsRemovePromise = removePinFromIPFS(fileIpfsHash).catch(
+            (e) => {
+              console.error(e);
+              throw new Error(`IPFS Removal Failed (${e.message})`);
+            }
+          );
+
+          ipfsRemovePromise;
+        })
+        .catch((e) => {
           console.error(e);
-          throw new Error(`IPFS Removal Failed (${e.message})`);
+          throw new Error(`IPFS Upload Failed (${e.message})`);
         });
 
-        ipfsRemovePromise;
-      })
-      .catch((e) => {
-        console.error(e);
-        throw new Error(`IPFS Upload Failed (${e.message})`);
-      });
+      await ipfsPromise;
+      console.log("ArUpload_uploadFile", ArUpload_uploadFile);
+    }
 
-    await ipfsPromise;
-    console.log("ArUpload_uploadFile", ArUpload_uploadFile);
-    setArweaveStatus({ mode: mode, status: "uploading" });
-    const arweavePromise = ArUpload_uploadFile(file, signature)
-      .then((x) => {
-        console.log("arweave?", x);
-        fileArweaveHash = x.ArweaveTx;
-        setArweaveStatus({ mode: mode, status: "uploaded" });
-        setArweaveHash({ mode: mode, hash: fileArweaveHash });
-        return arweaveStatusCheckLoop(fileArweaveHash, context);
-      })
-      .catch((error) => {
-        console.error(error);
-        setArweaveStatus({ mode: mode, status: "error", text: error });
-        throw error;
-      });
+    // ARWEAVE
 
-    await arweavePromise;
-    setArweaveStatus({ mode: mode, status: "uploaded" });
+    if (settings.arweave) {
+      // set initial progress
+      const progressObj = {
+        total: undefined,
+        loaded: undefined,
+        percent: 1,
+      };
+      setProgress(mode, "arweave", {}, progressObj);
+      setArweaveStatus({ mode: mode, status: "uploading" });
+
+      const arweavePromise = arUploadFile({
+        file: file,
+        context: context,
+        mode: mode,
+        setProgress: setProgress,
+      })
+        .then((fileArweaveHash) => {
+          console.log("arweave uploaded: ", fileArweaveHash);
+          setArweaveStatus({ mode: mode, status: "uploaded" });
+          setArweaveHash({ mode: mode, hash: fileArweaveHash });
+        })
+        .catch((e) => {
+          console.error(e);
+          throw new Error(`Arweave Upload Failed (${e.message})`);
+        });
+      await arweavePromise;
+    }
+
+    // ARWEAVE LEGACY
+    // TODO: refactor out.
+    if (settings.arweaveLegacy) {
+      setArweaveStatus({ mode: mode, status: "uploading" });
+      const arweavePromise = ArUpload_uploadFile(file, signature)
+        .then((x) => {
+          console.log("arweave?", x);
+          fileArweaveHash = x.ArweaveTx;
+          setArweaveStatus({ mode: mode, status: "uploaded" });
+          setArweaveHash({ mode: mode, hash: fileArweaveHash });
+          return arweaveStatusCheckLoop(fileArweaveHash, context);
+        })
+        .catch((error) => {
+          console.error(error);
+          setArweaveStatus({ mode: mode, status: "error", text: error });
+          throw error;
+        });
+      await arweavePromise;
+      setArweaveStatus({ mode: mode, status: "uploaded" });
+    }
   } catch (e) {
     // catches all errors.
     // setStatusError("file", `Error: ${e.message}`)
@@ -141,7 +187,7 @@ const processUpload = async (props) => {
     });
     return;
   }
-  console.log("fileIpfsHash", fileIpfsHash);
+
   setUploadStatus({ mode: mode, status: "ready" });
 };
 
@@ -367,9 +413,17 @@ const pinFileToIPFS = async (file, context, mode = "file") => {
       withCredentials: true,
       onUploadProgress: (ProgressEvent) => {
         //we mildly fake the percent loaded until the file upload success message is returned from the API
-        // console.log("progress!", ProgressEvent);
-        console.log("Mode: ", mode);
-        setProgress(mode, "ipfs", ProgressEvent);
+        console.log("progress!", ProgressEvent);
+        const percentLoaded =
+          (ProgressEvent.loaded / ProgressEvent.total) * 100;
+        const percentRounded =
+          Math.round((percentLoaded + Number.EPSILON) * 100) / 100;
+        const progressObj = {
+          total: ProgressEvent.total,
+          loaded: ProgressEvent.loaded,
+          percent: percentRounded,
+        };
+        setProgress(mode, "ipfs", ProgressEvent, progressObj);
         // this.setState({
         //     percentLoaded: (ProgressEvent.loaded / ProgressEvent.total * 100)
         // })

@@ -19,7 +19,7 @@
             class="status-icon"
             :class="ipfsStatus === 'uploaded' ? 'complete' : ''"
           ></div>
-          {{ ipfsStatus === "uploading" ? "Saving to IPFS..." : ipfsStatus }}
+          {{ ipfsStatus === "uploading" ? `Saving to IPFS... ${ipfsProgress && ipfsProgress + '%'}` : `Ipfs File ${ipfsStatus}` }}
         </div>
         <ProgressBar
           :percentage="ipfsProgress"
@@ -38,15 +38,15 @@
           ></div>
           {{
             arweaveStatus === "uploading"
-              ? "Saving to Arweave..."
-              : arweaveStatus
+              ? `Saving to Arweave... ${arweaveProgress && arweaveProgress + '%'}`
+              : `Arweave File ${arweaveStatus}`
           }}
+        </div>
           <ProgressBar
           :percentage="arweaveProgress"
           v-if="arweaveProgress"
           :showNumber="false"
           />
-        </div>
       </div>
     </div>
   </div>

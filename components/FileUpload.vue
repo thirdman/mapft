@@ -83,19 +83,18 @@ export default {
       // Utility in case we need to hook in when the upload component is enabled
       // FilePond instance methods are available on `this.$refs.pond`
       // console.log("this.$refs.pond", this.$refs.pond);
-      console.log("FILEPOND init");
-      console.log("FILEPOND files: ", this.files);
+      // console.log("FILEPOND init");
+      // console.log("FILEPOND files: ", this.files);
     },
     handleUpdateFiles: function (fileItems) {
       if (fileItems.length === 0) {
         this.$props.onRequestClear(this.$props.mode, null);
         this.files = [];
       }
-      console.log("onupdate files", fileItems);
+      // console.log("onupdate files", fileItems);
       const newFiles = fileItems.map((fileItem) => fileItem.file);
-      console.log("onupdate newFiles", newFiles);
+      // console.log("onupdate newFiles", newFiles);
       this.files = newFiles;
-      // setFiles(newFiles);
     },
     // handleAddFile: function (error, file) {
     //   console.group("handleaddfile");

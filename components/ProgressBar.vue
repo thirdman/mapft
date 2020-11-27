@@ -1,8 +1,8 @@
 <template>
-  <div class="ProgressBar" :class="`fill-${color}`">
+  <div class="ProgressBar" >
     <div v-if="showNumber" class="small">{{percentage}}</div>
     <div class="progressBarOuter">
-        <div class="progressBarFill" :style="`width: ${percentage}%`"></div>
+        <div class="progressBarFill" :class="`fill-${color}`" :style="`width: ${percentage}%`"></div>
     </div>        
   </div>
 </template>
@@ -17,13 +17,14 @@
   width: 100%;
   height: 1rem;
   border-radius: .25rem;
-  background: var(--line-color, #eee);
+  background: var(--ui-color, #eee);
   border: 1px solid var(--ui-color, #111);
 }
 .progressBarFill{
   height: 100%;
   display: block;
-  background: var(--ui-color, #111);
+  background: var(--fill-color, #111);
+  border-radius: 2px;
   &.fill-fill{
     background: var(--fill-color, #111);
   }

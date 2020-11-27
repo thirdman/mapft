@@ -194,6 +194,7 @@
     <UploadStatus
       :title="uploadStatusTitle"
       :arweaveStatus="arweaveStatus"
+      :arweaveProgress="fileArweaveProgress"
       :ipfsStatus="ipfsStatus"
       :ipfsProgress="fileIpfsProgress"
     />
@@ -685,18 +686,13 @@ import {
   getMimeType,
   dataURLtoFile,
 } from "../utils/files.js";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 import { mintThatShit } from "../utils/web3Mint.js";
 import { mapFields } from "vuex-map-fields";
-import { mapMutations, mapGetters } from "vuex";
 import { ValidationProvider, extend } from "vee-validate";
 import vueFilePond from "vue-filepond";
-
 import { required, min, max, email } from "vee-validate/dist/rules";
-// import VueCropper from "vue-cropperjs";
-// import "cropperjs/dist/cropper.css";
 import "filepond/dist/filepond.min.css";
-// import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
-// const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
 const FilePond = vueFilePond();
 const imageTypes = ["jpg", "png", "gif"];
@@ -705,6 +701,7 @@ extend("min", {
   // (value) => {
   ...min,
   // return value.length >= 3
+  message: `Minimum length is ${min}`,
 });
 extend("max", {
   ...max,
@@ -741,6 +738,7 @@ export default {
       uploadFiles: [],
       thumbnailUploadLabel: `Drag & Drop your file or <span class="filepond--label-action"> Browse </span>`,
       fileIpfsProgress: undefined,
+      fileArweaveProgress: undefined,
       // thumbnailIpfsProgress: '6',
     };
   },
@@ -824,6 +822,14 @@ export default {
       setFileInfo: "mintFormStore/setFileInfo",
       // setShowCropper: "mintFormStore/setShowCropper",
     }),
+    ...mapActions({
+      // ARWEAVE
+      getBalance: "arweaveStore/getBalance",
+      arUploadFile: "arweaveStore/arUploadFile",
+      lastTransaction: "arweaveStore/lastTransaction",
+      getTransactionStatus: "arweaveStore/getTransactionStatus",
+      getTransactionData: "arweaveStore/getTransactionData",
+    }),
     shouldHideForm() {
       const activeArray = [
         'confirming',
@@ -857,17 +863,28 @@ export default {
       console.log("this.$refs.pond", this.$refs.pond);
       // FilePond instance methods are available on `this.$refs.pond`
     },
-    setProgress(mode = 'file', type = 'ipfs', ProgressEvent){
+    setProgress(mode = 'file', type = 'ipfs', ProgressEvent, progressObj){
       console.log('progress ProgressEvent', ProgressEvent)
-      if(!ProgressEvent){
+      console.log('progress progressObj', progressObj)
+      if(!progressObj){
         return
       }
-      const percentLoaded = (ProgressEvent.loaded / ProgressEvent.total * 100);
+      const percentLoaded = progressObj.percent || (ProgressEvent.loaded / ProgressEvent.total * 100);
       console.log('percentLoaded', percentLoaded)
       if(mode === 'file'){
-        this.fileIpfsProgress = percentLoaded;
+        if(type === 'ipfs'){
+          this.fileIpfsProgress = percentLoaded;
+        }
+        if(type === 'arweave'){
+          this.fileArweaveProgress = percentLoaded;
+        }
       } else {
-        this.thumbnailIpfsProgress = percentLoaded;
+        if(type === 'ipfs'){
+          this.thumbnailIpfsProgress = percentLoaded;
+        }
+        if(type === 'arweave'){
+          this.thumbnailArweaveProgress = percentLoaded;
+        }
       }
     },
     onRequestSave: function (props) {
@@ -890,17 +907,17 @@ export default {
       }
     },
     handleAddFile: function (error, file) {
-      console.log("error", error);
-      console.log("file", file);
-      console.log("this", this);
+      // console.log("error", error);
+      // console.log("file", file);
+      // console.log("this", this);
       if (!error) {
-        console.log("fileloaded", file);
+        // console.log("fileloaded", file);
         const fileName = file.filename;
         const fileType = fileName.split(".").pop().toLowerCase();
         const fileExtension = file.fileExtension;
-        console.log("fileName", fileName);
-        console.log("fileType", fileType);
-        console.log("fileExtension", fileExtension);
+        // console.log("fileName", fileName);
+        // console.log("fileType", fileType);
+        // console.log("fileExtension", fileExtension);
 
         this.renderImage(
           fileType,
@@ -967,7 +984,7 @@ export default {
       this.$store.commit("ui/clearActiveContractId", value);
     },
     setUploadStatus(statusData) {
-      console.log("setUploadStatus(statusData) ", statusData);
+      // console.log("setUploadStatus(statusData) ", statusData);
       this.$store.commit("mintFormStore/setUploadStatus", statusData);
     },
     removeMetaField(id) {

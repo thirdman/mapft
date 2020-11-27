@@ -14,9 +14,9 @@ export const state = () => ({
     port: 443,
     protocol: "https", // Network protocol http or https
     timeout: 20000, // Network request timeouts in milliseconds
-    // logging: false,     // Enable network request logging
+    logging: true, // Enable network request logging
   }),
-  walletBalance: "1234",
+  walletBalance: undefined,
   arweaveStatus: "init",
   transactionId: "",
   transactionStatusObj: undefined,
@@ -49,7 +49,17 @@ export const mutations = {
     state.transactionData = newValue;
   },
   setArweaveProgress(state, newValue) {
+    console.log("setting progress", newValue);
     state.arweaveProgress = newValue;
+  },
+  resetArweaveStore(state, payload) {
+    console.log("resetArweaveStore");
+    state.walletBalance = undefined;
+    state.arweaveStatus = "ready";
+    state.transactionId = undefined;
+    state.transactionStatusObj = undefined;
+    state.transactionData = undefined;
+    state.arweaveProgress = undefined;
   },
 };
 
@@ -72,11 +82,20 @@ export const actions = {
       console.log(ar);
       // state.walletBalance = ar;
       context.commit("setBalance", ar);
+      return ar;
     });
   },
-  async arUploadFile(context, file) {
-    console.log("file: ", file);
+  async arUploadFile(storeContext, payload) {
+    const { context, file, mode = "file", setProgress } = payload;
+    console.group("arUploadFile");
+    console.log("props", payload);
+    console.log("arUploadFile context: ", context);
+    console.log("arUploadFile file: ", file);
+    console.log("arUploadFile mode: ", mode);
+    console.log("arUploadFile setProgress: ", setProgress);
+    console.groupEnd();
     const key = this.$config.ARWEAVE_WALLET_KEY;
+
     // const sourceString = this.imageFileString;
     // console.log('fileData:', this.fileData)
     if (!file) {
@@ -86,7 +105,7 @@ export const actions = {
     const fileType = file.type;
     // console.log("fileData", fileData);
     // console.log("fileType", fileType);
-    context.commit("arweaveStatus", "working");
+    storeContext.commit("arweaveStatus", "working");
     let transaction = await arweave.createTransaction({ data: fileData }, key);
     transaction.addTag("Content-Type", fileType);
     console.log("transaction", transaction);
@@ -94,21 +113,29 @@ export const actions = {
 
     await arweave.transactions.sign(transaction, key);
     let uploader = await arweave.transactions.getUploader(transaction);
-    context.commit("setArweaveProgress", 1); // fake the initial amount so it appears;
+    storeContext.commit("setArweaveProgress", 1); // fake the initial amount so it appears;
 
     while (!uploader.isComplete) {
       await uploader.uploadChunk();
-      context.commit("arweaveStatus", `${uploader.pctComplete}% complete`);
+      storeContext.commit("arweaveStatus", `${uploader.pctComplete}% complete`);
+      console.log("uploader: ", uploader);
       console.log(
         `${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`
       );
       const percentLoaded = uploader.pctComplete;
-      context.commit("setArweaveProgress", percentLoaded); // fake the initial amount so it appears;
+      const progressObj = {
+        total: undefined,
+        loaded: undefined,
+        percent: uploader.pctComplete,
+      };
+      setProgress(mode, "arweave", ProgressEvent, progressObj);
+      storeContext.commit("setArweaveProgress", percentLoaded); // fake the initial amount so it appears;
     }
-    context.commit("arweaveStatus", "done");
+    storeContext.commit("arweaveStatus", "done");
     if (transaction.id) {
-      context.commit("setTransactionId", transaction.id);
+      storeContext.commit("setTransactionId", transaction.id);
     }
+    return transaction.id;
   },
   async lastTransaction(context, payload) {
     const arweaveWalletId = this.$config.ARWEAVE_WALLET_ID;

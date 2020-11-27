@@ -47,6 +47,7 @@
           <Button @click="lastTransaction">Get last Transaction Id</Button>
           <Button @click="getTransactionStatus(transactionId)" :disabled="!transactionId">Get Transaction status</Button>
           <Button @click="getTransactionData(transactionId)" :disabled="!transactionId">Get Transaction Data</Button>
+          <Button @click="resetArweaveStore" :disabled="!transactionId">resetArweaveStore</Button>
         </div>
         <div class="row">
           <div v-if="imageFileString">
@@ -124,12 +125,12 @@ export default {
       transactionStatusObj: "arweaveStore/transactionStatusObj",
       arweaveProgress: "arweaveStore/arweaveProgress",
       transactionData: "arweaveStore/transactionData",
-      
     }),
   },
   methods: {
     ...mapMutations({
-      setBalance: "arweaveStore/setBalance"
+      setBalance: "arweaveStore/setBalance",
+      resetArweaveStore: "arweaveStore/resetArweaveStore",
     }),
     ...mapActions({
       getBalance: "arweaveStore/getBalance",
