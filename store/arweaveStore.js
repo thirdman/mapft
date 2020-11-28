@@ -102,6 +102,10 @@ export const actions = {
       "arUploadFile config ARWEAVE_WALLET_KEY: ",
       context.$config.ARWEAVE_WALLET_KEY
     );
+    console.log(
+      "arUploadFile,  is it a string: ",
+      typeof context.$config.ARWEAVE_WALLET_KEY === "string"
+    );
     console.groupEnd();
     // const key = this.$config.ARWEAVE_WALLET_KEY;
     const key = {

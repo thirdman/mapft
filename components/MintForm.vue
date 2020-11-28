@@ -109,6 +109,7 @@
         mintStatus === 'stillWorking' ||
         mintStatus === 'stillWorkingMore' ||
         mintStatus === 'checkTransaction' ||
+        mintStatus === 'noContract' ||
         mintStatus === 'error'
       "
     />
@@ -609,6 +610,9 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         </button>
         <button @click="setMintStatus('error', 'example text')">
           set error
+        </button>
+        <button @click="setMintStatus('noContract')">
+          noContract
         </button>
         <button @click="setMintStatus('completed')">completed</button>
         

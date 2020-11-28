@@ -610,7 +610,12 @@ const mintThatShit = (event, state, rootContext) => {
       fileType,
       userContractAddress,
     });
-
+    if (!userContractAddress) {
+      alert(
+        "error: Contract Address is missing. Please load your contract id."
+      );
+      context.commit("mintFormStore/setMintStatus", "noContract");
+    }
     return null;
   }
   console.log("MiNT this data should be: ", {

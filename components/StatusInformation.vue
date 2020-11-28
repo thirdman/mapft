@@ -30,7 +30,7 @@
             mintStatus === 'stillWorkingMode'
           "
         />
-        <IconError v-if="mintStatus === 'error'" :strokeClass="contrastMode" />
+        <IconError v-if="mintStatus === 'error' || mintStatus === 'noContract'" :strokeClass="contrastMode" />
         <IconInfo
           v-if="
             mintStatus === 'confirming' || mintStatus === 'checkTransaction'
@@ -39,12 +39,21 @@
         />
       </div>
       <p class="statusMessage">{{ mintStatusMessage }}</p>
+      
       <div class="loadingPuppy shadow" v-if="showPuppy()">
         <img src="~/assets/images/puppy.gif" alt="excited puppy"/> 
         </div>
     </div>
     <span id="status-box-icon" class="status-icon status-active"></span>
 
+    <div class="transactionInfo" v-if="mintStatus === 'noContract'">
+      <div v-if="activeContractId" style="padding: 1rem; margin-left: 1rem; background: rgba(0,0,0,.1); border-radius: .5rem;">
+        <p class="small">Sometimes this error appears despite having an active contract. This usually happens when you have loaded the site but it hasn't properly retrieved your stored contract id.</p>
+        <p class="small">Active Contract: {{activeContractId ? activeContractId : "no activeContractId"}}</p>
+        <p class="small"><Button @click="handleReset(activeContractId)">Reload Stored Account</Button></p>
+      
+      </div>
+      </div>
     <div class="transactionInfo" v-if="this.mintTransactionId">
       <label class="mintTransactionLabel">Transaction Id</label>
 
@@ -166,6 +175,7 @@ export default {
       mintStatusTitle: 'mintFormStore/mintStatusTitle',
       mintStatusMessage: 'mintFormStore/mintStatusMessage',
       statusModalMode: 'ui/statusModalMode',
+      activeContractId: 'ui/activeContractId',
     }),
    
     etherscanLink() {
@@ -186,6 +196,7 @@ export default {
     ...mapMutations({
       setMintStatus: 'mintFormStore/setMintStatus',
       setStatusModalMode: 'ui/setStatusModalMode',
+      setActiveContractId: 'ui/setActiveContractId',
     }),
     ...mapActions({
       showStatusModal: 'mintFormStore/showStatusModal',
@@ -214,6 +225,11 @@ export default {
         // this.$modal.hide('status-modal')
       }
     },
+    handleReset(id){
+      console.log('todo', id)
+      this.$store.commit('ui/setActiveContractId', id);
+      this.$store.commit('mintFormStore/setMintStatus', 'ready');
+    }
   },
 }
 </script>

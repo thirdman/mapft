@@ -40,6 +40,11 @@ const statusMap = {
     title: "Error",
     text: "Error: Something went wrong.",
   },
+  noContract: {
+    title: "Error",
+    text:
+      "Contract Address is missing. Please load your contract id, or reset it in the account settings modal.",
+  },
 };
 
 export const state = () => ({
@@ -283,7 +288,6 @@ export const mutations = {
       case "confirming":
         newStatusTitle = "Awaiting signature confirmation.";
         break;
-
       case "active":
         newStatusTitle = "Files Uploading...";
         break;
@@ -293,9 +297,12 @@ export const mutations = {
       case "finished":
         newStatusTitle = "Finished Uploading.";
         break;
+      case "noContract":
+        newStatusTitle =
+          "Contract Address is missing. Please load your contract id.";
+        break;
       case "error":
         newStatusTitle = text;
-
       case "noFile":
         newStatusTitle = "No file selected";
         break;
@@ -426,7 +433,9 @@ export const mutations = {
     state.mintTransactionId = value;
   },
   setMintStatus(state, status) {
+    console.log("setMintStatus", status);
     const message = statusMap[status].text;
+    console.log("setMintStatus", message);
     state.mintStatus = status;
     state.mintStatusMessage = message;
   },
@@ -521,6 +530,7 @@ export const actions = {
       mintStatus === "stillWorking" ||
       mintStatus === "stillWorkingMore" ||
       mintStatus === "checkTransaction" ||
+      mintStatus === "noAddress" ||
       mintStatus === "error"
         ? true
         : false;

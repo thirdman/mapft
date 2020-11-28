@@ -2196,7 +2196,8 @@ input.hero {
   MINT FORM
 */
 .form.create#deployForm.error,
-.form.create#mintForm.error {
+.form.create#mintForm.error,
+.form.create#mintForm.noContract {
   color: initial;
   display: block;
   border-color: var(--danger-color, red);
