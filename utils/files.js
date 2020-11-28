@@ -71,6 +71,10 @@ const openThumbnail = async (file, context) => {
 const processUpload = async (props) => {
   let fileArweaveHash;
   const { mode = "file", file, context } = props;
+  // console.group("PROCESS UPLOAD");
+  // console.log("PROCESS UPLOAD: ", { mode, file, context });
+  // console.groupEnd();
+
   // TOGGLE UPLOADER FUNCTIONS
   const settings = {
     ipfs: true,
@@ -130,12 +134,17 @@ const processUpload = async (props) => {
 
     if (settings.arweave) {
       // set initial progress
-      const progressObj = {
+      const tempProgressObj = {
         total: undefined,
         loaded: undefined,
         percent: 1,
       };
-      setProgress(mode, "arweave", {}, progressObj);
+      setProgress({
+        mode: mode,
+        type: "arweave",
+        ProgressEvent: { nope: "nope" },
+        progressObj: tempProgressObj,
+      });
       setArweaveStatus({ mode: mode, status: "uploading" });
 
       const arweavePromise = arUploadFile({
@@ -196,7 +205,8 @@ const processUpload = async (props) => {
  * THis is the main upload process
  * Triggers first IPFS, then Arweave.
  */
-const startUploadProcess = async (inputElement, context) => {
+const startUploadProcess = async (inputElement, context, mode) => {
+  console.log("startUploadProcess MODE: ", mode);
   let fileArweaveHash;
   const input = inputElement;
   const {
@@ -209,8 +219,7 @@ const startUploadProcess = async (inputElement, context) => {
     setArweaveHash,
     setArweaveStatus,
   } = context;
-  alert("here");
-  console.log("context", context);
+
   try {
     var signature;
     setUploadStatus({ mode: "file", status: "confirming", text: "" });
@@ -295,6 +304,7 @@ const startUploadThumbnailProcess = async (
   context,
   mode = "thumbnail"
 ) => {
+  console.log("startUploadThumbnailProcess mode: ", mode);
   console.log("startUploadThumbnailProcess context: ", context);
   let fileArweaveHash;
   const theFile = thumbnailFile;
@@ -423,7 +433,12 @@ const pinFileToIPFS = async (file, context, mode = "file") => {
           loaded: ProgressEvent.loaded,
           percent: percentRounded,
         };
-        setProgress(mode, "ipfs", ProgressEvent, progressObj);
+        setProgress({
+          mode: mode,
+          type: "ipfs",
+          ProgressEvent: ProgressEvent,
+          progressObj: progressObj,
+        });
         // this.setState({
         //     percentLoaded: (ProgressEvent.loaded / ProgressEvent.total * 100)
         // })
@@ -470,7 +485,7 @@ const pinThumbnailFileToIPFS = async (sourceFile, context) => {
       withCredentials: true,
       onUploadProgress: (ProgressEvent) => {
         // console.log("ProgressEvent: ", ProgressEvent);
-        setProgress({ mode, type: "ipfs", ProgressEvent });
+        setProgress({ mode, type: "ipfs", ProgressEvent, progressObj: {} });
       },
     })
     .then(function (response) {

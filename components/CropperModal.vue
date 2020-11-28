@@ -99,9 +99,11 @@ export default {
       setArweaveHash: "mintFormStore/setArweaveHash",
       setIpfsStatus: "mintFormStore/setIpfsStatus",
       setIpfsHash: "mintFormStore/setIpfsHash",
+      setUploadStatus: "mintFormStore/setUploadStatus",
     }),
     ...mapActions({
       showCropperModal: 'mintFormStore/showCropperModal',
+      arUploadFile: "arweaveStore/arUploadFile",
     }),
     handleModal(newState) {
       console.log('this.$modal', this.$modal)
@@ -140,9 +142,12 @@ export default {
       this.cropStatus = "ready"
       this.handleCropResult(image);
     },
-    handleApplyCrop(event) {
-      console.log("apply crop", event);
-      
+    handleApplyCrop() {
+      console.log("CROPPER: apply crop");
+      console.log("croppper removePinFromIPFS", removePinFromIPFS);
+
+      // temp set the context to be mint form instead of cropper
+      // TODO: this can be handled more nicer!
       const tempContext = {
         setThumbnailUploadStatus: this.setThumbnailUploadStatus,
         personalSignFiles: this.personalSignFiles,
@@ -151,31 +156,45 @@ export default {
         setIpfsStatus: this.setIpfsStatus,
         setIpfsHash: this.setIpfsHash,
         showCropper: this.showCropper,
-        setProgress: this.setProgress
+        setProgress: this.setProgress,
+        setUploadStatus: this.setUploadStatus,
+        removePinFromIPFS: this.removePinFromIPFS,
+        arUploadFile: this.arUploadFile
       }
       
+      // SET THE PRVIEW
+      // TODO: refactor this into another function as
+      // it diesn't really belong in here,
+      // combine with 'handleCropResult()' below
       const thumbnailElement = document.getElementById("outputThumbnailImage");
       const outputElement = document.getElementById("output");
-      const previewImageElement = document.getElementById("output").firstChild;
-      if (thumbnailElement && thumbnailElement.src) {
-        const newImage = thumbnailElement.src;
-        const mimeType = getMimeType(newImage);
-        const fileExtension = mimeType.replace("image/", "");
-        const fileName = `thumbnail.${fileExtension}`;
-        const thumbnailAsFile = dataURLtoFile(newImage, fileName);
-        this.$store.commit("mintFormStore/setShowCropper", false);
-        this.$modal.hide('cropper-modal')
-        startUploadThumbnailProcess(thumbnailAsFile, tempContext, "thumbnail");
-      
-      } else {
+      const previewImageElement = document.getElementById("output").firstChild;      
+      if (!thumbnailElement ||  thumbnailElement && !thumbnailElement.src) {
         console.error("no crop image");
       }
+
+      const newImage = thumbnailElement.src;
+      const mimeType = getMimeType(newImage);
+      const fileExtension = mimeType.replace("image/", "");
+      const fileName = `thumbnail.${fileExtension}`;
+      const thumbnailAsFile = dataURLtoFile(newImage, fileName);
+      this.$store.commit("mintFormStore/setShowCropper", false);
+      this.$modal.hide('cropper-modal')
+      // startUploadThumbnailProcess(thumbnailAsFile, tempContext, "thumbnail");
+      processUpload({
+          mode: "thumbnail",
+          context: tempContext,
+          file: thumbnailAsFile,
+          // inputElement: file,
+        }).catch((error) => {
+          alert(error);
+        });
+      
     },
     handleCropResult(croppedImage) {
-      console.log('cropped!', croppedImage)
+      // console.log('cropped!', croppedImage)
       this.$store.commit('mintFormStore/setCropOutputSource', croppedImage)
       const thumbnailElement = document.getElementById("outputThumbnailImage");
-
       if (thumbnailElement) {
         thumbnailElement.src = croppedImage;
       }

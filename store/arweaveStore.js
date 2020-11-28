@@ -89,10 +89,10 @@ export const actions = {
     const { context, file, mode = "file", setProgress } = payload;
     console.group("arUploadFile");
     console.log("props", payload);
-    console.log("arUploadFile context: ", context);
-    console.log("arUploadFile file: ", file);
-    console.log("arUploadFile mode: ", mode);
-    console.log("arUploadFile setProgress: ", setProgress);
+    // console.log("arUploadFile context: ", context);
+    // console.log("arUploadFile file: ", file);
+    /// console.log("arUploadFile mode: ", mode);
+    // console.log("arUploadFile setProgress: ", setProgress);
     console.groupEnd();
     const key = this.$config.ARWEAVE_WALLET_KEY;
 
@@ -128,7 +128,13 @@ export const actions = {
         loaded: undefined,
         percent: uploader.pctComplete,
       };
-      setProgress(mode, "arweave", ProgressEvent, progressObj);
+      console.log("test progresObj: ", progressObj);
+      setProgress({
+        mode: mode,
+        type: "arweave",
+        ProgressEvent: ProgressEvent,
+        progressObj: progressObj,
+      });
       storeContext.commit("setArweaveProgress", percentLoaded); // fake the initial amount so it appears;
     }
     storeContext.commit("arweaveStatus", "done");

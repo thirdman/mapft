@@ -1,6 +1,6 @@
 <!-- accepted-file-types="image/jpeg, image/png" -->
 <template>
-  <div class="FileUpload" :class="mode">
+  <div class="FileUpload" :class="`mode-mode`">
     <client-only>
       <file-pond
         name="test"
@@ -19,9 +19,9 @@
 </template>
 
 <style>
-.FileUpload {
-  margin-bottom: 1rem;
-}
+  .FileUpload {
+    /* margin-bottom: 1rem; */
+  }
 </style>
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";

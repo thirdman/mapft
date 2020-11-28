@@ -1948,7 +1948,7 @@ ul.heroList {
 }
 .form.create {
   border: 2px solid var(--ui-color);
-  min-height: 20rem;
+  min-height: 17rem;
   margin-right: 0.5rem;
 }
 .form .formContent {
@@ -2263,9 +2263,6 @@ input.hero {
   color: var(--background-color, #fff);
   margin-bottom: 0.5rem;
 }
-.mintStatusWrap {
-  padding-bottom: 1rem;
-}
 
 .form.create#mintForm .mintStatusWrap .status-icon {
   display: none;
@@ -2567,29 +2564,28 @@ MODAL
   vertical-align: middle;
 }
 
-#uploadStatus #file-status-subtitle-ipfs,
+/* #uploadStatus #file-status-subtitle-ipfs,
 #uploadStatus #file-status-subtitle-arweave,
 #thumbnailStatus #thumbnail-status-subtitle-ipfs,
 #thumbnailStatus #thumbnail-status-subtitle-arweave {
-  /* display: none; */
   padding: 0.5rem 1rem;
-}
-#uploadStatus #file-status-subtitle-ipfs.uploaded,
+} */
+/* #uploadStatus #file-status-subtitle-ipfs.uploaded,
 #uploadStatus #file-status-subtitle-arweave.uploaded,
 #thumbnailStatus #thumbnail-status-subtitle-ipfs.uploaded,
 #thumbnailStatus #thumbnail-status-subtitle-arweave.uploaded {
   color: var(--success-color, lime);
-}
+} */
 
-#uploadStatus.arweaveActive #file-status-subtitle-arweave,
+/* #uploadStatus.arweaveActive #file-status-subtitle-arweave,
 #thumbnailStatus.arweaveActive #thumbnail-status-subtitle-arweave {
   display: block;
-}
+} */
 
-#uploadStatus.ipfsActive #filestatus-subtitle-ipfs,
+/* #uploadStatus.ipfsActive #filestatus-subtitle-ipfs,
 #thumbnailStatus.ipfsActive #thumbnail-status-subtitle-ipfs {
   display: block;
-}
+} */
 
 .form .fieldset#fieldsetImage.hidden ~ .uploadStatusWrap {
   display: none;

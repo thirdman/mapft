@@ -9,11 +9,11 @@
       >
         <IconContract
           :strokeClass="contrastMode"
-          v-if="statusModalMode === 'fixed'"
+          v-if="statusModalMode === 'inline'"
         />
         <IconExpand
           :strokeClass="contrastMode"
-          v-if="statusModalMode === 'inline'"
+          v-if="statusModalMode === 'fixed'"
         />
       </button>
     </div>
@@ -45,7 +45,7 @@
     </div>
     <span id="status-box-icon" class="status-icon status-active"></span>
 
-    <div class="transactionInfo" v-if="mintStatus !== 'ready'">
+    <div class="transactionInfo" v-if="this.mintTransactionId">
       <label class="mintTransactionLabel">Transaction Id</label>
 
       <div>
@@ -86,12 +86,12 @@
   right: 0;
   z-index: 999;
 }
-.statusInformation.fixed .closeButtonWrap {
+.statusInformation.inline .closeButtonWrap {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
 }
-.statusInformation.inline .closeButtonWrap {
+.statusInformation.fixed .closeButtonWrap {
   position: absolute;
   top: 0rem;
   right: 0rem;
@@ -143,7 +143,7 @@
 
 }
 .transactionInfo {
-  border-top: 1px solid var(--line-color, #ccc);
+  /* border-top: 1px solid var(--line-color, #ccc); */
 }
 .etherscanLink {
   display: inline-flex;

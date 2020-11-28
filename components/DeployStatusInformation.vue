@@ -149,12 +149,12 @@
   z-index: 999;
   border-top: 1px solid var(--ui-color, #111);
 }
-.statusInformation.fixed .closeButtonWrap {
+.statusInformation.inline .closeButtonWrap {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
 }
-.statusInformation.inline .closeButtonWrap {
+.statusInformation.fixed .closeButtonWrap {
   position: absolute;
   top: 0rem;
   right: 0rem;

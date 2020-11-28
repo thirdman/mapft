@@ -9,17 +9,17 @@
       >
         <IconContract
           :strokeClass="contrastMode"
-          v-if="statusModalMode === 'fixed'"
+          v-if="statusModalMode === 'inline'"
         />
         <IconExpand
           :strokeClass="contrastMode"
-          v-if="statusModalMode === 'inline'"
+          v-if="statusModalMode === 'fixed'"
         />
       </button>
     </div>
     <h3>{{ mintStatusTitle }}</h3>
-    <div id="completedMintContent">
-      <p>
+    <div id="completedMintContent" style="margin-bottom: .5rem;">
+      <p class="small">
         Your tokens are minted and can be seen using the view page, or on
         Opensea.
       </p>
@@ -32,28 +32,24 @@
         >
       </div>
     </div>
-    <div v-if="devMode && fakeMintedData" class="help ">
-      <div>Contract: {{ fakeMintedData.contractId }}</div>
-      <div>Token: {{ fakeMintedData.tokenId }}</div>
-      <div>Network: {{ fakeMintedData.network }}</div>
-    </div>
-    <div v-if="!devMode && mintedData" class="help ">
-      <div>Contract: {{ mintedData.contractId }}</div>
-      <div>Token: {{ mintedData.tokenId }}</div>
-      <div>Network: {{ mintedData.network }}</div>
-    </div>
-    <ToggleSection v-if="openseaLink">
+    <ToggleSection v-if="openseaLink" active="true">
       <span slot="header">Transaction Meta</span>
       <div slot="content">
+        <div v-if="!devMode && mintedData" class="help formItem" style="margin: .5rem 0">
+          <label>Token Info</label>
+          <div class="xsmall">Contract Id: {{ mintedData.contractId }}</div>
+          <div class="xsmall">Token Id: {{ mintedData.tokenId }}</div>
+          <div class="xsmall" v-if="mintedData.network !== 'main'">Network: {{ mintedData.network }}</div>
+        </div>
         <div class="formItem">
-          <label>Opensea Link</label>
+          <label>Opensea</label>
           <a :href="openseaLink" class="etherscanLink" target="blank">
-        <IconExternalLink strokeClass="dark" />
+        <!-- <IconExternalLink strokeClass="dark" /> -->
         {{ openseaLink }}
       </a>
         </div>
         <div class="formItem" v-if="etherscanLink">
-          <label>Transaction</label>
+          <label>Transaction Info</label>
           
            <a :href="etherscanLink" class="etherscanLink" target="blank">
           <IconExternalLink
@@ -119,12 +115,12 @@
   right: 0;
   z-index: 999;
 }
-.mintedInformation.fixed .closeButtonWrap {
+.mintedInformation.inline .closeButtonWrap {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
 }
-.mintedInformation.inline .closeButtonWrap {
+.mintedInformation.fixed .closeButtonWrap {
   position: absolute;
   top: 0rem;
   right: 0rem;
@@ -152,12 +148,12 @@
   justify-content: center;
 }
 .transactionInfo {
-  border-top: 1px solid var(--line-color, #ccc);
+  /* border-top: 1px solid var(--line-color, #ccc); */
 }
 .etherscanLink {
   display: inline-flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   font-size: 0.75rem;
 }
 </style>

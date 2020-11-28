@@ -190,17 +190,23 @@
                   </div>
                 </div>
         -->
-    <!-- UPLOAD STATUS -->
-    <UploadStatus
-      :title="uploadStatusTitle"
-      :arweaveStatus="arweaveStatus"
-      :arweaveProgress="fileArweaveProgress"
-      :ipfsStatus="ipfsStatus"
-      :ipfsProgress="fileIpfsProgress"
-    />
-    <Button 
-    size="small"
-    @click="setShowThumbnailField(!showThumbnailField)">{{showThumbnailField ? "Hide" : 'Show'}} Thumbnail Upload</Button>
+      <!-- UPLOAD STATUS -->
+      <UploadStatus
+        displayMode="inline"
+        :title="uploadStatusTitle"
+        :arweaveStatus="arweaveStatus"
+        :arweaveProgress="fileArweaveProgress"
+        :arweaveHash="fileArweaveHash"
+        :ipfsStatus="ipfsStatus"
+        :ipfsProgress="fileIpfsProgress"
+        :ipfsHash="fileIpfsHash"
+      />
+      <div class="formItem block" style="margin-top: .5rem;">
+        <Button 
+        size="small"
+        @click="setShowThumbnailField(!showThumbnailField)">{{showThumbnailField ? "Hide" : 'Show'}} Thumbnail Upload
+        </Button>
+      </div>
     </div>
     
     <!-- THUMBNAIL SECTION -->
@@ -250,9 +256,13 @@
         </div>
       </div>
       <UploadStatus
+        displayMode="inline"
         :title="uploadThumbnailStatusTitle"
         :arweaveStatus="thumbnailArweaveStatus"
+        :arweaveHash="thumbnailArweaveHash"
         :ipfsStatus="thumbnailIpfsStatus"
+        :ipfsHash="thumbnailIpfsHash"
+        :arweaveProgress="thumbnailArweaveProgress"
         :ipfsProgress="thumbnailIpfsProgress"
     
       />
@@ -737,8 +747,8 @@ export default {
       classes: [],
       uploadFiles: [],
       thumbnailUploadLabel: `Drag & Drop your file or <span class="filepond--label-action"> Browse </span>`,
-      fileIpfsProgress: undefined,
-      fileArweaveProgress: undefined,
+      // fileIpfsProgress: undefined,
+      // fileArweaveProgress: undefined,
       // thumbnailIpfsProgress: '6',
     };
   },
@@ -764,13 +774,17 @@ export default {
       ipfsStatus: "mintFormStore/ipfsStatus",
       arweaveStatus: "mintFormStore/arweaveStatus",
       fileIpfsHash: "mintFormStore/fileIpfsHash",
+      fileIpfsProgress: "mintFormStore/fileIpfsProgress",
       fileArweaveHash: "mintFormStore/fileArweaveHash",
+      fileArweaveProgress: "mintFormStore/fileArweaveProgress",
       thumbnailUploadStatus: "mintFormStore/thumbnailUploadStatus",
       thumbnailIpfsStatus: "mintFormStore/thumbnailIpfsStatus",
       thumbnailIpfsProgress: "mintFormStore/thumbnailIpfsProgress",
       thumbnailArweaveStatus: "mintFormStore/thumbnailArweaveStatus",
       thumbnailArweaveProgress: "mintFormStore/thumbnailArweaveProgress",
+      thumbnailIpfsHash: "mintFormStore/thumbnailIpfsHash",
       thumbnailIpfsHashDefault: "mintFormStore/thumbnailIpfsHashDefault",
+      thumbnailArweaveHash: "mintFormStore/thumbnailArweaveHash",
       thumbnailArweaveHashDefault: "mintFormStore/thumbnailArweaveHashDefault",
       uploadThumbnailStatusTitle: "mintFormStore/uploadThumbnailStatusTitle",
       thumbnailSource: "mintFormStore/thumbnailSource",
@@ -820,7 +834,7 @@ export default {
       setThumbnailUploadStatus: "mintFormStore/setThumbnailUploadStatus",
       setThumbnailSource: "mintFormStore/setThumbnailSource",
       setFileInfo: "mintFormStore/setFileInfo",
-      // setShowCropper: "mintFormStore/setShowCropper",
+      setProgress: "mintFormStore/setProgress",
     }),
     ...mapActions({
       // ARWEAVE
@@ -863,30 +877,7 @@ export default {
       console.log("this.$refs.pond", this.$refs.pond);
       // FilePond instance methods are available on `this.$refs.pond`
     },
-    setProgress(mode = 'file', type = 'ipfs', ProgressEvent, progressObj){
-      console.log('progress ProgressEvent', ProgressEvent)
-      console.log('progress progressObj', progressObj)
-      if(!progressObj){
-        return
-      }
-      const percentLoaded = progressObj.percent || (ProgressEvent.loaded / ProgressEvent.total * 100);
-      console.log('percentLoaded', percentLoaded)
-      if(mode === 'file'){
-        if(type === 'ipfs'){
-          this.fileIpfsProgress = percentLoaded;
-        }
-        if(type === 'arweave'){
-          this.fileArweaveProgress = percentLoaded;
-        }
-      } else {
-        if(type === 'ipfs'){
-          this.thumbnailIpfsProgress = percentLoaded;
-        }
-        if(type === 'arweave'){
-          this.thumbnailArweaveProgress = percentLoaded;
-        }
-      }
-    },
+    
     onRequestSave: function (props) {
       alert("request save called");
 
@@ -906,19 +897,12 @@ export default {
         this.setThumbnailSource("");
       }
     },
+    // MAIN FILE ADD
     handleAddFile: function (error, file) {
-      // console.log("error", error);
-      // console.log("file", file);
-      // console.log("this", this);
       if (!error) {
-        // console.log("fileloaded", file);
         const fileName = file.filename;
         const fileType = fileName.split(".").pop().toLowerCase();
         const fileExtension = file.fileExtension;
-        // console.log("fileName", fileName);
-        // console.log("fileType", fileType);
-        // console.log("fileExtension", fileExtension);
-
         this.renderImage(
           fileType,
           window.URL.createObjectURL(file.file),
@@ -935,46 +919,50 @@ export default {
         }).catch((error) => {
           alert(error);
         });
-        // return triggerUploadProcess()
       } else {
         this.setUploadStatus({ mode: "file", status: "noFile" });
         console.error("error: ", error);
       }
     },
+    // THUMB MAIN FILE ADD
+    // This doesn't upload, but instead triggers the 
+    // cropper modal
     handleAddThumbnail: function (error, file) {
-      const oldWay = false
       if (error) {
         this.setUploadStatus({ mode: "thumbnail", status: "noFile" });
         console.error("error: ", error);
         return;
       }
-      if(file){
-        const urlElement = window.URL.createObjectURL(file.file);
-        this.setThumbnailSource(urlElement);
-        this.$store.commit("mintFormStore/setShowCropper", true);
-        this.$modal.show("cropper-modal");
+      if(!file){
+        return
       }
-      if(oldWay){
-        console.log("file", file);
-        const fileName = file.filename;
-        const fileType = fileName.split(".").pop().toLowerCase();
-        const fileExtension = file.fileExtension;
+      
+      const urlElement = window.URL.createObjectURL(file.file);
+      this.setThumbnailSource(urlElement);
+      this.$store.commit("mintFormStore/setShowCropper", true);
+      this.$modal.show("cropper-modal");
+      
+      // if(oldWay){
+      //   console.log("file", file);
+      //   const fileName = file.filename;
+      //   const fileType = fileName.split(".").pop().toLowerCase();
+      //   const fileExtension = file.fileExtension;
 
-        const cropImageElement = document.getElementById("cropImage");
-        console.log("cropImageElement", cropImageElement);
-        const urlElement = window.URL.createObjectURL(file.file);
-        console.log("thumbnail urlElement", urlElement);
-        this.setThumbnailSource(urlElement);
+      //   const cropImageElement = document.getElementById("cropImage");
+      //   console.log("cropImageElement", cropImageElement);
+      //   const urlElement = window.URL.createObjectURL(file.file);
+      //   console.log("thumbnail urlElement", urlElement);
+      //   this.setThumbnailSource(urlElement);
 
-        processUpload({
-          mode: "thumbnail",
-          context: this,
-          file: file.file,
-          inputElement: file,
-        }).catch((error) => {
-          alert(error);
-        });
-      }
+      //   processUpload({
+      //     mode: "thumbnail",
+      //     context: this,
+      //     file: file.file,
+      //     inputElement: file,
+      //   }).catch((error) => {
+      //     alert(error);
+      //   });
+      // }
     },
 
     setActiveContractId(value) {

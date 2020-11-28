@@ -256,7 +256,7 @@ export default {
      }
    },
    mounted() {
-     console.log(this.usedContracts)
+     // console.log(this.usedContracts)
      if(this.usedContracts && this.usedContracts.length){
        this.setSelectedPanel('existing')
      } else {

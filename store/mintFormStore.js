@@ -60,17 +60,19 @@ export const state = () => ({
   thumbnailUploadStatus: null,
   ipfsStatus: "",
   fileIpfsHash: "",
+  fileIpfsProgress: undefined,
   thumbnailIpfsStatus: "",
   thumbnailIpfsHash: "",
-  thumbnailIpfsProgress: null,
+  thumbnailIpfsProgress: undefined,
   // thumbnailIpfsHashDefault: "QmQw1qUqKnZSLUZEbtQqyWtqv7KeMzdZZ4ixJfEksdcaL9",
   thumbnailIpfsHashDefault: "QmawLNCbgvpqYvLSF9nvzbJacSuxF5taSdidfGVST8rG1F",
   thumbnailArweaveHashDefault: "isQRjzHIlqNmYW0KtboDm2gtJjg3dhRb_iV7sW8f_3g",
   arweaveStatus: "",
   fileArweaveHash: "",
+  fileArweaveProgress: undefined,
   thumbnailArweaveStatus: "",
   thumbnailArweaveHash: "",
-  thumbnailArweaveProgress: null,
+  thumbnailArweaveProgress: undefined,
   thumbnailSource:
     "https://arweave.net/isQRjzHIlqNmYW0KtboDm2gtJjg3dhRb_iV7sW8f_3g",
   cropOutputSource: "",
@@ -114,7 +116,9 @@ export const getters = {
   thumbnailIpfsStatus: (state) => state.thumbnailIpfsStatus,
   thumbnailArweaveStatus: (state) => state.thumbnailArweaveStatus,
   fileIpfsHash: (state) => state.fileIpfsHash,
+  fileIpfsProgress: (state) => state.fileIpfsProgress,
   fileArweaveHash: (state) => state.fileArweaveHash,
+  fileArweaveProgress: (state) => state.fileArweaveProgress,
   thumbnailIpfsHash: (state) => state.thumbnailIpfsHash,
   thumbnailIpfsProgress: (state) => state.thumbnailIpfsProgress,
   thumbnailIpfsHashDefault: (state) => state.thumbnailIpfsHashDefault,
@@ -234,7 +238,11 @@ export const mutations = {
   },
   setArweaveStatus(state, data) {
     const { mode = "file", status } = data;
-    console.log("setArweaveStatus mode: ", mode);
+    console.log("setArweaveStatus mode: ", mode, status);
+    if (!status) {
+      alert("no status");
+      return;
+    }
     if (mode === "thumbnail") {
       state.thumbnailArweaveStatus = status;
     } else {
@@ -310,15 +318,24 @@ export const mutations = {
     state.cropOutputSource = value;
   },
   setProgress(state, payload) {
-    const { mode = "file", type = "ipfs", ProgressEvent } = payload;
-    if (!ProgressEvent) {
+    const {
+      mode = "file",
+      type = "ipfs",
+      ProgressEvent,
+      progressObj,
+    } = payload;
+    console.group("progress");
+    console.log("progress: ", { mode, type, progressObj });
+    console.groupEnd();
+    if (!progressObj) {
       return;
     }
-    const percentLoaded = (ProgressEvent.loaded / ProgressEvent.total) * 100;
-    console.log("percentLoaded", percentLoaded);
+    const percentLoaded =
+      progressObj.percent || (ProgressEvent.loaded / ProgressEvent.total) * 100;
+    console.log("progress percentLoaded", percentLoaded);
     if (type === "ipfs") {
       if (mode === "file") {
-        this.fileIpfsProgress = percentLoaded;
+        // this.fileIpfsProgress = percentLoaded;
         state.fileIpfsProgress = percentLoaded;
       } else {
         state.thumbnailIpfsProgress = percentLoaded;
@@ -331,7 +348,46 @@ export const mutations = {
         state.thumbnailArweaveProgress = percentLoaded;
       }
     }
+    // if(mode === 'file'){
+    //   if(type === 'ipfs'){
+    //     this.fileIpfsProgress = percentLoaded;
+    //   }
+    //   if(type === 'arweave'){
+    //     this.fileArweaveProgress = percentLoaded;
+    //   }
+    // } else {
+    //   if(type === 'ipfs'){
+    //     this.thumbnailIpfsProgress = percentLoaded;
+    //   }
+    //   if(type === 'arweave'){
+    //     this.thumbnailArweaveProgress = percentLoaded;
+    //   }
+    // }
   },
+  // setProgress(state, payload) {
+  //   const { mode = "file", type = "ipfs", ProgressEvent } = payload;
+  //   console.log("setProgress", payload);
+  //   if (!ProgressEvent) {
+  //     return;
+  //   }
+  //   const percentLoaded = (ProgressEvent.loaded / ProgressEvent.total) * 100;
+  //   console.log("percentLoaded", percentLoaded);
+  //   if (type === "ipfs") {
+  //     if (mode === "file") {
+  //       this.fileIpfsProgress = percentLoaded;
+  //       state.fileIpfsProgress = percentLoaded;
+  //     } else {
+  //       state.thumbnailIpfsProgress = percentLoaded;
+  //     }
+  //   }
+  //   if (type === "arweave") {
+  //     if (mode === "file") {
+  //       state.fileArweaveProgress = percentLoaded;
+  //     } else {
+  //       state.thumbnailArweaveProgress = percentLoaded;
+  //     }
+  //   }
+  // },
   setThumbnailUploadStatus(state, data) {
     const { mode = "file", status, text = "" } = data;
     state.uploadThumbnailStatus = status;
@@ -431,13 +487,17 @@ export const mutations = {
     state.thumbnailUploadStatus = null;
     state.ipfsStatus = "";
     state.fileIpfsHash = "";
+    state.fileIpfsProgress = null;
     state.thumbnailIpfsStatus = "";
     state.thumbnailIpfsHash = "";
+    state.thumbnailIpfsProgress = null;
 
     state.arweaveStatus = "";
     state.fileArweaveHash = "";
+    state.fileArweaveProgress = null;
     state.thumbnailArweaveStatus = "";
     state.thumbnailArweaveHash = "";
+    state.thumbnailArweaveProgress = null;
   },
 };
 
