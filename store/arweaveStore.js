@@ -89,12 +89,39 @@ export const actions = {
     const { context, file, mode = "file", setProgress } = payload;
     console.group("arUploadFile");
     console.log("props", payload);
-    // console.log("arUploadFile context: ", context);
+    console.log("arUploadFile context: ", context);
+    console.log("arUploadFile context.$config: ", context.$config);
     // console.log("arUploadFile file: ", file);
     /// console.log("arUploadFile mode: ", mode);
     // console.log("arUploadFile setProgress: ", setProgress);
+    console.log(
+      "arUploadFile config ARWEAVE_WALLET_ID: ",
+      context.$config.ARWEAVE_WALLET_ID
+    );
+    console.log(
+      "arUploadFile config ARWEAVE_WALLET_KEY: ",
+      context.$config.ARWEAVE_WALLET_KEY
+    );
     console.groupEnd();
-    const key = this.$config.ARWEAVE_WALLET_KEY;
+    // const key = this.$config.ARWEAVE_WALLET_KEY;
+    const key = {
+      kty: "RSA",
+      n:
+        "l5ih0sSx3Xmi-DDpp6ksv5IN2b3BkRz-rhM5ph9l0nc9cIZwQSNhOXCPYSeETr_pz5XI0tPXzWGHSsogYYrcOmlNVDXeEmpUfCc82exXtEdgHXxtFbtJzlAvw0K9Yf9E-Q6JZXWAjQjCwx-K0TJY7QCA8Tnw1z0ker-veG099Q7CL7JNJSkifIrJflxY8RAqdEKIrPzw3jjzTnlkfJGaPoaUV_8Nvs5pk4-nHt9Ohscm-zygZjC6ZXfLxnC9cdbYzA8DpNB-RojByRy_UI88ISxU6qecdFHb5ZVUXkA6WKIHhkcIq0S1gtyt_eTDeKWAn9vZZHt38Y43CVN_nVdEfKZMETv-zzB50MWPvSm6uJoicR-SYvxKm2YxDv99scOJP2CWcwqOx2wY1csasSpaYAetdWSDS-kP8fWwQrKsGvU5A92aEPHpdX3PQFN1JedpvEmQ0ITlaTtxTYT9JpB0Q0t8Dtw49cbzzQyEBolz0X8X0XLGM9gHU5XfWp6V9XfoueKjSKGnLqW-HXAYdcN7p8tD5f7OL1SoGZzclTz8cJBkC8XlFgJWKCiwKWkgUne84pQqO2lxmaVwRynNt9pFvbKXSWw6RQizAbQ8IYsbT6KFydOOc6xssGRdR8Qy3rK7S1lj_R5p5w7rIUBSWl9Sg8uZnFeBPi4D28T_0cQM0Ok",
+      e: "AQAB",
+      d:
+        "HaP8UAehd1pnIPv_U4bidvqJtr9Bb6wpp8Oei_qroAEshCnlHPdb9S0q-6YMWpFvl-UDhSViloexOlBXEHtkIA-izQpTR2p-5l-NqFZrt5YVFu7TLWKXRb2r-RO9j8GnrMLI3oug_PJvklNCgzDC7mQg0gmwK4WK8m00U-mYKagfE9BbAR8P3SYNy6UmxsuQYXb43kn-lpSwDfHyUeDuNbd-nc4C1AHr5qw50vF6myOpXYo3GoQAjgJkV4KHqBCIBy4QWlNhvUzUBwyV45x990aBu_fVwXCX_EW8X0lTnyzfJ8QPz9z5WILpijEGfzps8dS8psb1ZseVvz8SPqNngmK-QmdifKjSTtNK-psgq8TfA_8ryLUYlw9ESUGEH8ljmF4Y_fyPfcTe37LE454Caz1rMRYDFCrYv1yYNLnN95KGoXp7o4b_chkNFfh34Jw1HFLtyZK5mCykvDmJKZCf9zPUq7DEfVtMKjXosaYOvd_gRtNnlK3UKaELWvapD-mOHsSVPZLXIw5k1RDLuANIcHi50h02amp9-WCEClrJmHOPhxi1ylBWXBQ-RNbTodYyksdCmJwX6NzpF1wlyZfccnAA2N980mpVg7Oyxdu95J4mqk19xByGTH82FVxP8NwfImtIVWJ6kMAb5cs3CTr6iL8xuHKcXWgJqaoFuGGCTTk",
+      p:
+        "x7fN8CaTdjSJrtY-kUENX4fpPNAXCVYjTK40cKhPo17HxpimHfCnna96VjiWnQ-6Xtt01WWMuy_1JUzeoChcEmnaCifOhtQXHE4DKhgnzqQEESNGTM9Bo08q5JFxst_MQSqiuqsZ0qbi3KOe-0D2zm72ybuwxBCzlGnPZOdCOq97lKTymue48kMufmjFo_vswYzdBHl6tRAOs8GO8Ga-yS_e-YRzojk3LJXwjtTlayr7V_5FvgvxyMyHCj6F45nplyTl1mYLRdWVLUqSOAeg8xd6rSwN2Mv12UQxrmzPsZisN2rZwEycOUT3jQKTP0cTgkMe56TC52y_jRGNS2MbWw",
+      q:
+        "wlExe51WO4KJqferJQ5UDa1VN6uk1Y-oApbchQ5-qgcH482xAPdCmdsubtaMcwoh93xTZ4QmtRvWglKAwr9-JZyy0FjtTHUfPXDL5PYLKSj130h9iu69YrvKMqxLObBHLT4Nmw7Bd6-yU56QvEKtpaDtxAscFRr0xNNmqj0iBpAP3IR3WSndjpAUwAt9zE0H7jgd-Wa7t64FbUCvng5_XsIqos4iUB34zd205SdAlMXTsyJVMPXrNjj7Wo1ITl_dm5nZK4Lqn-eSdhzNKqVlUxsw5l99J8SCVaoyNNVrGjpYSCgIlKfgTC-7_4gbeP36lKVpLCi3wvPvRiCk8PUsCw",
+      dp:
+        "blZmySmWyHRoKJamxHsLF18wBW_1eiwDnoaT5DWoodpoRpjpFZtyDxT2YpIq66TX0zYtSwQqhvQM3MmmKReDHo0qb_fkCus7xWB4MRZdT7WfpZQ2b5MFcWL4kISmKyunXc1fT__daVrX9QvUdn1CnXQClhtCol-TxwfaE6YMGf3_KXUjr18b94QUOLRLlLhG6fuX07QFjejMJpVmEfzBpMb0yidZ9yLjD5fa6h5GjTmW2Ntazo8sykHszUUTlVXgDqfM7vE7gx5npzkOpTPZwNOU6_1tvPuZ3KnnRLVK3ZQ6ePdoS-xHVwB6P4ZPsWLkLVBFz7ZgE5kqDpbG2AJuBw",
+      dq:
+        "WY-OnQjxe9A4nww154hpGTywsE3-VSg3KapazUDXBIrlCgv97xIHsl4hUpi0dzlOWoEE-AsixAqmnb5k9l3ISJGmoPy7sqew1GKut0Ln9fqZCGai5mwPAfjHwv9CVL54r9OP9c2hQgbKzFujHgIlgtdffyIXuWqJMka1ZPV0P04a4Wp0j7YKFfE2fyVMv-MpKpTWy-Kb1pbwjWBpERJhhk071XnousB1snzjKVMkIu3jGwdR-JT_6iftQdkoYGcy_sq0G6fld_oFuUahEWzV_K3lpeiRCMk7wTwGk-9hw97sXaWF_u45JSRDJA2Zi_STj_uFNAM4XzSLLelR3HVD7Q",
+      qi:
+        "IWt4WNagn9qPjnuKFtUodwPLXaNcNxSeBCictJ3xmU7sWwCZVQTcwgRnAUfzOFhvMQEHGV45aFp01EVCPzYD4-5NpbVyr9t-9WRW_Mx8EgSxvJG01D2F9wEtnB8etb-m8QKdgXSI0GIG9x-w9BMem34bb6jxYQJGUkORrEGGEPukFLS0LZvE7jK8Ji1ibW6v37zHjwPd2JLmDOTPvrmpVcNj-9UIiP0BMlVNFq4_CVoO_2sPzzktJSg9RTvKQm0Lrav0SlQDRfjmbDVhVRcr0tZvtWIq6rDJP2OpeVC0_4xoTzCPUNCXPhjXqDP4VG25IwYrUtKG7O_HH9wNPeq4xQ",
+    };
 
     // const sourceString = this.imageFileString;
     // console.log('fileData:', this.fileData)
