@@ -143,9 +143,7 @@ export default {
       this.handleCropResult(image);
     },
     handleApplyCrop() {
-      console.log("CROPPER: apply crop");
-      console.log("croppper removePinFromIPFS", removePinFromIPFS);
-
+      
       // temp set the context to be mint form instead of cropper
       // TODO: this can be handled more nicer!
       const tempContext = {

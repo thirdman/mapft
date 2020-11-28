@@ -324,15 +324,13 @@ export const mutations = {
       ProgressEvent,
       progressObj,
     } = payload;
-    console.group("progress");
-    console.log("progress: ", { mode, type, progressObj });
-    console.groupEnd();
+
     if (!progressObj) {
       return;
     }
     const percentLoaded =
       progressObj.percent || (ProgressEvent.loaded / ProgressEvent.total) * 100;
-    console.log("progress percentLoaded", percentLoaded);
+    // console.log("progress percentLoaded", percentLoaded);
     if (type === "ipfs") {
       if (mode === "file") {
         // this.fileIpfsProgress = percentLoaded;

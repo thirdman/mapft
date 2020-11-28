@@ -600,7 +600,6 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       <!-- <div class="divider" /> -->
       <button @click="setShowThumbnailField(true)">show thumb</button>
       <button @click="handleCropperModal(true)">show Cropper</button>
-      <button @click="test">test info</button>
       <div class="row">
         <button @click="setMintStatus('confirming')">set confirming</button>
         <button @click="setMintStatus('working')">set working</button>
@@ -864,7 +863,6 @@ export default {
       this.$modal.show("cropper-modal");
     },
     handleStatusModal(newState) {
-      console.log("this", this);
       this.$store.commit("mintFormStore/setShowStatusModal", newState);
       if (newState === true) {
         // this.$modal.show('status-modal')
@@ -873,8 +871,7 @@ export default {
       }
     },
     handleFilePondInit: function () {
-      console.log("FilePond has initialized");
-      console.log("this.$refs.pond", this.$refs.pond);
+      // console.log("FilePond has initialized");
       // FilePond instance methods are available on `this.$refs.pond`
     },
     
@@ -882,13 +879,13 @@ export default {
       alert("request save called");
 
       const { id, name, folder, file, target, mode } = props;
-      console.log("onRequestSave was called", id, name, folder, file, target);
+      // console.log("onRequestSave was called", id, name, folder, file, target);
       if (!file) {
         return;
       }
     },
     onRequestClear: function (mode, file) {
-      console.log("request clear called with file: ", mode, file);
+      // console.log("request clear called with file: ", mode, file);
       if (mode === "file") {
         this.unRenderImage(mode, file);
         this.setUploadStatus({ mode: mode, status: "" });
@@ -1040,13 +1037,11 @@ export default {
       }
       read.src = src;
       var output = document.getElementById(parent);
-      console.log("output element:", output);
       output.innerHTML = "";
       output.appendChild(read);
     },
     unRenderImage(mode, parent = "output") {
       var output = document.getElementById(parent);
-      console.log("output: ", output);
       if (output) {
         output.innerHTML = "";
       }
@@ -1067,41 +1062,15 @@ export default {
       const fileName = file.filename;
       const fileType = fileName.split(".").pop().toLowerCase();
       const fileExtension = file.fileExtension;
-
-      console.log("THUMBANIL file, fileTYpe", fileName, fileType);
       const cropImageElement = document.getElementById("cropImage");
-      console.log("cropImageElement", cropImageElement);
       const urlElement = window.URL.createObjectURL(fileInput);
       this.setThumbnailSource(urlElement);
-
-      // const thumbnailDisplayElement = document.getElementById(
-      //   'previewThumbnailContainer'
-      // )
-      // const thumbnailElement = document.getElementById('outputThumbnail')
-      // const cropContainerElement = document.getElementById('cropContainer')
-      // setClass('previewThumbnailContainer', 'visible', 'hidden')
-      // setClass('cropContainer', 'visible', 'hidden')
-      // console.log('cropContainerElement', cropContainerElement)
-      // console.log('thumbnailDisplayElement', thumbnailDisplayElement)
-      // console.log('thumbnailElement', thumbnailElement)
-      // cropImageElement.src = window.URL.createObjectURL(fileInput)
-      // const cropImage = document.getElementById('cropImage')
-      // this.handleCropper(cropImage)
-
-      // document.getElementById('thumbnailFileLabelText').innerHTML = fileName
-      // alert(
-      //   'Select image crop size, then click apply. Thumbnail will only be used after thumbail confirmations'
-      // )
-      // return openThumbnail(event, this)
     },
     handleApplyCrop(event) {
-      console.log("apply crop", event);
-
       const thumbnailElement = document.getElementById("outputThumbnailImage");
       const outputElement = document.getElementById("output");
       const previewImageElement = document.getElementById("output").firstChild;
-      console.log("outputElement", outputElement);
-      console.log("previewImageElement", previewImageElement);
+      
       if (thumbnailElement && thumbnailElement.src) {
         const newImage = thumbnailElement.src;
         const mimeType = getMimeType(newImage);
@@ -1120,9 +1089,6 @@ export default {
     destroyCropper() {
       const cropper = this.$refs.cropper;
       const cropImageElement = document.getElementById("cropImage");
-      console.log('cropperref', cropper)
-      console.log('cropImageElement', cropImageElement)
-      alert("remember to destroy cropper");
       if (
         cropImageElement &&
         cropImageElement.classList.contains("cropper-hidden")
@@ -1139,7 +1105,7 @@ export default {
       }
     },
     crop(event) {
-      console.log(event.detail.x);
+      // console.log(event.detail.x);
     },
     cropEnd(event) {
       // console.log('this', this)
@@ -1156,9 +1122,6 @@ export default {
       this.handleCropResult(image);
     },
     cropReady: function (item) {
-      console.log("ready: ");
-      // console.log('this', this)
-      // console.log('this.$refs.cropper', this.$refs.cropper)
       const cropper = this.$refs.cropper;
       if (!cropper) {
         return null;
@@ -1192,10 +1155,7 @@ export default {
       const inputElement = document.getElementById("thumbnailFile");
       startUploadThumbnailProcess(inputElement, this, "thumbnail");
     },
-    test() {
-      console.log("test axios", axios);
-    },
-
+    
     // ...mapActions({
     //   setArweaveStatus: 'mintFormStore/setArweaveStatus',
     // })

@@ -127,7 +127,6 @@ const processUpload = async (props) => {
         });
 
       await ipfsPromise;
-      console.log("ArUpload_uploadFile", ArUpload_uploadFile);
     }
 
     // ARWEAVE
@@ -423,7 +422,6 @@ const pinFileToIPFS = async (file, context, mode = "file") => {
       withCredentials: true,
       onUploadProgress: (ProgressEvent) => {
         //we mildly fake the percent loaded until the file upload success message is returned from the API
-        console.log("progress!", ProgressEvent);
         const percentLoaded =
           (ProgressEvent.loaded / ProgressEvent.total) * 100;
         const percentRounded =
@@ -484,7 +482,6 @@ const pinThumbnailFileToIPFS = async (sourceFile, context) => {
       },
       withCredentials: true,
       onUploadProgress: (ProgressEvent) => {
-        // console.log("ProgressEvent: ", ProgressEvent);
         setProgress({ mode, type: "ipfs", ProgressEvent, progressObj: {} });
       },
     })
@@ -515,7 +512,7 @@ const removePinFromIPFS = (hashToUnpin) => {
       },
     })
     .then((response) => {
-      console.log("IPFS File Removal response: ", response);
+      // console.log("IPFS File Removal response: ", response);
       console.log("IPFS File Removed");
       return "success";
     })
