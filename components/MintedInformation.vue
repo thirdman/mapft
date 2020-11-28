@@ -60,27 +60,6 @@
         </div>
       </div>
     </ToggleSection>
-    <!-- <div class="transactionInfo" v-if="openseaLink">
-      <label class="mintTransactionLabel">OPENSEA</label>
-      <div>
-        <a :href="openseaLink" class="etherscanLink" target="blank">
-          <IconExternalLink strokeClass="dark" />
-          {{ openseaLink }}
-        </a>
-      </div>
-    </div>
-    <div class="transactionInfo" v-if="etherscanLink">
-      <label class="mintTransactionLabel">Transaction</label>
-      <div>
-        <a :href="etherscanLink" class="etherscanLink" target="blank">
-          <IconExternalLink
-            :strokeClass="statusModalMode === 'fixed' ? 'dark' : 'dark'"
-          />
-          {{ etherscanLink }}
-        </a>
-      </div>
-    </div> -->
-
     <div class="row actions">
       <Button size="large" :fill="false"  mode="primary"
         id="resetMintButton"
