@@ -76,6 +76,14 @@ const processUpload = async (props) => {
   // console.groupEnd();
   console.log("processupload context: ", context);
   console.log("processupload config: ", context.$config);
+  console.log(
+    "processupload config ARWEAVE_WALLET_ID: ",
+    context.$config.ARWEAVE_WALLET_ID
+  );
+  console.log(
+    "processupload config ARWEAVE_WALLET_KEY: ",
+    context.$config.ARWEAVE_WALLET_KEY
+  );
 
   // TOGGLE UPLOADER FUNCTIONS
   const settings = {
