@@ -15,6 +15,7 @@
             <PreviewSvg :code="svgCode" v-if="showPreview" :previewData="previewData" />
           
         </div>
+        
       </div>
       <!-- <div class="secondary">
       </div> -->
@@ -25,6 +26,7 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
+
 export default {
   name: "SvgPage",
   head: {
@@ -43,6 +45,9 @@ export default {
       svgCode: "svgFormStore/svgCode",
       svgFormStatusMessage: "svgFormStore/svgFormStatusMessage",
     }),
+  },
+  methods: {
+   
   }
 }
 </script>

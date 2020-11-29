@@ -127,7 +127,9 @@
           />
         </div>
       </ValidationProvider>
-
+      <div v-if="this.countBytes()">
+        Length: {{this.countBytes()}} bytes
+      </div>
       
       
       <div class="devContent" v-if="devMode">
@@ -135,7 +137,6 @@
 
         <div class="row">
           <button @click="setDeployStatus('confirming')">set confirming</button>
-          
           
         </div>
       </div>
@@ -238,6 +239,11 @@ export default {
     updatePreview() {
       alert('up')
       // this.$store.commit("deployFormStore/addMetaTemplate", obj);
+    },
+     countBytes(){
+      const source = this.svgCode;
+      const bytes = new TextEncoder().encode(source).length; 
+      return bytes
     }
   },
 };
