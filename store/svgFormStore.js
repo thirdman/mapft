@@ -507,6 +507,8 @@ export const state = () => ({
   svgCreator: "example title",
   svgDescription: "This is a cool description",
   svgCode: defaultCode,
+  previewBytes: null,
+  calculatedFee: null,
 });
 
 export const getters = {
@@ -516,6 +518,8 @@ export const getters = {
   mintStatusMessage: (state) => state.mintStatusMessage,
   showPreview: (state) => state.showPreview,
   svgCode: (state) => state.svgCode,
+  previewBytes: (state) => state.previewBytes,
+  calculatedFee: (state) => state.calculatedFee,
 
   getActiveContractId(state, getters, rootState) {
     const activeContractId = rootState.ui.activeContractId;
@@ -546,6 +550,13 @@ export const mutations = {
   setShowPreview(state, newState) {
     console.log("settings show preview", newState);
     state.showPreview = newState;
+  },
+  setBytes(state, value) {
+    state.previewBytes = value;
+  },
+  setCalculatedFee(state, value) {
+    console.log("SETTING setCalculatedFee", value);
+    state.calculatedFee = value;
   },
 };
 

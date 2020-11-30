@@ -761,6 +761,10 @@ section {
   margin-right: auto;
   padding: 0;
 }
+#body.full {
+  border-left: 1px dotted var(--line-color);
+  border-right: 1px dotted var(--line-color);
+}
 #body.minimal section {
   /* min-height: calc(100vh - 80px); */
 }
@@ -798,11 +802,10 @@ section > .primary {
   flex-grow: 1;
   max-width: 900px;
   padding: 1rem;
-  border-left: 1px dotted var(--line-color);
-  border-right: 1px dotted var(--line-color);
 }
 section > .tertiary {
-  min-width: 200px;
+  /* min-width: 200px; */
+  min-width: 250px;
   flex-basis: 20%;
   flex-shrink: 0;
   flex-grow: 0;
@@ -1140,7 +1143,7 @@ ul.heroList {
   padding: 0.5rem;
   color: var(--background-color);
   font-weight: 300;
-  min-width: 200px;
+  min-width: 250px;
   flex-basis: calc(20% + 2px);
   flex-shrink: 0;
   font-size: 1.25rem;
@@ -1557,31 +1560,33 @@ ul.heroList {
   flex-shrink: 1;
   flex-grow: 0;
   position: sticky;
-  top: calc(1rem - 2px);
+  top: calc(0px - 2px);
   /* top: calc(80px - 2px); */
 }
 .row .previewColumn .previewWrap {
   min-height: 20rem;
   border: 2px solid var(--ui-color);
-  padding: 0.5rem;
-  padding-bottom: 2rem;
+  padding: 1.5rem 0.5rem 2rem;
+  /* padding-bottom: 2rem; */
   margin-left: 2px;
   border-left: 2px solid var(--ui-color, #111);
   background: var(--background-color, #fff);
   color: var(--ui-color, #111);
-  margin-top: 1rem;
+  margin-top: 0rem;
 }
 .row .previewColumn .previewWrap:before {
   position: absolute;
-  left: 2px;
-  top: -1.25rem;
-  content: "preview";
+  /* left: 2px;
+  top: -1.25rem; */
+  left: 0;
+  top: 0;
+  content: "Preview";
   background: var(--ui-color, #111);
   color: #eee;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   padding: 0 0.5rem;
-  text-transform: uppercase;
   font-weight: bold;
+  font-variation-settings: "wght" 600;
 }
 
 .preview.infinft {

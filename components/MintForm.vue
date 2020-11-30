@@ -173,7 +173,7 @@
         :ipfsProgress="fileIpfsProgress"
         :ipfsHash="fileIpfsHash"
       />
-      <div class="formItem block" style="margin-top: .5rem;">
+      <div class="formItem block" style="margin-top: .5rem;" v-if="devMode">
         <Button 
         size="small"
         mode="secondary"
@@ -475,8 +475,8 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
           />
         </div>
       </ValidationProvider>
-      <div class="formItem hidden">
-        <label>File Type</label>
+      <div class="formItem" :style="`${devMode ? 'visibility: visible;' : 'display: none; visibilty: hidden;'}`" >
+        <label>File Type</label>sdf {{devMode ? "devmode" :"not"}}
         <input
           class="small w3-input"
           id="g"

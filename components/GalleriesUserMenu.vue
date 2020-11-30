@@ -1,6 +1,6 @@
 <template>
-  <div class="galleriesMenu" v-if="usedContracts && usedContracts.length > 0">
-    <div v-for="(item, index) in usedContracts" :key="index" >
+  <div class="galleriesMenu userGalleriesMenu">
+    <div v-for="(item, index) in contracts" :key="index" class="listItem">
       <div class="xsmall clamp wide">
         <nuxt-link
           :to="`/gallery/${item}`"
@@ -9,7 +9,7 @@
               ? 'active'
               : 'notActive'
           "
-          >{{item}}</nuxt-link
+          ><Address :address="item" shrink fill /></nuxt-link
         >
       </div>
     </div>
@@ -18,22 +18,37 @@
   </div>
 </template>
 
-<style>
-
+<style lang="scss">
+.galleriesMenu.userGalleriesMenu{
+  border: none;
+  .listItem:last-child{
+    border-bottom: noe;
+  }
+}
 
 </style>
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
-  props: ["galleryContractId", "userAddress"],
+  props: ["galleryContractId", "userAddress", "contracts"],
   computed: {
     // ...mapGetters({
     //   usedContracts: "ui/usedContracts",
     // }),
-    usedContracts() {
-      console.log('this.$store.state.ui.usedContracts', this.$store.state.ui.usedContracts)
-      return this.$store.state.ui.usedContracts;
-    },
-  } 
+    // usedContracts() {
+    //   console.log('typeof ', typeof this.$store.state.ui.usedContracts);
+    //   return this.$store.state.ui.usedContracts;
+    // },
+  },
+  methods: {
+    // ...mapActions({
+    //   shrinkAddress: "ui/shrinkAddress"
+    // }),
+    // displayAddress(address){
+    //   const displayAddress = this.shrinkAddress(address);
+    //   return displayAddress.toString() || '...'
+    // }
+    
+  }
 };
 </script>

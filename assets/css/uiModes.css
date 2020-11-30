@@ -74,7 +74,7 @@ header.minimal .headerRow .wedgeWrap .wedgeSvg polygon {
 }
 header.minimal .headerRow .navRow {
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 header.minimal .headerRow .navRow .navItem {
   flex-basis: unset;
@@ -242,7 +242,7 @@ header.none .headerRow .wedgeWrap .wedgeSvg polygon {
 }
 header.none .headerRow .navRow {
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 header.none .headerRow .navRow .navItem {
   flex-basis: unset;

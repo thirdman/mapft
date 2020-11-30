@@ -4,16 +4,18 @@
 
     <section id="gallery" class>
       <div class="tertiary">
-        <hr />
-        <div>
-          <label>Featured Galleries</label>
-          <GalleriesMenu :galleryContractId="galleryContractId" />
-          <label>User Contracts</label>
-          <GalleriesUserMenu />
+        <label>Galleries</label>
+        <p class="small">A gallery displays the tokens created by a contract.
+        </p>
+        
+        <div v-if="usedContracts && usedContracts.length > 0">
+          <label>Your Contracts</label>
+          <p class="small">Contracts you have created</p>
+          <GalleriesUserMenu :contracts="usedContracts" />
         </div>
       </div>
       <div class="primary">
-        <h4>User Gallery</h4>
+        <h4>Load Gallery Contract</h4>
         <div class="loadContractRow row">
           <div class="column col-66">
           <input
@@ -24,21 +26,23 @@
             max="99"
             required
             placeholder="0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
-            v-model="galleryContractId"
+            v-model="tempContractId"
           />
           </div>
           <div class="col-33 column">
-          <Button size="medium" @click="handleLoad">
+            <!-- <nuxt-link :to="`/gallery/${tempContractId}`">Load</nuxt-link> -->
+            <nuxt-link :to="`/gallery/0xd0c402bcbcb5e70157635c41b2810b42fe592bb0`">Load</nuxt-link>
+          <!-- <Button size="large" @click="handleLoad(tempContractId)" :disabled="!tempContractId">
             Load Gallery
-          </Button>
-          <Button size="medium" @click="handleLoad">
+          </Button> -->
+          <!-- <Button size="medium" @click="handleLoad">
             Load Active
-          </Button>
+          </Button> -->
           </div>
         </div>
         <h4>Featured Galleries</h4>
         <GalleriesMenu />
-        
+        <p class="small">Talk to us on Discord to be listed here.</p>
         <h4>Elsewhere</h4>
         <figure>
           <img src="~/static/images/alpha.jpg" width="200px" />
@@ -67,16 +71,23 @@ import { mapMutations, mapGetters, mapActions } from 'vuex'
 export default {
   name: 'GalleryPage',
   created() {
-    
+    this.setInitialAccount();
     if (process.client) {
       // NO LONGER NEEDED - use contract page
       // console.log('triger on created: ')
       // this.$store.commit('galleryStore/getItems')
     }
   },
+  data() {
+    return {
+      tempContractId: ""
+    }
+  },
   computed: {
     ...mapFields('galleryStore', ['galleryContractId']),
     ...mapGetters({
+      activeContractId: "ui/activeContractId",
+      usedContracts: "ui/usedContracts",
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
       galleryStatus: 'galleryStore/galleryStatus',
@@ -94,9 +105,17 @@ export default {
       setGalleryDisplayMode: 'galleryStore/setGalleryDisplayMode',
     }),
     handleLoad(contractId) {
-      console.log('this.galleryContractId', this.galleryContractId)
-      $nuxt._router.push(`/gallery/${this.galleryContractId}`)
+      if(!contractId){return}
+      console.log('$nuxt._router', $nuxt._router)
+      console.log('contractId', contractId)
+      
+      $nuxt._router.push({ path: `/gallery/${contractId}`});
     },
+    setInitialAccount() {
+      setTimeout(() => {
+        this.tempContractId = this.activeContractId
+      }, 800);
+    }
   },
 }
 </script>

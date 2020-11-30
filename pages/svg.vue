@@ -11,8 +11,7 @@
       <div class="primary">
         <div class="row">
           <SvgForm />
-          
-            <PreviewSvg :code="svgCode" v-if="showPreview" :previewData="previewData" />
+          <PreviewSvg :code="svgCode" v-if="showPreview" :previewData="previewData" />
           
         </div>
         
@@ -40,6 +39,7 @@ export default {
       //UI
       devMode: "ui/devMode",
       // SVG
+      previewBytes: "svgFormStore/previewBytes",
       showPreview: "svgFormStore/showPreview",
       previewData: "svgFormStore/previewData",
       svgCode: "svgFormStore/svgCode",
@@ -47,7 +47,7 @@ export default {
     }),
   },
   methods: {
-   
+    
   }
 }
 </script>

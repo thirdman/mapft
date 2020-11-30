@@ -128,7 +128,7 @@
         </div>
       </ValidationProvider>
       <div v-if="this.countBytes()">
-        Length: {{this.countBytes()}} bytes
+        Length: {{this.countBytes()}} bytes / {{previewBytes}}
       </div>
       
       
@@ -212,6 +212,7 @@ export default {
       activeContractSymbol: "ui/activeContractSymbol",
       // SVG
       showPreview: "svgFormStore/showPreview",
+      previewBytes: "svgFormStore/previewBytes",
       canMintSvg: "svgFormStore/canMintSvg",
       svgMintStatus: "svgFormStore/svgMintStatus",
       svgFormStatusMessage: "svgFormStore/svgFormStatusMessage",
@@ -230,7 +231,8 @@ export default {
     ...mapMutations({
       setSvgMintStatus: "svgFormStore/setSvgMintStatus",
       resetSvgForm: "svgFormStore/resetSvgForm",
-      setShowPreview: "svgFormStore/setShowPreview",
+      setShowPreview: "svgFormStore/setShowPreview",  
+      setBytes: "svgFormStore/setBytes"
     }),
     ...mapActions({
       handleMintSvg: "svgFormStore/handleMintSvg",
@@ -242,7 +244,15 @@ export default {
     },
      countBytes(){
       const source = this.svgCode;
-      const bytes = new TextEncoder().encode(source).length; 
+      // const bytes = new TextEncoder().encode(source).length; 
+      // const bytes = this.svgCode.length
+      const bytes = Buffer.byteLength(source);
+      const gasFee = 30;
+      const transactionFee = bytes / 1000000 * gasFee;
+      // const roundedFee = Math.round((transactionFee + Number.EPSILON) * 100) / 100;
+      const roundedFee =parseFloat(transactionFee).toFixed(5);
+      this.$store.commit("svgFormStore/setBytes", bytes);
+      this.$store.commit("svgFormStore/setCalculatedFee", roundedFee);
       return bytes
     }
   },

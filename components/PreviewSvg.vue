@@ -4,7 +4,6 @@
 <div
       id="previewWrap"
       class="previewWrap shadow"
-      :class="previewMode"
     >
   <div class="preview svgPreview border">
     <div
@@ -35,7 +34,7 @@
           <div class="previewElement">
             <label>Character Length</label>
             <div >
-              {{this.characterCount}}
+              {{previewBytes}} / <strong>Ξ</strong>{{calculatedFee}} (@30 gas)
             </div>
           </div>
 
@@ -77,6 +76,8 @@ export default {
     ...mapGetters({
       //UI
       devMode: "ui/devMode",
+      previewBytes: "svgFormStore/previewBytes",
+      calculatedFee: "svgFormStore/calculatedFee",
     }),
     characterCount() {
       console.log(this.code)

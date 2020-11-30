@@ -79,19 +79,20 @@ export const mutations = {
 
         // state.galleryAssets = result
         // state.galleryStatus = 'loaded'
-
-        if (result.assets && result.assets.length) {
+        if (result && result.assets) {
+          //&& result.assets.length
           this.commit("galleryStore/setGalleryAssets", result.assets);
           this.commit("galleryStore/setGalleryStatus", "loaded");
           this.commit(
             "galleryStore/setGalleryAssetCount",
-            result.estimatedCount
+            result.estimatedCount || 0
           );
           this.commit(
             "galleryStore/setGalleryOffset",
             galleryOffset + pageSize
           );
         } else {
+          console.error("no result or result.assets", result);
           this.commit("galleryStore/setGalleryStatus", "error");
         }
       })

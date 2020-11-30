@@ -1,6 +1,9 @@
 <template>
   <div id="galleryList">
-    <div class="setsRow">
+    <div v-if="devMode">
+      length: {{galleryAssets && galleryAssets.length}}
+    </div>
+    <div class="setsRow" v-if="galleryAssets.length > 0">
       <div class="sets">
       <label>Filter:</label>
       <span class="filterContent" v-if="galleryFilter">{{ galleryFilter }}</span>
@@ -25,6 +28,14 @@
         </div>
       </div>
       
+    </div>
+    <div
+      class="galleryNotFound"
+      v-if="galleryAssets.length === 0"
+    >
+      <h3>Nothing Found</h3>
+      <p class="help">This either means that the contract has not created any tokens yet, or the filter returned nothing.</p>
+      <nuxt-link to="/gallery">Gallery Home</nuxt-link>
     </div>
     <div
       class="galleryGrid"
@@ -277,14 +288,14 @@ import { mapMutations, mapGetters, mapActions } from 'vuex'
 const BASE_URL = "https://infinft-flow.vercel.app"
 export default {
   props: ['displayMode'],
-  data() {
-    return {
-      // nothing to see here
-    }
-  },
-
+  // data() {
+  //   return {
+  //     // nothing to see here
+  //   }
+  // },
   computed: {
     ...mapGetters({
+      devMode: "ui/devMode",
       contrastMode: "ui/contrastMode",
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',

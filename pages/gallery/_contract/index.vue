@@ -3,19 +3,64 @@
     <Header />
     <section id="gallery" class>
       <div class="tertiary" >
-        
-        <div >
+        <div class="sidebarSection">
+          <label>Gallery</label>
+          <div class="">
+          <span style="display: inline-block"><IconExternalLink :strokeClass="contrastMode" size="small" /><Address shrink :address="galleryContractId"/></span>
+          </div>
+        </div>
+        <div class="sidebarSection">
+          <label>Share</label>
+          <div>
+            <a 
+              target="_blank" 
+              :href="`https://twitter.com/intent/tweet?url=${getUrl()}&text=${'A gallery on InfiNFT'}&related=nft4ever,nft42`" 
+              class="shareLink asButton full" 
+              >
+                <IconExternalLink :strokeClass="contrastMode" size="small" /> Twitter
+            </a>
+          </div>
+        </div>
+        <div v-if="usedContracts && usedContracts.length > 0" class="sidebarSection">
+          <label>Your Contracts</label>
+          <GalleriesUserMenu :contracts="usedContracts" />
+        </div>
+
+        <div v-if="!usedContracts || usedContracts && usedContracts.length === 0">
           <label>Featured Galleries</label>
           <GalleriesMenu :galleryContractId="galleryContractId" />
-          <label>Elsewhere</label>
-          <GalleriesElsewhere :galleryContractId="galleryContractId" />
         </div>
-      <div><Button @click="handleRefresh()">Refresh Assets</Button></div>
+        <div v-if="devMode"><Button @click="handleRefresh()">Refresh Assets</Button></div>
+        <div class="sidebarSection">
+          <label>Display</label>
+          <div class="buttonGroup uiMode" :class="contrastMode" direction="column">
+            <button
+              @click="setGalleryDisplayMode('compact')"
+              class="small toggleItem"
+              :class="galleryDisplayMode === 'compact' ? 'active' : 'notActive'"
+            >
+              Compact
+            </button>
+            <button
+              @click="setGalleryDisplayMode('expanded')"
+              class="small toggleItem"
+              :class="galleryDisplayMode === 'expanded' ? 'active' : 'notActive'"
+            >
+              Expanded
+            </button>
+            <button
+              @click="setGalleryDisplayMode('list')"
+              class="small toggleItem"
+              :class="galleryDisplayMode === 'list' ? 'active' : 'notActive'"
+            >
+              Full
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="primary">
         <div>
-          
             <div v-if="galleryStatus === 'loading'" class="loadingWrap">
             <Loading
               message="Retrieving Tokens..."
@@ -29,14 +74,13 @@
         <div v-if="galleryStatus === 'loaded'">
           <GalleryList
             :displayMode="galleryDisplayMode"
-            
           />
           </div>
         </client-only>
       </div>
 
       <div class="secondary" >
-        <label>Gallery Contract</label>
+        <!-- <label>Gallery Contract</label>
         <div
           class="help"
           style="width: 10rem; overflow: hidden; text-overflow: ellipsis;"
@@ -75,7 +119,7 @@
           >
             Full
           </button>
-        </div>
+        </div> -->
 
       </div>
     </section>
@@ -125,9 +169,11 @@ export default {
   computed: {
     ...mapFields('galleryStore', ['galleryContractId']),
     ...mapGetters({
+      devMode: 'ui/devMode',
       uiMode: 'ui/uiMode',
       uiTheme: 'ui/uiTheme',
       contrastMode: 'ui/contrastMode',
+      usedContracts: 'ui/usedContracts',
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
       galleryStatus: 'galleryStore/galleryStatus',
@@ -161,7 +207,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .linkRow {
   padding: 20px;
   min-height: 100px;
@@ -174,5 +220,11 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 1rem;
+}
+.sidebarSection{
+  margin-bottom: 1rem;
+  > label{
+    margin-bottom: .5rem;
+  }
 }
 </style>

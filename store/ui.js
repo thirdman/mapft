@@ -169,6 +169,7 @@ export const mutations = {
     console.log("UI store setActiveContractId", value);
     this.commit("mintFormStore/setActiveContractId", value);
     const usedContractsArray = state.usedContracts || [];
+    console.log("SETTINGS USED ONCTRACTS");
     if (!usedContractsArray.includes(value)) {
       usedContractsArray.push(value);
       state.usedContracts = usedContractsArray;
@@ -302,6 +303,7 @@ export const actions = {
   //   const walletProvider = dispatch.walletProvider;
   //   var ens = new ENS(walletProvider);
   // },
+
   doSearch() {
     console.log("doSearch");
   },

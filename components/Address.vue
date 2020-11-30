@@ -1,15 +1,20 @@
 <template>
-  <span class="address" :class="fill===true ? 'fill' : ''">{{address}}</span>
+  
+  <span class="address" >
+    {{shrinkAddress(address)}}
+  </span>
+  
 </template>
+  <!-- <span class="address" :class="fill===true ? 'fill' : ''">{{address}}</span> -->
 
 <style>
 .address {
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 
   display: inline-block;
-  max-width: 8rem;
+  max-width: 8rem; */
 }
 .address.fill {
   width: 100%;
@@ -18,6 +23,17 @@
 
 <script>
 export default {
-  props: ['address', 'fill'],
+  props: ['address', 'fill', "shrink"],
+  methods: { 
+    shrinkAddress(address) {
+      if (!address) {
+        return;
+      }
+      const first = address.slice(0, 6) || "";
+      const last = address.slice(-4) || "";
+      const returnValue = `${first}...${last}`;
+      return returnValue.toString() || "";
+    },
+  }
 }
 </script>

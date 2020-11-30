@@ -35,6 +35,7 @@
       </div>
 
       <div class="navRow">
+        <div v-if="devMode"><strong>Contrast Mode: {{contrastMode || "no contrast mode available"}}</strong></div>
         <div class="navItem">
           <nuxt-link to="/" class="w3-button navLink">About</nuxt-link>
         </div>
@@ -146,6 +147,7 @@
                     <IconUser :strokeClass="contrastMode" />
                   </button>
                 </div>
+                
                 <div class="itemContent">
                   <label id="footerWalletLabel" class="footerUserLabel"
                     >Wallet</label
