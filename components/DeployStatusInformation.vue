@@ -110,9 +110,6 @@
       </p>
     </div>
     <div class="row actions" v-if="deployStatus === 'completed'">
-      <Button size="large" :fill="false" @click="handleModal" mode="primary">
-        View Settings
-      </Button>
       <Button
         id="resetContractButton"
         size="large"
@@ -120,7 +117,10 @@
         mode="primary"
         @click="resetDeployForm"
       >
-        Close
+        Get Minting
+      </Button>
+      <Button size="large" :fill="false" @click="handleModal" mode="secondary">
+        View Settings
       </Button>
     </div>
   </div>

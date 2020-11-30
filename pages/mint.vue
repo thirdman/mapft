@@ -40,7 +40,19 @@
               </div>
             </div>
           </transition>
-
+          <transition name="fade" appear>
+            <div class="shadow contractStatusPanel" v-if="walletAddress && deployStatus === 'completed'">
+              <div v-if="devMode">status: {{deployStatus}}</div>
+              <DeployStatusInformation v-if="walletAddress && deployStatus === 'completed'" />
+            </div>
+          </transition>
+          <transition name="fade" appear>
+            <div class="shadow contractStatusPanel" v-if="walletAddress && deployStatus === 'completed'">
+              <div v-if="devMode">status: {{deployStatus}}</div>
+              <DeployStatusInformation v-if="walletAddress && deployStatus === 'completed'" />
+            </div>
+          </transition>
+          
           <transition name="fade" appear>
             <div v-if="walletAddress && !activeContractId" class="connectPanel shadow">
               <div class="connectSelect row">
@@ -61,6 +73,7 @@
                 <LoadContractForm />
               </div>
               <div class="connectBody" v-if="selectedConnectPanel === 'new'">
+                  
                 <div v-if="walletAddress" class="row NewFormRow">
                   <DeployForm displayMode="inline" />
                 </div>
@@ -74,8 +87,9 @@
               <div
                 class="fieldset formContent"
                 id="fieldsetContractView"
-                v-if="!showEditContract"
+                v-if="activeContractId && deployStatus !== 'completed'"
               >
+                <!-- v-if="!showEditContract" -->
                 <label>Active Contract </label>
                 <div class="row">
                   <div class="column col-66">
@@ -94,7 +108,7 @@
               </div>
             </div>
           </div>
-          <div v-if="walletAddress" class="row">
+          <div v-if="walletAddress && deployStatus !== 'completed'" class="row">
               
             <MintForm />
             <MintPreview />
@@ -120,7 +134,7 @@
 
     <!--  VUE DEPLOY FORM SECTION-->
     <client-only>
-      <section id="deploy" class="deploy market borderBottom" v-if="1==1">
+      <section id="deploy" class="deploy market borderBottom" v-if="1===2">
         <div class="tertiary">
           <h2>Artist Contract</h2>
           <div class="aside">
@@ -168,6 +182,12 @@
 </template>
 
 <style lang="scss">
+.contractStatusPanel{
+  border: 1px solid var(--ui-color, #eee);
+  padding: 0rem 1rem 1rem;
+  margin-bottom: 50px;
+  background: var(--fill-color, #ccc);
+}
 .connectPanel{
   border: 1px solid var(--ui-color, #eee);
   padding: 0rem 1rem 1rem;
@@ -265,12 +285,14 @@ export default {
    },
   computed: {
     ...mapGetters({
+      devMode: "ui/devMode",
       hasWallet: "ui/hasWallet",
       walletAddress: "ui/walletAddress",
       activeContractId: "ui/activeContractId",
       contrastMode: "ui/contrastMode",
       usedContracts: "ui/usedContracts",
-      showEditContract: "mintFormStore/showEditContract"
+      showEditContract: "mintFormStore/showEditContract",
+      deployStatus: "deployFormStore/deployStatus"
     }),
   },
   methods: {

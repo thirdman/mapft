@@ -7,7 +7,7 @@
   <div v-if="!walletAddress" class="small">
     WalletAddress: Missing wallet Address. This simetimes occurs when your browser security stops access to your wallet. Try disconnect/reconnect in the settings section.
   </div>
-    <DeployStatusInformation v-if="deployStatus !== 'ready'" />
+    <DeployStatusInformation v-if="deployStatus !== 'ready' && deployStatus !== 'competed'" />
     <div class="fieldset error" v-if="deployStatus === 'error'" >
       <h4>Error</h4>
     </div>

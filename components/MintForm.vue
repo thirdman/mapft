@@ -163,35 +163,6 @@
         </client-only>
         
       </div>
-      <!-- <div class="formItem required">
-        <label>File Upload</label>
-        <label class="file">
-          <input
-            type="file"
-            id="file"
-            aria-label="File upload input"
-            @change="handleOpenFile"
-          />
-          <span class="file-custom">
-            <span id="fileLabelText">{{ fileName || "Select..." }}</span>
-          </span>
-        </label>
-      </div> -->
-      <!--
-              <label>Folder upload (eg. 3D files)</label>
-                
-                <input type='file' webkitdirectory mozdirectory onchange='openFile(event)' class="file">
-
-                <div class="itemHelp">
-                  <div class="helpIcon"></div>
-                  <div class="helpContent">
-                    <p>
-                      Upload an image for this token. Either a single file, or alternatively upload a folder with multiple files.
-                    </p>
-                  </div>
-                </div>
-        -->
-      <!-- UPLOAD STATUS -->
       <UploadStatus
         displayMode="inline"
         :title="uploadStatusTitle"
@@ -205,6 +176,7 @@
       <div class="formItem block" style="margin-top: .5rem;">
         <Button 
         size="small"
+        mode="secondary"
         @click="setShowThumbnailField(!showThumbnailField)">{{showThumbnailField ? "Hide" : 'Show'}} Thumbnail Upload
         </Button>
       </div>

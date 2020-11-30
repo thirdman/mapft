@@ -52,7 +52,8 @@
 
       <div class="account-content modalSection" v-if="walletAddress">
         <label>Active Contract</label>
-        <div class="activeContractWrap shadow">
+        <p class="help" style="margin: 0" v-if="!activeContractId">None Selected</p>
+        <div class="activeContractWrap shadow" v-if="activeContractId">
           <div class="row" v-if="activeContractSymbol">
             <div class="column col-50">
               <label class="subtitle">SYMBOL</label>
@@ -74,7 +75,7 @@
               class="inactive"
               v-if="activeContractId"
             >
-              Remove
+              Disconnnect
             </Button>
           </div>
         </div>
@@ -89,7 +90,7 @@
           </Button>
         </div>
         <div class="addInterface row" v-if="showAddInterface">
-          <div class="column">
+          <div class="column col-100">
             <input
               name="Custom Contract ID"
               id="customTokenId"
@@ -101,7 +102,7 @@
               v-model="customContractId"
             />
           </div>
-          <div class="column">
+          <div class="column col-25">
             <Button @click="addContract">Add</Button>
             <Button @click="toggleAddInterface(false)" mode="secondary"
               >Cancel</Button
@@ -444,6 +445,7 @@ export default {
 
 .addInterface {
   padding: 0.5rem;
+  margin-bottom: .5rem;
   align-items: center;
   background: var(--fill-color, #eee);
 }
