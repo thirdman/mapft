@@ -1117,6 +1117,16 @@ export default {
     },
     handleMint() {
       const state = this.$store.state.mintFormStore;
+      const userContractAddress = state.activeContractId;
+      // const tempAddress = this.activeContractId;
+      // console.log('tempAddress? ', tempAddress);
+      // console.log('userContractAddress? ', userContractAddress);
+      // console.log('does it have active contract address? ', userContractAddress ? "yep" : "nope");
+      if(this.activeContractId && !userContractAddress ){
+        this.$store.commit("ui/setActiveContractId", this.activeContractId);
+      }
+      // this.$nextTick().then(() => alert('ggg'));
+      // console.log('state', state)
       mintThatShit(event, state, this);
     },
 

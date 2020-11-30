@@ -612,7 +612,7 @@ const mintThatShit = (event, state, rootContext) => {
     });
     if (!userContractAddress) {
       alert(
-        "error: Contract Address is missing. Please load your contract id."
+        "Missing Info: Contract Address. Please refresh your contract id and try again."
       );
       context.commit("mintFormStore/setMintStatus", "noContract");
     }

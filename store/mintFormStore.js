@@ -43,7 +43,7 @@ const statusMap = {
   noContract: {
     title: "Error",
     text:
-      "Contract Address is missing. Please load your contract id, or reset it in the account settings modal.",
+      "Contract Address is missing. Please load your contract id, or reset it in the account settings modal. This is a temporary error, and occurs when you have reloaded the mint page.",
   },
 };
 
