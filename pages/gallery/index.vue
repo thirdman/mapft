@@ -31,10 +31,10 @@
           </div>
           <div class="col-33 column">
             <!-- <nuxt-link :to="`/gallery/${tempContractId}`">Load</nuxt-link> -->
-            <nuxt-link :to="`/gallery/0xd0c402bcbcb5e70157635c41b2810b42fe592bb0`">Load</nuxt-link>
-          <!-- <Button size="large" @click="handleLoad(tempContractId)" :disabled="!tempContractId">
+            <!-- <nuxt-link :to="`/gallery/0xd0c402bcbcb5e70157635c41b2810b42fe592bb0`">Load</nuxt-link> -->
+          <Button size="large" @click="handleLoad(tempContractId)" :disabled="!tempContractId">
             Load Gallery
-          </Button> -->
+          </Button>
           <!-- <Button size="medium" @click="handleLoad">
             Load Active
           </Button> -->
@@ -71,7 +71,7 @@ import { mapMutations, mapGetters, mapActions } from 'vuex'
 export default {
   name: 'GalleryPage',
   created() {
-    this.setInitialAccount();
+    // this.setInitialAccount();
     if (process.client) {
       // NO LONGER NEEDED - use contract page
       // console.log('triger on created: ')
@@ -80,7 +80,7 @@ export default {
   },
   data() {
     return {
-      tempContractId: ""
+      tempContractId: "0xa0AfEDcC9446fD1F41706EaA4931512bDb2efAe7"
     }
   },
   computed: {
