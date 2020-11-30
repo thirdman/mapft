@@ -209,36 +209,6 @@ export const actions = {
       .then((data) => {
         console.log("txData:", data);
         context.commit("arweaveStatus", "retrieved");
-        var base64String = Buffer.from(data, "hex").toString("base64");
-        console.log(base64String);
-        // Uint8Array [10, 60, 33, 68, ...]
-        //   var base64String2 = Buffer.from(data).toString('base64')
-        //   const arrayBuffer = data;
-        //   var base64String3 = btoa(
-        //     new Uint8Array(arrayBuffer)
-        //       .reduce((data, byte) => data + String.fromCharCode(byte), '')
-        //   );
-        //   console.log('base64String:', base64String);
-        //   console.log('base64String2:', base64String2);
-        //   console.log('btoa:', base64String3);
-        //   var blob = new Blob(data)
-
-        //   var reader = new FileReader();
-        //   reader.readAsDataURL(blob)
-        //   reader.onloadend = () => {
-        //     var base64 =  reader.result
-        //     console.log('base64', base64);
-        //     this.txImageData = base64;
-        //   };
-
-        //   reader.readAsDataURL(blob)
-        //     .then(result => {
-        //       console.log('result', result)
-        //     })
-        //     .catch(error => {console.error(error)});
-
-        //   // this.txImageData = base64String;
-        // this.txImageData = data;
         context.commit("setTransactionData", data);
       });
   },
