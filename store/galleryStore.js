@@ -77,10 +77,7 @@ export const mutations = {
       .then((result) => {
         console.log("result", result);
 
-        // state.galleryAssets = result
-        // state.galleryStatus = 'loaded'
         if (result && result.assets) {
-          //&& result.assets.length
           this.commit("galleryStore/setGalleryAssets", result.assets);
           this.commit("galleryStore/setGalleryStatus", "loaded");
           this.commit(
@@ -101,6 +98,34 @@ export const mutations = {
         state.galleryStatus = "error";
         return false;
       });
+    // old way here:
+    // await getAssets
+    //   .then((result) => {
+    //     console.log("result", result);
+
+    //     // state.galleryAssets = result
+    //     // state.galleryStatus = 'loaded'
+
+    //     if (result.assets && result.assets.length) {
+    //       this.commit("galleryStore/setGalleryAssets", result.assets);
+    //       this.commit("galleryStore/setGalleryStatus", "loaded");
+    //       this.commit(
+    //         "galleryStore/setGalleryAssetCount",
+    //         result.estimatedCount
+    //       );
+    //       this.commit(
+    //         "galleryStore/setGalleryOffset",
+    //         galleryOffset + pageSize
+    //       );
+    //     } else {
+    //       this.commit("galleryStore/setGalleryStatus", "error");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("gallery error: ", error);
+    //     state.galleryStatus = "error";
+    //     return false;
+    //   });
     if (params.setId) {
       this.commit("galleryStore/setGalleryContractId", params.contractId);
       this.commit("galleryStore/filterGallery", params.setId);
@@ -116,3 +141,29 @@ export const mutations = {
     state.filteredAssets = filtered;
   },
 };
+
+// await getAssets
+//       .then((result) => {
+//         console.log("result", result);
+
+//         if (result && result.assets) {
+//           this.commit("galleryStore/setGalleryAssets", result.assets);
+//           this.commit("galleryStore/setGalleryStatus", "loaded");
+//           this.commit(
+//             "galleryStore/setGalleryAssetCount",
+//             result.estimatedCount || 0
+//           );
+//           this.commit(
+//             "galleryStore/setGalleryOffset",
+//             galleryOffset + pageSize
+//           );
+//         } else {
+//           console.error("no result or result.assets", result);
+//           this.commit("galleryStore/setGalleryStatus", "error");
+//         }
+//       })
+//       .catch((error) => {
+//         console.error("gallery error: ", error);
+//         state.galleryStatus = "error";
+//         return false;
+//       });

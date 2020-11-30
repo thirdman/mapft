@@ -115,6 +115,11 @@
   justify-content: center;
   margin-right: .25rem;
   
+  img {
+    object-fit: contain;
+    widht: 100%;
+    height: 100%;
+  }
 }
 .galleriesMenu .nuxt-link-active {
   width: 100%;
