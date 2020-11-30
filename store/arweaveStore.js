@@ -68,6 +68,10 @@ export const actions = {
     console.log("context", context);
     console.log("payload", payload);
     // const { arweave } = context;
+    if (!this$.config) {
+      console.log("getBalance: this.$config does not exist");
+      return;
+    }
     const key = this.$config.ARWEAVE_WALLET_KEY;
     const arweaveWalletId = this.$config.ARWEAVE_WALLET_ID;
     console.log("arweave", arweave);
@@ -90,22 +94,22 @@ export const actions = {
     console.group("arUploadFile");
     console.log("props", payload);
     console.log("arUploadFile context: ", context);
-    console.log("arUploadFile context.$config: ", context.$config);
+    // console.log("arUploadFile context.$config: ", context.$config);
     // console.log("arUploadFile file: ", file);
     /// console.log("arUploadFile mode: ", mode);
     // console.log("arUploadFile setProgress: ", setProgress);
-    console.log(
-      "arUploadFile config ARWEAVE_WALLET_ID: ",
-      context.$config.ARWEAVE_WALLET_ID
-    );
-    console.log(
-      "arUploadFile config ARWEAVE_WALLET_KEY: ",
-      context.$config.ARWEAVE_WALLET_KEY
-    );
-    console.log(
-      "arUploadFile,  is it a string: ",
-      typeof context.$config.ARWEAVE_WALLET_KEY === "string"
-    );
+    // console.log(
+    //   "arUploadFile config ARWEAVE_WALLET_ID: ",
+    //   context.$config.ARWEAVE_WALLET_ID
+    // );
+    // console.log(
+    //   "arUploadFile config ARWEAVE_WALLET_KEY: ",
+    //   context.$config.ARWEAVE_WALLET_KEY
+    // );
+    // console.log(
+    //   "arUploadFile,  is it a string: ",
+    //   typeof context.$config.ARWEAVE_WALLET_KEY === "string"
+    // );
     console.groupEnd();
     // const key = this.$config.ARWEAVE_WALLET_KEY;
     const key = {
@@ -175,7 +179,11 @@ export const actions = {
     return transaction.id;
   },
   async lastTransaction(context, payload) {
-    const arweaveWalletId = this.$config.ARWEAVE_WALLET_ID;
+    const arweaveWalletId = this.$config && this.$config.ARWEAVE_WALLET_ID;
+    if (!this.$config) {
+      console.log("arweaveWalletId: this.$config does not exist");
+      return;
+    }
     arweave.wallets
       .getLastTransactionID(arweaveWalletId)
       .then((transactionId) => {
