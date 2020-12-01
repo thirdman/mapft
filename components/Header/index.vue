@@ -288,7 +288,8 @@ export default {
     if (process.client) {
       // console.log('header this', this.$route)
       this.walletCheck();
-      
+      console.log('header: process.env', process.env)
+      console.log('header: this.$config', this.$config)
     }
   },
   created() {
