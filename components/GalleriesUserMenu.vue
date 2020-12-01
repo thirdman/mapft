@@ -1,5 +1,5 @@
 <template>
-  <div class="galleriesMenu userGalleriesMenu noAfter">
+  <div class="galleriesMenu userGalleriesMenu noAfter" :class="mode">
     <div v-for="(item, index) in contracts" :key="index" class="listItem">
       <div class="xsmall clamp wide">
         <nuxt-link
@@ -31,7 +31,7 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
-  props: ["galleryContractId", "userAddress", "contracts"],
+  props: ["galleryContractId", "userAddress", "contracts", "mode"],
   computed: {
     // ...mapGetters({
     //   usedContracts: "ui/usedContracts",

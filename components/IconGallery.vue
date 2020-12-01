@@ -1,13 +1,13 @@
 <template>
     <svg
       :class="`${strokeClass} ${size}`"
-      xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-photo" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-    <line x1="15" y1="8" x2="15.01" y2="8" />
-    <rect x="4" y="4" width="16" height="16" rx="3" />
-    <path d="M4 15l4 -4a3 5 0 0 1 3 0l5 5" />
-    <path d="M14 14l1 -1a3 5 0 0 1 3 0l2 2" />
-  </svg>
+  xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-news" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9E9E9E" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1 -4 0v-13a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1v12a3 3 0 0 0 3 3h11" />
+  <line x1="8" y1="8" x2="12" y2="8" />
+  <line x1="8" y1="12" x2="12" y2="12" />
+  <line x1="8" y1="16" x2="12" y2="16" />
+</svg>
 </template>
 
 <style>

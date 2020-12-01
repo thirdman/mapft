@@ -1,6 +1,6 @@
 <template>
-  <div class="galleriesMenu">
-    <div class="featured">
+  <div class="galleriesMenu" :class="mode">
+    <div class="listItem featured">
       <nuxt-link
         to="/alpha"
         class="featuredLink"
@@ -12,7 +12,7 @@
         ><div class="galleryImgWrap"><img src="~/static/images/alpha.jpg" width="200px" /></div> Alpha Series</nuxt-link
       >
     </div>
-    <div>
+    <div class="listItem">
       <nuxt-link
         to="/gallery/0xa0AfEDcC9446fD1F41706EaA4931512bDb2efAe7"
         class="featuredLink"
@@ -21,10 +21,10 @@
             ? 'active'
             : 'notActive'
         "
-        ><div class="galleryImgWrap"><IconGallery size="medium" /></div>Natealex Test</nuxt-link
+        ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>Natealex Test</nuxt-link
       >
     </div>
-    <div>
+    <div class="listItem">
       <nuxt-link
         to="/gallery/0x5056A51f6f48D9D9808300C242142acD2C855377"
         class="featuredLink"
@@ -34,12 +34,12 @@
             : 'notActive'
         "
         >
-        <div class="galleryImgWrap"><IconGallery size="medium" /></div>
+        <div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode"/></div>
         File type tests
         </nuxt-link
       >
     </div>
-    <div>
+    <div class="listItem">
       <nuxt-link
         to="/gallery/0xfbaf740d8823af28562faaef6f6a95cd9d244110"
         class="featuredLink"
@@ -49,12 +49,12 @@
             : 'notActive'
         "
         >
-        <div class="galleryImgWrap"><IconGallery size="medium" /></div>
-        Gareth Test 2
+        <div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode"/></div>
+          Editions Test
         </nuxt-link
       >
     </div>
-    </div>
+  </div>
 </template>
 
 <!-- <div>
@@ -77,6 +77,36 @@
 .galleriesMenu {
   margin-bottom: 1rem;
   border: 1px solid var(--line-color, #eee);
+  &.hero{
+    border: 0px solid white;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 50%), 1fr));
+    // grid-template-rows: repeat(auto-fit, minmax(4rem, 10rem));
+    grid-column-gap: 0;
+    grid-row-gap: 1rem;
+    .listItem {
+      display: flex;
+      min-height: 5rem;
+      align-items: center;
+      justify-content: stretch;
+      a, a.featuredLink{
+        border: 1px solid var(--line-color);
+        border-radius: .25rem;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: calc(100% - 1rem);
+        height: 100%;
+        min-height: 7rem;
+       .galleryImgWrap{
+         min-height: 4rem;
+         img{
+           max-height: 3.5rem;
+         }
+       }
+      }
+    }
+  }
 }
 .galleriesMenu {
   a{
@@ -153,7 +183,7 @@
 //   height: 1rem;
 //   width: 1rem;
 // }
-.galleriesMenu a svg{
+.galleriesMenu a svg.chevron{
   transform: rotate(90deg);
   stroke: currentColor;
 }
@@ -162,6 +192,6 @@
 </style>
 <script>
 export default {
-  props: ["galleryContractId"],
+  props: ["galleryContractId", "mode", "contrastMode"],
 };
 </script>

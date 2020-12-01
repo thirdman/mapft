@@ -349,11 +349,12 @@ footer {
 }
 
 .buttonGroup {
-  display: inline-flex;
+  display: flex;
   font-size: 0.875rem;
   position: relative;
-  height: 2rem;
+  min-height: 2rem;
 }
+
 .buttonGroup .swatch {
   padding-left: 2rem;
   /* box-shadow: 0 0 0 2px #111; */
@@ -1653,24 +1654,18 @@ ul.heroList {
   width: 100%;
 }
 
-.buttonGroup {
-  display: inline-flex;
-  font-size: 0.875rem;
-  position: relative;
-}
-
 .toggleItem {
   cursor: pointer;
   background: rgba(0, 0, 0, 0.1);
   font-size: 0.875rem;
   text-align: center;
-  padding: 2px 1rem;
+  padding: 2px 0.5rem;
 }
 .toggleItem.selected {
   background: rgba(0, 0, 0, 0.3);
 }
 .toggleItem:first-child {
-  border-right: 2px solid var(--ui-color);
+  border-right: 1px solid var(--ui-color);
 }
 .toggleItem:hover {
   background: rgba(0, 0, 0, 0.3);
@@ -1703,20 +1698,22 @@ ul.heroList {
 }
 
 .buttonGroup.uiMode .toggleItem {
-  border: 2px solid var(--ui-color, #111);
+  border: 1px solid var(--line-color, #111);
   font-size: 0.75rem;
 }
 .buttonGroup.light.uiMode .toggleItem {
-  border: 2px solid var(--background-color, #eee);
+  border: 1px solid var(--line-color, #eee);
   color: var(--background-color, #eee);
 }
 .buttonGroup.uiMode .toggleItem.active {
   background: var(--ui-color, #111);
+  border-color: var(--ui-color, #111);
   color: var(--background-color, #eee);
 }
 .buttonGroup.light.uiMode .toggleItem.active {
-  background: var(--background-color, #111);
-  color: var(--ui-color, #eee);
+  background: var(--fill-color, #111);
+  border-color: var(--fill-color, #111);
+  color: var(--background-color, #eee);
 }
 .buttonGroup.uiMode .toggleItem + .toggleItem {
   border-left: 0px solid var(--ui-color, #111);

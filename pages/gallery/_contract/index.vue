@@ -37,6 +37,7 @@
         <div v-if="devMode"><Button @click="handleRefresh()">Refresh Assets</Button></div>
         <div class="sidebarSection">
           <label>Display</label>
+          <div>
           <div class="buttonGroup uiMode" :class="contrastMode" direction="column">
             <button
               @click="setGalleryDisplayMode('compact')"
@@ -59,6 +60,7 @@
             >
               Full
             </button>
+          </div>
           </div>
         </div>
       </div>

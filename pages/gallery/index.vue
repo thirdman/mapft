@@ -11,7 +11,7 @@
         <div v-if="walletAddress && usedContracts && usedContracts.length > 0">
           <label>Your Contracts</label>
           <p class="small">Contracts you have created</p>
-          <GalleriesUserMenu :contracts="usedContracts" />
+          <GalleriesUserMenu :contracts="usedContracts" mode="list" />
         </div>
       </div>
       <div class="primary">
@@ -37,7 +37,7 @@
           </div>
         </div>
         <h4>Featured Galleries</h4>
-        <GalleriesMenu />
+        <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
         <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
        
       </div>
