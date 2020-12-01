@@ -52,11 +52,17 @@
             <GalleryImage 
               :src="
                 displayMode === 'compact'
+                  ? item.image_thumbnail_url
+                  : item.image_preview_url
+              "
+              :thumbnail="item && item.image_thumbnail_url"
+              />
+              <!-- :src="
+                displayMode === 'compact'
                   ? item.imageUrlThumbnail
                   : item.imagePreviewUrl
               "
-              :thumbnail="item && item.imageUrlThumbnail"
-              />
+              :thumbnail="item && item.imageUrlThumbnail" -->
             <DefaultImage v-if="!item.imageUrlThumbnail || item.imageUrlThumbnail === 'https://storage.opensea.io'"/>
           </div>
           <div class="galleryListItemContent">
@@ -200,7 +206,7 @@
   font-variation-settings: 'wght' 500;
 }
 
-.galleryImageWrap, {
+.galleryImageWrap {
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
@@ -293,6 +299,9 @@ export default {
   //     // nothing to see here
   //   }
   // },
+  mounted(){
+    console.log('this.galleryAssets', this.galleryAssets);
+  },
   computed: {
     ...mapGetters({
       devMode: "ui/devMode",
@@ -312,7 +321,8 @@ export default {
       console.log(`Image failed to load, ${index}`);
     },
     handleLink(item, contractId) {
-      const tokenId = item.tokenId
+      // const tokenId = item.tokenId
+      const tokenId = item.token_id
       const tempItem = {
         imageUrlOriginal: item.imageUrlOriginal,
         imageUrlThumbnail: item.imageUrlThumbnail,

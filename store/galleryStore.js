@@ -50,54 +50,100 @@ export const mutations = {
     state.galleryFilter = undefined;
   },
   async getItems(state, params) {
+    // due to opensea issues, I've changed it to use axios. If it is robust wversion.can remove the legacy in future
+    const useAxios = true;
+    const useOpenseaPort = false;
     console.log("get Items", params);
     console.log("get Items, contractAddress", state.galleryContractId);
-
+    const tempInfuraUrl =
+      "https://rinkeby.infura.io/v3/be139b65f221415ba0e1674f6bca9ff4";
     const network = this.$config.network;
-    const infuraUrl =
+    const galleryOffset = state.offset;
+    const pageSize = 30;
+    let infuraUrl =
       network === "main"
         ? this.$config.infuraUrlMain
         : this.$config.infuraUrlRinkeby;
+    let openseaServer =
+      network === "main"
+        ? "https://api.opensea.io/"
+        : "https://testnets-api.opensea.io/";
+    const axiosUrl = `${openseaServer}api/v1/assets/?asset_contract_address=${state.galleryContractId}`; //&limit=20&offset=${galleryOffset}&pageSize=${pageSize}
+    // let axiosUrl =
+    //   network === "main"
+    //     ? `https://api.opensea.io/api/v1/assets/?asset_contract_address=${state.galleryContractId}&limit=20&offset=${galleryOffset}&pageSize=${pageSize}`
+    //     : `https://testnets-api.opensea.io/api/v1/assets/?asset_contract_address=${state.galleryContractId}&limit=20&offset=${galleryOffset}&pageSize=${pageSize}`;
+
     this.commit("galleryStore/setGalleryStatus", "loading");
-    // console.log('network', network)
-    // console.log('infuraUrl', infuraUrl)
+    console.log("network", network);
+    console.log("infuraUrl", infuraUrl);
     const provider = new Web3.providers.HttpProvider(infuraUrl);
     const seaport = new OpenSeaPort(provider, {
       networkName: network === "rinkeby" ? Network.Rinkeby : Network.Main,
     });
-    const galleryOffset = state.offset;
-    const pageSize = 30;
-    const getAssets = seaport.api.getAssets({
-      asset_contract_address: state.galleryContractId, // string
-      pageSize: "30",
-      // limit: 10,
-      // tokenId: '9', // string | number | null
-    });
-    await getAssets
-      .then((result) => {
-        console.log("result", result);
 
-        if (result && result.assets) {
-          this.commit("galleryStore/setGalleryAssets", result.assets);
-          this.commit("galleryStore/setGalleryStatus", "loaded");
-          this.commit(
-            "galleryStore/setGalleryAssetCount",
-            result.estimatedCount || 0
-          );
-          this.commit(
-            "galleryStore/setGalleryOffset",
-            galleryOffset + pageSize
-          );
-        } else {
-          console.error("no result or result.assets", result);
-          this.commit("galleryStore/setGalleryStatus", "error");
-        }
-      })
-      .catch((error) => {
-        console.error("gallery error: ", error);
-        state.galleryStatus = "error";
-        return false;
+    // alert("stopping");
+    // let shallContinue = confirm("Do you want to continue ?");
+    // console.log("shallCOntinue: ", shallContinue);
+    const handleAssetResult = (result) => {
+      if (result && result.assets) {
+        this.commit("galleryStore/setGalleryAssets", result.assets);
+        this.commit("galleryStore/setGalleryStatus", "loaded");
+        this.commit(
+          "galleryStore/setGalleryAssetCount",
+          result.estimatedCount || 0
+        );
+        this.commit("galleryStore/setGalleryOffset", galleryOffset + pageSize);
+      } else {
+        console.error("no result or result.assets", result);
+        this.commit("galleryStore/setGalleryStatus", "error");
+      }
+    };
+    if (useAxios) {
+      console.log("using axiso: ", axiosUrl);
+      await axios
+        .get(axiosUrl)
+        .then((result) => {
+          handleAssetResult(result.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    if (useOpenseaPort) {
+      const getAssets = seaport.api.getAssets({
+        asset_contract_address: state.galleryContractId, // string
+        pageSize: "30",
+        // limit: 10,
+        // tokenId: '9', // string | number | null
       });
+
+      await getAssets
+        .then((result) => {
+          console.log("result", result);
+
+          if (result && result.assets) {
+            this.commit("galleryStore/setGalleryAssets", result.assets);
+            this.commit("galleryStore/setGalleryStatus", "loaded");
+            this.commit(
+              "galleryStore/setGalleryAssetCount",
+              result.estimatedCount || 0
+            );
+            this.commit(
+              "galleryStore/setGalleryOffset",
+              galleryOffset + pageSize
+            );
+          } else {
+            console.error("no result or result.assets", result);
+            this.commit("galleryStore/setGalleryStatus", "error");
+          }
+        })
+        .catch((error) => {
+          console.error("gallery error: ", error);
+          state.galleryStatus = "error";
+          return false;
+        });
+    }
     // old way here:
     // await getAssets
     //   .then((result) => {
