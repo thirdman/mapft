@@ -8,7 +8,7 @@
         <p class="small">A gallery displays the tokens created by a contract.
         </p>
         
-        <div v-if="usedContracts && usedContracts.length > 0">
+        <div v-if="walletAddress && usedContracts && usedContracts.length > 0">
           <label>Your Contracts</label>
           <p class="small">Contracts you have created</p>
           <GalleriesUserMenu :contracts="usedContracts" />
@@ -59,11 +59,6 @@ export default {
   name: 'GalleryPage',
   created() {
     // this.setInitialAccount();
-    if (process.client) {
-      // NO LONGER NEEDED - use contract page
-      // console.log('triger on created: ')
-      // this.$store.commit('galleryStore/getItems')
-    }
   },
   data() {
     return {

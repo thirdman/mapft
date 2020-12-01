@@ -37,7 +37,6 @@ export default {
     console.log('this.$route.params.contract', this.$route.params.contract)
 
     if (process.client) {
-      console.log('triger on created: ')
       this.$store.commit('giftFormStore/setGiftTokenId', this.$route.params.id)
       this.$store.commit(
         'giftFormStore/setGiftContractId',

@@ -61,10 +61,6 @@
         <div class="navItem" v-if="devMode">
           <nuxt-link to="/svg" class="w3-button navLink">SVG</nuxt-link>
         </div>
-        <!-- <div class="navItem" v-if="this.$config.network === 'rinkeby'">
-          <p class="small networkWarning" >Please use Rinkeby Network</p>
-        </div> -->
-        
         <div class="wedgeWrap">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -81,8 +77,6 @@
         <nuxt-link to="/view" >
           <IconSearch :strokeClass="contrastMode" />
         </nuxt-link>
-        <!-- <button @click="setShowSearch(!showSearch)" class="btn iconButton">
-        </button> -->
         <div class="wedgeWrap">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -211,11 +205,8 @@
   <client-only>
     <account-modal />
     <div style="opacity: 0; visibility: 0; z-index: -1">
-      <!-- This is hacky and surely theres a better way. In the interests 
-      of getting smoething to the public, i'm gonna leave like this for the moment -->
       {{ shallShowStatusModal ? "yes" : "" }}
     </div>
-      <!-- {{ shallShowCropperModal ? "yes" : "" }} -->
     <status-modal />
     <cropper-modal />
     <chain-modal />
