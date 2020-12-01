@@ -4,7 +4,13 @@
     :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
   >
   <client-only>
-    <div class="devModeFlag shadow" v-if="devMode">DEV MODE</div>
+    <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong><br />
+      Environment: {{VERCEL_ENV}}<br />
+      repo: {{VERCEL_GIT_REPO_SLUG}}<br />
+      commit: {{VERCEL_GIT_COMMIT_SHA}}<br />
+      network: {{ENV_NETWORK}}<br />
+      <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
+    </div>
     <div class="headerRow w3-row">
       <div class="brand w3-col s2">
         <span class="logoWrap" @click="goToHome()">
@@ -35,7 +41,7 @@
       </div>
 
       <div class="navRow">
-        <div v-if="devMode"><strong>Contrast Mode: {{contrastMode || "no contrast mode available"}}</strong></div>
+        
         <div class="navItem">
           <nuxt-link to="/" class="w3-button navLink">About</nuxt-link>
         </div>
@@ -229,7 +235,7 @@
   position: fixed;
   top: 0;
   left: 5rem;
-  background: red;
+  background: var(--danger-color, red);
   padding: 2px 1rem;
   font-weight: bold;
   font-size: 0.75rem;
@@ -282,10 +288,20 @@ export default {
     mounted: () => {
       this.$refs.modal.show();
     };
+    if(this.$config){
+      console.log('this.$config is available')
+    }
     if (process.client) {
-      // console.log('header this', this.$route)
       this.walletCheck();
-      
+      console.log('header: this.$config', this.$config)
+      const VERCEL_ENV = this.$config.VERCEL_ENV || "local"
+      const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
+      const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
+      const ENV_NETWORK = this.$config.network || "local"
+      this.VERCEL_ENV = VERCEL_ENV
+      this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
+      this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
+      this.ENV_NETWORK = ENV_NETWORK
     }
   },
   created() {
@@ -304,7 +320,10 @@ export default {
   },
   data() {
     return {
-      greeting: "Hello World",
+      VERCEL_ENV: "",
+      VERCEL_GIT_REPO_SLUG: "",
+      VERCEL_GIT_COMMIT_SHA: "",
+      ENV_NETWORK: "",
       showIt: false,
     };
   },
