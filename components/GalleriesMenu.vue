@@ -54,7 +54,7 @@
         </nuxt-link
       >
     </div>
-    <div>
+    <!-- <div>
       <nuxt-link
         to="/gallery/0xc8aee98fa2c02d83b52d3897455e47cf97271e76"
         class="featuredLink"
@@ -68,23 +68,8 @@
         Gareth Test 3
         </nuxt-link
       >
-    </div>
+    </div> -->
 
-    <div>
-      <nuxt-link
-        to="/gallery/0xC85BDEd5D6AbF3051B096CCCd30F1C73a31bE274"
-        class="featuredLink"
-        :class="
-          galleryContractId === '0xC85BDEd5D6AbF3051B096CCCd30F1C73a31bE274'
-            ? 'active'
-            : 'notActive'
-        "
-        >
-        <div class="galleryImgWrap"><IconGallery size="medium" /></div>
-          Gareth Test 4
-        </nuxt-link
-      >
-    </div>
   </div>
 </template>
 
@@ -93,18 +78,39 @@
   margin-bottom: 1rem;
   border: 1px solid var(--line-color, #eee);
 }
-.galleriesMenu a{
-  display: block;
-  text-decoration: none;
-  border-bottom: 1px solid var(--line-color, #eee);
-  padding: .25rem .5rem .25rem .25rem;
-  &.featuredLink{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    &:hover{
-      background: var(--line-color, #eee);
+.galleriesMenu {
+  a{
+    display: block;
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-color, #eee);
+    padding: .25rem .5rem .25rem .25rem;
+    &.featuredLink{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      &:hover{
+        background: var(--line-color, #eee);
+      }
+    }
+    
+  }
+  &.noAfter{
+    a{
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      svg{visibility: hidden;}
+      &:hover{
+        svg{visibility: visible;}
+        background: var(--line-color);
+      }
+      &.nuxt-link-active{
+        svg{
+          visibility: visible;
+        }
+      }
     }
   }
 }
@@ -119,9 +125,10 @@
     object-fit: contain;
     widht: 100%;
     height: 100%;
+    max-height: 2rem;
   }
 }
-.galleriesMenu .nuxt-link-active {
+.galleriesMenu a.nuxt-link-active {
   width: 100%;
   display: block;
   /* padding: 2px; */
@@ -135,14 +142,20 @@
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
+  
 }
-.galleriesMenu .nuxt-link-active:after {
+
+.galleriesMenu:not(.noAfter) .nuxt-link-active:after {
   content: ">";
   position: absolute;
   right: 0;
   top: 0;
   height: 1rem;
   width: 1rem;
+}
+.galleriesMenu a svg{
+  transform: rotate(90deg);
+  stroke: currentColor;
 }
 
 

@@ -32,7 +32,7 @@
           <div class="col-33 column">
             <!-- <nuxt-link :to="`/gallery/${tempContractId}`">Load</nuxt-link> -->
             <!-- <nuxt-link :to="`/gallery/0xd0c402bcbcb5e70157635c41b2810b42fe592bb0`">Load</nuxt-link> -->
-          <Button size="large" @click="handleLoad(tempContractId)" :disabled="!tempContractId">
+          <Button size="large" mode="primary" @click="handleLoad(tempContractId)" :disabled="!tempContractId">
             Load Gallery
           </Button>
           <!-- <Button size="medium" @click="handleLoad">
@@ -42,8 +42,8 @@
         </div>
         <h4>Featured Galleries</h4>
         <GalleriesMenu />
-        <p class="small">Talk to us on Discord to be listed here.</p>
-        <h4>Elsewhere</h4>
+        <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
+        <!-- <h4>Elsewhere</h4>
         <figure>
           <img src="~/static/images/alpha.jpg" width="200px" />
           <figcaption>Alpha Series</figcaption>
@@ -52,7 +52,7 @@
         <figure>
           <img src="~/static/images/cryptovoxels.jpg" width="200px" />
           <figcaption>Crypto Voxels Gallery</figcaption>
-        </figure>
+        </figure> -->
       </div>
       <div class="secondary">
         <label>Elsewhere</label>
@@ -86,6 +86,7 @@ export default {
   computed: {
     ...mapFields('galleryStore', ['galleryContractId']),
     ...mapGetters({
+      contrastMode: "ui/contrastMode",
       activeContractId: "ui/activeContractId",
       usedContracts: "ui/usedContracts",
       galleryContractId: 'galleryStore/galleryContractId',

@@ -75,7 +75,6 @@ export const actions = {
     const key = this.$config.ARWEAVE_WALLET_KEY;
     const arweaveWalletId = this.$config.ARWEAVE_WALLET_ID;
     console.log("arweave", arweave);
-
     console.log("arweaveWalletId: ", arweaveWalletId);
     console.log("key", key);
     // const { key, arweaveWalletId, arweave } = context;
@@ -106,10 +105,16 @@ export const actions = {
     //   "arUploadFile config ARWEAVE_WALLET_KEY: ",
     //   context.$config.ARWEAVE_WALLET_KEY
     // );
-    // console.log(
-    //   "arUploadFile,  is it a string: ",
-    //   typeof context.$config.ARWEAVE_WALLET_KEY === "string"
-    // );
+    const envKey =
+      context && context.$config && context.$config.ARWEAVE_WALLET_KEY;
+    if (envKey) {
+      console.log(
+        "arUploadFile,  is it a string: ",
+        typeof envKey === "string"
+      );
+      const keyAsObj = JSON.parse(envKey);
+      console.log("keyAsObj:", keyAsObj);
+    }
     console.groupEnd();
     // const key = this.$config.ARWEAVE_WALLET_KEY;
     const key = {

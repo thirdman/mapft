@@ -78,7 +78,7 @@
         <IconSettings :strokeClass="contrastMode" />
       </button>
       <div class="rotationControl2" v-if="allowRotation && remoteStart">
-        <Button @click="remoteStart" class="transparent"  v-if="!hasRotation" >
+        <Button @click="remoteStart"  mode="hollow"  v-if="!hasRotation" >
           <IconPlay :strokeClass="contrastMode" size="medium" />
         </Button>
         <Button @click="remoteStop" class="transparent" v-if="hasRotation" secondary>

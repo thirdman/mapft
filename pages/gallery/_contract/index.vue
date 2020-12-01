@@ -6,7 +6,11 @@
         <div class="sidebarSection">
           <label>Gallery</label>
           <div class="">
-          <span style="display: inline-block"><IconExternalLink :strokeClass="contrastMode" size="small" /><Address shrink :address="galleryContractId"/></span>
+            <!-- <IconExternalLink :strokeClass="contrastMode" size="small" /> -->
+          <span style="display: inline-block" class="galleryIdWrap">
+            <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span></span>
+            <Button @click="handleCopy" mode="hollow" v-if="!hasCopied"><IconCopy size="small"/></Button>
+          <input type="text" id="copy-string" :value="galleryContractId" style="visibility: hidden; position: absolute; z-index: -1">
           </div>
         </div>
         <div class="sidebarSection">
@@ -26,7 +30,7 @@
           <GalleriesUserMenu :contracts="usedContracts" />
         </div>
 
-        <div v-if="!usedContracts || usedContracts && usedContracts.length === 0">
+        <div v-if="galleryStatus !== 'loading' && (!usedContracts || usedContracts && usedContracts.length === 0)">
           <label>Featured Galleries</label>
           <GalleriesMenu :galleryContractId="galleryContractId" />
         </div>
@@ -166,6 +170,12 @@ export default {
       })
     }
   },
+  data(){
+    return {
+      copyString: "",
+      hasCopied: false,
+    }
+  },
   computed: {
     ...mapFields('galleryStore', ['galleryContractId']),
     ...mapGetters({
@@ -203,6 +213,30 @@ export default {
       const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
+    handleCopy () {
+      let stringToCopy = document.querySelector('#copy-string')
+      stringToCopy.setAttribute('type', 'text') 
+      stringToCopy.select()
+
+      try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('string was copied ' + msg);
+        this.hasCopied=true
+        const unset = () => {
+          this.hasCopied=false
+        };
+        setTimeout(() => unset(), 1000);
+      } catch (err) {
+        console.log('Oops, unable to copy');
+        this.hasCopied=true
+      }
+
+      /* unselect the range */
+      stringToCopy.setAttribute('type', 'hidden')
+      window.getSelection().removeAllRanges()
+      
+    },
   },
 }
 </script>
@@ -226,5 +260,19 @@ export default {
   > label{
     margin-bottom: .5rem;
   }
+}
+.galleryIdWrap{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+.copyConfirm{
+  background: var(--success-color);
+  padding: 1px .25rem;
+  border-radius: .25rem;
+  font-size: .75rem;
+  font-variation-settings: 'wght' 600;
+  color: #fff;
 }
 </style>

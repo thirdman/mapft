@@ -212,7 +212,7 @@
                   <Address :address="viewData && viewData.ownerAddress" :fill="true" />
                 </div>
                 <div v-if="isOwner" class="ownerBox">YOU</div>
-                <div v-if="isOwner" class="ownerGift">
+                <div v-if="isOwner" class="ownerGift w3-small">
                   <nuxt-link :to="/gift/ + contractId + '/' + tokenId"
                     >Gift this Token...</nuxt-link
                   >

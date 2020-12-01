@@ -217,7 +217,6 @@
         </div>
       </div>
       <div class="secondary" v-if="viewData">
-        <div class="aside help">&nbsp;</div>
         <div class="column col-66 metaColumn" v-if="viewData && uiMode !== 'none'">
           <ToggleSection v-if="viewData">
             <span slot="header">Token Info</span>
@@ -262,7 +261,7 @@
                 <label>IPFS</label>
                 <div id="link0" class="w3-small ">
                   <a :href="`https://ipfs.io/ipfs/${viewData.fileIpfsHash}`" target="_blank" v-if="viewData.fileIpfsHash" class="metaLink" ><IconExternalLink size="small" />
-                  {{ viewData.fileIpfsHash }}
+                  <Address :address="viewData.fileIpfsHash" />
                   </a>
                 </div>
               </div>
@@ -270,7 +269,7 @@
                 <label>Arweave</label>
                 <div id="link1" class="w3-small ">
                   <a :href="`https://arweave.net/${viewData.fileArweaveHash}`" target="_blank" v-if="viewData.fileArweaveHash" class="metaLink"><IconExternalLink size="small" />
-                  {{ viewData.fileArweaveHash }}</a>
+                  <Address :address="viewData.fileArweaveHash" /></a>
                 </div>
               </div>
             </div>

@@ -307,6 +307,7 @@ export const actions = {
   doSearch() {
     console.log("doSearch");
   },
+
   async handleSearch(dispatch, commit) {
     console.log("handleSearch");
     const { state } = dispatch;

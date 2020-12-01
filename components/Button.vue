@@ -62,6 +62,14 @@
     background: var(--background-color);
     color: var(--ui-color, #111);
   }
+  &.btnhollow {
+    // REPLICATED a.asButton
+    border-radius: 1rem;
+    border: 1px solid var(--line-color, #111);
+    background: transparent;
+    padding: 2px .5rem;
+    // color: var(--ui-color, #111);
+  }
   // HOVER
   &:not(.iconButton):hover {
     transform: translateY(-2px);

@@ -1,5 +1,5 @@
 <template>
-  <div class="galleriesMenu userGalleriesMenu">
+  <div class="galleriesMenu userGalleriesMenu noAfter">
     <div v-for="(item, index) in contracts" :key="index" class="listItem">
       <div class="xsmall clamp wide">
         <nuxt-link
@@ -9,7 +9,10 @@
               ? 'active'
               : 'notActive'
           "
-          ><Address :address="item" shrink fill /></nuxt-link
+          >
+            <Address :address="item" shrink fill />
+            <IconChevron size="small" />
+          </nuxt-link
         >
       </div>
     </div>

@@ -63,7 +63,7 @@
                   : item.imagePreviewUrl
               "
               :thumbnail="item && item.imageUrlThumbnail" -->
-            <DefaultImage v-if="!item.imageUrlThumbnail || item.imageUrlThumbnail === 'https://storage.opensea.io'"/>
+            <DefaultImage v-if="!item.image_thumbnail_url || item.image_thumbnail_url === 'https://storage.opensea.io'"/>
           </div>
           <div class="galleryListItemContent">
             <label>
@@ -110,7 +110,7 @@
   width: 100%;
 }
 .sets {
-  padding: 1rem 0 .25rem;
+  padding: 0 0 1rem .25rem;
   border-bottom: 1px solid var(--line-color);
   margin-bottom: 1rem;
 }
