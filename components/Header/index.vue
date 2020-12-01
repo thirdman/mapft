@@ -4,7 +4,10 @@
     :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
   >
   <client-only>
-    <div class="devModeFlag shadow" v-if="devMode">DEV MODE</div>
+    <div class="devModeFlag shadow" v-if="devMode">DEV MODE<br />
+      {{process.env.VERCEL_ENV || "local"}}<br />
+      branch: {{process.env.VERCEL_GIT_REPO_SLUG || "no slug"}}<br />
+    </div>
     <div class="headerRow w3-row">
       <div class="brand w3-col s2">
         <span class="logoWrap" @click="goToHome()">
