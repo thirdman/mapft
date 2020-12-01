@@ -11,7 +11,7 @@
           "
           >
             <Address :address="item" shrink fill />
-            <IconChevron size="small" />
+            <IconChevron size="small"  strokeClass="contrastMode" />
           </nuxt-link
         >
       </div>
@@ -31,7 +31,7 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
-  props: ["galleryContractId", "userAddress", "contracts", "mode"],
+  props: ["galleryContractId", "userAddress", "contracts", "mode", 'contrastMode'],
   computed: {
     // ...mapGetters({
     //   usedContracts: "ui/usedContracts",

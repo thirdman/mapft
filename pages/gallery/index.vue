@@ -7,8 +7,7 @@
         <label>Galleries</label>
         <p class="small">A gallery displays the tokens created by a contract.
         </p>
-        
-        <div v-if="walletAddress && usedContracts && usedContracts.length > 0">
+        <div v-if="usedContracts && usedContracts.length > 0">
           <label>Your Contracts</label>
           <p class="small">Contracts you have created</p>
           <GalleriesUserMenu :contracts="usedContracts" mode="list" />
@@ -103,7 +102,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .linkRow {
   padding: 20px;
   min-height: 100px;
@@ -119,19 +118,33 @@ export default {
 }
 .loadContractRow {
   flex-basis: auto;
-  padding: 1rem 0;
+  // padding: 1rem 0;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content:center;
   align-items: center;
-  background: var(--line-color, #eee);
-  border-radius: .5rem;
-  padding: .5rem;
-}
-.loadContractRow input{
-  width: 100%;
-}
-.loadContractRow button{
-  margin-left: .5rem;
+  // background: var(--line-color, #eee);
+  // border-radius: .5rem;
+  // padding: .5rem;
+  #galleryContractId{
+    background: var(--fill-color);
+    border: 0px solid;
+    
+  }
+  input#galleryContractId{
+    width: 100%;
+    padding-left: 1rem;
+    border-radius: 1rem 0 0 1rem ;
+    &:focus, &:active{
+      box-shadow: 0px 0px 0 2px var(--ui-color, #111) inset;
+    }
+  }
+  button, button.btn.large{
+    margin-left: 0rem;
+    border-radius: 0 1rem 1rem 0;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
+  
 }
 figure {
   margin: 0.25rem;

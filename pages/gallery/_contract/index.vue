@@ -27,7 +27,7 @@
         </div>
         <div v-if="usedContracts && usedContracts.length > 0" class="sidebarSection">
           <label>Your Contracts</label>
-          <GalleriesUserMenu :contracts="usedContracts" />
+          <GalleriesUserMenu :contracts="usedContracts" :contrastMode="contrastMode" />
         </div>
 
         <div v-if="galleryStatus !== 'loading' && (!usedContracts || usedContracts && usedContracts.length === 0)">

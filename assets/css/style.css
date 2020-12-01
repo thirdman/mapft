@@ -62,15 +62,18 @@
   --teal-background-color: #d6e8ea;
   --teal-mode: dark;
 
-  --charcoal-color: hsl(330, 7%, 20%);
-  --charcoal-dark-color: hsl(330, 25%, 7%);
+  /* --charcoal-color: hsl(330, 7%, 20%); */
+  /* --charcoal-color: hsl(330, 5%, 15%); */
+  --charcoal-color: hsl(330, 5%, 14%);
+  /* --charcoal-dark-color: hsl(330, 25%, 7%); */
+  --charcoal-dark-color: hsl(330, 15%, 8%);
   /* --charcoal-light-color: hsl(330, 10%, 8%); */
-  --charcoal-light-color: hsl(330, 2%, 50%);
+  --charcoal-light-color: hsl(330, 2%, 30%);
 
-  --charcoal-fill-color: #484848;
+  --charcoal-fill-color: hsl(330, 0%, 24%);
   --charcoal-ui-color: hsl(330, 4%, 7%);
   --charcoal-text-color: #c0c0c0;
-  --charcoal-background-color: hsl(330, 7%, 90%);
+  --charcoal-background-color: hsl(320, 6%, 90%);
   --charcoal-mode: dark;
 }
 /* STRUCTURE */
@@ -245,7 +248,8 @@ strong {
   --light-color: var(--charcoal-light-color, #f3f3f3);
   --text-color: var(--charcoal-text-color, #fff);
   --ui-color: var(--charcoal-ui-color, #f7e6da);
-  --line-color: rgb(233 233 233 / 28%);
+  /* --line-color: rgb(233 233 233 / 28%); */
+  --line-color: rgb(233 233 233 / 18%);
   --contrast-mode: var(--charcoal-mode, dark);
 }
 #body.charcoal .pageContainer {
@@ -1702,7 +1706,7 @@ ul.heroList {
   font-size: 0.75rem;
 }
 .buttonGroup.light.uiMode .toggleItem {
-  border: 1px solid var(--line-color, #eee);
+  border: 1px solid var(--ui-color, #eee);
   color: var(--background-color, #eee);
 }
 .buttonGroup.uiMode .toggleItem.active {
@@ -1711,8 +1715,8 @@ ul.heroList {
   color: var(--background-color, #eee);
 }
 .buttonGroup.light.uiMode .toggleItem.active {
-  background: var(--fill-color, #111);
-  border-color: var(--fill-color, #111);
+  background: var(--ui-color, #111);
+  border-color: var(--ui-color, #111);
   color: var(--background-color, #eee);
 }
 .buttonGroup.uiMode .toggleItem + .toggleItem {
