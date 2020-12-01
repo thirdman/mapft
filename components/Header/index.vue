@@ -290,15 +290,16 @@ export default {
     if (process.client) {
       // console.log('header this', this.$route)
       this.walletCheck();
-      console.log('header: process', process)
-      console.log('header: process.env', process.env)
+      console.log('header: env', env)
+      // console.log('header: process', process)
+      // console.log('header: process.env', process.env)
       console.log('header: this.$config', this.$config)
-      const VERCEL_ENV = process.env.VERCEL_ENV || "local"
-      const VERCEL_GIT_REPO_SLUG = process.env.VERCEL_GIT_REPO_SLUG || "local"
+      const VERCEL_ENV = this.$config.VERCEL_ENV || "local"
+      const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
       const ENV_NETWORK = this.$config.network || "local"
       this.VERCEL_ENV = VERCEL_ENV
       this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
-      this.ENV_NETWORK = VERCEL_GIT_REPO_SLUG
+      this.ENV_NETWORK = ENV_NETWORK
     }
   },
   created() {
