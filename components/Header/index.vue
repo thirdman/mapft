@@ -6,7 +6,8 @@
   <client-only>
     <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong><br />
       Environment: {{VERCEL_ENV}}<br />
-      branch: {{VERCEL_GIT_REPO_SLUG}}<br />
+      repo: {{VERCEL_GIT_REPO_SLUG}}<br />
+      commit: {{VERCEL_GIT_COMMIT_SHA}}<br />
       network: {{ENV_NETWORK}}<br />
       <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
     </div>
@@ -287,17 +288,19 @@ export default {
     mounted: () => {
       this.$refs.modal.show();
     };
+    if(this.$config){
+      console.log('this.$config is available')
+    }
     if (process.client) {
-      // console.log('header this', this.$route)
       this.walletCheck();
-      // console.log('header: process', process)
-      // console.log('header: process.env', process.env)
       console.log('header: this.$config', this.$config)
       const VERCEL_ENV = this.$config.VERCEL_ENV || "local"
       const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
+      const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
       const ENV_NETWORK = this.$config.network || "local"
       this.VERCEL_ENV = VERCEL_ENV
       this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
+      this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
       this.ENV_NETWORK = ENV_NETWORK
     }
   },
@@ -319,6 +322,7 @@ export default {
     return {
       VERCEL_ENV: "",
       VERCEL_GIT_REPO_SLUG: "",
+      VERCEL_GIT_COMMIT_SHA: "",
       ENV_NETWORK: "",
       showIt: false,
     };
