@@ -4,9 +4,10 @@
     :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
   >
   <client-only>
-    <div class="devModeFlag shadow" v-if="devMode">DEV MODE<br />
-      {{process.env.VERCEL_ENV || "local"}}<br />
-      branch: {{process.env.VERCEL_GIT_REPO_SLUG || "no slug"}}<br />
+    <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong><br />
+      Environment: {{VERCEL_ENV}}<br />
+      branch: {{VERCEL_GIT_REPO_SLUG}}<br />
+      network: {{ENV_NETWORK}}<br />
     </div>
     <div class="headerRow w3-row">
       <div class="brand w3-col s2">
@@ -290,6 +291,12 @@ export default {
       this.walletCheck();
       console.log('header: process.env', process.env)
       console.log('header: this.$config', this.$config)
+      const VERCEL_ENV = process.env.VERCEL_ENV || "local"
+      const VERCEL_GIT_REPO_SLUG = process.env.VERCEL_GIT_REPO_SLUG || "local"
+      const ENV_NETWORK = this.$config.network || "local"
+      this.VERCEL_ENV = VERCEL_ENV
+      this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
+      this.ENV_NETWORK = VERCEL_GIT_REPO_SLUG
     }
   },
   created() {
@@ -308,7 +315,9 @@ export default {
   },
   data() {
     return {
-      greeting: "Hello World",
+      VERCEL_ENV: "",
+      VERCEL_GIT_REPO_SLUG: "",
+      ENV_NETWORK: "",
       showIt: false,
     };
   },
