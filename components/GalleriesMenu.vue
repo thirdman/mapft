@@ -54,7 +54,10 @@
         </nuxt-link
       >
     </div>
-    <!-- <div>
+    </div>
+</template>
+
+<!-- <div>
       <nuxt-link
         to="/gallery/0xc8aee98fa2c02d83b52d3897455e47cf97271e76"
         class="featuredLink"
@@ -69,9 +72,6 @@
         </nuxt-link
       >
     </div> -->
-
-  </div>
-</template>
 
 <style lang="scss">
 .galleriesMenu {
@@ -145,14 +145,14 @@
   
 }
 
-.galleriesMenu:not(.noAfter) .nuxt-link-active:after {
-  content: ">";
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 1rem;
-  width: 1rem;
-}
+// .galleriesMenu:not(.noAfter) .nuxt-link-active:after {
+//   content: ">";
+//   position: absolute;
+//   right: 0;
+//   top: 0;
+//   height: 1rem;
+//   width: 1rem;
+// }
 .galleriesMenu a svg{
   transform: rotate(90deg);
   stroke: currentColor;
