@@ -30,14 +30,16 @@
           />
           </div>
           <div class="col-33 column">
-            utton size="large" mode="primary" @click="handleLoad(tempContractId)" :disabled="!tempContractId">
+          <Button size="large" mode="primary" @click="handleLoad(tempContractId)" :disabled="!tempContractId">
             Load Gallery
           </Button>
+
           </div>
         </div>
         <h4>Featured Galleries</h4>
         <GalleriesMenu />
         <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
+       
       </div>
       <div class="secondary">
         <label>Elsewhere</label>
