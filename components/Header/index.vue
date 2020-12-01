@@ -8,6 +8,7 @@
       Environment: {{VERCEL_ENV}}<br />
       branch: {{VERCEL_GIT_REPO_SLUG}}<br />
       network: {{ENV_NETWORK}}<br />
+      <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
     </div>
     <div class="headerRow w3-row">
       <div class="brand w3-col s2">
@@ -39,7 +40,7 @@
       </div>
 
       <div class="navRow">
-        <div v-if="devMode"><strong>Contrast Mode: {{contrastMode || "no contrast mode available"}}</strong></div>
+        
         <div class="navItem">
           <nuxt-link to="/" class="w3-button navLink">About</nuxt-link>
         </div>
@@ -233,7 +234,7 @@
   position: fixed;
   top: 0;
   left: 5rem;
-  background: red;
+  background: var(--danger-color, red);
   padding: 2px 1rem;
   font-weight: bold;
   font-size: 0.75rem;
@@ -289,6 +290,7 @@ export default {
     if (process.client) {
       // console.log('header this', this.$route)
       this.walletCheck();
+      console.log('header: process', process)
       console.log('header: process.env', process.env)
       console.log('header: this.$config', this.$config)
       const VERCEL_ENV = process.env.VERCEL_ENV || "local"

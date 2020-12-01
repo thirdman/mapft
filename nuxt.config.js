@@ -22,6 +22,8 @@ export default {
     baseUrl: process.env.BASE_URL,
     ARWEAVE_WALLET_ID: process.env.ARWEAVE_WALLET_ID,
     ARWEAVE_WALLET_KEY: process.env.ARWEAVE_WALLET_KEY,
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    VERCEL_GIT_REPO_SLUG: process.env.VERCEL_GIT_REPO_SLUG,
   },
   /*
    ** Headers of the page
