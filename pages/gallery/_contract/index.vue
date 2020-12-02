@@ -2,7 +2,7 @@
   <div class="pageContainer">
     <Header />
     <section id="gallery" class>
-      <div class="tertiary" >
+      <div class="tertiary" v-if="1 === 2">
         <div class="sidebarSection">
           <label>Gallery</label>
           <div class="">

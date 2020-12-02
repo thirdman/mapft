@@ -1,6 +1,5 @@
 <template>
   <div class="galleriesMenu" :class="mode" :environment="environment">
-    {{environment}}
     <div class="listItem featured">
       <nuxt-link
         to="/alpha"

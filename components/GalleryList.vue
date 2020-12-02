@@ -1,8 +1,5 @@
 <template>
   <div id="galleryList">
-    <div v-if="devMode">
-      length: {{galleryAssets && galleryAssets.length}}
-    </div>
     <div class="setsRow" v-if="galleryAssets.length > 0">
       <div class="sets">
       <label>Filter:</label>

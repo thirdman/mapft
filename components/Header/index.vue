@@ -4,19 +4,6 @@
     :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
   >
   <client-only>
-    <!-- <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><br />
-    <div v-if="showDevInfo">
-        Environment: {{VERCEL_ENV}}<br />
-        rootUrl: {{rootUrl}}<br />
-        factoryContract: {{factoryContract}}<br />
-        requiredNetwork: {{requiredNetwork}}<br />
-        infuraUrl: {{infuraUrl}}<br />
-        repo: {{VERCEL_GIT_REPO_SLUG}}<br />
-        baseUrl: {{VERCEL_URL}}<br />
-        commit: {{VERCEL_GIT_COMMIT_MESSAGE}}<br />
-        <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
-      </div>
-    </div> -->
     <div class="headerRow w3-row">
       <div class="brand w3-col s2">
         <span class="logoWrap" @click="goToHome()">
@@ -208,7 +195,21 @@
       </div>
     </div>
   </client-only>
-  
+  <client-only>
+  <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><br />
+    <div v-if="showDevInfo">
+        Environment: {{VERCEL_ENV}}<br />
+        rootUrl: {{rootUrl}}<br />
+        factoryContract: {{factoryContract}}<br />
+        requiredNetwork: {{requiredNetwork}}<br />
+        infuraUrl: {{infuraUrl}}<br />
+        repo: {{VERCEL_GIT_REPO_SLUG}}<br />
+        baseUrl: {{VERCEL_URL}}<br />
+        commit: {{VERCEL_GIT_COMMIT_MESSAGE}}<br />
+        <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
+      </div>
+    </div>
+  </client-only>
   <client-only>
     <div>
     <account-modal />
@@ -310,7 +311,7 @@ export default {
       const VERCEL_ENV = this.$config.VERCEL_ENV || "local"
       const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
       const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
-      const VERCEL_GIT_COMMIT_MESSAGE = this.$config.VERCEL_GIT_COMMIT_MESSAGE || 'local'
+      const VERCEL_GIT_COMMIT_MESSAGE = this.$config.VERCEL_GIT_COMMIT_MESSAGE || '-'
       console.log('HEADER VERCEL_GIT_COMMIT_MESSAGE: ', VERCEL_GIT_COMMIT_MESSAGE);
       this.rootUrl = rootUrl;
       this.factoryContract = factoryContract;
