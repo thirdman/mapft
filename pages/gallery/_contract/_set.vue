@@ -136,6 +136,7 @@ export default {
     ...mapGetters({
       uiTheme: 'ui/uiTheme',
       uiMode: 'ui/uiMode',
+      devMode: 'ui/devMode',
       contrastMode: 'ui/contrastMode',
       walletAddress: 'ui/walletAddress',
       usedContracts: 'ui/usedContracts',
