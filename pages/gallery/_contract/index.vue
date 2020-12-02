@@ -3,7 +3,7 @@
     <Header />
     <section id="gallery" class>
       <div class="tertiary">
-        <div class="sidebarSection" v-if="1===2">
+        <div class="sidebarSection">
           <label>Gallery</label>
           <div class="">
             <span style="display: inline-block" class="galleryIdWrap">
