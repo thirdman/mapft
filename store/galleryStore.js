@@ -55,15 +55,18 @@ export const mutations = {
     const useOpenseaPort = false;
     console.log("get Items", params);
     console.log("get Items, contractAddress", state.galleryContractId);
-    const tempInfuraUrl =
-      "https://rinkeby.infura.io/v3/be139b65f221415ba0e1674f6bca9ff4";
+
+    // const tempInfuraUrl =
+    //   "https://rinkeby.infura.io/v3/be139b65f221415ba0e1674f6bca9ff4";
     const network = this.$config.network;
+    const infuraUrl = this.$config.infuraUrl;
+    console.log("GET ITEMS infiraurl", infuraUrl);
     const galleryOffset = state.offset;
     const pageSize = 30;
-    let infuraUrl =
-      network === "main"
-        ? this.$config.infuraUrlMain
-        : this.$config.infuraUrlRinkeby;
+    // let infuraUrl =
+    //   network === "main"
+    //     ? this.$config.infuraUrlMain
+    //     : this.$config.infuraUrlRinkeby;
     let openseaServer =
       network === "main"
         ? "https://api.opensea.io/"
