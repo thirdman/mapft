@@ -547,10 +547,11 @@ const mintThatShit = (event, state, rootContext) => {
   const doIt = true;
   const context = rootContext.$store;
   const network = context.$config.network;
-  const infuraUrl =
-    network === "main"
-      ? context.$config.infuraUrlMain
-      : context.$config.infuraUrlRinkeby;
+  const infuraUrl = context.$config.infuraUrl;
+  // const infuraUrl =
+  //   network === "main"
+  //     ? context.$config.infuraUrlMain
+  //     : context.$config.infuraUrlRinkeby;
 
   const useThumbnailDefault =
     state.fileType === "glb" ||
@@ -795,10 +796,11 @@ function getTransactionStatus(num, txHash, context) {
   const intervalTime = 1700;
   console.log("context", context);
   const network = context.$config.network;
-  const infuraUrl =
-    network === "main"
-      ? context.$config.infuraUrlMain
-      : context.$config.infuraUrlRinkeby;
+  const infuraUrl = context.$config.infuraUrl;
+  // const infuraUrl =
+  //   network === "main"
+  //     ? context.$config.infuraUrlMain
+  //     : context.$config.infuraUrlRinkeby;
 
   const newWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
   console.log("getTransactionStatus num txHash: ", num, txHash);

@@ -291,7 +291,6 @@ export default {
     }
     if (process.client) {
       this.walletCheck();
-      console.log('header: this.$config', this.$config)
       const rootUrl = this.$config.rootUrl;
       const requiredNetwork = this.$config.requiredNetwork;
       const factoryContract = this.$config.factoryContract;
@@ -309,6 +308,7 @@ export default {
       this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
       this.ENV_NETWORK = ENV_NETWORK
       this.VERCEL_URL = this.$config.VERCEL_URL || 'local'
+      
     }
   },
   created() {
