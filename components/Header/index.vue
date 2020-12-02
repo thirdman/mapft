@@ -4,7 +4,7 @@
     :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
   >
   <client-only>
-    <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><br />
+    <!-- <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><br />
     <div v-if="showDevInfo">
         Environment: {{VERCEL_ENV}}<br />
         rootUrl: {{rootUrl}}<br />
@@ -16,7 +16,7 @@
         commit: {{VERCEL_GIT_COMMIT_MESSAGE}}<br />
         <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
       </div>
-    </div>
+    </div> -->
     <div class="headerRow w3-row">
       <div class="brand w3-col s2">
         <span class="logoWrap" @click="goToHome()">
@@ -208,7 +208,9 @@
       </div>
     </div>
   </client-only>
+  
   <client-only>
+    <div>
     <account-modal />
     <div style="opacity: 0; visibility: 0; z-index: -1">
       {{ shallShowStatusModal ? "yes" : "" }}
@@ -217,6 +219,7 @@
     <cropper-modal />
     <chain-modal />
     <info-modal />
+    </div>
   </client-only>
   </header>
 </template>
