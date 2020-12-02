@@ -21,7 +21,7 @@
             </a>
           </div>
         </div>
-        <div v-if="usedContracts && usedContracts.length > 0" class="sidebarSection">
+        <div v-if="walletAddress && usedContracts && usedContracts.length > 0" class="sidebarSection">
           <label>Your Contracts</label>
           <GalleriesUserMenu :contracts="usedContracts" />
         </div>
@@ -137,6 +137,7 @@ export default {
       uiTheme: 'ui/uiTheme',
       uiMode: 'ui/uiMode',
       contrastMode: 'ui/contrastMode',
+      walletAddress: 'ui/walletAddress',
       usedContracts: 'ui/usedContracts',
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',

@@ -7,7 +7,7 @@
         <label>Galleries</label>
         <p class="small">A gallery displays the tokens created by a contract.
         </p>
-        <div v-if="usedContracts && usedContracts.length > 0">
+        <div v-if="walletAddress && usedContracts && usedContracts.length > 0 &&  1===2">
           <label>Your Contracts</label>
           <p class="small">Contracts you have created</p>
           <GalleriesUserMenu :contracts="usedContracts" mode="list" />
@@ -70,6 +70,7 @@ export default {
       contrastMode: "ui/contrastMode",
       activeContractId: "ui/activeContractId",
       usedContracts: "ui/usedContracts",
+      walletAddress: "ui/walletAddress",
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
       galleryStatus: 'galleryStore/galleryStatus',

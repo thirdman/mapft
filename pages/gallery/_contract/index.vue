@@ -2,7 +2,7 @@
   <div class="pageContainer">
     <Header />
     <section id="gallery" class>
-      <div class="tertiary" v-if="1 === 2">
+      <div class="tertiary">
         <div class="sidebarSection">
           <label>Gallery</label>
           <div class="">
@@ -25,7 +25,7 @@
             </a>
           </div>
         </div>
-        <div v-if="usedContracts && usedContracts.length > 0" class="sidebarSection">
+        <div v-if="walletAddress && usedContracts && usedContracts.length > 0 &&  1===2" class="sidebarSection">
           <label>Your Contracts</label>
           <GalleriesUserMenu :contracts="usedContracts" :contrastMode="contrastMode" />
         </div>
@@ -185,6 +185,7 @@ export default {
       uiMode: 'ui/uiMode',
       uiTheme: 'ui/uiTheme',
       contrastMode: 'ui/contrastMode',
+      walletAddress: 'ui/walletAddress',
       usedContracts: 'ui/usedContracts',
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
