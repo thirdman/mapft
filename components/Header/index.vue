@@ -13,7 +13,7 @@
         infuraUrl: {{infuraUrl}}<br />
         repo: {{VERCEL_GIT_REPO_SLUG}}<br />
         baseUrl: {{VERCEL_URL}}<br />
-        commit: {{VERCEL_GIT_COMMIT_MESSSAGE}}<br />
+        commit: {{VERCEL_GIT_COMMIT_MESSAGE}}<br />
         <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
       </div>
     </div>
@@ -306,7 +306,7 @@ export default {
       this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
       this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
       this.VERCEL_URL = this.$config.VERCEL_URL || 'local'
-      this.VERCEL_GIT_COMMIT_MESSSAGE = this.$config.VERCEL_GIT_COMMIT_MESSSAGE || 'local'
+      this.VERCEL_GIT_COMMIT_MESSAGE = this.$config.VERCEL_GIT_COMMIT_MESSAGE || 'local'
       
     }
   },
@@ -334,7 +334,7 @@ export default {
       VERCEL_ENV: "",
       VERCEL_GIT_REPO_SLUG: "",
       VERCEL_GIT_COMMIT_SHA: "",
-      VERCEL_GIT_COMMIT_MESSSAGE: "",
+      VERCEL_GIT_COMMIT_MESSAGE: "",
       VERCEL_URL: "",
       showIt: false,
     };

@@ -353,7 +353,6 @@ function recursiveFunction(num, txHash, context) {
 }
 
 function getReceipt(txHash, context) {
-  // const network = this.$config.network;
   const infuraUrl = context.$config.infuraUrl;
   const newWeb3 = new Web3.providers.HttpProvider(infuraUrl);
   // console.log('newWeb3', newWeb3);
