@@ -407,11 +407,12 @@ export default {
 
   async asyncData(context) {
     const { params, $axios } = context
-    const requiredNetwork = this.$config.requiredNetwork;
+    const requiredNetwork = context.$config.requiredNetwork;
+    console.log('requiredNetwork', requiredNetwork)
     const openseaUrl =
       requiredNetwork === "main"
-        ? "https://api.opensea.io/"
-        : "https://testnets-api.opensea.io/";
+        ? "https://api.opensea.io"
+        : "https://rinkeby-api.opensea.io";
     const options = {
       contractId: params.contract,
       tokenId: parseInt(params.id),
