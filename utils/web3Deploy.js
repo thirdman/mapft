@@ -138,6 +138,9 @@ const deployThatShit = (event, state, context) => {
   console.log("factoryContract", factoryContract);
   console.log("infuraUrlTest", infuraUrlTest);
   console.log("ENV", ENV);
+  console.log(
+    "is this is production the factory contract should be 0x677444A94D7ba549aCAB94dA8767E1145E001AaA"
+  );
 
   const doIt = true;
   // const infuraUrl =
