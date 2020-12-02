@@ -21,16 +21,19 @@
             </a>
           </div>
         </div>
-        <div v-if="walletAddress && usedContracts && usedContracts.length > 0 && 1===2" class="sidebarSection">
+        <div class="sidebarSection" v-if="1===2">
+        <div v-if="walletAddress && usedContracts && usedContracts.length > 0 " class="sidebarSection">
           <label>Your Contracts</label>
           <GalleriesUserMenu :contracts="usedContracts" />
         </div>
-
-        <div v-if="!usedContracts || usedContracts && usedContracts.length === 0  && 1===2">
+        </div>
+        <div class="sidebarSection" v-if="1===2">
+        <div v-if="!usedContracts || usedContracts && usedContracts.length === 0 ">
           <label>Featured Galleries</label>
           <GalleriesMenu :galleryContractId="galleryContractId" />
         </div>
         <div v-if="devMode"><Button @click="handleRefresh()">Refresh Assets</Button></div>
+        </div>
         <div class="sidebarSection">
           <label>Display</label>
           <div class="buttonGroup uiMode" :class="contrastMode" direction="column">
