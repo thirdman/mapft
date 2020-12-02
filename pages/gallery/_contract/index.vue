@@ -2,15 +2,15 @@
   <div class="pageContainer">
     <Header />
     <section id="gallery" class>
-      <div class="tertiary" v-if="1 === 2">
-        <div class="sidebarSection">
+      <div class="tertiary">
+        <div class="sidebarSection" v-if="1===2">
           <label>Gallery</label>
           <div class="">
-            <!-- <IconExternalLink :strokeClass="contrastMode" size="small" /> -->
-          <span style="display: inline-block" class="galleryIdWrap">
-            <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span></span>
+            <span style="display: inline-block" class="galleryIdWrap">
+            <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span>
+            </span>
             <Button @click="handleCopy" mode="hollow" v-if="!hasCopied"><IconCopy size="small"/></Button>
-          <input type="text" id="copy-string" :value="galleryContractId" style="visibility: hidden; position: absolute; z-index: -1">
+            <input type="text" id="copy-string" :value="galleryContractId" style="visibility: hidden; position: absolute; z-index: -1">
           </div>
         </div>
         <div class="sidebarSection">
@@ -25,16 +25,20 @@
             </a>
           </div>
         </div>
-        <div v-if="usedContracts && usedContracts.length > 0" class="sidebarSection">
+        <div v-if="walletAddress && usedContracts && usedContracts.length > 0 &&  1===2" class="sidebarSection">
           <label>Your Contracts</label>
           <GalleriesUserMenu :contracts="usedContracts" :contrastMode="contrastMode" />
         </div>
-
-        <div v-if="galleryStatus !== 'loading' && (!usedContracts || usedContracts && usedContracts.length === 0)">
-          <label>Featured Galleries</label>
-          <GalleriesMenu :galleryContractId="galleryContractId" />
+        <div class="sidebarSection" v-if="1===2">
+          <div v-if="galleryStatus !== 'loading' && (!usedContracts || usedContracts && usedContracts.length === 0)">
+            <label>Featured Galleries</label>
+            <GalleriesMenu :galleryContractId="galleryContractId" />
+          </div>
         </div>
-        <div v-if="devMode"><Button @click="handleRefresh()">Refresh Assets</Button></div>
+        <div class="sidebarSection"  v-if="1===2">
+          <div v-if="devMode"><Button @click="handleRefresh()">Refresh Assets</Button>
+          </div>
+        </div>
         <div class="sidebarSection">
           <label>Display</label>
           <div>
@@ -185,6 +189,7 @@ export default {
       uiMode: 'ui/uiMode',
       uiTheme: 'ui/uiTheme',
       contrastMode: 'ui/contrastMode',
+      walletAddress: 'ui/walletAddress',
       usedContracts: 'ui/usedContracts',
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
