@@ -6,7 +6,17 @@
       <div class="tertiary">
         <h2>Mint Tokens</h2>
         <div class="aside">
-          <p>Mint NFT tokens using your deployed custom contract.</p>
+          <!-- <p>Mint NFT tokens using your deployed custom contract.</p> -->
+          <p>
+            Use the contract id generated in the deploy form to create your own tokens.
+          </p>
+          <p>
+            File size is currently limited to 500Mb.
+          </p>
+          <p>
+            Batch minting (editions) occurs automatically up to the Total Editions entered.
+            A maximum of 10 tokens can be batch minted at one time.
+          </p>
         </div>
       </div>
       <div class="primary">
@@ -117,8 +127,8 @@
       </div>
       <div class="secondary">
         <div class="aside help">
-          <h6>Minting NFT Tokens</h6>
-          <p>
+          <!-- <h6>Minting NFT Tokens</h6> -->
+          <!-- <p>
             Use the contract id generated in the deploy form to create your own tokens.
           </p>
           <p>
@@ -127,7 +137,7 @@
           <p>
             Batch minting (editions) occurs automatically up to the Total Editions entered.
             A maximum of 10 tokens can be batch minted at one time.
-          </p>
+          </p> -->
         </div>
       </div>
     </section>
