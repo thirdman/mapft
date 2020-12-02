@@ -316,7 +316,7 @@ import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { humanFileSize } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
-// const BASE_URL = "http://localhost:3333"
+
 const BASE_URL = "https://infinft-flow.vercel.app"
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
