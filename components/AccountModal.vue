@@ -143,6 +143,9 @@
               <button mode="hollow" class="btn inative" @click="goToGallery(item)">
                 View
               </button>
+              <Button  mode="hollow" @click="goToContract(item)">
+                <IconSettings size="small" strokeClass="dark"/>
+              </Button>
             </div>
           </div>
         </div>
@@ -388,7 +391,7 @@ export default {
       const requiredNetwork = this.$config.requiredNetwork;
       // console.log('req', requiredNetwork);
       const etherScanUrl = requiredNetwork === 'main' ? 'https://etherscan.io' : 'https://rinkeby.etherscan.io'
-      const theUrl = `${etherScanUrl}/address/${contractId}/#writeContract`
+      const theUrl = `${etherScanUrl}/token/${contractId}#writeContract`
       console.log('theUrl', theUrl)
       if(window){
         window.open(theUrl, '_blank');
