@@ -407,14 +407,18 @@ export default {
 
   async asyncData(context) {
     const { params, $axios } = context
-    //  console.log('process.env', process.env)
+    const requiredNetwork = this.$config.requiredNetwork;
+    const openseaUrl =
+      requiredNetwork === "main"
+        ? "https://api.opensea.io/"
+        : "https://testnets-api.opensea.io/";
     const options = {
       contractId: params.contract,
       tokenId: parseInt(params.id),
     }
     
-    const theUrl = `https://rinkeby-api.opensea.io/api/v1/asset/${params.contract}/${params.id}/`
-    console.log('async options', options)
+    const theUrl = `${openseaUrl}/api/v1/asset/${params.contract}/${params.id}/`
+    // console.log('async options', options)
     console.log('async theUrl', theUrl)
     
     const { data } = await $axios.get(theUrl);
