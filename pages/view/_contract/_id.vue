@@ -428,7 +428,7 @@ export default {
     //   previewImage: `${BASE_URL}${ogImage}`,
     //   previewUrl:`${BASE_URL}${ogImage}`,
     
-    const rootUrl = this.$config.rootUrl;
+    const rootUrl = process.env.testUrl;
     console.log('ogimage', ogImage)
     console.log('vuew page rootUrl ', rooturl)
     console.log('calc ogimage url =  ', `${rootUrl}${ogImage}`)
