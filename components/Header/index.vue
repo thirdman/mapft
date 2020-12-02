@@ -14,7 +14,6 @@
         repo: {{VERCEL_GIT_REPO_SLUG}}<br />
         baseUrl: {{VERCEL_URL}}<br />
         commit: {{VERCEL_GIT_COMMIT_MESSSAGE}}<br />
-        network: {{ENV_NETWORK}}<br />
         <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
       </div>
     </div>
@@ -298,7 +297,7 @@ export default {
       const VERCEL_ENV = this.$config.VERCEL_ENV || "local"
       const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
       const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
-      const ENV_NETWORK = this.$config.network || "local"
+      
       this.rootUrl = rootUrl;
       this.factoryContract = factoryContract;
       this.requiredNetwork = requiredNetwork;
@@ -306,7 +305,6 @@ export default {
       this.VERCEL_ENV = VERCEL_ENV
       this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
       this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
-      this.ENV_NETWORK = ENV_NETWORK
       this.VERCEL_URL = this.$config.VERCEL_URL || 'local'
       this.VERCEL_GIT_COMMIT_MESSSAGE = this.$config.VERCEL_GIT_COMMIT_MESSSAGE || 'local'
       
@@ -338,7 +336,6 @@ export default {
       VERCEL_GIT_COMMIT_SHA: "",
       VERCEL_GIT_COMMIT_MESSSAGE: "",
       VERCEL_URL: "",
-      ENV_NETWORK: "",
       showIt: false,
     };
   },
@@ -436,7 +433,6 @@ export default {
           // Get web3 instance
           const provider = window.ethereum;
           const networkVersion = provider.networkVersion;
-          // const siteNetwork = this.$config.network;
           const userNetwork = this.walletNetwork;
           const requiredNetwork = this.$config.requiredNetwork;
 
@@ -451,8 +447,7 @@ export default {
     setNetwork(){
       const provider = window.ethereum;
       const networkVersion = provider.networkVersion;
-      const siteNetwork = this.$config.network;
-      // console.log('site network: ', siteNetwork)
+      const requiredNetwork = this.$config.requiredNetwork;
       setConnectedNetwork(networkVersion, this.setNetworkName)
       // console.log('this.networkVersion', this.walletNetwork)
       return this.walletNetwork;

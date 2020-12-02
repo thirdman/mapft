@@ -55,8 +55,6 @@ export const mutations = {
     const useOpenseaPort = false;
     console.log("get Items", params);
     console.log("get Items, contractAddress", state.galleryContractId);
-
-    const network = this.$config.network;
     const infuraUrl = this.$config.infuraUrl;
     const galleryOffset = state.offset;
     const pageSize = 30;
@@ -83,11 +81,12 @@ export const mutations = {
     //     : `https://testnets-api.opensea.io/api/v1/assets/?asset_contract_address=${state.galleryContractId}&limit=20&offset=${galleryOffset}&pageSize=${pageSize}`;
 
     this.commit("galleryStore/setGalleryStatus", "loading");
-    console.log("network", network);
+
     console.log("infuraUrl", infuraUrl);
     const provider = new Web3.providers.HttpProvider(infuraUrl);
     const seaport = new OpenSeaPort(provider, {
-      networkName: network === "rinkeby" ? Network.Rinkeby : Network.Main,
+      networkName:
+        requiredNetwork === "rinkeby" ? Network.Rinkeby : Network.Main,
     });
 
     // alert("stopping");
