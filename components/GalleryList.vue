@@ -50,6 +50,7 @@
         >
           <div class="galleryImageWrap">
             <GalleryImage 
+              v-if="item && (item.image_thumbnail_url || item.image_preview_url)"
               :src="
                 displayMode === 'compact'
                   ? item.image_thumbnail_url
