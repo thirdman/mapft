@@ -142,11 +142,11 @@ const deployThatShit = (event, state, context) => {
   console.log("DEPLOY: infuraUrl", infuraUrl);
 
   // TODO: move this into .env variables
-  const masterContractAddress =
-    network === "rinkeby"
-      ? CONSTANTS.InfinftContract.rinkeby
-      : CONSTANTS.InfinftContract.main;
-  console.log("masterContractAddress: ", masterContractAddress);
+  // const masterContractAddress =
+  //   network === "rinkeby"
+  //     ? CONSTANTS.InfinftContract.rinkeby
+  //     : CONSTANTS.InfinftContract.main;
+  // console.log("masterContractAddress: ", masterContractAddress);
   console.log("factoryContract: ", factoryContract);
   if (!network) {
     console.error("no wallet network set");
@@ -182,9 +182,7 @@ const deployThatShit = (event, state, context) => {
   if (doIt) {
     // TODO: move these into env variables
 
-    const contractDEPLOY = web3.eth
-      .contract(abiDEPLOY)
-      .at(masterContractAddress);
+    const contractDEPLOY = web3.eth.contract(abiDEPLOY).at(factoryContract);
     if (!contractDEPLOY) {
       console.error("no contractDEPLOY");
       return null;
