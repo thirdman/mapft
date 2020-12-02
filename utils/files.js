@@ -83,7 +83,7 @@ const processUpload = async (props) => {
     arweave: true,
     arweaveLegacy: false,
   };
-  console.log("upload settings: ", settings);
+
   const {
     setUploadStatus,
     personalSignFiles,

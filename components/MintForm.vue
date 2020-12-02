@@ -176,7 +176,7 @@
       <div class="formItem block" style="margin-top: .5rem;" v-if="devMode">
         <Button 
         size="small"
-        mode="secondary"
+        mode="hollow"
         @click="setShowThumbnailField(!showThumbnailField)">{{showThumbnailField ? "Hide" : 'Show'}} Thumbnail Upload
         </Button>
       </div>
@@ -949,7 +949,7 @@ export default {
       this.$store.commit("mintFormStore/setUploadStatus", statusData);
     },
     removeMetaField(id) {
-      console.log("removeMetaField id", id);
+      // console.log("removeMetaField id", id);
       this.$store.commit("mintFormStore/removeMetaField", id);
     },
     addMetaField(obj) {
@@ -960,12 +960,12 @@ export default {
       this.$store.commit("mintFormStore/addMetaField", obj);
     },
     setShowNewMetaField(newState) {
-      console.log("setting setShowNewMetaField to", newState);
+      // console.log("setting setShowNewMetaField to", newState);
       this.$store.commit("mintFormStore/setShowNewMetaField", newState);
     },
 
     setShowThumbnailField(newState) {
-      console.log("setting setShowThumbnailField to", newState);
+      // console.log("setting setShowThumbnailField to", newState);
       this.$store.commit("mintFormStore/setShowThumbnailField", newState);
       
     },
@@ -979,7 +979,6 @@ export default {
     renderImage(fileType, src, parent) {
       let read;
       const previewTypes = ["video", "threeD"];
-      console.log("file type is: ", fileType);
       switch (fileType) {
         case "glb":
           read = document.createElement("model-viewer");

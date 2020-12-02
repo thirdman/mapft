@@ -461,24 +461,18 @@ export default {
       this.$store.commit("mintFormStore/clearActiveContractId", value);
     },
     setWallet(value) {
-      console.log("value", value);
       this.$store.commit("ui/setWallet", value);
     },
     setWalletStatus(value) {
-      console.log("value", value);
       this.$store.commit("ui/setWalletStatus", value);
     },
     setProvider(value) {
-      console.log("value", value);
       this.$store.commit("ui/setWalletProvider", value);
     },
     setNetworkName(value) {
-      console.log("value", value);
       this.$store.commit("ui/setNetworkName", value);
     },
     handleNetworkWarning() {
-      console.log('this is the nnetwork warning');
-      console.log('this.$modal', this.$modal)
       this.$modal.show("info-modal");
     },
 

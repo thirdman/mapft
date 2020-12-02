@@ -122,7 +122,7 @@
             Use the contract id generated in the deploy form to create your own tokens.
           </p>
           <p>
-            File size is currently limited to 50Mb.
+            File size is currently limited to 500Mb.
           </p>
           <p>
             Batch minting (editions) occurs automatically up to the Total Editions entered.

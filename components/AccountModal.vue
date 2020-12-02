@@ -129,7 +129,7 @@
               <div class="removeItem">
                 <Button
                   @click="removeUsedContractId(index)"
-                  class="btn inactive"
+                  strokeClass="dark"
                 >
                   <IconDelete size="small" strokeClass="dark"/>
                 </Button>
@@ -363,7 +363,6 @@ export default {
       console.log("test");
     },
     setWallet(value) {
-      console.log("value", value);
       this.$store.commit("ui/setWallet", value);
     },
     handleDisconnect() {
