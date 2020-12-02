@@ -391,16 +391,17 @@ export default {
         contractId: asyncContractId,
       })
 
-      // if(this.$config){
-      //   console.log('this.$config', this.$config)
-      //   // const requiredNetwork = this.$config.requiredNetwork;
-      //   const requiredNetwork = 'main';
-      //   const openseaUrlBase = 
-      //   requiredNetwork === "main"
-      //     ? "https://opensea.io/assets/"
-      //     : "https://rinkeby.opensea.io/assets/";
-      //   this.openseaUrlBase = openseaUrlBase;
-      // }
+      if(this.$config){
+        // console.log('this.$config', this.$config)
+        // console.log('this.$config.requiredNetwork', this.$config.requiredNetwork)
+        const requiredNetwork = this.$config.requiredNetwork || 'main';
+        // const requiredNetwork = 'main';
+        const openseaUrlBase = 
+        requiredNetwork === "main"
+          ? "https://opensea.io/assets/"
+          : "https://rinkeby.opensea.io/assets/";
+        this.openseaUrlBase = openseaUrlBase;
+      }
     }
     if (process.server) {
       console.log('VIEW server mount. Context:', context)
