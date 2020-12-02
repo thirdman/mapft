@@ -13,7 +13,7 @@
         infuraUrl: {{infuraUrl}}<br />
         repo: {{VERCEL_GIT_REPO_SLUG}}<br />
         baseUrl: {{VERCEL_URL}}<br />
-        commit: {{VERCEL_GIT_COMMIT_SHA}}<br />
+        commit: {{VERCEL_GIT_COMMIT_MESSSAGE}}<br />
         network: {{ENV_NETWORK}}<br />
         <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
       </div>
@@ -308,6 +308,7 @@ export default {
       this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
       this.ENV_NETWORK = ENV_NETWORK
       this.VERCEL_URL = this.$config.VERCEL_URL || 'local'
+      this.VERCEL_GIT_COMMIT_MESSSAGE = this.$config.VERCEL_GIT_COMMIT_MESSSAGE || 'local'
       
     }
   },
@@ -335,6 +336,7 @@ export default {
       VERCEL_ENV: "",
       VERCEL_GIT_REPO_SLUG: "",
       VERCEL_GIT_COMMIT_SHA: "",
+      VERCEL_GIT_COMMIT_MESSSAGE: "",
       VERCEL_URL: "",
       ENV_NETWORK: "",
       showIt: false,
@@ -434,10 +436,11 @@ export default {
           // Get web3 instance
           const provider = window.ethereum;
           const networkVersion = provider.networkVersion;
-          const siteNetwork = this.$config.network;
+          // const siteNetwork = this.$config.network;
           const userNetwork = this.walletNetwork;
-          
-          if(siteNetwork !== userNetwork){
+          const requiredNetwork = this.$config.requiredNetwork;
+
+          if(requiredNetwork !== userNetwork){
             this.$nextTick(() => {
               this.handleNetworkWarning();
             })

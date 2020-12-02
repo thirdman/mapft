@@ -71,12 +71,12 @@ export const mutations = {
         ? "https://api.opensea.io/"
         : "https://testnets-api.opensea.io/";
     console.log("openseaUrl", openseaUrl);
-    let openseaServer =
-      network === "main"
-        ? "https://api.opensea.io/"
-        : "https://testnets-api.opensea.io/";
-    console.log("openseaServer", openseaServer);
-    const axiosUrl = `${openseaServer}api/v1/assets/?asset_contract_address=${state.galleryContractId}`; //&limit=20&offset=${galleryOffset}&pageSize=${pageSize}
+    // let openseaServer =
+    //   network === "main"
+    //     ? "https://api.opensea.io/"
+    //     : "https://testnets-api.opensea.io/";
+    // console.log("openseaServer", openseaServer);
+    const axiosUrl = `${openseaUrl}api/v1/assets/?asset_contract_address=${state.galleryContractId}`; //&limit=20&offset=${galleryOffset}&pageSize=${pageSize}
     // let axiosUrl =
     //   network === "main"
     //     ? `https://api.opensea.io/api/v1/assets/?asset_contract_address=${state.galleryContractId}&limit=20&offset=${galleryOffset}&pageSize=${pageSize}`

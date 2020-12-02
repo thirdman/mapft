@@ -74,7 +74,7 @@
       </div>
       <div v-if="deployTransactionId">
         <a :href="etherscanLink" class="etherscanLink" target="blank">
-          <IconExternalLink :strokeClass="contrastMode" />
+          <IconExternalLink :strokeClass="contrastMode" size="small" />
           View on etherscan
         </a>
       </div>
