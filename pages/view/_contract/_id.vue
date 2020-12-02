@@ -317,7 +317,7 @@ import { humanFileSize } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
 
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
-const rootUrl = process.env.testUrl;
+const rootUrl = process.env.tempUrl;
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
   name: 'ViewPageParams',
