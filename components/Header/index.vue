@@ -279,17 +279,27 @@ export default {
   // mixins: [myMixin],
   components: {
     // ExampleModal,
-  },
-
+  }, 
+  // created() {
+  //   if (process.client) {
+  //     // handle client side
+  //     // console.log('created client')
+  //     // console.log('this.$scopedSlots', this.$scopedSlots)
+  //     // console.log('MOUNTED modal refs', this.$modal)
+  //     // this.$modal.show("cropper-modal");
+  //   }
+  //   if (process.server) {
+  //     // const { req, res, beforeNuxtRender } = context
+  //     // console.log("created server");
+  //     // console.log('this.$scopedSlots', this.$scopedSlots)
+  //   }
+  // },
   mounted() {
     mounted: () => {
       this.$refs.modal.show();
     };
     if(this.$config){
-      console.log('this.$config is available')
-    }
-    if (process.client) {
-      this.walletCheck();
+      console.log('HEADER this.$config is available', this.$config)
       const rootUrl = this.$config.rootUrl;
       const requiredNetwork = this.$config.requiredNetwork;
       const factoryContract = this.$config.factoryContract;
@@ -297,7 +307,8 @@ export default {
       const VERCEL_ENV = this.$config.VERCEL_ENV || "local"
       const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
       const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
-      
+      const VERCEL_GIT_COMMIT_MESSAGE = this.$config.VERCEL_GIT_COMMIT_MESSAGE || 'local'
+      console.log('HEADER VERCEL_GIT_COMMIT_MESSAGE: ', VERCEL_GIT_COMMIT_MESSAGE);
       this.rootUrl = rootUrl;
       this.factoryContract = factoryContract;
       this.requiredNetwork = requiredNetwork;
@@ -305,25 +316,14 @@ export default {
       this.VERCEL_ENV = VERCEL_ENV
       this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
       this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
+      this.VERCEL_GIT_COMMIT_MESSAGE = VERCEL_GIT_COMMIT_MESSAGE
       this.VERCEL_URL = this.$config.VERCEL_URL || 'local'
-      this.VERCEL_GIT_COMMIT_MESSAGE = this.$config.VERCEL_GIT_COMMIT_MESSAGE || 'local'
-      
     }
-  },
-  created() {
     if (process.client) {
-      // handle client side
-      // console.log('created client')
-      // console.log('this.$scopedSlots', this.$scopedSlots)
-      // console.log('MOUNTED modal refs', this.$modal)
-      // this.$modal.show("cropper-modal");
-    }
-    if (process.server) {
-      // const { req, res, beforeNuxtRender } = context
-      // console.log("created server");
-      // console.log('this.$scopedSlots', this.$scopedSlots)
+      this.walletCheck();
     }
   },
+
   data() {
     return {
       showDevInfo: true,
