@@ -141,6 +141,9 @@ const deployThatShit = (event, state, context) => {
   console.log(
     "is this is production the factory contract should be 0x677444A94D7ba549aCAB94dA8767E1145E001AaA"
   );
+  console.log(
+    "is this is staging the factory contract should be 0x8af1b8e9dff9e2a9cfaf31766fcddb3e24040671"
+  );
 
   const doIt = true;
   // const infuraUrl =

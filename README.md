@@ -1,6 +1,10 @@
 # infinft-flow
-demo forked from flower-power
 
+- Vue/Nuxt served via vercel
+- push to staging branch and view at https://staging.infinft.app
+- push to production branch and view at https://infinft.app
+
+.env variables are set lcoally in the .env file, but served on brances via vercel enf variables.
 
 ## Project setup
 
@@ -8,10 +12,10 @@ demo forked from flower-power
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### For development
 
 ```
-npm run serve
+npm run dev
 ```
 
 ### Compiles and minifies for production
@@ -19,13 +23,3 @@ npm run serve
 ```
 npm run build
 ```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
