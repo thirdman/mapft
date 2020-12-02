@@ -70,7 +70,7 @@ export const mutations = {
       requiredNetwork === "main"
         ? "https://api.opensea.io/"
         : "https://testnets-api.opensea.io/";
-    console.log("openseaUrl", openseUrl);
+    console.log("openseaUrl", openseaUrl);
     let openseaServer =
       network === "main"
         ? "https://api.opensea.io/"
