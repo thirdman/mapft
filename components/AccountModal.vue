@@ -127,16 +127,22 @@
                 View
               </button>
               <div class="removeItem">
-                <button
+                <Button
                   @click="removeUsedContractId(index)"
                   class="btn inactive"
                 >
-                  <span>Remove</span>
-                </button>
+                  <IconDelete size="small" strokeClass="dark"/>
+                </Button>
               </div>
+              <Button  mode="hollow" @click="goToContract(item)">
+                <IconSettings size="small" strokeClass="dark"/>
+              </Button>
             </div>
             <div class="column col-33" v-if="item === activeContractId">
               <div class="activeTag">ACTIVE</div>
+              <button mode="hollow" class="btn inative" @click="goToGallery(item)">
+                View
+              </button>
             </div>
           </div>
         </div>
@@ -377,6 +383,20 @@ export default {
       this.$router.push({
         path: `/gallery/${contractId}`,
       })
+    },
+    goToContract(contractId){
+      const requiredNetwork = this.$config.requiredNetwork;
+      // console.log('req', requiredNetwork);
+      const etherScanUrl = requiredNetwork === 'main' ? 'https://etherscan.io' : 'https://rinkeby.etherscan.io'
+      const theUrl = `${etherScanUrl}/address/${contractId}/#writeContract`
+      console.log('theUrl', theUrl)
+      if(window){
+        window.open(theUrl, '_blank');
+
+      }
+      // this.$router.push({
+      //   path: `/gallery/${contractId}`,
+      // })
     }
   },
 };
