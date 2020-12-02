@@ -241,7 +241,7 @@ export default {
     },
     
     handleOpenFile(event, blah) {
-      console.log('open file $config: ', this.$config);
+      // console.log('open file $config: ', this.$config);
       const key = this.$config.ARWEAVE_WALLET_KEY
       const arweaveWalletId = this.$config.ARWEAVE_WALLET_ID;
       console.log(event, blah);

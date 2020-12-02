@@ -303,7 +303,7 @@ export default {
       this.$refs.modal.show();
     };
     if(this.$config){
-      console.log('HEADER this.$config is available', this.$config)
+      // console.log('HEADER this.$config is available', this.$config)
       const rootUrl = this.$config.rootUrl;
       const requiredNetwork = this.$config.requiredNetwork;
       const factoryContract = this.$config.factoryContract;
