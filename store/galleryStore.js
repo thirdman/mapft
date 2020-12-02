@@ -56,21 +56,26 @@ export const mutations = {
     console.log("get Items", params);
     console.log("get Items, contractAddress", state.galleryContractId);
 
-    // const tempInfuraUrl =
-    //   "https://rinkeby.infura.io/v3/be139b65f221415ba0e1674f6bca9ff4";
     const network = this.$config.network;
     const infuraUrl = this.$config.infuraUrl;
-    console.log("GET ITEMS infiraurl", infuraUrl);
     const galleryOffset = state.offset;
     const pageSize = 30;
     // let infuraUrl =
     //   network === "main"
     //     ? this.$config.infuraUrlMain
     //     : this.$config.infuraUrlRinkeby;
+    const requiredNetwork = this.$config.requiredNetwork;
+    console.log("required network: ", requiredNetwork);
+    const openseaUrl =
+      requiredNetwork === "main"
+        ? "https://api.opensea.io/"
+        : "https://testnets-api.opensea.io/";
+    console.log("openseaUrl", openseUrl);
     let openseaServer =
       network === "main"
         ? "https://api.opensea.io/"
         : "https://testnets-api.opensea.io/";
+    console.log("openseaServer", openseaServer);
     const axiosUrl = `${openseaServer}api/v1/assets/?asset_contract_address=${state.galleryContractId}`; //&limit=20&offset=${galleryOffset}&pageSize=${pageSize}
     // let axiosUrl =
     //   network === "main"

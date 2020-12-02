@@ -132,19 +132,12 @@ const deployThatShit = (event, state, context) => {
   const network = context.$config.network;
   const requiredNetwork = context.$config.requiredNetwork;
   const factoryContract = context.$config.factoryContract;
-  const infuraUrlTest = context.$config.infuraUrl;
   const ENV = context.$config.VERCEL_ENV || "development";
   console.log("requiredNetwork", requiredNetwork);
   console.log("factoryContract", factoryContract);
-  console.log("infuraUrlTest", infuraUrlTest);
   console.log("ENV", ENV);
 
   const doIt = true;
-  // const infuraUrl =
-  //   network === 'main'
-  //     ? context.$config.infuraUrlMain
-  //     : context.$config.infuraUrlRinkeby
-  // console.log('network: ', network)
   const infuraUrl = context.$config.infuraUrl;
   console.log("DEPLOY: infuraUrl", infuraUrl);
 
@@ -154,6 +147,7 @@ const deployThatShit = (event, state, context) => {
       ? CONSTANTS.InfinftContract.rinkeby
       : CONSTANTS.InfinftContract.main;
   console.log("masterContractAddress: ", masterContractAddress);
+  console.log("factoryContract: ", factoryContract);
   if (!network) {
     console.error("no wallet network set");
     context.commit(
@@ -285,9 +279,9 @@ function asyncThing(num, txHash, context) {
     console.error("no Web3");
     return null;
   }
-  const network = context.$config.network;
+  // const network = context.$config.network;
   const infuraUrl = context.$config.infuraUrl;
-  console.log("asyncThing: infuraUrl", infuraUrl);
+  // console.log("asyncThing: infuraUrl", infuraUrl);
   const newWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
   // console.log('asyncThing num txHash context: ', num, txHash, context)
   // console.log('newWeb3: ', newWeb3)
@@ -361,7 +355,7 @@ function recursiveFunction(num, txHash, context) {
 }
 
 function getReceipt(txHash, context) {
-  const network = this.$config.network;
+  // const network = this.$config.network;
   const infuraUrl = context.$config.infuraUrl;
   const newWeb3 = new Web3.providers.HttpProvider(infuraUrl);
   // console.log('newWeb3', newWeb3);

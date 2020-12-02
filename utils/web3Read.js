@@ -546,9 +546,6 @@ var abiART = [
 const readThatShit = async (params, context) => {
   const { tokenId, contractId } = params;
   const infuraUrl = context.$config.infuraUrl;
-  // const infuraUrl =
-  //   'https://rinkeby.infura.io/v3/46aac655d58d4fc198a43792d193fd70'
-  console.log("READ: infuraUrl", infuraUrl);
 
   // let fileTypeByID
   // let contractData = {}
@@ -707,11 +704,6 @@ const readThatShit = async (params, context) => {
 const readAdditionalMeta = async (params, context) => {
   const { tokenId, contractId } = params;
   const infuraUrl = context.$config.infuraUrl;
-  // const infuraUrl =
-  //   'https://rinkeby.infura.io/v3/46aac655d58d4fc198a43792d193fd70'
-  console.log("READ: infuraUrl", infuraUrl);
-  // const infuraUrl =
-  //   "https://rinkeby.infura.io/v3/46aac655d58d4fc198a43792d193fd70";
   if (!contractId) {
     return null;
   }
@@ -725,7 +717,7 @@ const readAdditionalMeta = async (params, context) => {
     .getAdditionalMetadata(tokenId)
     .call()
     .then((result1) => {
-      console.log("result1", result1);
+      // console.log("result1", result1);
       // let [idresult8, idresult7, idresult9] = result1
 
       // const additionalData = {
@@ -747,7 +739,7 @@ const readAdditionalMeta = async (params, context) => {
       console.error(err);
       throw err;
     });
-  console.log("additionalMetadata", additionalMetadata);
+  // console.log("additionalMetadata", additionalMetadata);
   return additionalMetadata;
 };
 
@@ -759,16 +751,7 @@ const readRoyaltyData = async (params, context) => {
   const { tokenId, contractId } = params;
   // let fileTypeByID
   // const network = context.$config.network
-  // const infuraUrl =
-  //   network === 'main'
-  //     ? context.$config.infuraUrlMain
-  //     : context.$config.infuraUrlRinkeby
   const infuraUrl = context.$config.infuraUrl;
-  // const infuraUrl =
-  //   'https://rinkeby.infura.io/v3/46aac655d58d4fc198a43792d193fd70'
-  console.log("READ: infuraUrl", infuraUrl);
-  // const infuraUrl =
-  //   "https://rinkeby.infura.io/v3/46aac655d58d4fc198a43792d193fd70";
 
   if (!contractId) {
     return null;
@@ -806,31 +789,19 @@ const readImageLink = (params, context) => {
   if (!contractId) {
     return null;
   }
-  // const network = context.$config.network
-  // const infuraUrl =
-  //   network === 'main'
-  //     ? context.$config.infuraUrlMain
-  //     : context.$config.infuraUrlRinkeby
-  // console.log('infuraUrl', infuraUrl)
-  // const infuraUrl =
-  //   "https://rinkeby.infura.io/v3/46aac655d58d4fc198a43792d193fd70";
   const infuraUrl = context.$config.infuraUrl;
-  // const infuraUrl =
-  //   'https://rinkeby.infura.io/v3/46aac655d58d4fc198a43792d193fd70'
-  console.log("READ: infuraUrl", infuraUrl);
-  console.log("context", context);
   if (!infuraUrl) {
     console.error("no infuraUrl: ", infuraUrl);
     throw "no infuraUrl";
   }
   const readWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
   const contract = new readWeb3.eth.Contract(abiART, contractId);
-  console.log("gettingimagelink tokenId: ", tokenId);
+  // console.log("gettingimagelink tokenId: ", tokenId);
   const imageLinkData = contract.methods
     .getImageLink(tokenId)
     .call()
     .then((resultLinks) => {
-      console.log("resultlinks: ", resultLinks);
+      // console.log("resultlinks: ", resultLinks);
       return resultLinks;
     })
     .catch((err) => {
@@ -842,7 +813,7 @@ const readImageLink = (params, context) => {
   //     console.log('link result', result)
   //   })
   //   .catch((error) => console.log(error))
-  console.log("here!", imageLinkData);
+  // console.log("here!", imageLinkData);
 
   return imageLinkData;
 };
