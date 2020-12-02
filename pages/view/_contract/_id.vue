@@ -1,7 +1,9 @@
 <template>
   <div class="pageContainer">
     <Header />
-
+<img :src="tempImg"/>
+<img :src="tempImg2"/>
+<img :src="tempImg3"/>
     <div id="searchRow" class="row searchRow" v-if="showSearch && 1===2">
       <div class="form entry">
         <div class="w3-row row">
@@ -318,18 +320,17 @@ import { humanFileSize } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
 
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
+const rootUrl = process.env.testUrl;
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
   name: 'ViewPageParams',
-  // data() {
-  //   return {
-  //     title: 'View NFT',
-  //     description: 'A NFT on InfiNFT',
-  //     // previewImage: `${BASE_URL}_nuxt/assets/images/default3d.png`
-  //     previewImage: `${BASE_URL}${ogImage}`,
-  //     previewUrl:`${BASE_URL}${ogImage}`,
-  //   }
-  // },
+  data() {
+    return {
+     tempImg: "",
+     tempImg2: "",
+     tempImg3: ""
+    }
+  },
   head() {
     return {
       title: this.title,
@@ -428,15 +429,21 @@ export default {
     //   previewImage: `${BASE_URL}${ogImage}`,
     //   previewUrl:`${BASE_URL}${ogImage}`,
     
-    const rootUrl = process.env.testUrl;
+    
     console.log('ogimage', ogImage)
-    console.log('vuew page rootUrl ', rooturl)
-    console.log('calc ogimage url =  ', `${rootUrl}${ogImage}`)
+    console.log('rootUrl', rootUrl)
+    console.log('BASE_URL', BASE_URL)
+    
+    console.log('calc ogimage url =  ', `${BASE_URL}/${ogImage}`)
+    console.log('calc ogimage url =  ', `${BASE_URL}/assets/images/default3d.png`)
     const tempData = {
       title: `InfiNFT: ${data.name}` || "InfiiNFT: View Token",
       description: data.description || "",
       previewImage: `${rootUrl}${ogImage}`,
-      previewUrl: data.image_preview_url
+      previewUrl: data.image_preview_url,
+      tempImg: `${BASE_URL}/${ogImage}`,
+      tempImg2: `${BASE_URL}/${ogImage}`,
+      tempImg3: `${BASE_URL}/assets/images/default3d.png`
     }
     console.log('async tempData', tempData)
     return tempData;
