@@ -20,6 +20,22 @@ export default {
     infuraUrlRinkeby: process.env.INFURA_URL_RINKEBY,
     infuraUrlMain: process.env.INFURA_URL_RINKEBY,
     baseUrl: process.env.BASE_URL,
+    rootUrl:
+      process.env.PROD_BASE_URL ||
+      process.env.STAGING_BASE_URL ||
+      process.env.DEV_BASE_URL,
+    factoryContract:
+      process.env.PROD_FACTORY_CONTRACT ||
+      process.env.STAGING_FACTORY_CONTRACT ||
+      process.env.DEV_FACTORY_CONTRACT,
+    requiredNetwork:
+      process.env.PROD_NETWORK ||
+      process.env.STAGING_NETWORK ||
+      process.env.DEV_NETWORK,
+    infuraUrl:
+      process.env.PROD_INFURA_URL ||
+      process.env.STAGING_INFURA_URL ||
+      process.env.DEV_INFURA_URL,
     ARWEAVE_WALLET_ID: process.env.ARWEAVE_WALLET_ID,
     ARWEAVE_WALLET_KEY: process.env.ARWEAVE_WALLET_KEY,
     VERCEL_ENV: process.env.VERCEL_ENV,

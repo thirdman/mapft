@@ -129,8 +129,16 @@ var abiDEPLOY = [
  */
 const deployThatShit = (event, state, context) => {
   console.log("DEPLOYTHTATSHIT context: ", context);
-  console.log("DEPLOYTHTATSHIT walletAddress: ", context);
   const network = context.$config.network;
+  const requiredNetwork = context.$config.requiredNetwork;
+  const factoryContract = context.$config.factoryContract;
+  const infuraUrlTest = context.$config.infuraUrl;
+  const ENV = context.$config.VERCEL_ENV || "development";
+  console.log("requiredNetwork", requiredNetwork);
+  console.log("factoryContract", factoryContract);
+  console.log("infuraUrlTest", infuraUrlTest);
+  console.log("ENV", ENV);
+
   const doIt = true;
   // const infuraUrl =
   //   network === 'main'

@@ -12,7 +12,8 @@
       <h4>Error</h4>
     </div>
     <div class="fieldset metaContent" v-if="deployStatus !== 'completed'" :class="`${(deployStatus === 'ready' || deployStatus === 'error') ? '' : 'hidden'}`">
-      <ValidationProvider rules="required|min:3">
+      <!-- <ValidationProvider rules="required|min:3"> -->
+        <ValidationProvider rules="required|min:3">
         <div
           class="formItem required"
           :class="classes"
@@ -290,10 +291,14 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ValidationProvider, extend } from "vee-validate";
 import { required, min, email } from "vee-validate/dist/rules";
 
-extend("min", {
-  // (value) => {
-  ...min,
-  // return value.length >= 3
+extend("min", (value) => {
+  // ...min,
+  // return true if it passes
+  if (value.length >= 3) {
+    return true;
+  }
+  // messge if it fails
+  return `Value must be greater than ${3}`
 });
 extend("required", {
   ...required,

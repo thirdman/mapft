@@ -4,12 +4,19 @@
     :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
   >
   <client-only>
-    <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong><br />
-      Environment: {{VERCEL_ENV}}<br />
-      repo: {{VERCEL_GIT_REPO_SLUG}}<br />
-      commit: {{VERCEL_GIT_COMMIT_SHA}}<br />
-      network: {{ENV_NETWORK}}<br />
-      <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
+    <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><br />
+    <div v-if="showDevInfo">
+        Environment: {{VERCEL_ENV}}<br />
+        rootUrl: {{rootUrl}}<br />
+        factoryContract: {{factoryContract}}<br />
+        requiredNetwork: {{requiredNetwork}}<br />
+        infuraUrl: {{infuraUrl}}<br />
+        repo: {{VERCEL_GIT_REPO_SLUG}}<br />
+        baseUrl: {{VERCEL_URL}}<br />
+        commit: {{VERCEL_GIT_COMMIT_SHA}}<br />
+        network: {{ENV_NETWORK}}<br />
+        <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
+      </div>
     </div>
     <div class="headerRow w3-row">
       <div class="brand w3-col s2">
@@ -224,7 +231,7 @@
 }
 .devModeFlag {
   position: fixed;
-  top: 0;
+  top: 2rem;
   left: 5rem;
   background: var(--danger-color, red);
   padding: 2px 1rem;
@@ -285,14 +292,23 @@ export default {
     if (process.client) {
       this.walletCheck();
       console.log('header: this.$config', this.$config)
+      const rootUrl = this.$config.rootUrl;
+      const requiredNetwork = this.$config.requiredNetwork;
+      const factoryContract = this.$config.factoryContract;
+      const infuraUrl = this.$config.infuraUrl;
       const VERCEL_ENV = this.$config.VERCEL_ENV || "local"
       const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
       const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
       const ENV_NETWORK = this.$config.network || "local"
+      this.rootUrl = rootUrl;
+      this.factoryContract = factoryContract;
+      this.requiredNetwork = requiredNetwork;
+      this.infuraUrl = infuraUrl;
       this.VERCEL_ENV = VERCEL_ENV
       this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
       this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
       this.ENV_NETWORK = ENV_NETWORK
+      this.VERCEL_URL = this.$config.VERCEL_URL || 'local'
     }
   },
   created() {
@@ -311,9 +327,15 @@ export default {
   },
   data() {
     return {
+      showDevInfo: true,
+      rootUrl: "",
+      factoryContract: "",
+      requiredNetwork: "",
+      infuraUrl: "",
       VERCEL_ENV: "",
       VERCEL_GIT_REPO_SLUG: "",
       VERCEL_GIT_COMMIT_SHA: "",
+      VERCEL_URL: "",
       ENV_NETWORK: "",
       showIt: false,
     };
@@ -395,6 +417,9 @@ export default {
       showStatusModal: "mintFormStore/showStatusModal",
       showCropperModal: "mintFormStore/showCropperModal",
     }),
+    toggleDevInfo(){
+      this.showDevInfo = !this.showDevInfo
+    },
     goToHome() {
       this.$router.push({
         path: `/`,
