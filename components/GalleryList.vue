@@ -50,6 +50,7 @@
         >
           <div class="galleryImageWrap">
             <GalleryImage 
+              v-if="item && (item.image_thumbnail_url || item.image_preview_url)"
               :src="
                 displayMode === 'compact'
                   ? item.image_thumbnail_url
@@ -291,7 +292,6 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
-const BASE_URL = "https://infinft-flow.vercel.app"
 export default {
   props: ['displayMode'],
   // data() {
@@ -301,6 +301,14 @@ export default {
   // },
   mounted(){
     console.log('this.galleryAssets', this.galleryAssets);
+    // if(this.$config){
+    //   this.baseUrl = this.$config.rootUrl;
+    // }
+  },
+  data(){
+    return {
+      baseUrl: ""
+    }
   },
   computed: {
     ...mapGetters({
@@ -402,14 +410,7 @@ export default {
 
       return allSets.sort((a, b) => b.count - a.count)
     },
-    
-    // getUrl(){
-    //   const myUrl = BASE_URL + this.$route.fullPath;
-    //   const tempUiMode = "minimal";
-    //   const tempUiTheme = "charcoal";
-    //   const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
-    //   return encodeURIComponent(fullUrl);
-    // },
+   
   },
 }
 </script>

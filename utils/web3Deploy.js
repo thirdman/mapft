@@ -132,11 +132,9 @@ const deployThatShit = (event, state, context) => {
   const network = context.$config.network;
   const requiredNetwork = context.$config.requiredNetwork;
   const factoryContract = context.$config.factoryContract;
-  const infuraUrlTest = context.$config.infuraUrl;
   const ENV = context.$config.VERCEL_ENV || "development";
   console.log("requiredNetwork", requiredNetwork);
   console.log("factoryContract", factoryContract);
-  console.log("infuraUrlTest", infuraUrlTest);
   console.log("ENV", ENV);
   console.log(
     "is this is production the factory contract should be 0x677444A94D7ba549aCAB94dA8767E1145E001AaA"
@@ -146,18 +144,16 @@ const deployThatShit = (event, state, context) => {
   );
 
   const doIt = true;
-  // const infuraUrl =
-  //   network === 'main'
-  //     ? context.$config.infuraUrlMain
-  //     : context.$config.infuraUrlRinkeby
-  // console.log('network: ', network)
+  const infuraUrl = context.$config.infuraUrl;
+  console.log("DEPLOY: infuraUrl", infuraUrl);
 
   // TODO: move this into .env variables
-  const masterContractAddress =
-    network === "rinkeby"
-      ? CONSTANTS.InfinftContract.rinkeby
-      : CONSTANTS.InfinftContract.main;
-  console.log("masterContractAddress: ", masterContractAddress);
+  // const masterContractAddress =
+  //   network === "rinkeby"
+  //     ? CONSTANTS.InfinftContract.rinkeby
+  //     : CONSTANTS.InfinftContract.main;
+  // console.log("masterContractAddress: ", masterContractAddress);
+  console.log("factoryContract: ", factoryContract);
   if (!network) {
     console.error("no wallet network set");
     context.commit(
@@ -192,9 +188,7 @@ const deployThatShit = (event, state, context) => {
   if (doIt) {
     // TODO: move these into env variables
 
-    const contractDEPLOY = web3.eth
-      .contract(abiDEPLOY)
-      .at(masterContractAddress);
+    const contractDEPLOY = web3.eth.contract(abiDEPLOY).at(factoryContract);
     if (!contractDEPLOY) {
       console.error("no contractDEPLOY");
       return null;
@@ -289,11 +283,9 @@ function asyncThing(num, txHash, context) {
     console.error("no Web3");
     return null;
   }
-  const network = context.$config.network;
-  const infuraUrl =
-    network === "main"
-      ? context.$config.infuraUrlMain
-      : context.$config.infuraUrlRinkeby;
+  // const network = context.$config.network;
+  const infuraUrl = context.$config.infuraUrl;
+  // console.log("asyncThing: infuraUrl", infuraUrl);
   const newWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
   // console.log('asyncThing num txHash context: ', num, txHash, context)
   // console.log('newWeb3: ', newWeb3)
@@ -367,11 +359,7 @@ function recursiveFunction(num, txHash, context) {
 }
 
 function getReceipt(txHash, context) {
-  const network = this.$config.network;
-  const infuraUrl =
-    network === "main"
-      ? this.$config.infuraUrlMain
-      : this.$config.infuraUrlRinkeby;
+  const infuraUrl = context.$config.infuraUrl;
   const newWeb3 = new Web3.providers.HttpProvider(infuraUrl);
   // console.log('newWeb3', newWeb3);
   //console.log('signedTx', txHash);

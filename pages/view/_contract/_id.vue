@@ -1,7 +1,6 @@
 <template>
   <div class="pageContainer">
     <Header />
-
     <div id="searchRow" class="row searchRow" v-if="showSearch && 1===2">
       <div class="form entry">
         <div class="w3-row row">
@@ -316,18 +315,17 @@ import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { humanFileSize } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
-// const BASE_URL = "http://localhost:3333"
-const BASE_URL = "https://infinft-flow.vercel.app"
+
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+const rootUrl = process.env.tempUrl;
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
   name: 'ViewPageParams',
   // data() {
   //   return {
-  //     title: 'View NFT',
-  //     description: 'A NFT on InfiNFT',
-  //     // previewImage: `${BASE_URL}_nuxt/assets/images/default3d.png`
-  //     previewImage: `${BASE_URL}${ogImage}`,
-  //     previewUrl:`${BASE_URL}${ogImage}`,
+  //    tempImg: "",
+  //    tempImg2: "",
+  //    tempImg3: ""
   //   }
   // },
   head() {
@@ -409,14 +407,18 @@ export default {
 
   async asyncData(context) {
     const { params, $axios } = context
-    //  console.log('process.env', process.env)
+    const requiredNetwork = this.$config.requiredNetwork;
+    const openseaUrl =
+      requiredNetwork === "main"
+        ? "https://api.opensea.io/"
+        : "https://testnets-api.opensea.io/";
     const options = {
       contractId: params.contract,
       tokenId: parseInt(params.id),
     }
     
-    const theUrl = `https://rinkeby-api.opensea.io/api/v1/asset/${params.contract}/${params.id}/`
-    console.log('async options', options)
+    const theUrl = `${openseaUrl}/api/v1/asset/${params.contract}/${params.id}/`
+    // console.log('async options', options)
     console.log('async theUrl', theUrl)
     
     const { data } = await $axios.get(theUrl);
@@ -427,12 +429,17 @@ export default {
     //   // previewImage: `${BASE_URL}_nuxt/assets/images/default3d.png`
     //   previewImage: `${BASE_URL}${ogImage}`,
     //   previewUrl:`${BASE_URL}${ogImage}`,
-
+    
+    
+    console.log('BASE_URL', BASE_URL)
+    
+    // console.log('calc ogimage url =  ', `${BASE_URL}/${ogImage}`)
+    // console.log('calc ogimage url =  ', `${BASE_URL}/assets/images/default3d.png`)
     const tempData = {
       title: `InfiNFT: ${data.name}` || "InfiiNFT: View Token",
       description: data.description || "",
       previewImage: `${BASE_URL}${ogImage}`,
-      previewUrl: data.image_preview_url
+      previewUrl: data.image_preview_url,
     }
     console.log('async tempData', tempData)
     return tempData;

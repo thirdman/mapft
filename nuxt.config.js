@@ -9,9 +9,7 @@ export default {
    ** See https://nuxtjs.org/api/configuration-target
    */
   target: "server",
-  env: {
-    // baseUrl: process.env.BASE_URL || 'http://localhost:3000'
-  },
+
   /**
    * this brings in environment variables to public and private nuxt references
    */
@@ -41,6 +39,14 @@ export default {
     VERCEL_ENV: process.env.VERCEL_ENV,
     VERCEL_GIT_REPO_SLUG: process.env.VERCEL_GIT_REPO_SLUG,
     VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+    VERCEL_GIT_COMMIT_MESSAGE: process.env.VERCEL_GIT_COMMIT_MESSAGE,
+  },
+  env: {
+    tempUrl:
+      process.env.PROD_BASE_URL ||
+      process.env.STAGING_BASE_URL ||
+      process.env.DEV_BASE_URL ||
+      "http://localhost:3333",
   },
   /*
    ** Headers of the page

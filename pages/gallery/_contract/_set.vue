@@ -113,7 +113,7 @@ export default {
     // console.log('this.$router', this.$router)
     //  console.log('this.$route.params.contract', this.$route.params.contract)
     // console.log('this.$store.ui', this.$store.state.ui.walletNetwork)
-    // console.log('this.$config.network', this.$config.network)
+    
     
     if (process.client) {
       console.log('this.$route.params.set: ', this.$route.params.set)

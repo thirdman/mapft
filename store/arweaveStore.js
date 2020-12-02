@@ -109,11 +109,13 @@ export const actions = {
       context && context.$config && context.$config.ARWEAVE_WALLET_KEY;
     if (envKey) {
       console.log(
-        "arUploadFile,  is it a string: ",
+        "arUploadFile, envKey is it a string: ",
         typeof envKey === "string"
       );
-      const keyAsObj = JSON.parse(envKey);
-      console.log("keyAsObj:", keyAsObj);
+      const isString = typeof envKey === "string";
+      // console.log("envKey:", envKey);
+      const keyAsObj = (envKey && isString && JSON.parse(envKey)) || envKey;
+      // console.log("keyAsObj:", keyAsObj);
     }
     console.groupEnd();
     // const key = this.$config.ARWEAVE_WALLET_KEY;

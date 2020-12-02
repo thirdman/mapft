@@ -46,12 +46,12 @@
               <DeployStatusInformation v-if="walletAddress && deployStatus === 'completed'" />
             </div>
           </transition>
-          <transition name="fade" appear>
+          <!-- <transition name="fade" appear>
             <div class="shadow contractStatusPanel" v-if="walletAddress && deployStatus === 'completed'">
               <div v-if="devMode">status: {{deployStatus}}</div>
               <DeployStatusInformation v-if="walletAddress && deployStatus === 'completed'" />
             </div>
-          </transition>
+          </transition> -->
           
           <transition name="fade" appear>
             <div v-if="walletAddress && !activeContractId" class="connectPanel shadow">

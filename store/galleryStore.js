@@ -55,31 +55,38 @@ export const mutations = {
     const useOpenseaPort = false;
     console.log("get Items", params);
     console.log("get Items, contractAddress", state.galleryContractId);
-    const tempInfuraUrl =
-      "https://rinkeby.infura.io/v3/be139b65f221415ba0e1674f6bca9ff4";
-    const network = this.$config.network;
+    const infuraUrl = this.$config.infuraUrl;
     const galleryOffset = state.offset;
     const pageSize = 30;
-    let infuraUrl =
-      network === "main"
-        ? this.$config.infuraUrlMain
-        : this.$config.infuraUrlRinkeby;
-    let openseaServer =
-      network === "main"
+    // let infuraUrl =
+    //   network === "main"
+    //     ? this.$config.infuraUrlMain
+    //     : this.$config.infuraUrlRinkeby;
+    const requiredNetwork = this.$config.requiredNetwork;
+    console.log("required network: ", requiredNetwork);
+    const openseaUrl =
+      requiredNetwork === "main"
         ? "https://api.opensea.io/"
         : "https://testnets-api.opensea.io/";
-    const axiosUrl = `${openseaServer}api/v1/assets/?asset_contract_address=${state.galleryContractId}`; //&limit=20&offset=${galleryOffset}&pageSize=${pageSize}
+    console.log("openseaUrl", openseaUrl);
+    // let openseaServer =
+    //   network === "main"
+    //     ? "https://api.opensea.io/"
+    //     : "https://testnets-api.opensea.io/";
+    // console.log("openseaServer", openseaServer);
+    const axiosUrl = `${openseaUrl}api/v1/assets/?asset_contract_address=${state.galleryContractId}`; //&limit=20&offset=${galleryOffset}&pageSize=${pageSize}
     // let axiosUrl =
     //   network === "main"
     //     ? `https://api.opensea.io/api/v1/assets/?asset_contract_address=${state.galleryContractId}&limit=20&offset=${galleryOffset}&pageSize=${pageSize}`
     //     : `https://testnets-api.opensea.io/api/v1/assets/?asset_contract_address=${state.galleryContractId}&limit=20&offset=${galleryOffset}&pageSize=${pageSize}`;
 
     this.commit("galleryStore/setGalleryStatus", "loading");
-    console.log("network", network);
+
     console.log("infuraUrl", infuraUrl);
     const provider = new Web3.providers.HttpProvider(infuraUrl);
     const seaport = new OpenSeaPort(provider, {
-      networkName: network === "rinkeby" ? Network.Rinkeby : Network.Main,
+      networkName:
+        requiredNetwork === "rinkeby" ? Network.Rinkeby : Network.Main,
     });
 
     // alert("stopping");

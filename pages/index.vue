@@ -151,13 +151,22 @@
 
 <script>
 import { mapGetters } from 'vuex'
-const BASE_URL = "https://infinft-flow.vercel.app"
+const BASE_URL = "https://infinft.app"
 export default {
   name: 'ViewPageParams',
   data() {
     return {
+       baseUrl: "",
       previewUrl: `/images/preview.jpg`,
     }
+  },
+  created(){
+    this.baseUrl = this.$config.rootUrl
+    // console.log('this.$config', this.$config.rootUrl);
+    // console.log('this', this)
+    // console.log('this.router', this.$router)
+    // console.log('this.router.base', this.$router.base)
+    console.log('process', process.env.tempUrl)
   },
   head: {
     title: 'InfiNFT',
@@ -169,10 +178,10 @@ export default {
           hid: "og:image",
           property: "og:image",
           // content: this.previewUrl,
-          content: `${BASE_URL}/images/preview.jpg`
+          content: `${process.env.tempUrl}/images/preview.jpg`
+          // content: `~/assets/images/preview.jpg`
         },
     ],
-    
   },
   computed: {
     ...mapGetters({
