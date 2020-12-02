@@ -317,7 +317,7 @@ import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { humanFileSize } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
 
-const BASE_URL = "https://infinft-flow.vercel.app"
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
   name: 'ViewPageParams',
@@ -427,11 +427,15 @@ export default {
     //   // previewImage: `${BASE_URL}_nuxt/assets/images/default3d.png`
     //   previewImage: `${BASE_URL}${ogImage}`,
     //   previewUrl:`${BASE_URL}${ogImage}`,
-
+    
+    const rootUrl = this.$config.rootUrl;
+    console.log('ogimage', ogImage)
+    console.log('vuew page rootUrl ', rooturl)
+    console.log('calc ogimage url =  ', `${rootUrl}${ogImage}`)
     const tempData = {
       title: `InfiNFT: ${data.name}` || "InfiiNFT: View Token",
       description: data.description || "",
-      previewImage: `${BASE_URL}${ogImage}`,
+      previewImage: `${rootUrl}${ogImage}`,
       previewUrl: data.image_preview_url
     }
     console.log('async tempData', tempData)

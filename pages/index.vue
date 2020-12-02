@@ -178,8 +178,8 @@ export default {
           hid: "og:image",
           property: "og:image",
           // content: this.previewUrl,
-          // content: `${process.env.tempUrl}/images/preview.jpg`
-          content: `~/assets/images/preview.jpg`
+          content: `${process.env.tempUrl}/images/preview.jpg`
+          // content: `~/assets/images/preview.jpg`
         },
     ],
   },
