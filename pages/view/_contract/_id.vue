@@ -246,7 +246,7 @@
                 <div id="link0" class="w3-small">
                   <a
                     :href="
-                      'https://rinkeby.opensea.io/assets/' +
+                      this.openseaUrlBase +
                       contractId +
                       '/' +
                       tokenId
@@ -318,16 +318,15 @@ import ogImage from '~/assets/images/default3d.png';
 
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
 const rootUrl = process.env.tempUrl;
+
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
   name: 'ViewPageParams',
-  // data() {
-  //   return {
-  //    tempImg: "",
-  //    tempImg2: "",
-  //    tempImg3: ""
-  //   }
-  // },
+  data() {
+    return {
+     openseaUrlBase: "https://opensea.io/assets/"
+    }
+  },
   head() {
     return {
       title: this.title,
@@ -391,6 +390,17 @@ export default {
         tokenId: asyncTokenId,
         contractId: asyncContractId,
       })
+
+      // if(this.$config){
+      //   console.log('this.$config', this.$config)
+      //   // const requiredNetwork = this.$config.requiredNetwork;
+      //   const requiredNetwork = 'main';
+      //   const openseaUrlBase = 
+      //   requiredNetwork === "main"
+      //     ? "https://opensea.io/assets/"
+      //     : "https://rinkeby.opensea.io/assets/";
+      //   this.openseaUrlBase = openseaUrlBase;
+      // }
     }
     if (process.server) {
       console.log('VIEW server mount. Context:', context)
