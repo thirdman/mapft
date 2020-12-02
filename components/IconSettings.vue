@@ -2,7 +2,7 @@
   <svg
     xmlns="http://www.w3.org/2000/svg"
     class="icon icon-tabler icon-tabler-settings"
-    :class="strokeClass"
+    :class="`${strokeClass} ${size}`"
     width="24"
     height="24"
     viewBox="0 0 24 24"
@@ -36,6 +36,6 @@
 </style>
 <script>
 export default {
-  props: ['strokeClass'],
+  props: ['strokeClass', 'size'],
 }
 </script>
