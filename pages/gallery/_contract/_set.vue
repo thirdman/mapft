@@ -21,12 +21,12 @@
             </a>
           </div>
         </div>
-        <div v-if="walletAddress && usedContracts && usedContracts.length > 0" class="sidebarSection">
+        <div v-if="walletAddress && usedContracts && usedContracts.length > 0 && 1===2" class="sidebarSection">
           <label>Your Contracts</label>
           <GalleriesUserMenu :contracts="usedContracts" />
         </div>
 
-        <div v-if="!usedContracts || usedContracts && usedContracts.length === 0">
+        <div v-if="!usedContracts || usedContracts && usedContracts.length === 0  && 1===2">
           <label>Featured Galleries</label>
           <GalleriesMenu :galleryContractId="galleryContractId" />
         </div>
