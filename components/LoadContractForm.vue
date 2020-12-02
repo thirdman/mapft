@@ -155,8 +155,8 @@ export default {
     }),
 
     showEditContract() {
-      console.log('activeContractId: ', this.activeContractId)
-      console.log('showEditContract: ', this.$store.state.mintFormStore.showEditContract)
+      // console.log('activeContractId: ', this.activeContractId)
+      // console.log('showEditContract: ', this.$store.state.mintFormStore.showEditContract)
       if (this.activeContractId) {
         // console.log('no active contract Id, should NOT show')
         return false;
