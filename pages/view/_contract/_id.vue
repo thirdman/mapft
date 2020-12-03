@@ -591,13 +591,13 @@ export default {
       this.showExpandedDescription = newState
     },
     truncate(text, length, clamp){
-      console.log('truncate: ', {text, length, clamp});
+      // console.log('truncate: ', {text, length, clamp});
       clamp = clamp || '...';
       var node = document.createElement('div');
       node.innerHTML = text;
       var content = node.textContent;
       const returnContent = content.length > length ? content.slice(0, length) + clamp : content;
-      console.log('truncate: returncontent:', returnContent)
+      // console.log('truncate: returncontent:', returnContent)
       return returnContent;
     }
 

@@ -71,8 +71,8 @@
               </span>
               {{ item.name }}
             </label>
-            <p v-if="displayMode !== 'compact'" class="itemDescription">
-              {{ item.description }}
+            <p v-if="item.description && displayMode !== 'compact'" class="itemDescription">
+              {{ truncate(item.description, 200, "..." )}}
             </p>
             <div class="itemTags" v-if="displayMode !== 'compact'">
               <Trait
@@ -294,6 +294,8 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+// import { truncate } from '../utils/misc'
+
 export default {
   props: ['displayMode'],
   // data() {
@@ -412,6 +414,15 @@ export default {
 
       return allSets.sort((a, b) => b.count - a.count)
     },
+    truncate(text, length, clamp){
+      // console.log('truncate: ', {text, length, clamp});
+      clamp = clamp || '...';
+      var node = document.createElement('div');
+      node.innerHTML = text;
+      var content = node.textContent;
+      const returnContent = content.length > length ? content.slice(0, length) + clamp : content;
+      return returnContent;
+    }
    
   },
 }
