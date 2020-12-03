@@ -12,6 +12,17 @@
             <Button @click="handleCopy" mode="hollow" v-if="!hasCopied"><IconCopy size="small"/></Button>
             <input type="text" id="copy-string" :value="galleryContractId" style="visibility: hidden; position: absolute; z-index: -1">
           </div>
+          <div v-if="isLoadingMeta">
+            <Loading fillClass="light" />
+          </div>
+          <div v-if="galleryMeta">
+            <label>Name</label>
+            <div class="small">{{galleryMeta.name}}</div>
+            <label>Symbol</label>
+            <div class="small symbol">{{galleryMeta.symbol}}</div>
+            <label>Total</label>
+            <div class="small">{{galleryMeta.count}}</div>
+          </div>
         </div>
         <div class="sidebarSection">
           <label>Share</label>
@@ -24,6 +35,9 @@
                 <IconExternalLink :strokeClass="contrastMode" size="small" /> Twitter
             </a>
           </div>
+        </div>
+        <div v-if="galleryAssets">
+          <Button @click="getGalleryMeta(galleryContractId)">Get Meta</Button>
         </div>
         <div v-if="walletAddress && usedContracts && usedContracts.length > 0 &&  1===2" class="sidebarSection">
           <label>Your Contracts</label>
@@ -176,10 +190,13 @@ export default {
       })
     }
   },
+  
   data(){
     return {
       copyString: "",
       hasCopied: false,
+      galleryMeta: null,
+      isLoadingMeta: false,
     }
   },
   computed: {
@@ -206,6 +223,9 @@ export default {
     ...mapMutations({
       getItems: 'galleryStore/getItems',
       setGalleryDisplayMode: 'galleryStore/setGalleryDisplayMode',
+    }),
+    ...mapActions({
+      handleGalleryMeta: 'ui/handleGalleryMeta',
     }),
     handleRefresh() {
       console.log('refresh');
@@ -242,13 +262,33 @@ export default {
       /* unselect the range */
       stringToCopy.setAttribute('type', 'hidden')
       window.getSelection().removeAllRanges()
-      
     },
+    async getGalleryMeta(contractId, source){
+      const galleryArray = this.galleryAssets;
+      // const lastId = galleryArray.length ? galleryArray.length : 1;
+      const lastId = galleryArray[0] && galleryArray[0].token_id || 1;
+      console.log('getGalleryMeta', lastId)
+      const params = {
+        contractId: contractId,
+        tokenId: lastId
+      }
+      console.log('params: ', params)
+      this.isLoadingMeta = true
+      const metaData = await this.handleGalleryMeta(params).then(result => {
+        return result
+      }).catch(error => conole.error(error));
+      console.log('metaData: ', metaData);
+      this.galleryMeta = metaData
+      this.isLoadingMeta = false;
+    }
   },
 }
 </script>
 
 <style lang="scss">
+.symbol{
+  text-transform: uppercase;
+}
 .linkRow {
   padding: 20px;
   min-height: 100px;

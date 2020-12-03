@@ -2,6 +2,7 @@
 import { getField, updateField } from "vuex-map-fields";
 import {
   readThatShit,
+  readThatMeta,
   readAdditionalMeta,
   readImageLink,
 } from "../utils/web3Read";
@@ -333,7 +334,15 @@ export const actions = {
   doSearch() {
     console.log("doSearch");
   },
-
+  async handleGalleryMeta(dispatch, params) {
+    console.log("handleGalleryMeta", params);
+    const metaData = await readThatMeta(params, this)
+      .then((result) => {
+        return result;
+      })
+      .catch((error) => console.error(error));
+    return metaData;
+  },
   async handleSearch(dispatch, commit) {
     console.log("handleSearch");
     const { state } = dispatch;

@@ -542,6 +542,80 @@ var abiART = [
     type: "function",
   },
 ];
+const readThatMeta = async (params, context) => {
+  const { contractId, tokenId } = params;
+  const infuraUrl = context.$config.infuraUrl;
+  if (!infuraUrl) {
+    console.error("no infuraurl");
+    return null;
+  }
+  if (!contractId) {
+    return null;
+  }
+  if (!Web3) {
+    return null;
+  }
+  const readWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
+  const contract = new readWeb3.eth.Contract(abiART, contractId);
+
+  const getName = contract.methods
+    .name()
+    .call()
+    .then((result) => {
+      console.log("result is", result);
+      return result;
+    })
+    .catch((err) => {
+      console.error("getName error", err);
+      throw err;
+    });
+  const getSymbol = contract.methods
+    .symbol()
+    .call()
+    .then((result) => {
+      console.log("getSymbol result is", result);
+      return result;
+    })
+    .catch((err) => {
+      console.error("getSymbol error", err);
+      throw err;
+    });
+  const getTotalTokens = contract.methods
+    .totalArtPieces()
+    .call()
+    .then((result) => {
+      console.log("getTotalTokens result is", result);
+      return result;
+    })
+    .catch((err) => {
+      console.error("getTotalTokens error", err);
+      throw err;
+    });
+
+  const promiseArray = [getName, getSymbol, getTotalTokens];
+  console.log("readMeta: promiseArray", promiseArray);
+  const allMeta = await Promise.allSettled(promiseArray)
+    .then((values) => {
+      console.log("READ: values:", values);
+      const data = {
+        name: values[0].value,
+        symbol: values[1].value,
+        count: values[2].value,
+        // ...(values[1] && values[1].value),
+        // ...(values[2] && values[2].value),
+        // ownerAddress: values[3] && values[3].value,
+        // ...(values[4] && values[4].value),
+      };
+      console.log("read: all data", data);
+      return data;
+    })
+    .catch((error) => {
+      console.error(error);
+      return error;
+    });
+
+  return allMeta;
+};
 
 const readThatShit = async (params, context) => {
   const { tokenId, contractId } = params;
@@ -939,4 +1013,10 @@ const readImageLink = (params, context) => {
 //   // output.appendChild(read)
 // }
 
-export { readThatShit, readAdditionalMeta, readRoyaltyData, readImageLink };
+export {
+  readThatShit,
+  readThatMeta,
+  readAdditionalMeta,
+  readRoyaltyData,
+  readImageLink,
+};
