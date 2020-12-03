@@ -96,13 +96,20 @@
           <div class="metaItem">
             <label>Description</label>
             <div id="metadata4" class="aside">
-              <p>
+              <!-- <p>
                 {{
                 (viewData && viewData.description) ||
                 tempViewItem.description ||
                 ''
                 }}
-              </p>
+              </p> -->
+              <div v-if="!viewData && tempViewItem.description">
+                {{showExpandedDescription ? tempViewItem.description : truncate(tempViewItem.description, 4, '...' )}}
+              </div>
+              <div v-if="viewData && viewData.description">
+                {{showExpandedDescription ? viewData.description : truncate(viewData.description, 4, '...' )}}
+              </div>
+              <Button v-if="viewData && viewData.description || tempViewItem.description" mode="hollow" @click="setExpandDescription(!showExpandedDescription)">{{showExpandedDescription ? "Show less" : "Show more"}}</Button>
               <div v-if="viewStatus === 'loading' && !viewData" class="loadingPlaceholder">
                 <Loading text="lo" size="small" :fillClass="contrastMode" />
               </div>
@@ -231,7 +238,11 @@
               <div class="formItem">
                 <label>File Type</label>
                 <div class="small" id="metadata7">{{ viewData.fileType }}</div>
-                <div class="small" >{{ getHumanSize() }}</div>
+              
+              </div>
+              <div class="formItem" v-if="devMode">
+                <label>Size</label>
+                <div class="small" >Devmode: {{ getHumanSize() }}</div>
               </div>
               <div class="formItem">
                 <label>Exhibition</label>
@@ -259,13 +270,9 @@
                   ><IconExternalLink size="small" />View on Opensea</a>
                 </div>
               </div>
-              <div class="formItem">
+              <div class="formItem" v-if="1===3">
                 <label>Etherscan</label>
-                {{this.etherscanUrlBase }} |
-                {{this.etherscanUrlBase +
-                      'token/' +
-                      contractId +
-                      '#readContract'}}
+                
                 <div class="w3-small">
                   <a
                     :href="
@@ -348,7 +355,8 @@ export default {
   data() {
     return {
      openseaUrlBase: "https://opensea.io/assets/",
-     etherscanUrlBase: "https://etherscan.io/"
+     etherscanUrlBase: "https://etherscan.io/",
+     showExpandedDescription: false,
     }
   },
   head() {
@@ -421,9 +429,9 @@ export default {
         requiredNetwork === "main"
           ? "https://opensea.io/assets/"
           : "https://rinkeby.opensea.io/assets/";
-        const etherScanUrlBase = requiredNetwork === 'main' ? 'https://etherscan.io/' : 'https://rinkeby.etherscan.io/'
+        // const etherScanUrlBase = requiredNetwork === 'main' ? 'https://etherscan.io/' : 'https://rinkeby.etherscan.io/'
         this.openseaUrlBase = openseaUrlBase;
-        this.etherScanUrlBase = etherScanUrlBase;
+        // this.etherScanUrlBase = etherScanUrlBase;
       }
     }
     if (process.server) {
@@ -500,6 +508,7 @@ export default {
   computed: {
     ...mapGetters({
       uiMode: 'ui/uiMode',
+      devMode: 'ui/devMode',
       uiTheme: 'ui/uiTheme',
       contrastMode: 'ui/contrastMode',
       showSearch: 'ui/showSearch',
@@ -556,6 +565,7 @@ export default {
       $nuxt._router.push(`/view/${this.contractId}/${newTokenId}`)
     },
     getHumanSize(size){
+      console.log('size', size);
       return "23"
     },
     getUrl(){
@@ -565,6 +575,20 @@ export default {
       const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
+    setExpandDescription(newState){
+      this.showExpandedDescription = newState
+    },
+    truncate(text, length, clamp){
+      console.log('truncate: ', {text, length, clamp});
+      clamp = clamp || '...';
+      var node = document.createElement('div');
+      node.innerHTML = text;
+      var content = node.textContent;
+      const returnContent = content.length > length ? content.slice(0, length) + clamp : content;
+      console.log('truncate: returncontent:', returnContent)
+      return returnContent;
+    }
+
      
   },
   actions: {
