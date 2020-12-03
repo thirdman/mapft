@@ -96,14 +96,20 @@
           <div class="metaItem">
             <label>Description</label>
             <div id="metadata4" class="aside">
-              <p>
+              <!-- <p>
                 {{
                 (viewData && viewData.description) ||
                 tempViewItem.description ||
                 ''
                 }}
-                {{viewData && viewData.description && truncate(viewData.description, 10, '...' )}}
-              </p>
+              </p> -->
+              <div v-if="!viewData && tempViewItem.description">
+                {{showExpandedDescription ? tempViewItem.description : truncate(tempViewItem.description, 4, '...' )}}
+              </div>
+              <div v-if="viewData && viewData.description">
+                {{showExpandedDescription ? viewData.description : truncate(viewData.description, 4, '...' )}}
+              </div>
+              <Button v-if="viewData && viewData.description || tempViewItem.description" mode="hollow" @click="setExpandDescription(!showExpandedDescription)">{{showExpandedDescription ? "Show less" : "Show more"}}</Button>
               <div v-if="viewStatus === 'loading' && !viewData" class="loadingPlaceholder">
                 <Loading text="lo" size="small" :fillClass="contrastMode" />
               </div>
@@ -345,7 +351,8 @@ export default {
   data() {
     return {
      openseaUrlBase: "https://opensea.io/assets/",
-     etherscanUrlBase: "https://etherscan.io/"
+     etherscanUrlBase: "https://etherscan.io/",
+     showExpandedDescription: false,
     }
   },
   head() {
@@ -562,12 +569,18 @@ export default {
       const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
+    setExpandDescription(newState){
+      this.showExpandedDescription = newState
+    },
     truncate(text, length, clamp){
+      console.log('truncate: ', {text, length, clamp});
       clamp = clamp || '...';
       var node = document.createElement('div');
       node.innerHTML = text;
       var content = node.textContent;
-      return content.length > length ? content.slice(0, length) + clamp : content;
+      const returnContent = content.length > length ? content.slice(0, length) + clamp : content;
+      console.log('truncate: returncontent:', returnContent)
+      return returnContent;
     }
 
      
