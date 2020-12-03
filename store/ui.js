@@ -39,6 +39,7 @@ export const state = () => ({
   showSearch: false,
   searchParams: {},
   usedContracts: [],
+  usedContractsObj: null,
   devMode: false,
   hasVerticalGridLines: false,
   statusModalMode: "fixed",
@@ -86,6 +87,7 @@ export const getters = {
   activeContractName: (state) => state.activeContractName,
   activeContractSymbol: (state) => state.activeContractSymbol,
   usedContracts: (state) => state.usedContracts,
+  usedContractsObj: (state) => state.usedContractsObj,
   tempViewItem: (state) => state.tempViewItem,
   searchData: (state) => {
     return {
@@ -205,6 +207,16 @@ export const mutations = {
       state.usedContracts = usedContractsArray;
     }
     console.log("ui state is now", state);
+  },
+  setUsedContractsObj(state, value) {
+    const usedContractsArray = state.usedContracts || [];
+    console.log("usedContractsArray: ", usedContractsArray);
+    const asObjects = usedContractsArray.map((contract) => {
+      const obj = { id: contract, name: "nope", symbol: "NOPE" };
+      return obj;
+    });
+    console.log("asObjects", asObjects);
+    state.usedContractsObj = asObjects;
   },
   clearActiveContractId(state, value) {
     state.activeContractId = null;

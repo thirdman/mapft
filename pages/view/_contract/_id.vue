@@ -104,12 +104,12 @@
                 }}
               </p> -->
               <div v-if="!viewData && tempViewItem.description">
-                {{showExpandedDescription ? tempViewItem.description : truncate(tempViewItem.description, 4, '...' )}}
+                {{showExpandedDescription ? tempViewItem.description : truncate(tempViewItem.description, 300, '...' )}}
               </div>
               <div v-if="viewData && viewData.description">
-                {{showExpandedDescription ? viewData.description : truncate(viewData.description, 4, '...' )}}
+                {{showExpandedDescription ? viewData.description : truncate(viewData.description, 300, '...' )}}
               </div>
-              <Button v-if="viewData && viewData.description || tempViewItem.description" mode="hollow" @click="setExpandDescription(!showExpandedDescription)">{{showExpandedDescription ? "Show less" : "Show more"}}</Button>
+              <Button v-if="viewData && viewData.description && viewData.description > 300 || tempViewItem.description && tempViewItem.description > 300" mode="hollow" @click="setExpandDescription(!showExpandedDescription)">{{showExpandedDescription ? "Show less" : "Show more"}}</Button>
               <div v-if="viewStatus === 'loading' && !viewData" class="loadingPlaceholder">
                 <Loading text="lo" size="small" :fillClass="contrastMode" />
               </div>
