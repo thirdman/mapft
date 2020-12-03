@@ -38,7 +38,9 @@
         <h4>Featured Galleries</h4>
         <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
         <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
-       
+        <div v-if="devMode">
+          <Button @click="setUsedContractsObj">set obj</Button>
+        </div>
       </div>
       <div class="secondary">
         <label>Elsewhere</label>
@@ -67,9 +69,11 @@ export default {
   computed: {
     ...mapFields('galleryStore', ['galleryContractId']),
     ...mapGetters({
+      devMode: "ui/devMode",
       contrastMode: "ui/contrastMode",
       activeContractId: "ui/activeContractId",
       usedContracts: "ui/usedContracts",
+      usedContractsObj: "ui/usedContractsObj",
       walletAddress: "ui/walletAddress",
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
@@ -86,6 +90,7 @@ export default {
     ...mapMutations({
       getItems: 'galleryStore/getItems',
       setGalleryDisplayMode: 'galleryStore/setGalleryDisplayMode',
+      setUsedContractsObj: 'ui/setUsedContractsObj',
     }),
     handleLoad(contractId) {
       if(!contractId){return}

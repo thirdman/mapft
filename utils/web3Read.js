@@ -657,16 +657,23 @@ const readThatShit = async (params, context) => {
       console.error("royaltyData error: ", err);
       throw err;
     });
-  // console.log('royaltyData', royaltyData)
-  //imageLink,
-  // additionalMetadata,
-  const allData = await Promise.allSettled([
-    coreMetadata,
-    additionalMetadata,
-    royaltyData,
-    ownerOfToken,
-    imageLinkData,
-  ])
+
+  // dont get things if alpha contract
+  const promiseArray = isAlpha
+    ? [
+        coreMetadata,
+        // royaltyData,
+        // ownerOfToken,
+        // imageLinkData,
+      ]
+    : [
+        coreMetadata,
+        additionalMetadata,
+        royaltyData,
+        ownerOfToken,
+        imageLinkData,
+      ];
+  const allData = await Promise.allSettled(promiseArray)
     .then((values) => {
       console.log("READ: values:", values);
       const data = {
