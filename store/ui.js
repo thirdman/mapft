@@ -353,9 +353,9 @@ export const actions = {
       let linkDataAlpha = {};
       if (isAlpha) {
         linkDataAlpha = {
-          fileArweaveUrl: `https://arweave.rocks/${result.fileArweaveURL}`,
-          fileIpfsUrl: `https://gateway.pinata.cloud/ipfs/${result.fileIPFSHashByID}`,
-          thumbnailUrl: "https://arweave.rocks/abc",
+          fileArweaveUrl: `https://arweave.rocks/${result.fileArweaveHash}`,
+          fileIpfsUrl: `https://gateway.pinata.cloud/ipfs/${result.fileIpfsHash}`,
+          thumbnailUrl: result.thumbnailUrl,
         };
         console.log("ISALPHA", linkDataAlpha);
       }
