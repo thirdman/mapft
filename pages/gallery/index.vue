@@ -38,17 +38,18 @@
         <h4>Featured Galleries</h4>
         <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
         <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
-        <div v-if="devMode">
-          <Button @click="setUsedContractsObj">set temporary usedCOntractsObj</Button>
-          <div v-if="walletAddress && usedContractsObj">
-            <div
-              v-for="(item, index) in usedContractsObj"
-              :key="index"
-            >
-              <span>{{ item.name }}</span>
-              <span>{{ item.symbol }}</span>
-              <span>{{ item.id }}</span>
+        <div>
+          <div v-if="walletAddress">
+            <Button @click="updateUsedContractsObj({data: {
+              id: '0x12345',
+              name: 'test name',
+              symbol: 'TEST'
+            }, remove: true})">test updateCOntractsObj</Button>
             </div>
+          </div>
+          <div>
+          <div v-if="walletAddress && usedContractsObj">
+            <GalleriesUserMenu :contractsArray="usedContractsObj" />
           </div>
         </div>
       </div>
@@ -101,6 +102,9 @@ export default {
       getItems: 'galleryStore/getItems',
       setGalleryDisplayMode: 'galleryStore/setGalleryDisplayMode',
       setUsedContractsObj: 'ui/setUsedContractsObj',
+    }),
+    ...mapActions({
+      updateUsedContractsObj: 'ui/updateUsedContractsObj',
     }),
     handleLoad(contractId) {
       if(!contractId){return}

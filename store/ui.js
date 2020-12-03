@@ -7,6 +7,7 @@ import {
 } from "../utils/web3Read";
 import { getContrast } from "../utils/theme";
 import { resolveEns } from "../utils/wallet";
+
 const themeArray = [
   "lemon",
   "sand",
@@ -192,6 +193,8 @@ export const mutations = {
       state.usedContracts = newArray;
     }
     console.log("newArray", newArray);
+    const tempObj = { id: value };
+    this.dispatch("ui/updateUsedContractsObj", { data: tempObj, remove: true });
   },
   setActiveContractData(state, data) {
     console.log("IO STORE setActiveContractData", data);
@@ -202,21 +205,25 @@ export const mutations = {
     state.activeContractName = data.activeContractName;
     state.activeContractSymbol = data.activeContractSymbol;
     const usedContractsArray = state.usedContracts || [];
+
     if (!usedContractsArray.includes(data.activeContractId)) {
       usedContractsArray.push(data.activeContractId);
       state.usedContracts = usedContractsArray;
     }
+    // HANDLE OBJ VERSION
+    const tempObj = {
+      id: data.activeContractId,
+      name: data.activeContractName,
+      symbol: data.activeContractSymbol,
+    };
+    this.dispatch("ui/updateUsedContractsObj", {
+      data: tempObj,
+      remove: false,
+    });
     console.log("ui state is now", state);
   },
-  setUsedContractsObj(state, value) {
-    const usedContractsArray = state.usedContracts || [];
-    console.log("usedContractsArray: ", usedContractsArray);
-    const asObjects = usedContractsArray.map((contract) => {
-      const obj = { id: contract, name: "nope", symbol: "NOPE" };
-      return obj;
-    });
-    console.log("asObjects", asObjects);
-    state.usedContractsObj = asObjects;
+  setUsedContractsObj(state, array) {
+    state.usedContractsObj = array;
   },
   clearActiveContractId(state, value) {
     state.activeContractId = null;
@@ -360,7 +367,7 @@ export const actions = {
         console.log("ISALPHA", linkDataAlpha);
       }
       resultData = { ...resultData, ...linkDataAlpha };
-      console.log("resultdatais", resultData);
+      console.log("resultData is", resultData);
       // if (!result.ownerAddress) {
       if (!resultData.fileArweaveHash) {
         console.log("no data?");
@@ -372,5 +379,28 @@ export const actions = {
       }
     });
     // readAdditionalMeta(params)
+  },
+  updateUsedContractsObj(dispatch, props) {
+    const { state } = dispatch;
+    const { data, remove } = props;
+    console.log("updateUsedContractsObj data:", data);
+    const tempUsedContractsObj =
+      (state.usedContractsObj && state.usedContractsObj.slice()) || [];
+    const filteredContracts = tempUsedContractsObj.filter(
+      (item) => item.id === data.id
+    );
+    if (filteredContracts.length) {
+      if (remove) {
+        console.log("REMOVE");
+        const newArray = tempUsedContractsObj.filter(
+          (item) => item.id !== data.id
+        );
+        this.commit("ui/setUsedContractsObj", newArray);
+      }
+    } else {
+      tempUsedContractsObj.push(data);
+      this.commit("ui/setUsedContractsObj", tempUsedContractsObj);
+    }
+    console.log("tempUsedContractsObj is now: ", tempUsedContractsObj);
   },
 };
