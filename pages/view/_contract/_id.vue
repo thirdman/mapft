@@ -238,7 +238,11 @@
               <div class="formItem">
                 <label>File Type</label>
                 <div class="small" id="metadata7">{{ viewData.fileType }}</div>
-                <div class="small" >{{ getHumanSize() }}</div>
+              
+              </div>
+              <div class="formItem" v-if="devMode">
+                <label>Size</label>
+                <div class="small" >Devmode: {{ getHumanSize() }}</div>
               </div>
               <div class="formItem">
                 <label>Exhibition</label>
@@ -504,6 +508,7 @@ export default {
   computed: {
     ...mapGetters({
       uiMode: 'ui/uiMode',
+      devMode: 'ui/devMode',
       uiTheme: 'ui/uiTheme',
       contrastMode: 'ui/contrastMode',
       showSearch: 'ui/showSearch',
@@ -560,6 +565,7 @@ export default {
       $nuxt._router.push(`/view/${this.contractId}/${newTokenId}`)
     },
     getHumanSize(size){
+      console.log('size', size);
       return "23"
     },
     getUrl(){
