@@ -102,6 +102,7 @@
                 tempViewItem.description ||
                 ''
                 }}
+                {{viewData && viewData.description && truncate(viewData.description, 10, '...' )}}
               </p>
               <div v-if="viewStatus === 'loading' && !viewData" class="loadingPlaceholder">
                 <Loading text="lo" size="small" :fillClass="contrastMode" />
@@ -261,11 +262,7 @@
               </div>
               <div class="formItem">
                 <label>Etherscan</label>
-                {{this.etherscanUrlBase }} |
-                {{this.etherscanUrlBase +
-                      'token/' +
-                      contractId +
-                      '#readContract'}}
+                
                 <div class="w3-small">
                   <a
                     :href="
@@ -565,6 +562,14 @@ export default {
       const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
+    truncate(text, length, clamp){
+      clamp = clamp || '...';
+      var node = document.createElement('div');
+      node.innerHTML = text;
+      var content = node.textContent;
+      return content.length > length ? content.slice(0, length) + clamp : content;
+    }
+
      
   },
   actions: {
