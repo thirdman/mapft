@@ -331,6 +331,7 @@ export const actions = {
 
     // const imageLink = await readImageLink(params, this)
     // console.log('imageLink', imageLink)
+    console.log("about tot readThatShit with params: ", params);
     this.commit("ui/setViewStatus", "loading");
     await readThatShit(params, this).then((result) => {
       console.log("readthatshit viewResult result", result);
