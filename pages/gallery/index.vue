@@ -38,7 +38,7 @@
         <h4>Featured Galleries</h4>
         <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
         <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
-        <div>
+        <div v-if="devMode">
           <div >
             <Button @click="updateUsedContractsObj({data: {
               id: '0x12345',

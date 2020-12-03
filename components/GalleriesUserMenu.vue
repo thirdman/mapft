@@ -17,7 +17,7 @@
             <div class="row xsmall">
               <div class="column col-33">{{item.symbol}}</div>
               <div class="column">{{item.name}}</div>
-              <div class="column"><IconChevron size="small" strokeClass="contrastMode" /></div>            
+              <!-- <div class="column"><IconChevron size="small" strokeClass="contrastMode" /></div>             -->
             </div>
             <div class="row subtitle xsmall"><Address :address="item.id" shrink fill /></div>
           </div>
