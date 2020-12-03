@@ -80,8 +80,11 @@ import { mapMutations, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'GalleryPage',
-  created() {
-    // this.setInitialAccount();
+  mounted() {
+    console.log('GALLERY MOUNTED', this.activeContractId)
+    if(this.activeContractId){
+      this.tempContractId = this.activeContractId
+    }
   },
   data() {
     return {

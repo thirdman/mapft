@@ -73,7 +73,7 @@
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .statusInformation {
   position: relative;
   background: var(--fill-color, #111);
@@ -84,8 +84,14 @@
   padding: 0.5rem;
 }
 .statusMessage {
-  margin: 0.5rem 0;
+  margin: 0.5rem 0 .5rem 1rem;
   max-width: 40rem;
+}
+.statusInformation.fixed {
+  padding: 2rem 1rem;
+  .statusRow{
+    margin-bottom: 1rem;
+  }
 }
 .statusInformation.inline {
   padding: 1rem;
@@ -118,9 +124,23 @@
 .closeButtonWrap button:hover {
   transform: scale(1.1);
 }
-.statusInformation h3 {
-  margin: 0;
+
+.form{
+  .statusInformation{
+    h3 {
+    margin: 0;
+    }
+  }
+  &.checkTransaction, &.noContract{
+    .statusRow{
+      align-items: flex-start;
+      .statusIcon{
+        margin-top: .5rem;
+      }
+    }
+  }
 }
+
 .statusRow {
   display: flex;
   flex-direction: row;
@@ -142,7 +162,7 @@
   border: 2px solid #111;
   border-radius: 80px;
   overflow: hidden;
-  margin-left: 1rem;
+  margin-left: 2rem;
 }
 .statusRow .loadingPuppy img{
   object-fit: cover;
