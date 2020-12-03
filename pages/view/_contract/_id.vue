@@ -260,7 +260,7 @@
                   ><IconExternalLink size="small" />View on Opensea</a>
                 </div>
               </div>
-              <div class="formItem">
+              <div class="formItem" v-if="1===3">
                 <label>Etherscan</label>
                 
                 <div class="w3-small">
@@ -418,9 +418,9 @@ export default {
         requiredNetwork === "main"
           ? "https://opensea.io/assets/"
           : "https://rinkeby.opensea.io/assets/";
-        const etherScanUrlBase = requiredNetwork === 'main' ? 'https://etherscan.io/' : 'https://rinkeby.etherscan.io/'
+        // const etherScanUrlBase = requiredNetwork === 'main' ? 'https://etherscan.io/' : 'https://rinkeby.etherscan.io/'
         this.openseaUrlBase = openseaUrlBase;
-        this.etherScanUrlBase = etherScanUrlBase;
+        // this.etherScanUrlBase = etherScanUrlBase;
       }
     }
     if (process.server) {
