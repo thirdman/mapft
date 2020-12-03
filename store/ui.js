@@ -331,7 +331,8 @@ export const actions = {
     console.log("handleSearch");
     const { state } = dispatch;
     this.commit("ui/setViewStatus", "loading");
-    const isAlpha = contractId === "0xd0c402bcbcb5e70157635c41b2810b42fe592bb0";
+    const isAlpha =
+      state.searchContractId === "0xd0c402bcbcb5e70157635c41b2810b42fe592bb0";
     const params = {
       contractId: state.searchContractId,
       tokenId: parseInt(state.searchTokenId),
