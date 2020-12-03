@@ -38,20 +38,29 @@
         <h4>Featured Galleries</h4>
         <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
         <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
+        <client-only>
         <div v-if="devMode">
           <div >
             <Button @click="updateUsedContractsObj({data: {
               id: '0x12345',
               name: 'test name',
               symbol: 'TEST'
-            }, remove: true})"><span>test updateCOntractsObj</span></Button>
-            </div>
-          </div>
-          <div>
-          <div v-if="devMode && walletAddress && usedContractsObj">
-            <GalleriesUserMenu :contractsArray="usedContractsObj" />
+            }, remove: true})"><span>test updateCOntractsObj</span>
+            </Button>
           </div>
         </div>
+        </client-only>
+        <client-only>
+        <div v-if="devMode">
+          <h3>Your Contracts </h3>
+          <div v-if="usedContractsObj">
+            <GalleriesUserMenu mode="hero" :contractsArray="usedContractsObj" :contrastMode="contrastMode"/>
+          </div>
+          <div>
+            <GalleriesUserMenu mode="hero" :contracts="usedContracts" :contrastMode="contrastMode"/>
+          </div>
+        </div>
+        </client-only>
       </div>
       <div class="secondary">
         <label>Elsewhere</label>

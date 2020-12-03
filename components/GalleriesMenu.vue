@@ -113,7 +113,7 @@
       display: flex;
       min-height: 5rem;
       align-items: center;
-      justify-content: stretch;
+      justify-content: center;
       a, a.featuredLink{
         border: 1px solid var(--line-color);
         border-radius: .25rem;
@@ -156,16 +156,16 @@
       width: 100%;
       align-items: center;
       justify-content: space-between;
-      svg{visibility: hidden;}
-      &:hover{
-        svg{visibility: visible;}
-        background: var(--line-color);
-      }
-      &.nuxt-link-active{
-        svg{
-          visibility: visible;
-        }
-      }
+      // svg{visibility: hidden;}
+      // &:hover{
+      //   svg{visibility: visible;}
+      //   background: var(--line-color);
+      // }
+      // &.nuxt-link-active{
+      //   svg{
+      //     visibility: visible;
+      //   }
+      // }
     }
   }
 }

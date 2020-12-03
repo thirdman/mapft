@@ -312,7 +312,7 @@ export default {
       const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
       const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
       const VERCEL_GIT_COMMIT_MESSAGE = this.$config.VERCEL_GIT_COMMIT_MESSAGE || '-'
-      console.log('HEADER VERCEL_GIT_COMMIT_MESSAGE: ', VERCEL_GIT_COMMIT_MESSAGE);
+      
       this.rootUrl = rootUrl;
       this.factoryContract = factoryContract;
       this.requiredNetwork = requiredNetwork;

@@ -5,7 +5,7 @@
     @click="$emit('click')"
     :disabled="disabled"
   >
-    <slot></slot>
+    <slot />
   </button>
 </template>
 
