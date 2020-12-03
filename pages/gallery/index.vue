@@ -39,7 +39,17 @@
         <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
         <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
         <div v-if="devMode">
-          <Button @click="setUsedContractsObj">set obj</Button>
+          <Button @click="setUsedContractsObj">set temporary usedCOntractsObj</Button>
+          <div v-if="walletAddress && usedContractsObj">
+            <div
+              v-for="(item, index) in usedContractsObj"
+              :key="index"
+            >
+              <span>{{ item.name }}</span>
+              <span>{{ item.symbol }}</span>
+              <span>{{ item.id }}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="secondary">

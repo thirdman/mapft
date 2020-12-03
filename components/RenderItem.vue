@@ -150,7 +150,8 @@ export default {
       console.log('file loaded, thing:', event)
       
     },
-    imageLoadError: (event) => {
+    imageLoadError(event){
+      console.log('imageLoadError', event);
       this.notFound = true;
     }
   },

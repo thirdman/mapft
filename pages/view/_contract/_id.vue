@@ -96,6 +96,7 @@
           <div class="metaItem">
             <label>Description</label>
             <div id="metadata4" class="aside">
+              {{getDescription()}}
               <!-- <p>
                 {{
                 (viewData && viewData.description) ||
@@ -109,7 +110,11 @@
               <div v-if="viewData && viewData.description">
                 {{showExpandedDescription ? viewData.description : truncate(viewData.description, 300, '...' )}}
               </div>
-              <Button v-if="viewData && viewData.description && viewData.description > 300 || tempViewItem.description && tempViewItem.description > 300" mode="hollow" @click="setExpandDescription(!showExpandedDescription)">{{showExpandedDescription ? "Show less" : "Show more"}}</Button>
+              <div v-if="viewData && viewData.description|| tempViewItem && tempViewItem.description" >
+                <Button mode="hollow" @click="setExpandDescription(!showExpandedDescription)">
+                  {{showExpandedDescription ? "Show less" : "Show more"}}
+                </Button>
+              </div>
               <div v-if="viewStatus === 'loading' && !viewData" class="loadingPlaceholder">
                 <Loading text="lo" size="small" :fillClass="contrastMode" />
               </div>
@@ -574,6 +579,12 @@ export default {
       const tempUiTheme = this.uiTheme || "charcoal";
       const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
+    },
+    getDescription(content){
+      console.log('getdescription')
+      console.log('viewData.description', this.viewData.description);
+      const description = this.viewData && this.viewData.description
+      return description;
     },
     setExpandDescription(newState){
       this.showExpandedDescription = newState

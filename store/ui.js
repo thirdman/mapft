@@ -347,7 +347,8 @@ export const actions = {
     this.commit("ui/setViewStatus", "loading");
     await readThatShit(params, this).then((result) => {
       console.log("readthatshit viewResult result", result);
-      if (!result.ownerAddress) {
+      // if (!result.ownerAddress) {
+      if (!result.fileArweaveHash) {
         console.log("no data?");
         return this.commit("ui/setViewStatus", "error");
       } else {
