@@ -40,6 +40,7 @@ export const state = () => ({
   searchParams: {},
   usedContracts: [],
   devMode: false,
+  hasVerticalGridLines: false,
   statusModalMode: "fixed",
   uiMode: "minimal",
   uiTheme: "teal",
@@ -67,6 +68,7 @@ export const getters = {
   statusModalMode: (state) => state.statusModalMode,
   hasWallet: (state) => state.hasWallet,
   hasChainSelect: (state) => state.hasChainSelect,
+  hasVerticalGridLines: (state) => state.hasVerticalGridLines,
   walletChain: (state) => state.walletChain,
   walletAddress: (state) => state.walletAddress,
   walletNetwork: (state) => state.walletNetwork,
@@ -213,6 +215,10 @@ export const mutations = {
   },
   setHasChainSelect(state, value) {
     state.hasChainSelect = value;
+  },
+  setHasVerticalGridLines(state, value) {
+    console.log("settingslines, value", value);
+    state.hasVerticalGridLines = value;
   },
   setStatusModalMode(state, value) {
     console.log("setStatusModalMode", value);

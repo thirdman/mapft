@@ -186,7 +186,8 @@ export default {
   computed: {
     ...mapGetters({
       contrastMode: 'ui/contrastMode',
-      hasChainSelect: 'ui/hasChainSelect'
+      hasChainSelect: 'ui/hasChainSelect',
+      hasVerticalGridLines: 'ui/hasVerticalGridLines'
     }),
   },
 }
