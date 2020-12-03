@@ -1,6 +1,6 @@
 <template>
   <div class="statusInformation" :class="statusModalMode">
-    <div class="closeButtonWrap">
+    <div class="closeButtonWrap" v-if="devMode">
       <button
         class="btn iconButton"
         @click="
@@ -59,14 +59,14 @@
 
       <div>
         <a :href="etherscanLink" class="etherscanLink" target="blank">
-          <IconExternalLink :strokeClass="contrastMode" />
+          <IconExternalLink :strokeClass="contrastMode" size="small" />
           {{ etherscanLink }}
         </a>
       </div>
     </div>
     <div v-if="mintStatus === 'checkTransaction'">
       <a class="etherscanLink" target="blank" href="https://discord.gg/WPpD2X5">
-        <IconExternalLink :strokeClass="contrastMode" />
+        <IconExternalLink :strokeClass="contrastMode" size="small"/>
         <span>Discord Server</span>
       </a>
     </div>
@@ -168,6 +168,7 @@ export default {
   props: ['displayMode', 'message', 'title', 'status'], // possibly redundant.
   computed: {
     ...mapGetters({
+      devMode: 'ui/devMode',
       contrastMode: 'ui/contrastMode',
       walletNetwork: 'ui/walletNetwork',
       mintTransactionId: 'mintFormStore/mintTransactionId',

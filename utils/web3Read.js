@@ -567,7 +567,7 @@ const readThatShit = async (params, context) => {
     .getCoreMetadata(tokenId)
     .call()
     .then((result) => {
-      // console.log('result is', result)
+      console.log("result is", result);
       const data = {
         title: result.artTitleByID,
         authorName: result.artistNameByID,
@@ -687,6 +687,72 @@ const readThatShit = async (params, context) => {
         ...values[4].value,
       };
       // console.log('all data', data)
+      return data;
+    })
+    .catch((error) => {
+      console.error(error);
+      return error;
+    });
+
+  return allData;
+};
+
+const readThatToken = async (params, context) => {
+  const { tokenId, contractId } = params;
+  const infuraUrl = context.$config.infuraUrl;
+
+  if (!infuraUrl) {
+    console.error("no infuraurl");
+    return null;
+  }
+  if (!contractId) {
+    return null;
+  }
+  if (!Web3) {
+    return null;
+  }
+  const readWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
+  const contract = new readWeb3.eth.Contract(abiART, contractId);
+
+  const getSymbol = contract.methods
+    .symbol(tokenId)
+    .call()
+    .then((result) => {
+      console.log("result is", result);
+      // const data = {
+      //   title: result.artTitleByID,
+      //   authorName: result.artistNameByID,
+      //   description: result.artistNoteByID,
+      //   edition: result.editionNumberByID,
+      //   fileArweaveHash: result.fileArweaveHashByID,
+      //   fileIpfsHash: result.fileIPFSHashByID,
+      //   editions: result.totalEditionsByID,
+      // };
+
+      return data;
+    })
+    .catch((err) => {
+      console.error(err);
+      throw err;
+    });
+
+  const allData = await Promise.allSettled([
+    getSymbol,
+    // additionalMetadata,
+    // royaltyData,
+    // ownerOfToken,
+    // imageLinkData,
+  ])
+    .then((values) => {
+      console.log("values:", values);
+      // const data = {
+      //   ...values[0].value,
+      //   ...values[1].value,
+      //   ...values[2].value,
+      //   ownerAddress: values[3].value,
+      //   ...values[4].value,
+      // };
+
       return data;
     })
     .catch((error) => {
