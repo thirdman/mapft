@@ -14,6 +14,18 @@
     </div>
     <div class="listItem" v-if="environment === 'main'">
       <nuxt-link
+        to="/gallery/0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
+        class="featuredLink"
+        :class="
+          galleryContractId === '0xd0c402bcbcb5e70157635c41b2810b42fe592bb0'
+            ? 'active'
+            : 'notActive'
+        "
+        ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>Alpha Artist Gallery</nuxt-link
+      >
+    </div>
+    <div class="listItem" v-if="environment === 'main'">
+      <nuxt-link
         to="/gallery/0xcd8a0e29514910532db4b500ad109927262f54d8"
         class="featuredLink"
         :class="

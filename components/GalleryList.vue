@@ -64,6 +64,7 @@
             <DefaultImage v-if="!item.image_thumbnail_url || item.image_thumbnail_url === 'https://storage.opensea.io'"/>
           </div>
           <div class="galleryListItemContent">
+            <div class="tokenId" v-if="displayMode === 'list'">#{{item.token_id}}</div>
             <label>
               <span class="fileType" v-if="displayMode === 'compact'">
                 {{ getFileType(item.traits) }}
@@ -221,8 +222,12 @@
   object-fit: contain;
   object-position: left top;
 }
-
-.itemDescription {
+.tokenId{
+  text-transform: uppercase;
+  font-variation-settings: 'wght' 600;
+  margin-bottom: 1rem;
+}
+.itemDescription, .tokenId {
   font-size: 0.75rem;
   line-height: 1.5;
 }

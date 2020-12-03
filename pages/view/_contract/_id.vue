@@ -221,6 +221,10 @@
             <span slot="header">Token Info</span>
             <div slot="content">
               <div class="formItem">
+                <label>ID</label>
+                <div class="small">{{ tokenId }}</div>
+              </div>
+              <div class="formItem">
                 <label>Edition</label>
                 <div class="small">{{ viewData.edition }} of {{ viewData.editions }}</div>
               </div>
@@ -392,10 +396,7 @@ export default {
       })
 
       if(this.$config){
-        // console.log('this.$config', this.$config)
-        // console.log('this.$config.requiredNetwork', this.$config.requiredNetwork)
         const requiredNetwork = this.$config.requiredNetwork || 'main';
-        // const requiredNetwork = 'main';
         const openseaUrlBase = 
         requiredNetwork === "main"
           ? "https://opensea.io/assets/"
