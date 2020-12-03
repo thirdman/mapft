@@ -48,7 +48,7 @@
             </div>
           </div>
           <div>
-          <div v-if="walletAddress && usedContractsObj">
+          <div v-if="devMode && walletAddress && usedContractsObj">
             <GalleriesUserMenu :contractsArray="usedContractsObj" />
           </div>
         </div>

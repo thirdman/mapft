@@ -176,7 +176,7 @@ const deployThatShit = (event, state, context) => {
   // MAP STATE INTO EXISTING MIT FORM VARIABLES
   const contractName = state.name;
   const contractSymbol = state.symbol;
-
+  console.log("about to deploy with ", { contractName, contractSymbol });
   if (!contractName || !contractSymbol) {
     console.error("missing variable: ", { contractName, contractSymbol });
     context.commit("deployFormStore/setDeployErrorMessage", {

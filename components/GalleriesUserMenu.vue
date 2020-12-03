@@ -15,7 +15,7 @@
           >
           <div class="column col-100">
             <div class="row xsmall">
-              <div class="column col-33">{{item.symbol}}</div>
+              <div class="column col-33 symbol">{{item.symbol}}</div>
               <div class="column">{{item.name}}</div>
               <!-- <div class="column"><IconChevron size="small" strokeClass="contrastMode" /></div>             -->
             </div>
@@ -34,6 +34,10 @@
   .listItem:last-child{
     border-bottom: noe;
   }
+}
+.galleriesMenu .column.symbol{
+  text-transform: uppercase;
+  font-variation-settings: 'wght' 600;
 }
 
 </style>
