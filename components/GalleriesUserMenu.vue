@@ -106,7 +106,7 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
-  props: ["galleryContractId", "userAddress", "contracts", "contractsArray", "mode", 'contrastMode'],
+  props: ["galleryContractId", "userAddress", "contracts", "contractsArray", "mode", 'contrastMode', 'activeContractId'],
   computed: {
     // ...mapGetters({
     //   usedContracts: "ui/usedContracts",

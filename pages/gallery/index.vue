@@ -13,14 +13,14 @@
           <GalleriesUserMenu :contracts="usedContracts" mode="list" />
         </div>
       </div>
-      <div class="primary">
+      <div class="primary ">
         <h4>Load Gallery Contract</h4>
-        <div class="loadContractRow row">
-          <div class="column col-66">
+        <div class="loadContractRow row clampWidth">
+          <div class="column col-75">
           <input
             name="Contract Id"
             id="galleryContractId"
-            class="hero"
+            :class="`hero ${contrastMode}`"
             type="string"
             max="99"
             required
@@ -28,19 +28,21 @@
             v-model="tempContractId"
           />
           </div>
-          <div class="col-33 column">
+          <div class="col-25 column">
           <Button size="large" mode="primary" @click="handleLoad(tempContractId)" :disabled="!tempContractId">
             Load Gallery
           </Button>
 
           </div>
         </div>
-        <h4>Featured Galleries</h4>
-        <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
-        <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
+        <div class="clampWidth">
+          <h4>Featured Galleries</h4>
+          <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
+          <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
+        </div>
         <client-only>
         <div v-if="devMode">
-          <div >
+          <div class="clampWidth">
             <Button @click="updateUsedContractsObj({data: {
               id: '0x12345',
               name: 'test name',
@@ -51,13 +53,13 @@
         </div>
         </client-only>
         <client-only>
-        <div>
-          <h3 v-if="usedContracts">Your Contracts </h3>
+        <div class="clampWidth">
+          <h4 v-if="usedContracts">Your Contracts </h4>
           <div v-if="devMode && usedContractsObj">
-            <GalleriesUserMenu mode="hero" :contractsArray="usedContractsObj" :contrastMode="contrastMode"/>
+            <GalleriesUserMenu mode="hero" :contractsArray="usedContractsObj" :contrastMode="contrastMode" :activeContractId="activeContractId" />
           </div>
           <div>
-            <GalleriesUserMenu mode="hero" :contracts="usedContracts" :contrastMode="contrastMode"/>
+            <GalleriesUserMenu mode="hero" :contracts="usedContracts" :contrastMode="contrastMode" :activeContractId="activeContractId" />
           </div>
         </div>
         </client-only>
@@ -132,6 +134,9 @@ export default {
 </script>
 
 <style lang="scss">
+.primary .clampWidth{
+  max-width: 700px;
+}
 .linkRow {
   padding: 20px;
   min-height: 100px;
@@ -157,7 +162,8 @@ export default {
   #galleryContractId{
     background: var(--fill-color);
     border: 0px solid;
-    
+    &.dark{ color:  var(--ui-color, #111)}
+    &.light{ color:  #fff}
   }
   input#galleryContractId{
     width: 100%;
