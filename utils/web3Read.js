@@ -589,6 +589,7 @@ const readThatShit = async (params, context) => {
       throw err;
     });
 
+  console.log("READ before additional meta", isAlpha);
   const additionalMetadata = await contract.methods
     .getAdditionalMetadata(tokenId)
     .call()
@@ -673,6 +674,7 @@ const readThatShit = async (params, context) => {
         ownerOfToken,
         imageLinkData,
       ];
+  console.log("read: promiseArray", promiseArray);
   const allData = await Promise.allSettled(promiseArray)
     .then((values) => {
       console.log("READ: values:", values);
