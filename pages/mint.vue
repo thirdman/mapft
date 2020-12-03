@@ -106,6 +106,13 @@
                     <div id="userContractAddress">{{ activeContractId }}</div>
                   </div>
                   <div class="column col-33">
+                    <Button
+                      mode="hollow"
+                      size="small"
+                      @click="goToGallery(activeContractId)"
+                    >
+                      View Gallery
+                    </Button>
                     <button
                       class="btn"
                       id="editUserContractButton"
@@ -325,6 +332,11 @@ export default {
     handleAccountModal() {
       this.$modal.show("account-modal");
     },
+    goToGallery(contractId){
+      this.$router.push({
+        path: `/gallery/${contractId}`,
+      })
+    }
   },
 };
 </script>

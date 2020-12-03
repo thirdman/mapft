@@ -562,12 +562,17 @@ const readThatShit = async (params, context) => {
   }
   const readWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
   const contract = new readWeb3.eth.Contract(abiART, contractId);
+  const isAlpha = contractId === "0xd0c402bcbcb5e70157635c41b2810b42fe592bb0";
   // console.log('contract.methods', contract.methods)
   const coreMetadata = contract.methods
     .getCoreMetadata(tokenId)
     .call()
     .then((result) => {
       console.log("result is", result);
+      if (isAlpha) {
+        console.log("READ: is alpha contract");
+      }
+
       const data = {
         title: result.artTitleByID,
         authorName: result.artistNameByID,
@@ -577,25 +582,10 @@ const readThatShit = async (params, context) => {
         fileIpfsHash: result.fileIPFSHashByID,
         editions: result.totalEditionsByID,
       };
-
-      //   idresult0.toString(10),
-      //   idresult1.toString(10),
-      //   idresult2.toString(10),
-      //   idresult3.toString(10),
-      //   idresult4.toString(10),
-      //   idresult5.toString(10),
-      //   idresult6.toString(10)
-      // if (document) {
-      //   document.getElementById('metadata2').textContent = idresult2
-      //   document.getElementById('metadata3').textContent = idresult3
-      //   document.getElementById('metadata4').textContent = idresult4
-      //   document.getElementById('metadata5').textContent = idresult5
-      //   document.getElementById('metadata6').textContent = idresult6
-      // }
       return data;
     })
     .catch((err) => {
-      console.error(err);
+      console.error("coreMetadata error", err);
       throw err;
     });
 
@@ -616,7 +606,7 @@ const readThatShit = async (params, context) => {
       return data;
     })
     .catch((err) => {
-      console.error(err);
+      console.error("additionalMetadata error", err);
       throw err;
     });
   // console.log('additionalMetadata', additionalMetadata)
@@ -632,7 +622,7 @@ const readThatShit = async (params, context) => {
       return result;
     })
     .catch((err) => {
-      console.error(err);
+      console.error("ownerOfToken error", err);
       throw err;
     });
   const imageLinkData = contract.methods
@@ -647,7 +637,7 @@ const readThatShit = async (params, context) => {
       return linkData;
     })
     .catch((err) => {
-      console.error(err);
+      console.error("imageLinkData error ", err);
     });
 
   const royaltyData = contract.methods
@@ -664,7 +654,7 @@ const readThatShit = async (params, context) => {
       return { artistAddress, royaltyFee: royaltyFeeByID };
     })
     .catch((err) => {
-      console.error(err);
+      console.error("royaltyData error: ", err);
       throw err;
     });
   // console.log('royaltyData', royaltyData)
@@ -678,7 +668,7 @@ const readThatShit = async (params, context) => {
     imageLinkData,
   ])
     .then((values) => {
-      // console.log('values:', values)
+      console.log("READ: values:", values);
       const data = {
         ...values[0].value,
         ...values[1].value,
@@ -686,7 +676,7 @@ const readThatShit = async (params, context) => {
         ownerAddress: values[3].value,
         ...values[4].value,
       };
-      // console.log('all data', data)
+      console.log("read: all data", data);
       return data;
     })
     .catch((error) => {

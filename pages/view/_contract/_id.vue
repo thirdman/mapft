@@ -246,7 +246,6 @@
             <div slot="content">
               <div class="formItem">
                 <label>Opensea</label>
-
                 <div id="link0" class="w3-small">
                   <a
                     :href="
@@ -258,6 +257,26 @@
                     target="_blank"
                     class="metaLink"
                   ><IconExternalLink size="small" />View on Opensea</a>
+                </div>
+              </div>
+              <div class="formItem">
+                <label>Etherscan</label>
+                {{this.etherscanUrlBase }} |
+                {{this.etherscanUrlBase +
+                      'token/' +
+                      contractId +
+                      '#readContract'}}
+                <div class="w3-small">
+                  <a
+                    :href="
+                      this.etherscanUrlBase +
+                      'token/' +
+                      contractId +
+                      '#readContract'
+                    "
+                    target="_blank"
+                    class="metaLink"
+                  ><IconExternalLink size="small" />View on Etherscan</a>
                 </div>
               </div>
               <div class="formItem">
@@ -328,7 +347,8 @@ export default {
   name: 'ViewPageParams',
   data() {
     return {
-     openseaUrlBase: "https://opensea.io/assets/"
+     openseaUrlBase: "https://opensea.io/assets/",
+     etherscanUrlBase: "https://etherscan.io/"
     }
   },
   head() {
@@ -401,7 +421,9 @@ export default {
         requiredNetwork === "main"
           ? "https://opensea.io/assets/"
           : "https://rinkeby.opensea.io/assets/";
+        const etherScanUrlBase = requiredNetwork === 'main' ? 'https://etherscan.io/' : 'https://rinkeby.etherscan.io/'
         this.openseaUrlBase = openseaUrlBase;
+        this.etherScanUrlBase = etherScanUrlBase;
       }
     }
     if (process.server) {
@@ -425,6 +447,7 @@ export default {
       requiredNetwork === "main"
         ? "https://api.opensea.io"
         : "https://rinkeby-api.opensea.io";
+    
     const options = {
       contractId: params.contract,
       tokenId: parseInt(params.id),
