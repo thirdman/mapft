@@ -590,42 +590,46 @@ const readThatShit = async (params, context) => {
     });
 
   console.log("READ before additional meta", isAlpha);
-  const additionalMetadata = await contract.methods
-    .getAdditionalMetadata(tokenId)
-    .call()
-    .then((result) => {
-      // console.log('result', result)
-      const data = {
-        exhibition: result.exhibitionByID,
-        fileType: result.fileTypeByID,
-        thumbnailHash: result.thumbnailHashByID,
-      };
-      // FILE TYPE
-      // document.getElementById('metadata7').textContent = idresult7
-      // document.getElementById('metadata8').textContent = idresult8
-      // fileTypeByID = idresult7
-      return data;
-    })
-    .catch((err) => {
-      console.error("additionalMetadata error", err);
-      throw err;
-    });
+  const additionalMetadata =
+    !isAlpha &&
+    (await contract.methods
+      .getAdditionalMetadata(tokenId)
+      .call()
+      .then((result) => {
+        // console.log('result', result)
+        const data = {
+          exhibition: result.exhibitionByID,
+          fileType: result.fileTypeByID,
+          thumbnailHash: result.thumbnailHashByID,
+        };
+        // FILE TYPE
+        // document.getElementById('metadata7').textContent = idresult7
+        // document.getElementById('metadata8').textContent = idresult8
+        // fileTypeByID = idresult7
+        return data;
+      })
+      .catch((err) => {
+        console.error("additionalMetadata error", err);
+        throw err;
+      }));
   // console.log('additionalMetadata', additionalMetadata)
 
-  const ownerOfToken = contract.methods
-    .ownerOf(tokenId)
-    .call()
-    .then((result) => {
-      // console.log('ownerOf result', result)
-      // if (document) {
-      //   document.getElementById('owner0').textContent = result
-      // }
-      return result;
-    })
-    .catch((err) => {
-      console.error("ownerOfToken error", err);
-      throw err;
-    });
+  const ownerOfToken =
+    !isAlpha &&
+    contract.methods
+      .ownerOf(tokenId)
+      .call()
+      .then((result) => {
+        // console.log('ownerOf result', result)
+        // if (document) {
+        //   document.getElementById('owner0').textContent = result
+        // }
+        return result;
+      })
+      .catch((err) => {
+        console.error("ownerOfToken error", err);
+        throw err;
+      });
   const imageLinkData = contract.methods
     .getImageLink(tokenId)
     .call()
@@ -641,23 +645,25 @@ const readThatShit = async (params, context) => {
       console.error("imageLinkData error ", err);
     });
 
-  const royaltyData = contract.methods
-    .getRoyaltyData(tokenId)
-    .call()
-    .then((result) => {
-      // console.log('result', result)
-      const { artistAddress, royaltyFeeByID } = result;
-      // let [royaltyresult0, royaltyresult1] = result3
-      // if (document) {
-      //   document.getElementById('royalty0').textContent = royaltyresult0
-      //   document.getElementById('royalty1').textContent = royaltyresult1
-      // }
-      return { artistAddress, royaltyFee: royaltyFeeByID };
-    })
-    .catch((err) => {
-      console.error("royaltyData error: ", err);
-      throw err;
-    });
+  const royaltyData =
+    !isAlpha &&
+    contract.methods
+      .getRoyaltyData(tokenId)
+      .call()
+      .then((result) => {
+        // console.log('result', result)
+        const { artistAddress, royaltyFeeByID } = result;
+        // let [royaltyresult0, royaltyresult1] = result3
+        // if (document) {
+        //   document.getElementById('royalty0').textContent = royaltyresult0
+        //   document.getElementById('royalty1').textContent = royaltyresult1
+        // }
+        return { artistAddress, royaltyFee: royaltyFeeByID };
+      })
+      .catch((err) => {
+        console.error("royaltyData error: ", err);
+        throw err;
+      });
 
   // dont get things if alpha contract
   const promiseArray = isAlpha
@@ -665,7 +671,7 @@ const readThatShit = async (params, context) => {
         coreMetadata,
         // royaltyData,
         // ownerOfToken,
-        // imageLinkData,
+        imageLinkData,
       ]
     : [
         coreMetadata,
@@ -679,11 +685,11 @@ const readThatShit = async (params, context) => {
     .then((values) => {
       console.log("READ: values:", values);
       const data = {
-        ...values[0].value,
-        ...values[1].value,
-        ...values[2].value,
-        ownerAddress: values[3].value,
-        ...values[4].value,
+        ...(values[0] && values[0].value),
+        ...(values[1] && values[1].value),
+        ...(values[2] && values[2].value),
+        ownerAddress: values[3] && values[3].value,
+        ...(values[4] && values[4].value),
       };
       console.log("read: all data", data);
       return data;
