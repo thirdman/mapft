@@ -1,5 +1,5 @@
 <template>
-  <div class="UploadStatus" :class="displayMode">
+  <div class="UploadStatus" :class="`${displayMode} ${contrastMode}`">
     <!-- <div class="help" v-if="!title">No file selected</div> -->
     <div 
       v-if="title"
@@ -22,9 +22,11 @@
           <div
             class="status-icon"
             :class="ipfsStatus === 'uploaded' ? 'complete' : ''"
-          ></div>
+          >
+          <IconCheck :strokeClass="contrastMode" v-if="ipfsStatus === 'uploaded'"/>
+          </div>
           {{ ipfsStatus === "uploading" ? `Saving to IPFS... ${ipfsProgress && ipfsProgress + '%'}` : `Ipfs File ${ipfsStatus}` }}
-          <a :href="`https://ipfs.io/ipfs/${ipfsHash}`" target="blank" v-if="ipfsHash">link</a>
+          <a :href="`https://ipfs.io/ipfs/${ipfsHash}`" target="blank" v-if="ipfsHash" class="asButton small">Open on IPFS</a>
           
         </div>
         <ProgressBar
@@ -41,13 +43,15 @@
           <div
             class="status-icon"
             :class="arweaveStatus === 'uploaded' ? 'complete' : ''"
-          ></div>
+          >
+            <IconCheck :strokeClass="contrastMode" v-if="arweaveStatus === 'uploaded'" />
+          </div>
           {{
             arweaveStatus === "uploading"
               ? `Saving to Arweave... ${arweaveProgress && arweaveProgress + '%'}`
               : `Arweave File ${arweaveStatus}`
           }}
-          <a :href="`https://arweave.net/${arweaveHash}`" target="blank" v-if="arweaveHash">link</a>
+          <a :href="`https://arweave.net/${arweaveHash}`" target="blank" class="asButton small" v-if="arweaveHash">Open on Arweave</a>
         </div>
           <ProgressBar
           :percentage="arweaveProgress"
@@ -62,24 +66,40 @@
 <style lang="scss">
 .UploadStatus{
   // margin-top: .5rem;
-  &.inline{
-    .status-box{
-      color: var(--ui-color, #eee);
-    }
-    .uploadStatusWrap{
+  .uploadStatusWrap{
       background: transparent;
       border: none;
-      color: var(--background-color, #eee);
     }
+  
+  &.light{
+    .status-box, .subtitle.statusRow{
+      color: var(--text-color, #eee);
+    }
+    .status-icon{
+      
+    }
+  }
+  &.dark{
+    .status-box, .subtitle.statusRow{
+      color: var(--ui-color, #eee);
+    }
+    .status-icon{
+      
+    }
+    // .uploadStatusWrap{
+    //   background: transparent;
+    //   border: none;
+    //   // color: var(--background-color, #eee);
+    // }
   }
   .subtitle.statusRow{
     padding: .25rem;
     display: block;
-    color: var(--ui-color, #eee) !important;
+    // color: var(--ui-color, #eee) !important;
     &.uploaded{
       // background: var(--success-color, lime);
       border-radius: .25rem;
-      color: var(--ui-color, #eee) !important
+      // color: var(--ui-color, #eee) !important
     }
   }
   
@@ -88,8 +108,10 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+import IconCheck from './IconCheck.vue';
 export default {
-  props: ["displayMode", "title", "ipfsStatus", "arweaveStatus", "ipfsHash", "arweaveHash", "ipfsProgress", "arweaveProgress"],
+  components: { IconCheck },
+  props: ["displayMode", "contrastMode", "title", "ipfsStatus", "arweaveStatus", "ipfsHash", "arweaveHash", "ipfsProgress", "arweaveProgress"],
   computed: {
     ...mapGetters({
       statusModalMode: 'ui/statusModalMode',

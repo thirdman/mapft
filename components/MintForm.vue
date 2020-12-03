@@ -172,6 +172,7 @@
         :ipfsStatus="ipfsStatus"
         :ipfsProgress="fileIpfsProgress"
         :ipfsHash="fileIpfsHash"
+        :contrastMode="contrastMode"
       />
       <div class="formItem block" style="margin-top: .5rem;" v-if="devMode">
         <Button 
@@ -237,7 +238,7 @@
         :ipfsHash="thumbnailIpfsHash"
         :arweaveProgress="thumbnailArweaveProgress"
         :ipfsProgress="thumbnailIpfsProgress"
-    
+        :contrastMode="contrastMode"
       />
       <!-- <div class="cropContainer" id="cropContainer" style='max-width: 300px' :class="showCropper ? 'visible' : 'visible'">
         <vue-cropper

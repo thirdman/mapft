@@ -2548,7 +2548,7 @@ MODAL
 }
 .uploadStatusWrap .status-box .status-icon.status-success,
 .statusBox .status-box .status-icon.status-success {
-  background: url("../icons/check_circle-24px.svg") center center no-repeat;
+  /* background: url("../icons/check_circle-24px.svg") center center no-repeat; */
   animation: none;
   width: 24px;
   height: 24px;
@@ -2571,7 +2571,8 @@ MODAL
   animation-fill-mode: forwards;
 }
 .uploadStatusWrap .status-icon.complete {
-  background: url("../icons/check_circle-24px.svg") center center no-repeat;
+  background: transparent;
+  /* background: url("../icons/check_circle-24px.svg") center center no-repeat; */
   animation: none;
   width: 24px;
   height: 24px;
