@@ -96,7 +96,7 @@
           <div class="metaItem">
             <label>Description</label>
             <div id="metadata4" class="aside">
-              {{getDescription()}}
+              <!-- {{getDescription()}} -->
               <!-- <p>
                 {{
                 (viewData && viewData.description) ||
@@ -104,13 +104,13 @@
                 ''
                 }}
               </p> -->
-              <div v-if="!viewData && tempViewItem.description">
-                {{showExpandedDescription ? tempViewItem.description : truncate(tempViewItem.description, 300, '...' )}}
+              <div v-if="getDescription()">
+                {{showExpandedDescription ? getDescription() : truncate(getDescription(), 300, '...' )}}
               </div>
-              <div v-if="viewData && viewData.description">
+              <!-- <div v-if="viewData && viewData.description">
                 {{showExpandedDescription ? viewData.description : truncate(viewData.description, 300, '...' )}}
-              </div>
-              <div v-if="viewData && viewData.description|| tempViewItem && tempViewItem.description" >
+              </div> -->
+              <div v-if="getDescription() && getDescription().length > 300" >
                 <Button mode="hollow" @click="setExpandDescription(!showExpandedDescription)">
                   {{showExpandedDescription ? "Show less" : "Show more"}}
                 </Button>
@@ -583,8 +583,9 @@ export default {
     getDescription(content){
       console.log('getdescription')
       console.log('viewData.description', this.viewData.description);
+      const tempDescription = this.tempViewItem && this.tempViewItem.description
       const description = this.viewData && this.viewData.description
-      return description;
+      return description || tempDescription;
     },
     setExpandDescription(newState){
       this.showExpandedDescription = newState
