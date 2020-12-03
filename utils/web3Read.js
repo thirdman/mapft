@@ -630,20 +630,24 @@ const readThatShit = async (params, context) => {
         console.error("ownerOfToken error", err);
         throw err;
       });
-  const imageLinkData = contract.methods
-    .getImageLink(tokenId)
-    .call()
-    .then((resultLinks) => {
-      const linkData = {
-        fileArweaveUrl: resultLinks.fileArweaveURL,
-        fileIpfsUrl: resultLinks.fileIPFSURL,
-        thumbnailUrl: resultLinks.thumbnailURL,
-      };
-      return linkData;
-    })
-    .catch((err) => {
-      console.error("imageLinkData error ", err);
-    });
+  const imageLinkData =
+    !isAlpha &&
+    contract.methods
+      .getImageLink(tokenId)
+      .call()
+      .then((resultLinks) => {
+        console.info("imageLinkData resultLinks ", resultLinks);
+
+        const linkData = {
+          fileArweaveUrl: resultLinks.fileArweaveURL,
+          fileIpfsUrl: resultLinks.fileIPFSURL,
+          thumbnailUrl: resultLinks.thumbnailURL,
+        };
+        return linkData;
+      })
+      .catch((err) => {
+        console.error("imageLinkData error ", err);
+      });
 
   const royaltyData =
     !isAlpha &&

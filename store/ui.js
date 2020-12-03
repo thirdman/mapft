@@ -331,6 +331,7 @@ export const actions = {
     console.log("handleSearch");
     const { state } = dispatch;
     this.commit("ui/setViewStatus", "loading");
+    const isAlpha = contractId === "0xd0c402bcbcb5e70157635c41b2810b42fe592bb0";
     const params = {
       contractId: state.searchContractId,
       tokenId: parseInt(state.searchTokenId),
@@ -347,13 +348,25 @@ export const actions = {
     this.commit("ui/setViewStatus", "loading");
     await readThatShit(params, this).then((result) => {
       console.log("readthatshit viewResult result", result);
+      let resultData = result;
+      let linkDataAlpha = {};
+      if (isAlpha) {
+        linkDataAlpha = {
+          fileArweaveUrl: `https://arweave.rocks/${result.fileArweaveURL}`,
+          fileIpfsUrl: `https://gateway.pinata.cloud/ipfs/${result.fileIPFSHashByID}`,
+          thumbnailUrl: "https://arweave.rocks/abc",
+        };
+        console.log("ISALPHA", linkDataAlpha);
+      }
+      resultData = { ...resultData, ...linkDataAlpha };
+      console.log("resultdatais", resultData);
       // if (!result.ownerAddress) {
-      if (!result.fileArweaveHash) {
+      if (!resultData.fileArweaveHash) {
         console.log("no data?");
         return this.commit("ui/setViewStatus", "error");
       } else {
-        console.log("has owneraddress", result.ownerAddress); // substitute for if data exists
-        this.commit("ui/setViewData", result);
+        console.log("has owneraddress", resultData.ownerAddress); // substitute for if data exists
+        this.commit("ui/setViewData", resultData);
         this.commit("ui/setViewStatus", "loaded");
       }
     });
