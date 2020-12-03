@@ -51,9 +51,9 @@
         </div>
         </client-only>
         <client-only>
-        <div v-if="devMode">
-          <h3>Your Contracts </h3>
-          <div v-if="usedContractsObj">
+        <div>
+          <h3 v-if="usedContracts">Your Contracts </h3>
+          <div v-if="devMode && usedContractsObj">
             <GalleriesUserMenu mode="hero" :contractsArray="usedContractsObj" :contrastMode="contrastMode"/>
           </div>
           <div>
