@@ -1,21 +1,6 @@
 <template>
   <div class="galleriesMenu userGalleriesMenu noAfter" :class="mode">
-    <!-- <div v-for="(item, index) in contracts" :key="index" class="listItem">
-      <div class="xsmall clamp wide">
-        <nuxt-link
-          :to="`/gallery/${item}`"
-          :class="
-            galleryContractId === item
-              ? 'active'
-              : 'notActive'
-          "
-          >
-            <Address :address="item" shrink fill />
-            <IconChevron size="small"  strokeClass="contrastMode" />
-          </nuxt-link
-        >
-      </div>
-    </div> -->
+    
     <div v-for="(item, index) in contractsArray" :key="`item${index}`" class="listItem">
     <div>
         <nuxt-link
@@ -77,3 +62,20 @@ export default {
   }
 };
 </script>
+
+<!-- <div v-for="(item, index) in contracts" :key="index" class="listItem">
+      <div class="xsmall clamp wide">
+        <nuxt-link
+          :to="`/gallery/${item}`"
+          :class="
+            galleryContractId === item
+              ? 'active'
+              : 'notActive'
+          "
+          >
+            <Address :address="item" shrink fill />
+            <IconChevron size="small"  strokeClass="contrastMode" />
+          </nuxt-link
+        >
+      </div>
+    </div> -->

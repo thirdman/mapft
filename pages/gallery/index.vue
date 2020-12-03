@@ -39,12 +39,12 @@
         <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
         <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
         <div>
-          <div v-if="walletAddress">
+          <div >
             <Button @click="updateUsedContractsObj({data: {
               id: '0x12345',
               name: 'test name',
               symbol: 'TEST'
-            }, remove: true})">test updateCOntractsObj</Button>
+            }, remove: true})"><span>test updateCOntractsObj</span></Button>
             </div>
           </div>
           <div>
