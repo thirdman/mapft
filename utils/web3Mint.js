@@ -546,7 +546,7 @@ var abiART = [
 const mintThatShit = (event, state, rootContext) => {
   const doIt = true;
   const context = rootContext.$store;
-  const network = context.$config.network;
+  const network = context.$config.requiredNetwork || "main";
   const infuraUrl = context.$config.infuraUrl;
   // const infuraUrl =
   //   network === "main"

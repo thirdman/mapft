@@ -118,6 +118,7 @@
                 :fileType="viewData.fileType"
                 :src="viewData.fileIpfsUrl"
                 v-if="viewData.fileIpfsUrl"
+                :hasImageOptimization="false"
               />
             </div>
           </div>
@@ -337,7 +338,8 @@ export default {
       setSearchParams: "ui/setSearchParams",
     }),
     getTokenId() {
-      console.log("this", this);
+      // console.log("this", this);
+      console.log('get token id: nothing')
     },
     doTest() {
       console.log(this);

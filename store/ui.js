@@ -2,11 +2,13 @@
 import { getField, updateField } from "vuex-map-fields";
 import {
   readThatShit,
+  readThatMeta,
   readAdditionalMeta,
   readImageLink,
 } from "../utils/web3Read";
 import { getContrast } from "../utils/theme";
 import { resolveEns } from "../utils/wallet";
+
 const themeArray = [
   "lemon",
   "sand",
@@ -39,7 +41,9 @@ export const state = () => ({
   showSearch: false,
   searchParams: {},
   usedContracts: [],
+  usedContractsObj: null,
   devMode: false,
+  hasVerticalGridLines: false,
   statusModalMode: "fixed",
   uiMode: "minimal",
   uiTheme: "teal",
@@ -52,6 +56,9 @@ export const state = () => ({
     "0x63a9dbCe75413036B2B778E670aaBd4493aAF9F3", //natealex
     "0xDbB59151b18Dd72E9AC092706e93De5b5d7a9325", // trislit
   ],
+  // IMAGES
+  hasImageOptimization: true,
+  imageOptimizationUrl: "https://infinft.gumlet.net/fetch/", // https://arweave.net/KGxebgYGPYYYtZYCIvxsEEM-LC49KVwp00TYO98RbPA?width=1200
   // SEARCH FIELDS
   searchContractId: "",
   searchTokenId: "",
@@ -67,6 +74,9 @@ export const getters = {
   statusModalMode: (state) => state.statusModalMode,
   hasWallet: (state) => state.hasWallet,
   hasChainSelect: (state) => state.hasChainSelect,
+  hasVerticalGridLines: (state) => state.hasVerticalGridLines,
+  hasImageOptimization: (state) => state.hasImageOptimization,
+  imageOptimizationUrl: (state) => state.imageOptimizationUrl,
   walletChain: (state) => state.walletChain,
   walletAddress: (state) => state.walletAddress,
   walletNetwork: (state) => state.walletNetwork,
@@ -84,6 +94,7 @@ export const getters = {
   activeContractName: (state) => state.activeContractName,
   activeContractSymbol: (state) => state.activeContractSymbol,
   usedContracts: (state) => state.usedContracts,
+  usedContractsObj: (state) => state.usedContractsObj,
   tempViewItem: (state) => state.tempViewItem,
   searchData: (state) => {
     return {
@@ -165,6 +176,10 @@ export const mutations = {
   setNetworkName(state, value) {
     state.walletNetwork = value;
   },
+  setHasImageOptimization(state, value) {
+    console.log("setHasImageOptimization", value);
+    state.hasImageOptimization = value;
+  },
   setActiveContractId(state, value) {
     state.activeContractId = value;
     console.log("UI store setActiveContractId", value);
@@ -188,6 +203,8 @@ export const mutations = {
       state.usedContracts = newArray;
     }
     console.log("newArray", newArray);
+    const tempObj = { id: value };
+    this.dispatch("ui/updateUsedContractsObj", { data: tempObj, remove: true });
   },
   setActiveContractData(state, data) {
     console.log("IO STORE setActiveContractData", data);
@@ -198,11 +215,25 @@ export const mutations = {
     state.activeContractName = data.activeContractName;
     state.activeContractSymbol = data.activeContractSymbol;
     const usedContractsArray = state.usedContracts || [];
+
     if (!usedContractsArray.includes(data.activeContractId)) {
       usedContractsArray.push(data.activeContractId);
       state.usedContracts = usedContractsArray;
     }
+    // HANDLE OBJ VERSION
+    const tempObj = {
+      id: data.activeContractId,
+      name: data.activeContractName,
+      symbol: data.activeContractSymbol,
+    };
+    this.dispatch("ui/updateUsedContractsObj", {
+      data: tempObj,
+      remove: false,
+    });
     console.log("ui state is now", state);
+  },
+  setUsedContractsObj(state, array) {
+    state.usedContractsObj = array;
   },
   clearActiveContractId(state, value) {
     state.activeContractId = null;
@@ -213,6 +244,10 @@ export const mutations = {
   },
   setHasChainSelect(state, value) {
     state.hasChainSelect = value;
+  },
+  setHasVerticalGridLines(state, value) {
+    console.log("settingslines, value", value);
+    state.hasVerticalGridLines = value;
   },
   setStatusModalMode(state, value) {
     console.log("setStatusModalMode", value);
@@ -308,11 +343,21 @@ export const actions = {
   doSearch() {
     console.log("doSearch");
   },
-
+  async handleGalleryMeta(dispatch, params) {
+    console.log("handleGalleryMeta", params);
+    const metaData = await readThatMeta(params, this)
+      .then((result) => {
+        return result;
+      })
+      .catch((error) => console.error(error));
+    return metaData;
+  },
   async handleSearch(dispatch, commit) {
     console.log("handleSearch");
     const { state } = dispatch;
     this.commit("ui/setViewStatus", "loading");
+    const isAlpha =
+      state.searchContractId === "0xd0c402bcbcb5e70157635c41b2810b42fe592bb0";
     const params = {
       contractId: state.searchContractId,
       tokenId: parseInt(state.searchTokenId),
@@ -325,18 +370,55 @@ export const actions = {
 
     // const imageLink = await readImageLink(params, this)
     // console.log('imageLink', imageLink)
+    console.log("about tot readThatShit with params: ", params);
     this.commit("ui/setViewStatus", "loading");
     await readThatShit(params, this).then((result) => {
       console.log("readthatshit viewResult result", result);
-      if (!result.ownerAddress) {
+      let resultData = result;
+      let linkDataAlpha = {};
+      if (isAlpha) {
+        linkDataAlpha = {
+          fileArweaveUrl: `https://arweave.rocks/${result.fileArweaveHash}`,
+          fileIpfsUrl: `https://gateway.pinata.cloud/ipfs/${result.fileIpfsHash}`,
+          thumbnailUrl: result.thumbnailUrl,
+        };
+        console.log("ISALPHA", linkDataAlpha);
+      }
+      resultData = { ...resultData, ...linkDataAlpha };
+      console.log("resultData is", resultData);
+      // if (!result.ownerAddress) {
+      if (!resultData.fileArweaveHash) {
         console.log("no data?");
         return this.commit("ui/setViewStatus", "error");
       } else {
-        console.log("has owneraddress", result.ownerAddress); // substitute for if data exists
-        this.commit("ui/setViewData", result);
+        console.log("has owneraddress", resultData.ownerAddress); // substitute for if data exists
+        this.commit("ui/setViewData", resultData);
         this.commit("ui/setViewStatus", "loaded");
       }
     });
     // readAdditionalMeta(params)
+  },
+  updateUsedContractsObj(dispatch, props) {
+    const { state } = dispatch;
+    const { data, remove } = props;
+    console.log("updateUsedContractsObj data:", data);
+    const tempUsedContractsObj =
+      (state.usedContractsObj && state.usedContractsObj.slice()) || [];
+    const filteredContracts = tempUsedContractsObj.filter(
+      (item) => item.id === data.id
+    );
+    if (filteredContracts.length) {
+      if (remove) {
+        console.log("REMOVE");
+        const newArray = tempUsedContractsObj.filter(
+          (item) => item.id !== data.id
+        );
+        this.commit("ui/setUsedContractsObj", newArray);
+      }
+    } else {
+      tempUsedContractsObj.push(data);
+      this.commit("ui/setUsedContractsObj", tempUsedContractsObj);
+    }
+    console.log("tempUsedContractsObj is now: ", tempUsedContractsObj);
   },
 };

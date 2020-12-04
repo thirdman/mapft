@@ -1,6 +1,6 @@
 <template>
   <div class="mintedInformation" :class="statusModalMode">
-    <div class="closeButtonWrap">
+    <div class="closeButtonWrap" v-if="devMode">
       <button
         class="btn iconButton"
         @click="
@@ -24,12 +24,12 @@
         Opensea.
       </p>
       <div>
-        <nuxt-link :to="`/gallery/${activeContractId}`" class="asButton">View Gallery</nuxt-link>
         <nuxt-link
           :to="`/view/${activeContractId}/${mintedData && mintedData.tokenId}`"
           class="asButton"
           >View Token</nuxt-link
         >
+        <nuxt-link :to="`/gallery/${activeContractId}`" class="asButton">View Gallery</nuxt-link>
       </div>
     </div>
     <ToggleSection v-if="openseaLink" active="true">
@@ -44,18 +44,19 @@
         <div class="formItem">
           <label>Opensea</label>
           <a :href="openseaLink" class="etherscanLink" target="blank">
-        <!-- <IconExternalLink strokeClass="dark" /> -->
-        {{ openseaLink }}
-      </a>
+            <IconExternalLink :strokeClass="contrastMode" size="small" />
+            View on Opensea
+          </a>
         </div>
         <div class="formItem" v-if="etherscanLink">
           <label>Transaction Info</label>
-          
+          <p class="xsmall">{{mintTransactionId}}</p>
            <a :href="etherscanLink" class="etherscanLink" target="blank">
           <IconExternalLink
-            :strokeClass="statusModalMode === 'fixed' ? 'dark' : 'dark'"
+            :strokeClass="contrastMode"
+            size="small"
           />
-          {{ etherscanLink }}
+          View on Etherscan
         </a>
         </div>
       </div>
@@ -125,6 +126,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.statusInformation .formItem label{
+  line-height: 1.5rem;
 }
 .transactionInfo {
   /* border-top: 1px solid var(--line-color, #ccc); */

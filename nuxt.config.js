@@ -57,7 +57,13 @@ export default {
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      // { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
+      { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
+      {
+        hid: "description",
+        name: "description",
+        content:
+          "A NFT platform with a focus on extendability, flexibility, and on-chain data.",
+      },
       // { hid: "og:type", name: "og:type", content: "website" },
       // { hid: "og:title", name: "og:title", content: "InfiNFT" },
       // {
@@ -70,11 +76,12 @@ export default {
       //   name: "og:description",
       //   content: process.env.npm_package_description,
       // },
-      // {
-      //   hid: "og-image",
-      //   name: "og:image",
-      //   content: "/images/preview.jpg",
-      // },
+      {
+        hid: "ogimage2",
+        name: "og:image",
+        // content: "/images/preview.jpg",
+        content: "https://staging.infinft.app/_nuxt/assets/images/preview.jpg",
+      },
     ],
     link: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },

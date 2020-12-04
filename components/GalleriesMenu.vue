@@ -1,5 +1,5 @@
 <template>
-  <div class="galleriesMenu" :class="mode">
+  <div class="galleriesMenu" :class="mode" :environment="environment">
     <div class="listItem featured">
       <nuxt-link
         to="/alpha"
@@ -12,7 +12,32 @@
         ><div class="galleryImgWrap"><img src="~/static/images/alpha.jpg" width="200px" /></div> Alpha Series</nuxt-link
       >
     </div>
-    <div class="listItem">
+    <div class="listItem" v-if="environment === 'main'">
+      <nuxt-link
+        to="/gallery/0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
+        class="featuredLink"
+        :class="
+          galleryContractId === '0xd0c402bcbcb5e70157635c41b2810b42fe592bb0'
+            ? 'active'
+            : 'notActive'
+        "
+        ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>Alpha Artist Gallery</nuxt-link
+      >
+    </div>
+    <div class="listItem" v-if="environment === 'main'">
+      <nuxt-link
+        to="/gallery/0xcd8a0e29514910532db4b500ad109927262f54d8"
+        class="featuredLink"
+        :class="
+          galleryContractId === '0xcd8a0e29514910532db4b500ad109927262f54d8'
+            ? 'active'
+            : 'notActive'
+        "
+        ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>Example Posters</nuxt-link
+      >
+    </div>
+
+    <div class="listItem" v-if="environment === 'rinkeby'">
       <nuxt-link
         to="/gallery/0xa0AfEDcC9446fD1F41706EaA4931512bDb2efAe7"
         class="featuredLink"
@@ -24,7 +49,7 @@
         ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>Natealex Test</nuxt-link
       >
     </div>
-    <div class="listItem">
+    <div class="listItem" v-if="environment === 'rinkeby'">
       <nuxt-link
         to="/gallery/0x5056A51f6f48D9D9808300C242142acD2C855377"
         class="featuredLink"
@@ -39,7 +64,7 @@
         </nuxt-link
       >
     </div>
-    <div class="listItem">
+    <div class="listItem" v-if="environment === 'rinkeby'">
       <nuxt-link
         to="/gallery/0xfbaf740d8823af28562faaef6f6a95cd9d244110"
         class="featuredLink"
@@ -88,7 +113,7 @@
       display: flex;
       min-height: 5rem;
       align-items: center;
-      justify-content: stretch;
+      justify-content: center;
       a, a.featuredLink{
         border: 1px solid var(--line-color);
         border-radius: .25rem;
@@ -131,16 +156,16 @@
       width: 100%;
       align-items: center;
       justify-content: space-between;
-      svg{visibility: hidden;}
-      &:hover{
-        svg{visibility: visible;}
-        background: var(--line-color);
-      }
-      &.nuxt-link-active{
-        svg{
-          visibility: visible;
-        }
-      }
+      // svg{visibility: hidden;}
+      // &:hover{
+      //   svg{visibility: visible;}
+      //   background: var(--line-color);
+      // }
+      // &.nuxt-link-active{
+      //   svg{
+      //     visibility: visible;
+      //   }
+      // }
     }
   }
 }
@@ -193,5 +218,16 @@
 <script>
 export default {
   props: ["galleryContractId", "mode", "contrastMode"],
+  mounted(){
+    if(this.$config){
+      const env = this.$config.requiredNetwork || "local";
+      this.environment = env;
+    }
+  },
+  data(){
+    return {
+      environment: ""
+    }
+  }
 };
 </script>

@@ -536,11 +536,26 @@ GRID LINES
 .row .column {
   flex-basis: 50%;
 }
+.row .column.col-10 {
+  flex-basis: 10%;
+}
+.row .column.col-25 {
+  flex-basis: 25%;
+}
 .row .column.col-33 {
   flex-basis: 33.3%;
 }
 .row .column.col-66 {
   flex-basis: 66.6%;
+}
+.row .column.col-75 {
+  flex-basis: 75%;
+}
+.row .column.col-90 {
+  flex-basis: 90%;
+}
+.row .column.col-100 {
+  flex-basis: 100%;
 }
 .row .column.btn-column {
   flex-basis: 10%;
@@ -2533,7 +2548,7 @@ MODAL
 }
 .uploadStatusWrap .status-box .status-icon.status-success,
 .statusBox .status-box .status-icon.status-success {
-  background: url("../icons/check_circle-24px.svg") center center no-repeat;
+  /* background: url("../icons/check_circle-24px.svg") center center no-repeat; */
   animation: none;
   width: 24px;
   height: 24px;
@@ -2556,7 +2571,8 @@ MODAL
   animation-fill-mode: forwards;
 }
 .uploadStatusWrap .status-icon.complete {
-  background: url("../icons/check_circle-24px.svg") center center no-repeat;
+  background: transparent;
+  /* background: url("../icons/check_circle-24px.svg") center center no-repeat; */
   animation: none;
   width: 24px;
   height: 24px;
@@ -2760,6 +2776,18 @@ CUSTOM FILE inputINPUTS
   text-overflow: ellipsis;
   width: calc(100% - 5rem);
   display: inline-block;
+}
+
+/* META BOXES */
+.primaryMeta {
+  border: 1px solid var(--line-color, #111);
+}
+.metaItem {
+  border-bottom: 1px solid var(--line-color, #111);
+  padding: 0.25rem 0.5rem;
+}
+.metaItem:last-child {
+  border-bottom: none;
 }
 
 /* Focus */

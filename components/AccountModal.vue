@@ -116,9 +116,6 @@
             <div v-for="(item, index) in usedContracts" :key="index">
           <div class="row between contractRow">
             <span class="column col-66">{{ item }}</span>
-            <!-- <div class="column" v-if="item === activeContractId">
-              <span class="activeTag">ACTIVE</span>
-            </div>-->
             <div class="column col-33 actions" v-if="item !== activeContractId">
               <button class="btn inactive" @click="setActiveContractId(item)">
                 Select
@@ -127,16 +124,25 @@
                 View
               </button>
               <div class="removeItem">
-                <button
+                <Button
                   @click="removeUsedContractId(index)"
-                  class="btn inactive"
+                  strokeClass="dark"
                 >
-                  <span>Remove</span>
-                </button>
+                  <IconDelete size="small" strokeClass="dark"/>
+                </Button>
               </div>
+              <Button  mode="hollow" @click="goToContract(item)">
+                <IconSettings size="small" strokeClass="dark"/>
+              </Button>
             </div>
             <div class="column col-33" v-if="item === activeContractId">
               <div class="activeTag">ACTIVE</div>
+              <button mode="hollow" class="btn inative" @click="goToGallery(item)">
+                View
+              </button>
+              <Button  mode="hollow" @click="goToContract(item)">
+                <IconSettings size="small" strokeClass="dark"/>
+              </Button>
             </div>
           </div>
         </div>
@@ -168,6 +174,28 @@
 
       <div class="settings-content modalSection" v-if="walletAddress">
         <label>Settings</label>
+        <div class="row contentRow">
+          <div class="column col-66">Image Optimization:<br />
+            <div class="xsmall">High resolution images will be reduced for presentation purposes. <br />This does not effect original files.</div>
+          </div>
+          <div class="column col-33">
+            <button
+              class="btn small"
+              :class="hasImageOptimization ? 'active' : 'inactive'"
+              @click="setHasImageOptimization(true)"
+            >
+              Yes
+            </button>
+            <button
+              class="btn small"
+              :class="hasImageOptimization ? 'inactive' : 'active'"
+              @click="setHasImageOptimization(false)"
+            >
+              No
+            </button>
+            
+          </div>
+        </div>
         <div class="row contentRow">
           <div class="column col-66">Status Information:</div>
           <div class="column col-33">
@@ -215,7 +243,6 @@
               >
                 none
               </button>
-              <!-- <div class="col-50 toggleItem"  onClick='setClass("read", "showMeta", "showImage")'>Meta</div> -->
             </div>
           </div>
         </div>
@@ -251,44 +278,66 @@
           </div>
         </div>
       </div>
-      <div class="row devSettings contentRow modalSection" v-if="isDevAddress">
-        <div class="column">Dev Mode:</div>
-        <div class="column">
-          <button
-            class="btn small"
-            :class="devModeClass(!devMode)"
-            @click="setDevMode(false)"
-          >
-            off
-          </button>
-          <button
-            class="btn small"
-            :class="devModeClass(devMode)"
-            @click="setDevMode(true)"
-          >
-            on
-          </button>
+      <div class="devSettings modalSection" v-if="isDevAddress">
+        <div class="row contentRow">
+          <div class="column">Dev Mode:</div>
+          <div class="column">
+            <button
+              class="btn small"
+              :class="devModeClass(!devMode)"
+              @click="setDevMode(false)"
+            >
+              off
+            </button>
+            <button
+              class="btn small"
+              :class="devModeClass(devMode)"
+              @click="setDevMode(true)"
+            >
+              on
+            </button>
+          </div>
+        </div>
+        <div class="row contentRow" v-if="isDevAddress">
+          <div class="column">Allow Chain Select (when Flow exists):</div>
+          <div class="column">
+            <button
+              class="btn small"
+              :class="chainSelectClass(!hasChainSelect)"
+              @click="setHasChainSelect(false)"
+            >
+              No
+            </button>
+            <button
+              class="btn small"
+              :class="chainSelectClass(hasChainSelect)"
+              @click="setHasChainSelect(true)"
+            >
+              Yes
+            </button>
+          </div>
+        </div>
+        <div class="row contentRow">
+          <div class="column">Show vertical Grid:</div>
+          <div class="column">
+            <button
+              class="btn small"
+              :class="hasVerticalGridLines ? 'inactive' : 'active'"
+              @click="setHasVerticalGrid(false)"
+            >
+              No
+            </button>
+            <button
+              class="btn small"
+              :class="hasVerticalGridLines ? 'active': 'inactive'"
+              @click="setHasVerticalGrid(true)"
+            >
+              Yes
+            </button>
+          </div>
         </div>
       </div>
-      <div class="row devSettings contentRow modalSection" v-if="isDevAddress">
-        <div class="column">Allow Chain Select:</div>
-        <div class="column">
-          <button
-            class="btn small"
-            :class="chainSelectClass(!hasChainSelect)"
-            @click="setHasChainSelect(false)"
-          >
-            No
-          </button>
-          <button
-            class="btn small"
-            :class="chainSelectClass(hasChainSelect)"
-            @click="setHasChainSelect(true)"
-          >
-            Yes
-          </button>
-        </div>
-      </div>
+      
     </div>
   </modal>
 </template>
@@ -302,7 +351,12 @@ export default {
     return {
       showAddInterface: false,
       customContractId: "",
+      hasVerticalGrid: false,
     };
+  },
+  mounted() {
+    // console.log('account modal mounted: ', this.devAddresses)
+    // console.log('does it contain 0xDbB59151b18Dd72E9AC092706e93De5b5d7a9325', this.devAddresses.includes('0xDbB59151b18Dd72E9AC092706e93De5b5d7a9325'))
   },
   computed: {
     ...mapGetters({
@@ -314,6 +368,10 @@ export default {
       uiTheme: "ui/uiTheme",
       usedContracts: "ui/usedContracts",
       hasChainSelect: "ui/hasChainSelect",
+      hasVerticalGridLines: "ui/hasVerticalGridLines",
+      hasVerticalGridLines: "ui/hasVerticalGridLines",
+      hasImageOptimization: "ui/hasImageOptimization",
+      imageOptimizationUrl: "ui/imageOptimizationUrl",
       statusModalMode: "ui/statusModalMode",
       activeContractId: "ui/activeContractId",
       activeContractName: "ui/activeContractName",
@@ -322,6 +380,9 @@ export default {
 
     devMode() {
       return this.$store.state.ui.devMode;
+    },
+    devAddresses() {
+      return this.$store.state.ui.devAddresses;
     },
   },
   methods: {
@@ -332,6 +393,7 @@ export default {
       setUiTheme: "ui/setUiTheme",
       setWalletChain: "ui/setWalletChain",
       setHasChainSelect: "ui/setHasChainSelect",
+      setHasImageOptimization: "ui/setHasImageOptimization",
     }),
 
     clearActiveContractId(value) {
@@ -341,6 +403,7 @@ export default {
       this.$store.commit("ui/setActiveContractId", value);
     },
 
+    
     setDevMode(value) {
       this.$store.commit("ui/setDevMode", value);
     },
@@ -350,11 +413,15 @@ export default {
     chainSelectClass(state) {
       return state ? "active" : "inactive";
     },
+    setHasVerticalGrid(value){
+      console.log('value', value)
+      this.hasVerticalGrid = value
+      this.$store.commit("ui/setHasVerticalGridLines", value);
+    },
     accountLink() {
       console.log("test");
     },
     setWallet(value) {
-      console.log("value", value);
       this.$store.commit("ui/setWallet", value);
     },
     handleDisconnect() {
@@ -377,6 +444,20 @@ export default {
       this.$router.push({
         path: `/gallery/${contractId}`,
       })
+    },
+    goToContract(contractId){
+      const requiredNetwork = this.$config.requiredNetwork;
+      // console.log('req', requiredNetwork);
+      const etherScanUrl = requiredNetwork === 'main' ? 'https://etherscan.io' : 'https://rinkeby.etherscan.io'
+      const theUrl = `${etherScanUrl}/token/${contractId}#writeContract`
+      console.log('theUrl', theUrl)
+      if(window){
+        window.open(theUrl, '_blank');
+
+      }
+      // this.$router.push({
+      //   path: `/gallery/${contractId}`,
+      // })
     }
   },
 };
@@ -410,6 +491,7 @@ export default {
   color: var(--ui-color, #111);
   border: 2px solid var(--ui-color, #111);
 }
+
 .account-header {
   padding: 1rem;
   border-bottom: 1px solid var(--ui-color, #111);
@@ -471,7 +553,8 @@ export default {
   align-items: center;
 }
 .contentRow {
-  padding: 0.5rem 0;
+  padding: 0.25rem 0;
+  font-size: .875rem;
 }
 .modalSection {
   padding: 1rem;

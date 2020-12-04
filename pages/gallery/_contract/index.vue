@@ -2,15 +2,34 @@
   <div class="pageContainer">
     <Header />
     <section id="gallery" class>
-      <div class="tertiary" >
+      <div class="tertiary">
         <div class="sidebarSection">
-          <label>Gallery</label>
-          <div class="">
-            <!-- <IconExternalLink :strokeClass="contrastMode" size="small" /> -->
-          <span style="display: inline-block" class="galleryIdWrap">
-            <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span></span>
-            <Button @click="handleCopy" mode="hollow" v-if="!hasCopied"><IconCopy size="small"/></Button>
-          <input type="text" id="copy-string" :value="galleryContractId" style="visibility: hidden; position: absolute; z-index: -1">
+          <div class="primaryMeta">
+            <div class="metaItem">
+              <label>Gallery</label>
+              <div class="small">
+                <span style="display: inline-block" class="galleryIdWrap">
+                <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span>
+                </span>
+                <Button @click="handleCopy" mode="hollow" v-if="!hasCopied">
+                  <IconCopy size="small"/>
+                </Button>
+                <div class="hiddenInputWrap" style="visibility: visible; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; position: relative;">
+                  <input type="text" id="copy-string" :value="galleryContractId" style=" position: absolute; z-index: -1">
+                </div>
+              </div>
+            </div>
+            <div class="loadingWrap" v-if="isLoadingMeta">
+              <Loading fillClass="light" />
+            </div>
+            <div class="metaItem" v-if="galleryMeta">
+              <label>Name</label>
+              <div class="small">{{galleryMeta.name}}</div>
+              <label>Symbol</label>
+              <div class="small symbol">{{galleryMeta.symbol}}</div>
+              <label>Tokens</label>
+              <div class="small">{{galleryMeta.count}}</div>
+            </div>
           </div>
         </div>
         <div class="sidebarSection">
@@ -25,16 +44,23 @@
             </a>
           </div>
         </div>
-        <div v-if="usedContracts && usedContracts.length > 0" class="sidebarSection">
+        <!-- <div v-if="galleryAssets">
+          <Button @click="getGalleryMeta(galleryContractId)">Get Meta</Button>
+        </div> -->
+        <div v-if="walletAddress && usedContracts && usedContracts.length > 0 &&  1===2" class="sidebarSection">
           <label>Your Contracts</label>
           <GalleriesUserMenu :contracts="usedContracts" :contrastMode="contrastMode" />
         </div>
-
-        <div v-if="galleryStatus !== 'loading' && (!usedContracts || usedContracts && usedContracts.length === 0)">
-          <label>Featured Galleries</label>
-          <GalleriesMenu :galleryContractId="galleryContractId" />
+        <div class="sidebarSection" v-if="1===2">
+          <div v-if="galleryStatus !== 'loading' && (!usedContracts || usedContracts && usedContracts.length === 0)">
+            <label>Featured Galleries</label>
+            <GalleriesMenu :galleryContractId="galleryContractId" />
+          </div>
         </div>
-        <div v-if="devMode"><Button @click="handleRefresh()">Refresh Assets</Button></div>
+        <div class="sidebarSection"  v-if="1===2">
+          <div v-if="devMode"><Button @click="handleRefresh()">Refresh Assets</Button>
+          </div>
+        </div>
         <div class="sidebarSection">
           <label>Display</label>
           <div>
@@ -67,13 +93,13 @@
 
       <div class="primary">
         <div>
-            <div v-if="galleryStatus === 'loading'" class="loadingWrap">
-            <Loading
-              message="Retrieving Tokens..."
-              size="large"
-              :fillClass="contrastMode === 'light' ? 'light' : 'dark'"
-            />
-          </div>
+          <div v-if="galleryStatus === 'loading'" class="loadingWrap">
+          <Loading
+            message="Retrieving Tokens..."
+            size="large"
+            :fillClass="contrastMode === 'light' ? 'light' : 'dark'"
+          />
+        </div>
           
         </div>
         <client-only>
@@ -137,19 +163,25 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
-const BASE_URL = "https://infinft-flow.vercel.app"
+import {
+  readThatMeta,
+} from "../../../utils/web3Read";
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+import ogImagePreview from '~/assets/images/preview.jpg'
+
 export default {
   name: 'GalleryPage',
   head: {
     title: 'InfiNFT Gallery',
     meta: [
+      // { hid: 'og:title', name: 'og:title', content: `InfiNFT | ${this.galleryName}` },
       { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
       { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
       { hid: "og:type", name: "og:type", content: "website" },
       {
           hid: "og:image",
           property: "og:image",
-          content: `${BASE_URL}/images/preview.jpg`
+          content: BASE_URL + ogImagePreview
         },
     ],
   },
@@ -172,12 +204,32 @@ export default {
       })
     }
   },
+  
   data(){
     return {
       copyString: "",
       hasCopied: false,
+      galleryMeta: null,
+      galleryName: "",
+      isLoadingMeta: false,
     }
   },
+  async mounted() {
+    const contractId = this.$route.params.contract;
+    if(!contractId){return null}
+    this.isLoadingMeta = true;
+    const params = {
+      contractId: contractId,
+      tokenId: 1
+    }
+    const metaData = await this.handleGalleryMeta(params).then(result => {
+        return result
+      }).catch(error => console.error(error));
+    this.galleryMeta = metaData
+    this.galleryName = metaData && metaData.name
+    this.isLoadingMeta = false;
+  },
+
   computed: {
     ...mapFields('galleryStore', ['galleryContractId']),
     ...mapGetters({
@@ -185,11 +237,13 @@ export default {
       uiMode: 'ui/uiMode',
       uiTheme: 'ui/uiTheme',
       contrastMode: 'ui/contrastMode',
+      walletAddress: 'ui/walletAddress',
       usedContracts: 'ui/usedContracts',
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
       galleryStatus: 'galleryStore/galleryStatus',
       galleryDisplayMode: 'galleryStore/galleryDisplayMode',
+      
     }),
     displayMode() {
       return 'expanded'
@@ -201,6 +255,9 @@ export default {
     ...mapMutations({
       getItems: 'galleryStore/getItems',
       setGalleryDisplayMode: 'galleryStore/setGalleryDisplayMode',
+    }),
+    ...mapActions({
+      handleGalleryMeta: 'ui/handleGalleryMeta',
     }),
     handleRefresh() {
       console.log('refresh');
@@ -217,6 +274,7 @@ export default {
     },
     handleCopy () {
       let stringToCopy = document.querySelector('#copy-string')
+      console.log('stringToCopy', stringToCopy)
       stringToCopy.setAttribute('type', 'text') 
       stringToCopy.select()
 
@@ -235,15 +293,36 @@ export default {
       }
 
       /* unselect the range */
-      stringToCopy.setAttribute('type', 'hidden')
+      // stringToCopy.setAttribute('type', 'hidden')
       window.getSelection().removeAllRanges()
-      
     },
+    async getGalleryMeta(contractId, source){
+      const galleryArray = this.galleryAssets;
+      console.log('readThatMeta', readThatMeta);
+      // const lastId = galleryArray.length ? galleryArray.length : 1;
+      const lastId = galleryArray[0] && galleryArray[0].token_id || 1;
+      console.log('getGalleryMeta', lastId)
+      const params = {
+        contractId: contractId,
+        tokenId: lastId
+      }
+      console.log('params: ', params)
+      this.isLoadingMeta = true
+      const metaData = await this.handleGalleryMeta(params).then(result => {
+        return result
+      }).catch(error => console.error(error));
+      console.log('metaData: ', metaData);
+      this.galleryMeta = metaData
+      this.isLoadingMeta = false;
+    }
   },
 }
 </script>
 
 <style lang="scss">
+.symbol{
+  text-transform: uppercase;
+}
 .linkRow {
   padding: 20px;
   min-height: 100px;

@@ -542,6 +542,80 @@ var abiART = [
     type: "function",
   },
 ];
+const readThatMeta = async (params, context) => {
+  const { contractId, tokenId } = params;
+  const infuraUrl = context.$config.infuraUrl;
+  if (!infuraUrl) {
+    console.error("no infuraurl");
+    return null;
+  }
+  if (!contractId) {
+    return null;
+  }
+  if (!Web3) {
+    return null;
+  }
+  const readWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
+  const contract = new readWeb3.eth.Contract(abiART, contractId);
+
+  const getName = contract.methods
+    .name()
+    .call()
+    .then((result) => {
+      console.log("result is", result);
+      return result;
+    })
+    .catch((err) => {
+      console.error("getName error", err);
+      throw err;
+    });
+  const getSymbol = contract.methods
+    .symbol()
+    .call()
+    .then((result) => {
+      console.log("getSymbol result is", result);
+      return result;
+    })
+    .catch((err) => {
+      console.error("getSymbol error", err);
+      throw err;
+    });
+  const getTotalTokens = contract.methods
+    .totalArtPieces()
+    .call()
+    .then((result) => {
+      console.log("getTotalTokens result is", result);
+      return result;
+    })
+    .catch((err) => {
+      console.error("getTotalTokens error", err);
+      throw err;
+    });
+
+  const promiseArray = [getName, getSymbol, getTotalTokens];
+  console.log("readMeta: promiseArray", promiseArray);
+  const allMeta = await Promise.allSettled(promiseArray)
+    .then((values) => {
+      console.log("READ: values:", values);
+      const data = {
+        name: values[0].value,
+        symbol: values[1].value,
+        count: values[2].value,
+        // ...(values[1] && values[1].value),
+        // ...(values[2] && values[2].value),
+        // ownerAddress: values[3] && values[3].value,
+        // ...(values[4] && values[4].value),
+      };
+      console.log("read: all data", data);
+      return data;
+    })
+    .catch((error) => {
+      console.error(error);
+      return error;
+    });
+
+  return allMeta;
+};
 
 const readThatShit = async (params, context) => {
   const { tokenId, contractId } = params;
@@ -562,12 +636,17 @@ const readThatShit = async (params, context) => {
   }
   const readWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
   const contract = new readWeb3.eth.Contract(abiART, contractId);
+  const isAlpha = contractId === "0xd0c402bcbcb5e70157635c41b2810b42fe592bb0";
   // console.log('contract.methods', contract.methods)
   const coreMetadata = contract.methods
     .getCoreMetadata(tokenId)
     .call()
     .then((result) => {
-      // console.log('result is', result)
+      console.log("result is", result);
+      if (isAlpha) {
+        console.log("READ: is alpha contract");
+      }
+
       const data = {
         title: result.artTitleByID,
         authorName: result.artistNameByID,
@@ -577,116 +656,186 @@ const readThatShit = async (params, context) => {
         fileIpfsHash: result.fileIPFSHashByID,
         editions: result.totalEditionsByID,
       };
-
-      //   idresult0.toString(10),
-      //   idresult1.toString(10),
-      //   idresult2.toString(10),
-      //   idresult3.toString(10),
-      //   idresult4.toString(10),
-      //   idresult5.toString(10),
-      //   idresult6.toString(10)
-      // if (document) {
-      //   document.getElementById('metadata2').textContent = idresult2
-      //   document.getElementById('metadata3').textContent = idresult3
-      //   document.getElementById('metadata4').textContent = idresult4
-      //   document.getElementById('metadata5').textContent = idresult5
-      //   document.getElementById('metadata6').textContent = idresult6
-      // }
       return data;
     })
     .catch((err) => {
-      console.error(err);
+      console.error("coreMetadata error", err);
       throw err;
     });
 
-  const additionalMetadata = await contract.methods
-    .getAdditionalMetadata(tokenId)
-    .call()
-    .then((result) => {
-      // console.log('result', result)
-      const data = {
-        exhibition: result.exhibitionByID,
-        fileType: result.fileTypeByID,
-        thumbnailHash: result.thumbnailHashByID,
-      };
-      // FILE TYPE
-      // document.getElementById('metadata7').textContent = idresult7
-      // document.getElementById('metadata8').textContent = idresult8
-      // fileTypeByID = idresult7
-      return data;
-    })
-    .catch((err) => {
-      console.error(err);
-      throw err;
-    });
+  console.log("READ before additional meta", isAlpha);
+  const additionalMetadata =
+    !isAlpha &&
+    (await contract.methods
+      .getAdditionalMetadata(tokenId)
+      .call()
+      .then((result) => {
+        // console.log('result', result)
+        const data = {
+          exhibition: result.exhibitionByID,
+          fileType: result.fileTypeByID,
+          thumbnailHash: result.thumbnailHashByID,
+        };
+        // FILE TYPE
+        // document.getElementById('metadata7').textContent = idresult7
+        // document.getElementById('metadata8').textContent = idresult8
+        // fileTypeByID = idresult7
+        return data;
+      })
+      .catch((err) => {
+        console.error("additionalMetadata error", err);
+        throw err;
+      }));
   // console.log('additionalMetadata', additionalMetadata)
 
-  const ownerOfToken = contract.methods
-    .ownerOf(tokenId)
-    .call()
-    .then((result) => {
-      // console.log('ownerOf result', result)
-      // if (document) {
-      //   document.getElementById('owner0').textContent = result
-      // }
-      return result;
-    })
-    .catch((err) => {
-      console.error(err);
-      throw err;
-    });
-  const imageLinkData = contract.methods
-    .getImageLink(tokenId)
-    .call()
-    .then((resultLinks) => {
-      const linkData = {
-        fileArweaveUrl: resultLinks.fileArweaveURL,
-        fileIpfsUrl: resultLinks.fileIPFSURL,
-        thumbnailUrl: resultLinks.thumbnailURL,
+  const ownerOfToken =
+    !isAlpha &&
+    contract.methods
+      .ownerOf(tokenId)
+      .call()
+      .then((result) => {
+        // console.log('ownerOf result', result)
+        // if (document) {
+        //   document.getElementById('owner0').textContent = result
+        // }
+        return result;
+      })
+      .catch((err) => {
+        console.error("ownerOfToken error", err);
+        throw err;
+      });
+  const imageLinkData =
+    !isAlpha &&
+    contract.methods
+      .getImageLink(tokenId)
+      .call()
+      .then((resultLinks) => {
+        console.info("imageLinkData resultLinks ", resultLinks);
+
+        const linkData = {
+          fileArweaveUrl: resultLinks.fileArweaveURL,
+          fileIpfsUrl: resultLinks.fileIPFSURL,
+          thumbnailUrl: resultLinks.thumbnailURL,
+        };
+        return linkData;
+      })
+      .catch((err) => {
+        console.error("imageLinkData error ", err);
+      });
+
+  const royaltyData =
+    !isAlpha &&
+    contract.methods
+      .getRoyaltyData(tokenId)
+      .call()
+      .then((result) => {
+        // console.log('result', result)
+        const { artistAddress, royaltyFeeByID } = result;
+        // let [royaltyresult0, royaltyresult1] = result3
+        // if (document) {
+        //   document.getElementById('royalty0').textContent = royaltyresult0
+        //   document.getElementById('royalty1').textContent = royaltyresult1
+        // }
+        return { artistAddress, royaltyFee: royaltyFeeByID };
+      })
+      .catch((err) => {
+        console.error("royaltyData error: ", err);
+        throw err;
+      });
+
+  // dont get things if alpha contract
+  const promiseArray = isAlpha
+    ? [
+        coreMetadata,
+        // royaltyData,
+        // ownerOfToken,
+        imageLinkData,
+      ]
+    : [
+        coreMetadata,
+        additionalMetadata,
+        royaltyData,
+        ownerOfToken,
+        imageLinkData,
+      ];
+  console.log("read: promiseArray", promiseArray);
+  const allData = await Promise.allSettled(promiseArray)
+    .then((values) => {
+      console.log("READ: values:", values);
+      const data = {
+        ...(values[0] && values[0].value),
+        ...(values[1] && values[1].value),
+        ...(values[2] && values[2].value),
+        ownerAddress: values[3] && values[3].value,
+        ...(values[4] && values[4].value),
       };
-      return linkData;
+      console.log("read: all data", data);
+      return data;
     })
-    .catch((err) => {
-      console.error(err);
+    .catch((error) => {
+      console.error(error);
+      return error;
     });
 
-  const royaltyData = contract.methods
-    .getRoyaltyData(tokenId)
+  return allData;
+};
+
+const readThatToken = async (params, context) => {
+  const { tokenId, contractId } = params;
+  const infuraUrl = context.$config.infuraUrl;
+
+  if (!infuraUrl) {
+    console.error("no infuraurl");
+    return null;
+  }
+  if (!contractId) {
+    return null;
+  }
+  if (!Web3) {
+    return null;
+  }
+  const readWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
+  const contract = new readWeb3.eth.Contract(abiART, contractId);
+
+  const getSymbol = contract.methods
+    .symbol(tokenId)
     .call()
     .then((result) => {
-      // console.log('result', result)
-      const { artistAddress, royaltyFeeByID } = result;
-      // let [royaltyresult0, royaltyresult1] = result3
-      // if (document) {
-      //   document.getElementById('royalty0').textContent = royaltyresult0
-      //   document.getElementById('royalty1').textContent = royaltyresult1
-      // }
-      return { artistAddress, royaltyFee: royaltyFeeByID };
+      console.log("result is", result);
+      // const data = {
+      //   title: result.artTitleByID,
+      //   authorName: result.artistNameByID,
+      //   description: result.artistNoteByID,
+      //   edition: result.editionNumberByID,
+      //   fileArweaveHash: result.fileArweaveHashByID,
+      //   fileIpfsHash: result.fileIPFSHashByID,
+      //   editions: result.totalEditionsByID,
+      // };
+
+      return data;
     })
     .catch((err) => {
       console.error(err);
       throw err;
     });
-  // console.log('royaltyData', royaltyData)
-  //imageLink,
-  // additionalMetadata,
+
   const allData = await Promise.allSettled([
-    coreMetadata,
-    additionalMetadata,
-    royaltyData,
-    ownerOfToken,
-    imageLinkData,
+    getSymbol,
+    // additionalMetadata,
+    // royaltyData,
+    // ownerOfToken,
+    // imageLinkData,
   ])
     .then((values) => {
-      // console.log('values:', values)
-      const data = {
-        ...values[0].value,
-        ...values[1].value,
-        ...values[2].value,
-        ownerAddress: values[3].value,
-        ...values[4].value,
-      };
-      // console.log('all data', data)
+      console.log("values:", values);
+      // const data = {
+      //   ...values[0].value,
+      //   ...values[1].value,
+      //   ...values[2].value,
+      //   ownerAddress: values[3].value,
+      //   ...values[4].value,
+      // };
+
       return data;
     })
     .catch((error) => {
@@ -864,4 +1013,10 @@ const readImageLink = (params, context) => {
 //   // output.appendChild(read)
 // }
 
-export { readThatShit, readAdditionalMeta, readRoyaltyData, readImageLink };
+export {
+  readThatShit,
+  readThatMeta,
+  readAdditionalMeta,
+  readRoyaltyData,
+  readImageLink,
+};

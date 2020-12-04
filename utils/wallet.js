@@ -122,11 +122,10 @@ const handleAccountLink = () => {
  *
  */
 const resolveEns = (address, provider, setEnsName) => {
-  console.log("resolveEns:", address, provider);
+  // console.log("resolveEns:", address, provider);
   // if (address && provider) {
   //   var ens = new ENS(provider);
   //   console.log("ens", ens);
-
   //   // var ensResult = new ens(provider);
   //   // console.log("ensThing", ensResult);
   //   return ens

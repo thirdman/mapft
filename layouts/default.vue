@@ -6,6 +6,7 @@
       uiMode,
       uiTheme,
       this.$store.state.ui.walletNetwork || 'no-network',
+      hasVerticalGridLines ? 'hasLines' : ''
     ]"
   >
     <!-- <Header /> -->
@@ -14,7 +15,21 @@
   </div>
 </template>
 
-<style></style>
+<style lang="scss">
+#body.hasLines:after {
+  content:"";
+  position: absolute;
+  lefT: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  min-height: 300vh;
+  background: linear-gradient(180deg, var(--danger-color, #eee) 1px, transparent 1px) 1px 0, transparent;
+  background-size: 1px 1rem;
+  pointer-events: none;
+}
+</style>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
@@ -41,6 +56,7 @@ export default {
       uiMode: 'ui/uiMode',
       uiTheme: 'ui/uiTheme',
       contrastMode: 'ui/contrastMode',
+      hasVerticalGridLines: 'ui/hasVerticalGridLines',
     }),
     walletNetwork() {
       return this.$store.state.ui.walletNetwork

@@ -1,6 +1,6 @@
 <template>
   <svg
-    :class="strokeClass"
+    :class="`${strokeClass} ${size}`"
     xmlns="http://www.w3.org/2000/svg"
     class="icon icon-tabler icon-tabler-arrows-maximize"
     width="24"
@@ -41,6 +41,6 @@
 <script>
 //https://tablericons.com/
 export default {
-  props: ['strokeClass'],
+  props: ['strokeClass', 'size'],
 }
 </script>

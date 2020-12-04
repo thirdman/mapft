@@ -4,19 +4,6 @@
     :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
   >
   <client-only>
-    <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><br />
-    <div v-if="showDevInfo">
-        Environment: {{VERCEL_ENV}}<br />
-        rootUrl: {{rootUrl}}<br />
-        factoryContract: {{factoryContract}}<br />
-        requiredNetwork: {{requiredNetwork}}<br />
-        infuraUrl: {{infuraUrl}}<br />
-        repo: {{VERCEL_GIT_REPO_SLUG}}<br />
-        baseUrl: {{VERCEL_URL}}<br />
-        commit: {{VERCEL_GIT_COMMIT_MESSAGE}}<br />
-        <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
-      </div>
-    </div>
     <div class="headerRow w3-row">
       <div class="brand w3-col s2">
         <span class="logoWrap" @click="goToHome()">
@@ -209,6 +196,22 @@
     </div>
   </client-only>
   <client-only>
+  <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><br />
+    <div v-if="showDevInfo">
+        Environment: {{VERCEL_ENV}}<br />
+        rootUrl: {{rootUrl}}<br />
+        factoryContract: {{factoryContract}}<br />
+        requiredNetwork: {{requiredNetwork}}<br />
+        infuraUrl: {{infuraUrl}}<br />
+        repo: {{VERCEL_GIT_REPO_SLUG}}<br />
+        baseUrl: {{VERCEL_URL}}<br />
+        commit: {{VERCEL_GIT_COMMIT_MESSAGE}}<br />
+        <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
+      </div>
+    </div>
+  </client-only>
+  <client-only>
+    <div>
     <account-modal />
     <div style="opacity: 0; visibility: 0; z-index: -1">
       {{ shallShowStatusModal ? "yes" : "" }}
@@ -217,6 +220,7 @@
     <cropper-modal />
     <chain-modal />
     <info-modal />
+    </div>
   </client-only>
   </header>
 </template>
@@ -279,17 +283,27 @@ export default {
   // mixins: [myMixin],
   components: {
     // ExampleModal,
-  },
-
+  }, 
+  // created() {
+  //   if (process.client) {
+  //     // handle client side
+  //     // console.log('created client')
+  //     // console.log('this.$scopedSlots', this.$scopedSlots)
+  //     // console.log('MOUNTED modal refs', this.$modal)
+  //     // this.$modal.show("cropper-modal");
+  //   }
+  //   if (process.server) {
+  //     // const { req, res, beforeNuxtRender } = context
+  //     // console.log("created server");
+  //     // console.log('this.$scopedSlots', this.$scopedSlots)
+  //   }
+  // },
   mounted() {
     mounted: () => {
       this.$refs.modal.show();
     };
     if(this.$config){
-      console.log('this.$config is available')
-    }
-    if (process.client) {
-      this.walletCheck();
+      // console.log('HEADER this.$config is available', this.$config)
       const rootUrl = this.$config.rootUrl;
       const requiredNetwork = this.$config.requiredNetwork;
       const factoryContract = this.$config.factoryContract;
@@ -297,6 +311,7 @@ export default {
       const VERCEL_ENV = this.$config.VERCEL_ENV || "local"
       const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
       const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
+      const VERCEL_GIT_COMMIT_MESSAGE = this.$config.VERCEL_GIT_COMMIT_MESSAGE || '-'
       
       this.rootUrl = rootUrl;
       this.factoryContract = factoryContract;
@@ -305,25 +320,14 @@ export default {
       this.VERCEL_ENV = VERCEL_ENV
       this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
       this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
+      this.VERCEL_GIT_COMMIT_MESSAGE = VERCEL_GIT_COMMIT_MESSAGE
       this.VERCEL_URL = this.$config.VERCEL_URL || 'local'
-      this.VERCEL_GIT_COMMIT_MESSAGE = this.$config.VERCEL_GIT_COMMIT_MESSAGE || 'local'
-      
     }
-  },
-  created() {
     if (process.client) {
-      // handle client side
-      // console.log('created client')
-      // console.log('this.$scopedSlots', this.$scopedSlots)
-      // console.log('MOUNTED modal refs', this.$modal)
-      // this.$modal.show("cropper-modal");
-    }
-    if (process.server) {
-      // const { req, res, beforeNuxtRender } = context
-      // console.log("created server");
-      // console.log('this.$scopedSlots', this.$scopedSlots)
+      this.walletCheck();
     }
   },
+
   data() {
     return {
       showDevInfo: true,
@@ -457,24 +461,18 @@ export default {
       this.$store.commit("mintFormStore/clearActiveContractId", value);
     },
     setWallet(value) {
-      console.log("value", value);
       this.$store.commit("ui/setWallet", value);
     },
     setWalletStatus(value) {
-      console.log("value", value);
       this.$store.commit("ui/setWalletStatus", value);
     },
     setProvider(value) {
-      console.log("value", value);
       this.$store.commit("ui/setWalletProvider", value);
     },
     setNetworkName(value) {
-      console.log("value", value);
       this.$store.commit("ui/setNetworkName", value);
     },
     handleNetworkWarning() {
-      console.log('this is the nnetwork warning');
-      console.log('this.$modal', this.$modal)
       this.$modal.show("info-modal");
     },
 

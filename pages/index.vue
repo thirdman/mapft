@@ -151,42 +151,50 @@
 
 <script>
 import { mapGetters } from 'vuex'
-const BASE_URL = "https://infinft.app"
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+import ogImagePreview from '~/assets/images/preview.jpg'
+
+ 
 export default {
   name: 'ViewPageParams',
   data() {
     return {
-       baseUrl: "",
-      previewUrl: `/images/preview.jpg`,
+      baseUrl: "https://localhost:3333",
+      previewUrl: `images/preview.jpg`,
     }
   },
   created(){
     this.baseUrl = this.$config.rootUrl
-    // console.log('this.$config', this.$config.rootUrl);
     // console.log('this', this)
     // console.log('this.router', this.$router)
     // console.log('this.router.base', this.$router.base)
     console.log('process', process.env.tempUrl)
+    console.log('this.baseUrl', this.baseUrl)
   },
   head: {
     title: 'InfiNFT',
     meta: [
       { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
+      { hid: "og:title", name: "og:title", content: "InfiNFT" },
       { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
       { hid: "og:type", name: "og:type", content: "website" },
       {
           hid: "og:image",
           property: "og:image",
+          content: BASE_URL + ogImagePreview
+          // content: `${BASE_URL}/images/preview.jpg`
+          // content: `~/img/preview.jpg`
           // content: this.previewUrl,
-          content: `${process.env.tempUrl}/images/preview.jpg`
           // content: `~/assets/images/preview.jpg`
         },
+        
     ],
   },
   computed: {
     ...mapGetters({
       contrastMode: 'ui/contrastMode',
-      hasChainSelect: 'ui/hasChainSelect'
+      hasChainSelect: 'ui/hasChainSelect',
+      hasVerticalGridLines: 'ui/hasVerticalGridLines'
     }),
   },
 }

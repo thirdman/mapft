@@ -1,6 +1,5 @@
 <template>
   <div>
-    sdfsdf
     <div id="viewport">
       
       
@@ -13,7 +12,7 @@
 .viewport{
   width: 500px;
   height: 500px;
-  border: 1px solid lime;
+
 }
 
 </style>

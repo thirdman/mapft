@@ -6,7 +6,17 @@
       <div class="tertiary">
         <h2>Mint Tokens</h2>
         <div class="aside">
-          <p>Mint NFT tokens using your deployed custom contract.</p>
+          <!-- <p>Mint NFT tokens using your deployed custom contract.</p> -->
+          <p>
+            Use the contract id generated in the deploy form to create your own tokens.
+          </p>
+          <p>
+            File size is currently limited to 500Mb.
+          </p>
+          <p>
+            Batch minting (editions) occurs automatically up to the Total Editions entered.
+            A maximum of 10 tokens can be batch minted at one time.
+          </p>
         </div>
       </div>
       <div class="primary">
@@ -96,6 +106,13 @@
                     <div id="userContractAddress">{{ activeContractId }}</div>
                   </div>
                   <div class="column col-33">
+                    <Button
+                      mode="hollow"
+                      size="small"
+                      @click="goToGallery(activeContractId)"
+                    >
+                      View Gallery
+                    </Button>
                     <button
                       class="btn"
                       id="editUserContractButton"
@@ -117,17 +134,17 @@
       </div>
       <div class="secondary">
         <div class="aside help">
-          <h6>Minting NFT Tokens</h6>
-          <p>
+          <!-- <h6>Minting NFT Tokens</h6> -->
+          <!-- <p>
             Use the contract id generated in the deploy form to create your own tokens.
           </p>
           <p>
-            File size is currently limited to 50Mb.
+            File size is currently limited to 500Mb.
           </p>
           <p>
             Batch minting (editions) occurs automatically up to the Total Editions entered.
             A maximum of 10 tokens can be batch minted at one time.
-          </p>
+          </p> -->
         </div>
       </div>
     </section>
@@ -258,16 +275,25 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { connectWallet, handleAccountLink } from "../utils/wallet";
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+import ogImagePreview from '~/assets/images/preview.jpg'
+
 export default {
   name: "MintPage",
    head: {
     title: 'InfiNFT: Mint Tokens',
     meta: [
+      { hid: "og:title", name: "og:title", content: "InfiNFT: Mint NFT Tokens with on-chain meta" },
       {
-        hid: 'description',
-        name: 'description',
+        hid: 'og:description',
+        name: 'og:description',
         content: 'Mint your own custom NFT tokens'
-      }
+      },
+      {
+          hid: "og:image",
+          property: "og:image",
+          content: BASE_URL + ogImagePreview
+      },
     ],
    },
    data(){
@@ -315,6 +341,11 @@ export default {
     handleAccountModal() {
       this.$modal.show("account-modal");
     },
+    goToGallery(contractId){
+      this.$router.push({
+        path: `/gallery/${contractId}`,
+      })
+    }
   },
 };
 </script>

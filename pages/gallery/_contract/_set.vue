@@ -21,16 +21,19 @@
             </a>
           </div>
         </div>
-        <div v-if="usedContracts && usedContracts.length > 0" class="sidebarSection">
+        <div class="sidebarSection" v-if="1===2">
+        <div v-if="walletAddress && usedContracts && usedContracts.length > 0 " class="sidebarSection">
           <label>Your Contracts</label>
           <GalleriesUserMenu :contracts="usedContracts" />
         </div>
-
-        <div v-if="!usedContracts || usedContracts && usedContracts.length === 0">
+        </div>
+        <div class="sidebarSection" v-if="1===2">
+        <div v-if="!usedContracts || usedContracts && usedContracts.length === 0 ">
           <label>Featured Galleries</label>
           <GalleriesMenu :galleryContractId="galleryContractId" />
         </div>
         <div v-if="devMode"><Button @click="handleRefresh()">Refresh Assets</Button></div>
+        </div>
         <div class="sidebarSection">
           <label>Display</label>
           <div class="buttonGroup uiMode" :class="contrastMode" direction="column">
@@ -91,7 +94,9 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
-const BASE_URL = "https://infinft-flow.vercel.app"
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+import ogImagePreview from '~/assets/images/preview.jpg'
+
 export default {
   name: 'SetPage',
   head: {
@@ -104,7 +109,7 @@ export default {
       {
           hid: "og:image",
           property: "og:image",
-          content: `${BASE_URL}/images/preview.jpg`
+          content: BASE_URL + ogImagePreview
         },
     ],
   },
@@ -136,7 +141,9 @@ export default {
     ...mapGetters({
       uiTheme: 'ui/uiTheme',
       uiMode: 'ui/uiMode',
+      devMode: 'ui/devMode',
       contrastMode: 'ui/contrastMode',
+      walletAddress: 'ui/walletAddress',
       usedContracts: 'ui/usedContracts',
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',

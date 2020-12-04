@@ -1,6 +1,6 @@
 <template>
   <div class="statusInformation" :class="statusModalMode">
-    <div class="closeButtonWrap">
+    <div class="closeButtonWrap" v-if="devMode">
       <button
         class="btn iconButton"
         @click="
@@ -59,21 +59,21 @@
 
       <div>
         <a :href="etherscanLink" class="etherscanLink" target="blank">
-          <IconExternalLink :strokeClass="contrastMode" />
+          <IconExternalLink :strokeClass="contrastMode" size="small" />
           {{ etherscanLink }}
         </a>
       </div>
     </div>
     <div v-if="mintStatus === 'checkTransaction'">
       <a class="etherscanLink" target="blank" href="https://discord.gg/WPpD2X5">
-        <IconExternalLink :strokeClass="contrastMode" />
+        <IconExternalLink :strokeClass="contrastMode" size="small"/>
         <span>Discord Server</span>
       </a>
     </div>
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .statusInformation {
   position: relative;
   background: var(--fill-color, #111);
@@ -84,8 +84,14 @@
   padding: 0.5rem;
 }
 .statusMessage {
-  margin: 0.5rem 0;
+  margin: 0.5rem 0 .5rem 1rem;
   max-width: 40rem;
+}
+.statusInformation.fixed {
+  padding: 2rem 1rem;
+  .statusRow{
+    margin-bottom: 1rem;
+  }
 }
 .statusInformation.inline {
   padding: 1rem;
@@ -118,9 +124,23 @@
 .closeButtonWrap button:hover {
   transform: scale(1.1);
 }
-.statusInformation h3 {
-  margin: 0;
+
+.form{
+  .statusInformation{
+    h3 {
+    margin: 0;
+    }
+  }
+  &.checkTransaction, &.noContract{
+    .statusRow{
+      align-items: flex-start;
+      .statusIcon{
+        margin-top: .5rem;
+      }
+    }
+  }
 }
+
 .statusRow {
   display: flex;
   flex-direction: row;
@@ -142,7 +162,7 @@
   border: 2px solid #111;
   border-radius: 80px;
   overflow: hidden;
-  margin-left: 1rem;
+  margin-left: 2rem;
 }
 .statusRow .loadingPuppy img{
   object-fit: cover;
@@ -168,6 +188,7 @@ export default {
   props: ['displayMode', 'message', 'title', 'status'], // possibly redundant.
   computed: {
     ...mapGetters({
+      devMode: 'ui/devMode',
       contrastMode: 'ui/contrastMode',
       walletNetwork: 'ui/walletNetwork',
       mintTransactionId: 'mintFormStore/mintTransactionId',

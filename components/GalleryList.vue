@@ -1,8 +1,5 @@
 <template>
   <div id="galleryList">
-    <div v-if="devMode">
-      length: {{galleryAssets && galleryAssets.length}}
-    </div>
     <div class="setsRow" v-if="galleryAssets.length > 0">
       <div class="sets">
       <label>Filter:</label>
@@ -67,14 +64,15 @@
             <DefaultImage v-if="!item.image_thumbnail_url || item.image_thumbnail_url === 'https://storage.opensea.io'"/>
           </div>
           <div class="galleryListItemContent">
+            <div class="tokenId" v-if="displayMode === 'list'">#{{item.token_id}}</div>
             <label>
               <span class="fileType" v-if="displayMode === 'compact'">
                 {{ getFileType(item.traits) }}
               </span>
               {{ item.name }}
             </label>
-            <p v-if="displayMode !== 'compact'" class="itemDescription">
-              {{ item.description }}
+            <p v-if="item.description && displayMode !== 'compact'" class="itemDescription">
+              {{ truncate(item.description, 200, "..." )}}
             </p>
             <div class="itemTags" v-if="displayMode !== 'compact'">
               <Trait
@@ -224,8 +222,12 @@
   object-fit: contain;
   object-position: left top;
 }
-
-.itemDescription {
+.tokenId{
+  text-transform: uppercase;
+  font-variation-settings: 'wght' 600;
+  margin-bottom: 1rem;
+}
+.itemDescription, .tokenId {
   font-size: 0.75rem;
   line-height: 1.5;
 }
@@ -292,6 +294,8 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+// import { truncate } from '../utils/misc'
+
 export default {
   props: ['displayMode'],
   // data() {
@@ -410,6 +414,15 @@ export default {
 
       return allSets.sort((a, b) => b.count - a.count)
     },
+    truncate(text, length, clamp){
+      // console.log('truncate: ', {text, length, clamp});
+      clamp = clamp || '...';
+      var node = document.createElement('div');
+      node.innerHTML = text;
+      var content = node.textContent;
+      const returnContent = content.length > length ? content.slice(0, length) + clamp : content;
+      return returnContent;
+    }
    
   },
 }

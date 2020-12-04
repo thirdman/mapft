@@ -137,10 +137,10 @@ const deployThatShit = (event, state, context) => {
   console.log("factoryContract", factoryContract);
   console.log("ENV", ENV);
   console.log(
-    "is this is production the factory contract should be 0x677444A94D7ba549aCAB94dA8767E1145E001AaA"
+    "IF this is production the factory contract should be 0x677444A94D7ba549aCAB94dA8767E1145E001AaA"
   );
   console.log(
-    "is this is staging the factory contract should be 0x8af1b8e9dff9e2a9cfaf31766fcddb3e24040671"
+    "IF this is staging the factory contract should be 0x8af1b8e9dff9e2a9cfaf31766fcddb3e24040671"
   );
 
   const doIt = true;
@@ -176,7 +176,7 @@ const deployThatShit = (event, state, context) => {
   // MAP STATE INTO EXISTING MIT FORM VARIABLES
   const contractName = state.name;
   const contractSymbol = state.symbol;
-
+  console.log("about to deploy with ", { contractName, contractSymbol });
   if (!contractName || !contractSymbol) {
     console.error("missing variable: ", { contractName, contractSymbol });
     context.commit("deployFormStore/setDeployErrorMessage", {

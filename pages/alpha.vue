@@ -186,6 +186,7 @@
                 :src="giantSwanData.fileIpfsUrl"
                 mode="preview"
                 :data="giantSwanData"
+                :hasImageOptimization="true"
               />
               </client-only>
               <!-- <ModelViewer

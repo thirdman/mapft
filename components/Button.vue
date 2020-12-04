@@ -5,7 +5,7 @@
     @click="$emit('click')"
     :disabled="disabled"
   >
-    <slot></slot>
+    <slot />
   </button>
 </template>
 
@@ -68,7 +68,7 @@
     border: 1px solid var(--line-color, #111);
     background: transparent;
     padding: 2px .5rem;
-    // color: var(--ui-color, #111);
+    color: currentColor;
   }
   // HOVER
   &:not(.iconButton):hover {

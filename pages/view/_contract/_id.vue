@@ -96,13 +96,25 @@
           <div class="metaItem">
             <label>Description</label>
             <div id="metadata4" class="aside">
-              <p>
+              <!-- {{getDescription()}} -->
+              <!-- <p>
                 {{
                 (viewData && viewData.description) ||
                 tempViewItem.description ||
                 ''
                 }}
-              </p>
+              </p> -->
+              <div v-if="getDescription()">
+                {{showExpandedDescription ? getDescription() : truncate(getDescription(), 300, '...' )}}
+              </div>
+              <!-- <div v-if="viewData && viewData.description">
+                {{showExpandedDescription ? viewData.description : truncate(viewData.description, 300, '...' )}}
+              </div> -->
+              <div v-if="getDescription() && getDescription().length > 300" >
+                <Button mode="hollow" @click="setExpandDescription(!showExpandedDescription)">
+                  {{showExpandedDescription ? "Show less" : "Show more"}}
+                </Button>
+              </div>
               <div v-if="viewStatus === 'loading' && !viewData" class="loadingPlaceholder">
                 <Loading text="lo" size="small" :fillClass="contrastMode" />
               </div>
@@ -207,10 +219,28 @@
             
             >
               <RenderItem
+                v-if="getContentType(viewData.fileType) === 'image' && !fullResolution"
                 :item="viewData"
                 :fileType="viewData.fileType"
                 :src="viewData.fileIpfsUrl"
+                :hasImageOptimization="hasImageOptimization"
+                :imageOptimizationUrl="imageOptimizationUrl"
+                optimization="width=800"
               />
+              <RenderItem
+                v-if="getContentType(viewData.fileType) !== 'image' || fullResolution"
+                :item="viewData"
+                :fileType="viewData.fileType"
+                :src="viewData.fileIpfsUrl"
+                :hasImageOptimization="false"
+              />
+              <div class="optimisationToggle" v-if="hasImageOptimization && getContentType(viewData.fileType) === 'image'">
+                <Button v-if="!fullResolution" mode="hollow" size="small" @click="viewFullResolution(true)"><IconExpand size="small" :strokeClass="contrastMode" />&nbsp;<span>Full Resolution</span></Button>
+                <Button v-if="fullResolution" mode="hollow" size="small" @click="viewFullResolution(false)"><IconContract size="small" :strokeClass="contrastMode" />&nbsp;<span>View Preview Resolution</span></Button>
+                <!-- <div v-if="viewData && viewData.fileType">contentType is: {{getContentType(viewData.fileType)}}</div> -->
+              </div>
+              
+              
             </div>
           </div>
         </div>
@@ -221,13 +251,21 @@
             <span slot="header">Token Info</span>
             <div slot="content">
               <div class="formItem">
+                <label>ID</label>
+                <div class="small">{{ tokenId }}</div>
+              </div>
+              <div class="formItem">
                 <label>Edition</label>
                 <div class="small">{{ viewData.edition }} of {{ viewData.editions }}</div>
               </div>
               <div class="formItem">
                 <label>File Type</label>
                 <div class="small" id="metadata7">{{ viewData.fileType }}</div>
-                <div class="small" >{{ getHumanSize() }}</div>
+              
+              </div>
+              <div class="formItem" v-if="devMode">
+                <label>Size</label>
+                <div class="small" >Devmode: {{ getHumanSize() }}</div>
               </div>
               <div class="formItem">
                 <label>Exhibition</label>
@@ -242,11 +280,10 @@
             <div slot="content">
               <div class="formItem">
                 <label>Opensea</label>
-
                 <div id="link0" class="w3-small">
                   <a
                     :href="
-                      'https://rinkeby.opensea.io/assets/' +
+                      this.openseaUrlBase +
                       contractId +
                       '/' +
                       tokenId
@@ -254,6 +291,22 @@
                     target="_blank"
                     class="metaLink"
                   ><IconExternalLink size="small" />View on Opensea</a>
+                </div>
+              </div>
+              <div class="formItem" v-if="1===3">
+                <label>Etherscan</label>
+                
+                <div class="w3-small">
+                  <a
+                    :href="
+                      this.etherscanUrlBase +
+                      'token/' +
+                      contractId +
+                      '#readContract'
+                    "
+                    target="_blank"
+                    class="metaLink"
+                  ><IconExternalLink size="small" />View on Etherscan</a>
                 </div>
               </div>
               <div class="formItem">
@@ -315,19 +368,23 @@ import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { humanFileSize } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
+import Button from '../../../components/Button.vue';
 
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
-const rootUrl = process.env.tempUrl;
+import ogImagePreview from '~/assets/images/preview.jpg'
+
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
+  components: { Button },
   name: 'ViewPageParams',
-  // data() {
-  //   return {
-  //    tempImg: "",
-  //    tempImg2: "",
-  //    tempImg3: ""
-  //   }
-  // },
+  data() {
+    return {
+      openseaUrlBase: "https://opensea.io/assets/",
+      etherscanUrlBase: "https://etherscan.io/",
+      showExpandedDescription: false,
+      fullResolution: false,
+    }
+  },
   head() {
     return {
       title: this.title,
@@ -391,6 +448,17 @@ export default {
         tokenId: asyncTokenId,
         contractId: asyncContractId,
       })
+
+      if(this.$config){
+        const requiredNetwork = this.$config.requiredNetwork || 'main';
+        const openseaUrlBase = 
+        requiredNetwork === "main"
+          ? "https://opensea.io/assets/"
+          : "https://rinkeby.opensea.io/assets/";
+        // const etherScanUrlBase = requiredNetwork === 'main' ? 'https://etherscan.io/' : 'https://rinkeby.etherscan.io/'
+        this.openseaUrlBase = openseaUrlBase;
+        // this.etherScanUrlBase = etherScanUrlBase;
+      }
     }
     if (process.server) {
       console.log('VIEW server mount. Context:', context)
@@ -407,41 +475,28 @@ export default {
 
   async asyncData(context) {
     const { params, $axios } = context
-    const requiredNetwork = this.$config.requiredNetwork;
+    const requiredNetwork = context.$config.requiredNetwork;
     const openseaUrl =
       requiredNetwork === "main"
-        ? "https://api.opensea.io/"
-        : "https://testnets-api.opensea.io/";
+        ? "https://api.opensea.io"
+        : "https://rinkeby-api.opensea.io";
+    
     const options = {
       contractId: params.contract,
       tokenId: parseInt(params.id),
     }
     
     const theUrl = `${openseaUrl}/api/v1/asset/${params.contract}/${params.id}/`
-    // console.log('async options', options)
-    console.log('async theUrl', theUrl)
-    
     const { data } = await $axios.get(theUrl);
-    // console.log('async data: ', data)
-    
-    // title: 'View NFT',
-    //   description: 'A NFT on InfiNFT',
-    //   // previewImage: `${BASE_URL}_nuxt/assets/images/default3d.png`
-    //   previewImage: `${BASE_URL}${ogImage}`,
-    //   previewUrl:`${BASE_URL}${ogImage}`,
-    
-    
-    console.log('BASE_URL', BASE_URL)
-    
-    // console.log('calc ogimage url =  ', `${BASE_URL}/${ogImage}`)
-    // console.log('calc ogimage url =  ', `${BASE_URL}/assets/images/default3d.png`)
+    // console.log('async data result: ', data)
+    // console.log('BASE_URL', BASE_URL)
     const tempData = {
-      title: `InfiNFT: ${data.name}` || "InfiiNFT: View Token",
-      description: data.description || "",
+      title: `InfiNFT | ${data.name}` || "InfiiNFT: View Token",
+      description: `InfiNFT | data.description` || "",
       previewImage: `${BASE_URL}${ogImage}`,
       previewUrl: data.image_preview_url,
     }
-    console.log('async tempData', tempData)
+    // console.log('async tempData', tempData)
     return tempData;
     // console.log('async Web3', Web3)
     // if (!Web3) {
@@ -464,6 +519,7 @@ export default {
   computed: {
     ...mapGetters({
       uiMode: 'ui/uiMode',
+      devMode: 'ui/devMode',
       uiTheme: 'ui/uiTheme',
       contrastMode: 'ui/contrastMode',
       showSearch: 'ui/showSearch',
@@ -472,6 +528,8 @@ export default {
       viewStatus: 'ui/viewStatus',
       walletAddress: 'ui/walletAddress',
       tempViewItem: 'ui/tempViewItem',
+      hasImageOptimization: 'ui/hasImageOptimization',
+      imageOptimizationUrl: 'ui/imageOptimizationUrl',
     }),
     tokenId: (context) => {
       return context.$route && context.$route.params.id
@@ -506,11 +564,57 @@ export default {
       setSearchParams: 'ui/setSearchParams',
       setViewStatus: 'ui/setViewStatus',
     }),
+    ...mapActions({
+      contentType: 'ui/contentType',
+    }),
+    getContentType(fileType){
+      // const type = await this.$store.dispatch('ui/contentType', fileType);
+      const type = this.contentSwitch(fileType);
+      console.log('type: ', type)
+      return type
+    },
+    contentSwitch(fileType){
+      console.log("fileType", fileType);
+      switch (fileType) {
+        case "glb":
+        case "obj":
+        case "usdz":
+        case "gltf":
+          return "threed";
+          break;
+        case "vox":
+          return "voxel";
+          break;
+        case "mp4":
+        case "mov":
+          return "video";
+          break;
+        case "mp3":
+          return "audio";
+          break;
+        case "pdf":
+          return "pdf";
+          break;
+        case "rtf":
+        case "txt":
+          return "text";
+          break;
+        default:
+          return "image";
+      }
+    },
     getTokenId() {
       console.log('this', this)
     },
+    setFullResolution(value){
+      console.log('load full image', value)
+      this.fullResolution = value
+    },
+    viewFullResolution(value){
+      console.log('set Full Resolution', value)
+      this.fullResolution = value
+    },
     doTest() {
-      console.log(this)
       this.$store.dispatch('ui/handleSearch')
     },
     navigate(newTokenId) {
@@ -520,6 +624,7 @@ export default {
       $nuxt._router.push(`/view/${this.contractId}/${newTokenId}`)
     },
     getHumanSize(size){
+      console.log('size', size);
       return "23"
     },
     getUrl(){
@@ -529,13 +634,30 @@ export default {
       const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
+    getDescription(content){
+      console.log('getdescription')
+      console.log('viewData.description', this.viewData.description);
+      const tempDescription = this.tempViewItem && this.tempViewItem.description
+      const description = this.viewData && this.viewData.description
+      return description || tempDescription;
+    },
+    setExpandDescription(newState){
+      this.showExpandedDescription = newState
+    },
+    truncate(text, length, clamp){
+      // console.log('truncate: ', {text, length, clamp});
+      clamp = clamp || '...';
+      var node = document.createElement('div');
+      node.innerHTML = text;
+      var content = node.textContent;
+      const returnContent = content.length > length ? content.slice(0, length) + clamp : content;
+      // console.log('truncate: returncontent:', returnContent)
+      return returnContent;
+    }
+
      
   },
-  actions: {
-    ...mapActions({
-      handleSearch: 'ui/handleSearch',
-    }),
-  },
+  
 }
 </script>
 
@@ -650,16 +772,7 @@ export default {
     }
   }
 }
-.primaryMeta {
-  border: 1px solid var(--line-color, #111);
-}
-.metaItem {
-  border-bottom: 1px solid var(--line-color, #111);
-  padding: 0.25rem 0.5rem;
-}
-.metaItem:last-child {
-  border-bottom: none;
-}
+
 .metaLink{
   display: flex;
   flex-direction: row;
@@ -685,6 +798,12 @@ export default {
   width: 100%;
   flex-grow: 1;
   font-size: .75rem;
+}
+.optimisationToggle{
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 </style>

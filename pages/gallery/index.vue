@@ -7,20 +7,20 @@
         <label>Galleries</label>
         <p class="small">A gallery displays the tokens created by a contract.
         </p>
-        <div v-if="usedContracts && usedContracts.length > 0">
+        <div v-if="walletAddress && usedContracts && usedContracts.length > 0 &&  1===2">
           <label>Your Contracts</label>
           <p class="small">Contracts you have created</p>
           <GalleriesUserMenu :contracts="usedContracts" mode="list" />
         </div>
       </div>
-      <div class="primary">
+      <div class="primary ">
         <h4>Load Gallery Contract</h4>
-        <div class="loadContractRow row">
-          <div class="column col-66">
+        <div class="loadContractRow row clampWidth">
+          <div class="column col-75">
           <input
             name="Contract Id"
             id="galleryContractId"
-            class="hero"
+            :class="`hero ${contrastMode}`"
             type="string"
             max="99"
             required
@@ -28,17 +28,41 @@
             v-model="tempContractId"
           />
           </div>
-          <div class="col-33 column">
+          <div class="col-25 column">
           <Button size="large" mode="primary" @click="handleLoad(tempContractId)" :disabled="!tempContractId">
             Load Gallery
           </Button>
 
           </div>
         </div>
-        <h4>Featured Galleries</h4>
-        <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
-        <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
-       
+        <div class="clampWidth">
+          <h4>Featured Galleries</h4>
+          <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
+          <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
+        </div>
+        <client-only>
+        <div v-if="devMode">
+          <div class="clampWidth">
+            <Button @click="updateUsedContractsObj({data: {
+              id: '0x12345',
+              name: 'test name',
+              symbol: 'TEST'
+            }, remove: true})"><span>test updateCOntractsObj</span>
+            </Button>
+          </div>
+        </div>
+        </client-only>
+        <client-only>
+        <div class="clampWidth">
+          <h4 v-if="usedContracts">Your Contracts </h4>
+          <div v-if="devMode && usedContractsObj">
+            <GalleriesUserMenu mode="hero" :contractsArray="usedContractsObj" :contrastMode="contrastMode" :activeContractId="activeContractId" />
+          </div>
+          <div>
+            <GalleriesUserMenu mode="hero" :contracts="usedContracts" :contrastMode="contrastMode" :activeContractId="activeContractId" />
+          </div>
+        </div>
+        </client-only>
       </div>
       <div class="secondary">
         <label>Elsewhere</label>
@@ -53,23 +77,47 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+import ogImagePreview from '~/assets/images/preview.jpg'
 
 export default {
   name: 'GalleryPage',
-  created() {
-    // this.setInitialAccount();
+  mounted() {
+    console.log('GALLERY MOUNTED', this.activeContractId)
+    if(this.activeContractId){
+      this.tempContractId = this.activeContractId
+    }
   },
   data() {
     return {
       tempContractId: "0xa0AfEDcC9446fD1F41706EaA4931512bDb2efAe7"
     }
   },
+  head: {
+    title: 'InfiNFT: Galleries',
+    meta: [
+      { hid: "og:title", name: "og:title", content: "InfiNFT: Galleries" },
+      {
+        hid: 'og:description',
+        name: 'og:description',
+        content: 'Load and view galleries of NFT with on-chain data'
+      },
+      {
+          hid: "og:image",
+          property: "og:image",
+          content: BASE_URL + ogImagePreview
+      },
+    ],
+   },
   computed: {
     ...mapFields('galleryStore', ['galleryContractId']),
     ...mapGetters({
+      devMode: "ui/devMode",
       contrastMode: "ui/contrastMode",
       activeContractId: "ui/activeContractId",
       usedContracts: "ui/usedContracts",
+      usedContractsObj: "ui/usedContractsObj",
+      walletAddress: "ui/walletAddress",
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
       galleryStatus: 'galleryStore/galleryStatus',
@@ -85,6 +133,10 @@ export default {
     ...mapMutations({
       getItems: 'galleryStore/getItems',
       setGalleryDisplayMode: 'galleryStore/setGalleryDisplayMode',
+      setUsedContractsObj: 'ui/setUsedContractsObj',
+    }),
+    ...mapActions({
+      updateUsedContractsObj: 'ui/updateUsedContractsObj',
     }),
     handleLoad(contractId) {
       if(!contractId){return}
@@ -103,6 +155,9 @@ export default {
 </script>
 
 <style lang="scss">
+.primary .clampWidth{
+  max-width: 700px;
+}
 .linkRow {
   padding: 20px;
   min-height: 100px;
@@ -128,7 +183,8 @@ export default {
   #galleryContractId{
     background: var(--fill-color);
     border: 0px solid;
-    
+    &.dark{ color:  var(--ui-color, #111)}
+    &.light{ color:  #fff}
   }
   input#galleryContractId{
     width: 100%;
