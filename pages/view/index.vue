@@ -338,7 +338,8 @@ export default {
       setSearchParams: "ui/setSearchParams",
     }),
     getTokenId() {
-      console.log("this", this);
+      // console.log("this", this);
+      console.log('get token id: nothing')
     },
     doTest() {
       console.log(this);

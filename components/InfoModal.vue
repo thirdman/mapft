@@ -43,9 +43,7 @@ export default {
   name: "InfoModal",
   mounted() {
     if(this.$config){
-      console.log('this.$config', this.$config)
-      console.log('this.$config.requiredNetwork', this.$config.requiredNetwork)
-      console.log('this.walletNetwork', this.walletNetwork)
+      
       const requiredNetwork = this.$config.requiredNetwork;
       this.desiredNetwork = requiredNetwork;
     }

@@ -165,7 +165,6 @@ export default {
   },
   created(){
     this.baseUrl = this.$config.rootUrl
-    // console.log('this.$config', this.$config.rootUrl);
     // console.log('this', this)
     // console.log('this.router', this.$router)
     // console.log('this.router.base', this.$router.base)
