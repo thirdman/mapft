@@ -147,7 +147,14 @@ export default {
       }
     },
     onLoad: (event) => {
-      console.log('file loaded, thing:', event)
+      // console.log('loaded:', event)
+      const imgEl = event.target;
+      // console.log('loaded: imgEl', imgEl)
+      // console.log('loaded: imgEl', imgEl.naturalHeight)
+      // console.log('loaded: imgEl', imgEl.naturalWidth)
+      imgEl.width = imgEl.naturalWidth
+      imgEl.width = imgEl.naturalHeight
+        // alert(this.width + 'x' + this.height);
     },
     imageLoadError(event){
       console.log('imageLoadError', event);
