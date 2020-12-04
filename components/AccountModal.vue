@@ -175,6 +175,28 @@
       <div class="settings-content modalSection" v-if="walletAddress">
         <label>Settings</label>
         <div class="row contentRow">
+          <div class="column col-66">Image Optimization:<br />
+            <div class="xsmall">High resolution images will be reduced for presentation purposes. <br />This does not effect original files.</div>
+          </div>
+          <div class="column col-33">
+            <button
+              class="btn small"
+              :class="hasImageOptimization ? 'active' : 'inactive'"
+              @click="setHasImageOptimization(true)"
+            >
+              Yes
+            </button>
+            <button
+              class="btn small"
+              :class="hasImageOptimization ? 'inactive' : 'active'"
+              @click="setHasImageOptimization(false)"
+            >
+              No
+            </button>
+            
+          </div>
+        </div>
+        <div class="row contentRow">
           <div class="column col-66">Status Information:</div>
           <div class="column col-33">
             <button
@@ -347,6 +369,9 @@ export default {
       usedContracts: "ui/usedContracts",
       hasChainSelect: "ui/hasChainSelect",
       hasVerticalGridLines: "ui/hasVerticalGridLines",
+      hasVerticalGridLines: "ui/hasVerticalGridLines",
+      hasImageOptimization: "ui/hasImageOptimization",
+      imageOptimizationUrl: "ui/imageOptimizationUrl",
       statusModalMode: "ui/statusModalMode",
       activeContractId: "ui/activeContractId",
       activeContractName: "ui/activeContractName",
@@ -368,6 +393,7 @@ export default {
       setUiTheme: "ui/setUiTheme",
       setWalletChain: "ui/setWalletChain",
       setHasChainSelect: "ui/setHasChainSelect",
+      setHasImageOptimization: "ui/setHasImageOptimization",
     }),
 
     clearActiveContractId(value) {
@@ -377,6 +403,7 @@ export default {
       this.$store.commit("ui/setActiveContractId", value);
     },
 
+    
     setDevMode(value) {
       this.$store.commit("ui/setDevMode", value);
     },

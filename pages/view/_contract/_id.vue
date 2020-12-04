@@ -219,9 +219,26 @@
             
             >
               <RenderItem
+                v-if="!fullResolution"
                 :item="viewData"
                 :fileType="viewData.fileType"
                 :src="viewData.fileIpfsUrl"
+                :hasImageOptimization="hasImageOptimization"
+                :imageOptimizationUrl="imageOptimizationUrl"
+                optimization="width=300"
+              />
+              <div class="optimisationToggle" v-if="hasImageOptimization">
+                <Button v-if="!fullResolution" mode="hollow" size="small" @click="viewFullResolution(true)"><IconExpand size="small" :strokeClass="contrastMode" />&nbsp;<span>Full Resolution</span></Button>
+                <Button v-if="fullResolution" mode="hollow" size="small" @click="viewFullResolution(false)"><IconContract size="small" :strokeClass="contrastMode" />&nbsp;<span>View Preview Resolution</span></Button>
+                <!-- <Button mode="hollow" size="small" @click="setFullResolution(!fullResolution)">Use {{fullResolution ? "Preview" : "Full"}} Resolution Image</Button> -->
+              </div>
+              
+              <RenderItem
+                v-if="fullResolution"
+                :item="viewData"
+                :fileType="viewData.fileType"
+                :src="viewData.fileIpfsUrl"
+                :hasImageOptimization="false"
               />
             </div>
           </div>
@@ -350,18 +367,21 @@ import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { humanFileSize } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
+import Button from '../../../components/Button.vue';
 
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
 const rootUrl = process.env.tempUrl;
 
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
+  components: { Button },
   name: 'ViewPageParams',
   data() {
     return {
      openseaUrlBase: "https://opensea.io/assets/",
      etherscanUrlBase: "https://etherscan.io/",
      showExpandedDescription: false,
+     fullResolution: false,
     }
   },
   head() {
@@ -522,6 +542,8 @@ export default {
       viewStatus: 'ui/viewStatus',
       walletAddress: 'ui/walletAddress',
       tempViewItem: 'ui/tempViewItem',
+      hasImageOptimization: 'ui/hasImageOptimization',
+      imageOptimizationUrl: 'ui/imageOptimizationUrl',
     }),
     tokenId: (context) => {
       return context.$route && context.$route.params.id
@@ -558,6 +580,14 @@ export default {
     }),
     getTokenId() {
       console.log('this', this)
+    },
+    setFullResolution(value){
+      console.log('load full image', value)
+      this.fullResolution = value
+    },
+    viewFullResolution(value){
+      console.log('set Full Resolution', value)
+      this.fullResolution = value
     },
     doTest() {
       console.log(this)
@@ -757,6 +787,12 @@ export default {
   width: 100%;
   flex-grow: 1;
   font-size: .75rem;
+}
+.optimisationToggle{
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 </style>

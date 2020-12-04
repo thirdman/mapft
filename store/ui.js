@@ -56,6 +56,9 @@ export const state = () => ({
     "0x63a9dbCe75413036B2B778E670aaBd4493aAF9F3", //natealex
     "0xDbB59151b18Dd72E9AC092706e93De5b5d7a9325", // trislit
   ],
+  // IMAGES
+  hasImageOptimization: true,
+  imageOptimizationUrl: "https://infinft.gumlet.net/fetch/", // https://arweave.net/KGxebgYGPYYYtZYCIvxsEEM-LC49KVwp00TYO98RbPA?width=1200
   // SEARCH FIELDS
   searchContractId: "",
   searchTokenId: "",
@@ -72,6 +75,8 @@ export const getters = {
   hasWallet: (state) => state.hasWallet,
   hasChainSelect: (state) => state.hasChainSelect,
   hasVerticalGridLines: (state) => state.hasVerticalGridLines,
+  hasImageOptimization: (state) => state.hasImageOptimization,
+  imageOptimizationUrl: (state) => state.imageOptimizationUrl,
   walletChain: (state) => state.walletChain,
   walletAddress: (state) => state.walletAddress,
   walletNetwork: (state) => state.walletNetwork,
@@ -170,6 +175,10 @@ export const mutations = {
   },
   setNetworkName(state, value) {
     state.walletNetwork = value;
+  },
+  setHasImageOptimization(state, value) {
+    console.log("setHasImageOptimization", value);
+    state.hasImageOptimization = value;
   },
   setActiveContractId(state, value) {
     state.activeContractId = value;

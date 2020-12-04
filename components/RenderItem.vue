@@ -10,7 +10,7 @@
     <img
       @load="onLoad"
       @error="imageLoadError"
-      :src="item.fileIpfsUrl"
+      :src="hasImageOptimization ? `${imageOptimizationUrl}${item.fileIpfsUrl}/?${optimization ? optimization : 'width=300'}` : item.fileIpfsUrl"
       v-if="contentType(fileType) === 'image'"
       id="result"
     />
@@ -108,7 +108,7 @@ margin-right: auto;
 
 <script>
 export default {
-  props: ['item', 'fileType', 'mode', "data"],
+  props: ['item', 'fileType', 'mode', "data", "hasImageOptimization", "imageOptimizationUrl", "optimization"],
   data() {
     return {
       isActive: false,
