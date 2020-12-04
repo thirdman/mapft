@@ -10,7 +10,7 @@
         :src="hasImageOptimization ? `${imageOptimizationUrl}${item.fileIpfsUrl}/?${optimization ? optimization : 'width=300'}` : item.fileIpfsUrl"
         v-if="contentType(fileType) === 'image'"
         id="result"
-        :class="`tokenImage ${isLoading ? 'isLoading' : ''} ${notFound ? 'notFoundImage' : ''}`"
+        :class="`tokenImage ${isLoading ? 'isLoading' : ''} ${notFound ? 'notFoundImage' : ''} ${hasImageOptimization ? 'optimized' : 'fullresolution'}`"
         width="800"
         height="800"
       />
@@ -85,10 +85,17 @@
   justify-content: center;
 }
 .renderItem.image #result {
-  width: unset;
-  height: 100%;
+  // width: unset;
+  // height: 100%;
+  object-fit: contain;
   max-height: 80vh;
   max-width: 100%;
+  &.optimized{
+    
+  }
+  &.fullresolution{
+    max-height: unset;
+  }
 }
 .renderItem .tokenImage{
   background: rgba(0,0,0,.1);
@@ -103,6 +110,7 @@
   //   bottom: 0;
   // }
   // }
+  
 }
 .renderItem .notFoundImage{
   background: rgba(0,0,0,.1);
