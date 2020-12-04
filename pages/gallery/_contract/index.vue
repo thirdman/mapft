@@ -4,24 +4,32 @@
     <section id="gallery" class>
       <div class="tertiary">
         <div class="sidebarSection">
-          <label>Gallery</label>
-          <div class="">
-            <span style="display: inline-block" class="galleryIdWrap">
-            <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span>
-            </span>
-            <Button @click="handleCopy" mode="hollow" v-if="!hasCopied"><IconCopy size="small"/></Button>
-            <input type="text" id="copy-string" :value="galleryContractId" style="visibility: hidden; position: absolute; z-index: -1">
-          </div>
-          <div v-if="isLoadingMeta">
-            <Loading fillClass="light" />
-          </div>
-          <div v-if="galleryMeta">
-            <label>Name</label>
-            <div class="small">{{galleryMeta.name}}</div>
-            <label>Symbol</label>
-            <div class="small symbol">{{galleryMeta.symbol}}</div>
-            <label>Total</label>
-            <div class="small">{{galleryMeta.count}}</div>
+          <div class="primaryMeta">
+            <div v-if="isLoadingMeta">
+              <Loading fillClass="light" />
+            </div>
+            <div class="metaItem">
+              <label>Gallery</label>
+              <div class="small">
+                <span style="display: inline-block" class="galleryIdWrap">
+                <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span>
+                </span>
+                <Button @click="handleCopy" mode="hollow" v-if="!hasCopied">
+                  <IconCopy size="small"/>
+                </Button>
+                <div class="hiddenInputWrap" style="visibility: visible; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; position: relative;">
+                  <input type="text" id="copy-string" :value="galleryContractId" style=" position: absolute; z-index: -1">
+                </div>
+              </div>
+            </div>
+            <div class="metaItem" v-if="galleryMeta">
+              <label>Name</label>
+              <div class="small">{{galleryMeta.name}}</div>
+              <label>Symbol</label>
+              <div class="small symbol">{{galleryMeta.symbol}}</div>
+              <label>Tokens</label>
+              <div class="small">{{galleryMeta.count}}</div>
+            </div>
           </div>
         </div>
         <div class="sidebarSection">
@@ -155,6 +163,9 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+import {
+  readThatMeta,
+} from "../../../utils/web3Read";
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
 import ogImagePreview from '~/assets/images/preview.jpg'
 
@@ -163,6 +174,7 @@ export default {
   head: {
     title: 'InfiNFT Gallery',
     meta: [
+      // { hid: 'og:title', name: 'og:title', content: `InfiNFT | ${this.galleryName}` },
       { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
       { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
       { hid: "og:type", name: "og:type", content: "website" },
@@ -198,9 +210,26 @@ export default {
       copyString: "",
       hasCopied: false,
       galleryMeta: null,
+      galleryName: "",
       isLoadingMeta: false,
     }
   },
+  async mounted() {
+    const contractId = this.$route.params.contract;
+    if(!contractId){return null}
+    this.isLoadingMeta = true;
+    const params = {
+      contractId: contractId,
+      tokenId: 1
+    }
+    const metaData = await this.handleGalleryMeta(params).then(result => {
+        return result
+      }).catch(error => console.error(error));
+    this.galleryMeta = metaData
+    this.galleryName = metaData && metaData.name
+    this.isLoadingMeta = false;
+  },
+
   computed: {
     ...mapFields('galleryStore', ['galleryContractId']),
     ...mapGetters({
@@ -214,6 +243,7 @@ export default {
       galleryAssets: 'galleryStore/galleryAssets',
       galleryStatus: 'galleryStore/galleryStatus',
       galleryDisplayMode: 'galleryStore/galleryDisplayMode',
+      
     }),
     displayMode() {
       return 'expanded'
@@ -244,6 +274,7 @@ export default {
     },
     handleCopy () {
       let stringToCopy = document.querySelector('#copy-string')
+      console.log('stringToCopy', stringToCopy)
       stringToCopy.setAttribute('type', 'text') 
       stringToCopy.select()
 
@@ -262,11 +293,12 @@ export default {
       }
 
       /* unselect the range */
-      stringToCopy.setAttribute('type', 'hidden')
+      // stringToCopy.setAttribute('type', 'hidden')
       window.getSelection().removeAllRanges()
     },
     async getGalleryMeta(contractId, source){
       const galleryArray = this.galleryAssets;
+      console.log('readThatMeta', readThatMeta);
       // const lastId = galleryArray.length ? galleryArray.length : 1;
       const lastId = galleryArray[0] && galleryArray[0].token_id || 1;
       console.log('getGalleryMeta', lastId)
@@ -278,7 +310,7 @@ export default {
       this.isLoadingMeta = true
       const metaData = await this.handleGalleryMeta(params).then(result => {
         return result
-      }).catch(error => conole.error(error));
+      }).catch(error => console.error(error));
       console.log('metaData: ', metaData);
       this.galleryMeta = metaData
       this.isLoadingMeta = false;
