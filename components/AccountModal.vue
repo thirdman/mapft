@@ -181,16 +181,16 @@
           <div class="column col-33">
             <button
               class="btn small"
+              :class="hasImageOptimization ? 'active' : 'inactive'"
               @click="setHasImageOptimization(true)"
             >
-              <!-- :class="hasImageOptimization ? 'active' : 'inactive'" -->
               Yes
             </button>
             <button
               class="btn small"
+              :class="hasImageOptimization ? 'inactive' : 'active'"
               @click="setHasImageOptimization(false)"
             >
-              <!-- :class="hasImageOptimization ? 'inactive' : 'active'" -->
               No
             </button>
             
