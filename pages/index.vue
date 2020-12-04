@@ -151,7 +151,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-const BASE_URL = "https://infinft.app"
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+const ogImagePreview = "~/img/preview.jpg"
+ 
 export default {
   name: 'ViewPageParams',
   data() {
@@ -172,13 +174,16 @@ export default {
     title: 'InfiNFT',
     meta: [
       { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
+      { hid: "og:title", name: "og:title", content: "InfiNFT" },
       { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
       { hid: "og:type", name: "og:type", content: "website" },
       {
           hid: "og:image",
           property: "og:image",
+          // content: `${process.env.tempUrl}${ogImagePreview}`
+          content: `${BASE_URL}/images/preview.jpg`
+          // content: `~/img/preview.jpg`
           // content: this.previewUrl,
-          content: `${process.env.tempUrl}/images/preview.jpg`
           // content: `~/assets/images/preview.jpg`
         },
     ],
