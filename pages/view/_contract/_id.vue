@@ -492,7 +492,7 @@ export default {
     console.log('async theUrl', theUrl)
     
     const { data } = await $axios.get(theUrl);
-    // console.log('async data: ', data)
+    console.log('async data result: ', data)
     
     // title: 'View NFT',
     //   description: 'A NFT on InfiNFT',

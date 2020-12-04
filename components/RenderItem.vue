@@ -13,6 +13,9 @@
       :src="hasImageOptimization ? `${imageOptimizationUrl}${item.fileIpfsUrl}/?${optimization ? optimization : 'width=300'}` : item.fileIpfsUrl"
       v-if="contentType(fileType) === 'image'"
       id="result"
+      class="tokenImage"
+      width="1000"
+      height="1000"
     />
     <client-only>
       <ModelViewer
@@ -87,6 +90,10 @@ margin-right: auto;
   width: unset;
   height: 100%;
   max-height: 80vh;
+}
+.renderItem .tokenImage{
+  background: rgba(0,0,0,.1);
+  /* background: var(--shadow-color, rgba(0,0,0,.05)); */
 }
 .renderItem.threed {
   position: fixed;
