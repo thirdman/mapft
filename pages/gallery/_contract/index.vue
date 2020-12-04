@@ -155,7 +155,9 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
-const BASE_URL = "https://infinft-flow.vercel.app"
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+import ogImagePreview from '~/assets/images/preview.jpg'
+
 export default {
   name: 'GalleryPage',
   head: {
@@ -167,7 +169,7 @@ export default {
       {
           hid: "og:image",
           property: "og:image",
-          content: `${BASE_URL}/images/preview.jpg`
+          content: BASE_URL + ogImagePreview
         },
     ],
   },

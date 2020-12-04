@@ -152,7 +152,6 @@
 <script>
 import { mapGetters } from 'vuex'
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
-
 import ogImagePreview from '~/assets/images/preview.jpg'
 
  

@@ -371,7 +371,7 @@ import ogImage from '~/assets/images/default3d.png';
 import Button from '../../../components/Button.vue';
 
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
-const rootUrl = process.env.tempUrl;
+import ogImagePreview from '~/assets/images/preview.jpg'
 
 // import { readThatShit } from '../../../utils/web3Read'
 export default {

@@ -77,6 +77,8 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+import ogImagePreview from '~/assets/images/preview.jpg'
 
 export default {
   name: 'GalleryPage',
@@ -91,6 +93,22 @@ export default {
       tempContractId: "0xa0AfEDcC9446fD1F41706EaA4931512bDb2efAe7"
     }
   },
+  head: {
+    title: 'InfiNFT: Galleries',
+    meta: [
+      { hid: "og:title", name: "og:title", content: "InfiNFT: Galleries" },
+      {
+        hid: 'og:description',
+        name: 'og:description',
+        content: 'Load and view galleries of NFT with on-chain data'
+      },
+      {
+          hid: "og:image",
+          property: "og:image",
+          content: BASE_URL + ogImagePreview
+      },
+    ],
+   },
   computed: {
     ...mapFields('galleryStore', ['galleryContractId']),
     ...mapGetters({

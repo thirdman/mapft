@@ -34,9 +34,24 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+import ogImagePreview from '~/assets/images/preview.jpg'
 
 export default {
   name: 'ViewPageParams',
+  title: 'InfiNFT Token Set',
+    meta: [
+      { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
+      { hid: "og:site_name", name: "og:site_name", content: "InfiNFT: View Token" },
+      { hid: "og:type", name: "og:type", content: "website" },
+      { hid: "og:title", name: "og:title", content: "InfiNFT: View Token" },
+      {
+          hid: "og:image",
+          property: "og:image",
+          content: BASE_URL + ogImagePreview
+        },
+    ],
+    
   data() {
     // nothing to see here
   },

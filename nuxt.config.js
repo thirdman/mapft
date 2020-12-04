@@ -79,7 +79,8 @@ export default {
       {
         hid: "ogimage2",
         name: "og:image",
-        content: "/images/preview.jpg",
+        // content: "/images/preview.jpg",
+        content: "https://staging.infinft.app/_nuxt/assets/images/preview.jpg",
       },
     ],
     link: [

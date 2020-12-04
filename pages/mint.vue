@@ -275,6 +275,9 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { connectWallet, handleAccountLink } from "../utils/wallet";
+const BASE_URL = process.env.tempUrl || "https://infinft.app"
+import ogImagePreview from '~/assets/images/preview.jpg'
+
 export default {
   name: "MintPage",
    head: {
@@ -285,6 +288,11 @@ export default {
         hid: 'og:description',
         name: 'og:description',
         content: 'Mint your own custom NFT tokens'
+      },
+      {
+          hid: "og:image",
+          property: "og:image",
+          content: BASE_URL + ogImagePreview
       },
     ],
    },
