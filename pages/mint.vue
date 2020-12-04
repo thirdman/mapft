@@ -280,11 +280,12 @@ export default {
    head: {
     title: 'InfiNFT: Mint Tokens',
     meta: [
+      { hid: "og:title", name: "og:title", content: "InfiNFT: Mint NFT Tokens with on-chain meta" },
       {
-        hid: 'description',
-        name: 'description',
+        hid: 'og:description',
+        name: 'og:description',
         content: 'Mint your own custom NFT tokens'
-      }
+      },
     ],
    },
    data(){
