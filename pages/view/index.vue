@@ -118,6 +118,7 @@
                 :fileType="viewData.fileType"
                 :src="viewData.fileIpfsUrl"
                 v-if="viewData.fileIpfsUrl"
+                :hasImageOptimization="false"
               />
             </div>
           </div>
