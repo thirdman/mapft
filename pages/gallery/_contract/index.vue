@@ -44,9 +44,9 @@
             </a>
           </div>
         </div>
-        <div v-if="galleryAssets">
+        <!-- <div v-if="galleryAssets">
           <Button @click="getGalleryMeta(galleryContractId)">Get Meta</Button>
-        </div>
+        </div> -->
         <div v-if="walletAddress && usedContracts && usedContracts.length > 0 &&  1===2" class="sidebarSection">
           <label>Your Contracts</label>
           <GalleriesUserMenu :contracts="usedContracts" :contrastMode="contrastMode" />
