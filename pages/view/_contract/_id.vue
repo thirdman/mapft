@@ -476,7 +476,6 @@ export default {
   async asyncData(context) {
     const { params, $axios } = context
     const requiredNetwork = context.$config.requiredNetwork;
-    console.log('requiredNetwork', requiredNetwork)
     const openseaUrl =
       requiredNetwork === "main"
         ? "https://api.opensea.io"
@@ -488,18 +487,12 @@ export default {
     }
     
     const theUrl = `${openseaUrl}/api/v1/asset/${params.contract}/${params.id}/`
-    // console.log('async options', options)
-    console.log('async theUrl', theUrl)
-    
     const { data } = await $axios.get(theUrl);
     // console.log('async data result: ', data)
-    console.log('BASE_URL', BASE_URL)
-    
-    // console.log('calc ogimage url =  ', `${BASE_URL}/${ogImage}`)
-    // console.log('calc ogimage url =  ', `${BASE_URL}/assets/images/default3d.png`)
+    // console.log('BASE_URL', BASE_URL)
     const tempData = {
-      title: `InfiNFT: ${data.name}` || "InfiiNFT: View Token",
-      description: data.description || "",
+      title: `InfiNFT | ${data.name}` || "InfiiNFT: View Token",
+      description: `InfiNFT | data.description` || "",
       previewImage: `${BASE_URL}${ogImage}`,
       previewUrl: data.image_preview_url,
     }
