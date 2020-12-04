@@ -225,7 +225,7 @@
                 :src="viewData.fileIpfsUrl"
                 :hasImageOptimization="hasImageOptimization"
                 :imageOptimizationUrl="imageOptimizationUrl"
-                optimization="width=300"
+                optimization="width=800"
               />
               <RenderItem
                 v-if="getContentType(viewData.fileType) !== 'image' || fullResolution"
@@ -492,15 +492,7 @@ export default {
     console.log('async theUrl', theUrl)
     
     const { data } = await $axios.get(theUrl);
-    console.log('async data result: ', data)
-    
-    // title: 'View NFT',
-    //   description: 'A NFT on InfiNFT',
-    //   // previewImage: `${BASE_URL}_nuxt/assets/images/default3d.png`
-    //   previewImage: `${BASE_URL}${ogImage}`,
-    //   previewUrl:`${BASE_URL}${ogImage}`,
-    
-    
+    // console.log('async data result: ', data)
     console.log('BASE_URL', BASE_URL)
     
     // console.log('calc ogimage url =  ', `${BASE_URL}/${ogImage}`)
@@ -511,7 +503,7 @@ export default {
       previewImage: `${BASE_URL}${ogImage}`,
       previewUrl: data.image_preview_url,
     }
-    console.log('async tempData', tempData)
+    // console.log('async tempData', tempData)
     return tempData;
     // console.log('async Web3', Web3)
     // if (!Web3) {

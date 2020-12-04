@@ -4,19 +4,17 @@
     :class="`${contentType(fileType)} ${mode}`"
     v-if="item && item.fileIpfsUrl"
   >
-    <div v-if="notFound">
-      not found
-      </div>
-    <img
-      @load="onLoad"
-      @error="imageLoadError"
-      :src="hasImageOptimization ? `${imageOptimizationUrl}${item.fileIpfsUrl}/?${optimization ? optimization : 'width=300'}` : item.fileIpfsUrl"
-      v-if="contentType(fileType) === 'image'"
-      id="result"
-      class="tokenImage"
-      width="1000"
-      height="1000"
-    />
+      <img
+        @load="onLoad"
+        @error="imageLoadError"
+        :src="hasImageOptimization ? `${imageOptimizationUrl}${item.fileIpfsUrl}/?${optimization ? optimization : 'width=300'}` : item.fileIpfsUrl"
+        v-if="contentType(fileType) === 'image'"
+        id="result"
+        :class="`tokenImage ${isLoading ? 'isLoading' : ''} ${notFound ? 'notFoundImage' : ''}`"
+        width="800"
+        height="800"
+      />
+    
     <client-only>
       <ModelViewer
         v-if="contentType(fileType) === 'threed'"
@@ -52,13 +50,13 @@
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .renderItem {
-  /* max-width: 100%;
-  max-height: 80vh; */
+  &.default{
+
+  }
 }
-.renderItem.default {
-}
+
 .renderItem.preview, .renderItem.preview.threed {
   position: relative;
   width: 100%;
@@ -75,11 +73,11 @@
 .renderItem.preview .modelWrapper .loadingContainer{
   position: relative;
   left: auto;
-right: auto;
-width: unset;
-width: 80%;
-margin-left: auto;
-margin-right: auto;
+  right: auto;
+  width: unset;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 
 } 
 .renderItem.image {
@@ -90,10 +88,25 @@ margin-right: auto;
   width: unset;
   height: 100%;
   max-height: 80vh;
+  max-width: 100%;
 }
 .renderItem .tokenImage{
   background: rgba(0,0,0,.1);
   /* background: var(--shadow-color, rgba(0,0,0,.05)); */
+  // &.isLoading, &.notFound{
+  // &:before{
+  //   content: "Loading...";
+  //   position: absolute;
+  //   left: 0;
+  //   top: 0;
+  //   right: 0;
+  //   bottom: 0;
+  // }
+  // }
+}
+.renderItem .notFoundImage{
+  background: rgba(0,0,0,.1);
+  font-size: .75rem;
 }
 .renderItem.threed {
   position: fixed;
@@ -105,12 +118,8 @@ margin-right: auto;
   max-height: unset;
   z-index: -1;
 }
-.renderItem .userInput {
-  /* outline: 1px solid pink; */
-}
-.userInput:focus {
-  /* outline: 1px auto pink; */
-}
+
+
 </style>
 
 <script>
@@ -120,6 +129,7 @@ export default {
     return {
       isActive: false,
       notFound: false,
+      isLoading: true,
     }
   },
   computed: {},
@@ -153,7 +163,7 @@ export default {
           return 'image'
       }
     },
-    onLoad: (event) => {
+    onLoad(event){
       // console.log('loaded:', event)
       const imgEl = event.target;
       // console.log('loaded: imgEl', imgEl)
@@ -162,11 +172,17 @@ export default {
       imgEl.width = imgEl.naturalWidth
       imgEl.width = imgEl.naturalHeight
         // alert(this.width + 'x' + this.height);
+        this.isLoading = false;
     },
     imageLoadError(event){
       console.log('imageLoadError', event);
       this.notFound = true;
+      this.isLoading = false;
     }
   },
 }
 </script>
+
+<!-- <div v-if="notFound" class="notFoundImage">
+      not found
+    </div> -->
