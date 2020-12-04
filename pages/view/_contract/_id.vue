@@ -772,16 +772,7 @@ export default {
     }
   }
 }
-.primaryMeta {
-  border: 1px solid var(--line-color, #111);
-}
-.metaItem {
-  border-bottom: 1px solid var(--line-color, #111);
-  padding: 0.25rem 0.5rem;
-}
-.metaItem:last-child {
-  border-bottom: none;
-}
+
 .metaLink{
   display: flex;
   flex-direction: row;

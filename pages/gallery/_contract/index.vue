@@ -5,9 +5,6 @@
       <div class="tertiary">
         <div class="sidebarSection">
           <div class="primaryMeta">
-            <div v-if="isLoadingMeta">
-              <Loading fillClass="light" />
-            </div>
             <div class="metaItem">
               <label>Gallery</label>
               <div class="small">
@@ -21,6 +18,9 @@
                   <input type="text" id="copy-string" :value="galleryContractId" style=" position: absolute; z-index: -1">
                 </div>
               </div>
+            </div>
+            <div class="loadingWrap" v-if="isLoadingMeta">
+              <Loading fillClass="light" />
             </div>
             <div class="metaItem" v-if="galleryMeta">
               <label>Name</label>
@@ -93,13 +93,13 @@
 
       <div class="primary">
         <div>
-            <div v-if="galleryStatus === 'loading'" class="loadingWrap">
-            <Loading
-              message="Retrieving Tokens..."
-              size="large"
-              :fillClass="contrastMode === 'light' ? 'light' : 'dark'"
-            />
-          </div>
+          <div v-if="galleryStatus === 'loading'" class="loadingWrap">
+          <Loading
+            message="Retrieving Tokens..."
+            size="large"
+            :fillClass="contrastMode === 'light' ? 'light' : 'dark'"
+          />
+        </div>
           
         </div>
         <client-only>
