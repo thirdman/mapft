@@ -219,7 +219,7 @@
             
             >
               <RenderItem
-                v-if="!fullResolution"
+                v-if="getContentType(viewData.fileType) === 'image' && !fullResolution"
                 :item="viewData"
                 :fileType="viewData.fileType"
                 :src="viewData.fileIpfsUrl"
@@ -227,19 +227,20 @@
                 :imageOptimizationUrl="imageOptimizationUrl"
                 optimization="width=300"
               />
-              <div class="optimisationToggle" v-if="hasImageOptimization">
-                <Button v-if="!fullResolution" mode="hollow" size="small" @click="viewFullResolution(true)"><IconExpand size="small" :strokeClass="contrastMode" />&nbsp;<span>Full Resolution</span></Button>
-                <Button v-if="fullResolution" mode="hollow" size="small" @click="viewFullResolution(false)"><IconContract size="small" :strokeClass="contrastMode" />&nbsp;<span>View Preview Resolution</span></Button>
-                <!-- <Button mode="hollow" size="small" @click="setFullResolution(!fullResolution)">Use {{fullResolution ? "Preview" : "Full"}} Resolution Image</Button> -->
-              </div>
-              
               <RenderItem
-                v-if="fullResolution"
+                v-if="getContentType(viewData.fileType) !== 'image' || fullResolution"
                 :item="viewData"
                 :fileType="viewData.fileType"
                 :src="viewData.fileIpfsUrl"
                 :hasImageOptimization="false"
               />
+              <div class="optimisationToggle" v-if="hasImageOptimization && getContentType(viewData.fileType) === 'image'">
+                <Button v-if="!fullResolution" mode="hollow" size="small" @click="viewFullResolution(true)"><IconExpand size="small" :strokeClass="contrastMode" />&nbsp;<span>Full Resolution</span></Button>
+                <Button v-if="fullResolution" mode="hollow" size="small" @click="viewFullResolution(false)"><IconContract size="small" :strokeClass="contrastMode" />&nbsp;<span>View Preview Resolution</span></Button>
+                <!-- <div v-if="viewData && viewData.fileType">contentType is: {{getContentType(viewData.fileType)}}</div> -->
+              </div>
+              
+              
             </div>
           </div>
         </div>
@@ -378,10 +379,10 @@ export default {
   name: 'ViewPageParams',
   data() {
     return {
-     openseaUrlBase: "https://opensea.io/assets/",
-     etherscanUrlBase: "https://etherscan.io/",
-     showExpandedDescription: false,
-     fullResolution: false,
+      openseaUrlBase: "https://opensea.io/assets/",
+      etherscanUrlBase: "https://etherscan.io/",
+      showExpandedDescription: false,
+      fullResolution: false,
     }
   },
   head() {
@@ -578,6 +579,45 @@ export default {
       setSearchParams: 'ui/setSearchParams',
       setViewStatus: 'ui/setViewStatus',
     }),
+    ...mapActions({
+      contentType: 'ui/contentType',
+    }),
+    getContentType(fileType){
+      // const type = await this.$store.dispatch('ui/contentType', fileType);
+      const type = this.contentSwitch(fileType);
+      console.log('type: ', type)
+      return type
+    },
+    contentSwitch(fileType){
+      console.log("fileType", fileType);
+      switch (fileType) {
+        case "glb":
+        case "obj":
+        case "usdz":
+        case "gltf":
+          return "threed";
+          break;
+        case "vox":
+          return "voxel";
+          break;
+        case "mp4":
+        case "mov":
+          return "video";
+          break;
+        case "mp3":
+          return "audio";
+          break;
+        case "pdf":
+          return "pdf";
+          break;
+        case "rtf":
+        case "txt":
+          return "text";
+          break;
+        default:
+          return "image";
+      }
+    },
     getTokenId() {
       console.log('this', this)
     },
@@ -590,7 +630,6 @@ export default {
       this.fullResolution = value
     },
     doTest() {
-      console.log(this)
       this.$store.dispatch('ui/handleSearch')
     },
     navigate(newTokenId) {
@@ -633,11 +672,7 @@ export default {
 
      
   },
-  actions: {
-    ...mapActions({
-      handleSearch: 'ui/handleSearch',
-    }),
-  },
+  
 }
 </script>
 

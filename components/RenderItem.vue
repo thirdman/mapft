@@ -148,7 +148,6 @@ export default {
     },
     onLoad: (event) => {
       console.log('file loaded, thing:', event)
-      
     },
     imageLoadError(event){
       console.log('imageLoadError', event);
