@@ -295,13 +295,12 @@ function asyncThing(num, txHash, context) {
       newWeb3.eth
         .getTransactionReceipt(txHash)
         .then((hash) => {
-          console.log("hash is: ", hash);
-          // console.log('txHash is: ', txHash)
+          // console.log("hash is: ", hash);
           if (hash === null) {
             console.log("no hash, number is: ", num);
             resolve(num);
           } else {
-            console.log("hash exists!: ", hash);
+            // console.log("hash exists!: ", hash);
             // resolve(-1, hash)
             resolve(hash);
           }

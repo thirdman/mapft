@@ -40,9 +40,6 @@
           <div class="xsmall">Contract Id: {{ mintedData.contractId }}</div>
           <div class="xsmall">Token Id: {{ mintedData.tokenId }}</div>
           <div class="xsmall" v-if="mintedData.network !== 'main'">Network: {{ mintedData.network }}</div>
-        </div>
-        <div class="formItem">
-          <label>Opensea</label>
           <a :href="openseaLink" class="etherscanLink" target="blank">
             <IconExternalLink :strokeClass="contrastMode" size="small" />
             View on Opensea

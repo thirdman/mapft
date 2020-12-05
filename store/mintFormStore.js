@@ -108,7 +108,6 @@ export const getters = {
   mintStatus: (state) => state.mintStatus,
   mintStatusMessage: (state) => state.mintStatusMessage,
   mintStatusTitle: (state) => {
-    console.log("mintstatus...", state.mintStatus);
     const mintStatus = state.mintStatus;
     const title = statusMap[mintStatus].title;
     return title;
@@ -432,9 +431,7 @@ export const mutations = {
     state.mintTransactionId = value;
   },
   setMintStatus(state, status) {
-    console.log("setMintStatus", status);
     const message = statusMap[status].text;
-    console.log("setMintStatus", message);
     state.mintStatus = status;
     state.mintStatusMessage = message;
   },

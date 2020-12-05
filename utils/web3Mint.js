@@ -548,10 +548,6 @@ const mintThatShit = (event, state, rootContext) => {
   const context = rootContext.$store;
   const network = context.$config.requiredNetwork || "main";
   const infuraUrl = context.$config.infuraUrl;
-  // const infuraUrl =
-  //   network === "main"
-  //     ? context.$config.infuraUrlMain
-  //     : context.$config.infuraUrlRinkeby;
 
   const useThumbnailDefault =
     state.fileType === "glb" ||
@@ -571,21 +567,21 @@ const mintThatShit = (event, state, rootContext) => {
   const fileIPFSHash = state.fileIpfsHash;
   const fileArweaveHash = state.fileArweaveHash;
   const thumbnailIPFSHash =
-    state.thumbnailIpfsHash ||
-    (useThumbnailDefault && state.thumbnailIpfsHashDefault);
+    state.thumbnailIpfsHash || state.thumbnailIpfsHashDefault;
   const thumbnailArweaveHash =
     state.thumbnailArweaveHash || state.thumbnailArweaveHashDefault;
   const userContractAddress = state.activeContractId;
   console.log("isNan(royaltyfee)", isNaN(royaltyFee));
   console.log("MINT: royaltyFee", royaltyFee);
   const isValidRoyalty = !Number.isNaN(royaltyFee);
+  const thumbnailHashToUse = thumbnailArweaveHash;
 
   console.log("MINT isValidRoyalty", isValidRoyalty);
   console.log("MINT fileIPFSHash: ", fileIPFSHash);
+  console.log("MINT useThumbnailDefault", useThumbnailDefault);
   console.log("MINT thumbnailIPFSHash: ", thumbnailIPFSHash);
   console.log("MINT thumbnailArweaveHash: ", thumbnailArweaveHash);
   // const thumbnailHashToUse = thumbnailIPFSHash || fileIPFSHash || "";
-  const thumbnailHashToUse = thumbnailArweaveHash;
 
   console.log("MINT thumbnailHashToUse: ", thumbnailHashToUse);
 
@@ -619,7 +615,7 @@ const mintThatShit = (event, state, rootContext) => {
     }
     return null;
   }
-  console.log("MiNT this data should be: ", {
+  console.log("MiNT data will be: ", {
     fileIPFSHash,
     fileArweaveHash,
     thumbnailHashToUse,

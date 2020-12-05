@@ -48,6 +48,7 @@
           <div class="galleryImageWrap">
             <GalleryImage 
               v-if="item && (item.image_thumbnail_url || item.image_preview_url)"
+              altSrc="https://storage.opensea.io/files/5473dd4729009541701d3dcbedee730b.mp4"
               :src="
                 displayMode === 'compact'
                   ? item.image_thumbnail_url

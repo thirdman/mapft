@@ -328,7 +328,6 @@ export default {
     async loadMomentMetadata() {
       console.log("loadMomentMetadata");
       const vm = this;
-      console.log("this", this);
       const momentIds = await sendScript(
         this,
         `
