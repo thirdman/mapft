@@ -1,7 +1,7 @@
 <template>
   <div class="galleryImageWrapInner" :class="this.previewImage ? 'moviePreview' : ''">
     <transition name="fade" appear>
-    <Video :src="src" :autoplay="false" v-if="this.isVideo" />
+    <Video :src="src" :autoplay="false" :controls="false" v-if="this.isVideo" :poster="poster" />
     <img
       :src="src"
       @error="imageLoadError()"

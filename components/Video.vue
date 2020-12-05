@@ -1,5 +1,5 @@
 <template>
-  <video class="videoItem" :src="src" :autoplay="autoPlay ? true : false"  loop controls></video>
+  <video class="videoItem" :src="src" :autoplay="autoPlay ? true : false"  loop :controls="controls ? true : false" :poster="poster"></video>
 </template>
 
 <style>
@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  props: ['src', 'autoPlay', 'loop', 'controls'],
+  props: ['src', 'autoPlay', 'loop', 'controls', "poster"],
   data() {
     return {
       // isActive: false,

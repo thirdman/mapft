@@ -33,7 +33,7 @@
       />
     </client-only>
 
-    <Video v-if="contentType(fileType) === 'video'" :src="item.fileIpfsUrl" />
+    <Video v-if="contentType(fileType) === 'video'" :src="item.fileIpfsUrl" :controls="true" :autoPlay="true" />
     <RenderPdf v-if="contentType(fileType) === 'pdf'" :src="item.fileIpfsUrl" />
     <RenderAudio
       v-if="contentType(fileType) === 'audio'"
