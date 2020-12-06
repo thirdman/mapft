@@ -3,10 +3,11 @@
     id="body"
     class="hasSearch"
     :class="[
-      uiMode,
-      uiTheme,
-      this.$store.state.ui.walletNetwork || 'no-network',
-      hasVerticalGridLines ? 'hasLines' : ''
+      uiMode, // sets how much ui is present
+      uiTheme, // sets the ui color theme
+      this.$mq, // comes from the media query plugin.
+      this.$store.state.ui.walletNetwork || 'no-network', // main or rinkby (and future: Flow)
+      hasVerticalGridLines ? 'hasLines' : '' // for typography
     ]"
   >
     <!-- <Header /> -->

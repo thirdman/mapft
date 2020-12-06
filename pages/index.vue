@@ -14,6 +14,7 @@
       </div>
       <div class="primary">
         <div class style="max-width: 700px;">
+           
           <h1>
             InfiNFT
             <span class="betaFlag">beta</span>
@@ -164,12 +165,8 @@ export default {
     }
   },
   created(){
-    this.baseUrl = this.$config.rootUrl
-    // console.log('this', this)
-    // console.log('this.router', this.$router)
-    // console.log('this.router.base', this.$router.base)
-    console.log('process', process.env.tempUrl)
-    console.log('this.baseUrl', this.baseUrl)
+    // this.baseUrl = this.$config.rootUrl
+    
   },
   head: {
     title: 'InfiNFT',

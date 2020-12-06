@@ -1,7 +1,13 @@
-/* THE STYLE LIBRARY */
-/*This will eventually eb refactored out.*/
+/* Note: lots of this css is now redundant, 
+and will need to be refactored at some point. 
+
+Over time I intend to migrate to main.scss
+*/
+
+/* legacy styles from initial page */
 @import url("./w3.css");
-/* STATIC PAGES */
+
+/* STATIC PAGES, MODES, ICONS, TRANSITIONS */
 @import url("./static.css");
 @import url("./uiModes.css");
 @import url("./icons.css");
@@ -787,11 +793,6 @@ section {
 }
 #body.minimal section {
   /* min-height: calc(100vh - 80px); */
-}
-section .primary,
-section .secondary,
-section .tertiary {
-  padding-top: 5rem !important;
 }
 
 section.marker:before {

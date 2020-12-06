@@ -118,12 +118,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: [
-    "@/assets/css/main.css",
-    "@/assets/css/style.css",
-    // SCSS file in the project
-    // '@/assets/css/main.scss'
-  ],
+  css: ["@/assets/css/style.css", "@/assets/css/main.scss"],
   /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
@@ -156,11 +151,23 @@ export default {
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    "@nuxtjs/axios",
-    "@nuxtjs/pwa",
     // Doc: https://github.com/nuxt/content
     // "@nuxt/content",
-    // 'vue-ethereum/nuxt',
+    "@nuxtjs/axios",
+    "@nuxtjs/pwa",
+    [
+      "nuxt-mq",
+      {
+        // Default breakpoint for SSR
+        defaultBreakpoint: "sm",
+        breakpoints: {
+          sm: 450,
+          md: 780,
+          lg: 1250,
+          xl: Infinity,
+        },
+      },
+    ],
   ],
   /*
    ** Axios module configuration
@@ -169,6 +176,7 @@ export default {
   axios: {
     proxy: true,
   },
+
   /*
    ** Content module configuration
    ** See https://content.nuxtjs.org/configuration
