@@ -32,7 +32,11 @@
     >
       <h3>Nothing Found</h3>
       <p class="help">This either means that the contract has not created any tokens yet, or the filter returned nothing.</p>
-      <nuxt-link to="/gallery">Gallery Home</nuxt-link>
+      <nuxt-link to="/gallery" class="asButton">Galleries Home</nuxt-link>
+      
+      <div class="newContract help" style="padding-top: 1rem;">
+        <p>Note: In some cases when a contract has just minted it's first token, it can take a while to show up here</p>
+      </div>
     </div>
     <div
       class="galleryGrid"

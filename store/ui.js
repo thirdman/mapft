@@ -42,6 +42,8 @@ export const state = () => ({
   searchParams: {},
   usedContracts: [],
   usedContractsObj: null,
+  tempUsedContractsObj: null,
+  activityId: "1234",
   devMode: false,
   hasVerticalGridLines: false,
   statusModalMode: "fixed",
@@ -95,6 +97,8 @@ export const getters = {
   activeContractSymbol: (state) => state.activeContractSymbol,
   usedContracts: (state) => state.usedContracts,
   usedContractsObj: (state) => state.usedContractsObj,
+  tempUsedContractsObj: (state) => state.tempUsedContractsObj,
+  activityId: (state) => state.activityId,
   tempViewItem: (state) => state.tempViewItem,
   searchData: (state) => {
     return {
@@ -235,6 +239,9 @@ export const mutations = {
   setUsedContractsObj(state, array) {
     state.usedContractsObj = array;
   },
+  setTempUsedContractsObj(state, array) {
+    state.tempUsedContractsObj = array;
+  },
   clearActiveContractId(state, value) {
     state.activeContractId = null;
     this.commit("mintFormStore/clearActiveContractId", null);
@@ -259,6 +266,10 @@ export const mutations = {
     // } else {
     //   $modal.hide('status-modal')
     // }
+  },
+  setActivityId(state, id) {
+    // if(state.activityId){}
+    state.activityId = id;
   },
   setSearchContractId(state, value) {
     state.searchContractId = value;
@@ -412,8 +423,9 @@ export const actions = {
     );
     const itemExists = filteredContracts.length;
     const isOwner = owner && owner === walletAddress;
-    console.log("itemExists", itemExists);
-    console.log("isOwner", isOwner);
+    // console.log("itemExists", itemExists);
+    // console.log("isOwner", isOwner);
+    this.commit("ui/setActivityId", id);
     if (id && name && symbol && owner) {
       this.dispatch("ui/updateUsedContractsObj", {
         data: payload,
@@ -426,12 +438,13 @@ export const actions = {
         remove: true,
       });
     }
+    this.commit("ui/setActivityId", "");
   },
   updateUsedContractsObj(dispatch, props) {
-    console.log("updateUsedContractsObj props:", props);
+    // console.log("updateUsedContractsObj props:", props);
     const { state } = dispatch;
     const { data, remove } = props;
-    console.log("updateUsedContractsObj data:", data);
+    // console.log("updateUsedContractsObj data:", data);
     const tempUsedContractsObj =
       (state.usedContractsObj && state.usedContractsObj.slice()) || [];
     const filteredContracts = tempUsedContractsObj.filter(
@@ -447,10 +460,55 @@ export const actions = {
         this.commit("ui/setUsedContractsObj", newArray);
       }
     } else {
-      console.log("doesnt exist, so Adding");
+      console.log("ADD");
       tempUsedContractsObj.push(data);
       this.commit("ui/setUsedContractsObj", tempUsedContractsObj);
     }
     console.log("tempUsedContractsObj is now: ", tempUsedContractsObj);
+  },
+  async getAllContractsMeta(dispatch, payload) {
+    console.log("getting all contracts meta");
+    const { state } = dispatch;
+    console.log("dispatch", dispatch);
+    console.log("state", state);
+
+    const { usedContracts, usedContractsObj } = state;
+    console.log("usedCONtracts", usedContracts);
+    let tempUsedContractsObj = usedContractsObj.slice() || [];
+    if (!usedContracts.length) {
+      return;
+    }
+    const flattenedArray = usedContracts.map(async (hash) => {
+      // console.log("hash", hash);
+      const filteredExisting = tempUsedContractsObj.filter(
+        (item) => item.id === hash
+      );
+      console.log("filtered Existing", filteredExisting);
+      const hasData = filteredExisting.length && filteredExisting[0].symbol;
+      if (hasData) {
+        console.log("Do nothing, has Data");
+        return filteredExisting[0];
+      } else {
+        const params = {
+          contractId: hash,
+          tokenId: 1,
+        };
+        const metaData = await readThatMeta(params, this)
+          .then((result) => {
+            return result;
+          })
+          .catch((error) => console.error(error));
+        const completeResult = {
+          id: hash,
+          ...metaData,
+        };
+        console.log("completeResult: ", completeResult);
+        return completeResult;
+      }
+    });
+    console.log("flattenedArray", flattenedArray);
+    const filledContractsArray = await Promise.all(flattenedArray);
+    console.log("filledContractsArray", filledContractsArray);
+    this.commit("ui/setUsedContractsObj", filledContractsArray);
   },
 };

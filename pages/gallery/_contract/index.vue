@@ -13,7 +13,7 @@
                     <span style="display: inline-block" class="galleryIdWrap">
                     <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span>
                     </span>
-                    <Button @click="handleCopy" mode="hollow" v-if="!hasCopied">
+                    <Button @click="handleCopy" mode="hollow" v-if="!hasCopied" >
                       <IconCopy size="small"/>
                     </Button>
                     <div class="hiddenInputWrap" style="visibility: visible; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; position: relative;">
@@ -22,7 +22,12 @@
                   </div>
                 </div>
                 <div class="column col-10">
-                  <Button mode="hollow" @click="updateFollowing({id: galleryContractId, name: galleryMeta.name, symbol: galleryMeta.symbol, owner: galleryMeta.owner})"><IconHeart size="small" :strokeClass="contrastMode" :active="false" /></Button>
+                  <Button
+                    mode="hollow"
+                    :filled="activityId === galleryContractId" 
+                    @click="updateFollowing({id: galleryContractId, name: galleryMeta.name, symbol: galleryMeta.symbol, owner: galleryMeta.owner})">
+                      <IconHeart size="small" :strokeClass="contrastMode" :active="isFollowing(usedContractsObj, galleryContractId)" />
+                    </Button>
                 </div>
               </div>
               
@@ -252,6 +257,8 @@ export default {
       walletAddress: 'ui/walletAddress',
       usedContracts: 'ui/usedContracts',
       usedContractsObj: 'ui/usedContractsObj',
+      activityId: "ui/activityId",
+      // GALLERY
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
       galleryStatus: 'galleryStore/galleryStatus',
@@ -332,6 +339,13 @@ export default {
     handleFollowing(id){
       console.log('toggleFollowing', id)
       console.log('usedContractsObj', this.usedContractsObj)
+    },
+    isFollowing(contractsArray, targetId, ){
+      if(!contractsArray || !targetId){return false};
+      console.log('isfolowing', targetId, contractsArray);
+      const filtered = contractsArray.filter(item => item.id === targetId);
+      console.log('isfollowing filtered', filtered)
+      return filtered.length > 0
     }
   },
 }

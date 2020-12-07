@@ -1,7 +1,7 @@
 <template>
   <button
     class="btn"
-    :class="`btn${mode} ${className} ${size} ${fill ? 'fill' : ''}`"
+    :class="`btn${mode} ${className} ${size} ${filled ? 'filled' : ''} ${fill ? 'fill' : ''}`"
     @click="$emit('click')"
     :disabled="disabled"
   >
@@ -30,6 +30,22 @@
     background: unset;
     border: none;
     box-shadow: none;
+  }
+  &:not(.iconButton):active{
+    box-shadow: unset;
+    transform: translateY(1px) scale(.9);
+    transition-duration: .1s;
+    &:hover{
+      box-shadow: unset;
+      transform: translateY(1px) scale(.9);
+      opacity: .7;
+    }
+  }
+  &:focus{
+    outline: none;
+    // background: red !important;
+    // box-shadow: 0 0 0 1px var(--fill-color), 0 0 0 2px var(--ui-color);
+    box-shadow: 0 0 0 1px var(--fill-color), 0 0 0 3px red;
   }
   //sizes
   &.small {
@@ -69,11 +85,18 @@
     background: transparent;
     padding: 2px .5rem;
     color: currentColor;
+    &:hover{
+      box-shadow: 0 0 0 0 var(--line-color);
+    }
+    &.filled{
+      background: var(--line-color);
+    }
   }
   // HOVER
   &:not(.iconButton):hover {
     transform: translateY(-2px);
-    box-shadow: 0 2px 0 0px var(--shadow-color, #111);
+    // box-shadow: 0 2px 0 0px var(--shadow-color, #111);
+    box-shadow: 0 0 0 2px var(--shadow-color, #111);
   }
   &:not(.iconButton).active:hover {
     transform: translateY(-2px);
@@ -88,7 +111,8 @@ export default {
   props: {
     mode: { default: 'default' },
     size: { default: 'medium' },
-    fill: { default: false, type: Boolean },
+    filled: { default: false, type: Boolean }, // filled the background
+    fill: { default: false, type: Boolean }, // makes it 100% width
     disabled: { default: false, type: Boolean },
     className: { type: String, default: '' },
     // click: { type: Function },

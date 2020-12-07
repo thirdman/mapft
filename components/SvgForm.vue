@@ -161,7 +161,7 @@
         <Button
           :disabled="!this.svgCode"
           mode="primary"
-          size="large"
+          size="medium"
           @click="() => setShowPreview(true)"
           >
             Update Preview

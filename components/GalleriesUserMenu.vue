@@ -13,16 +13,36 @@
             `
           "
           >
-          <div :class="`${mode ==='hero' ? 'symbol' : 'column col-25 symbol'}`">
-            <IconGallery :size="mode ==='hero' ? 'large' : 'small'" :strokeClass="contrastMode" /><span>{{item.symbol}}</span>
+          <div class="cardImage" :class="`${mode ==='hero' ? 'symbol' : 'column col-25 symbol'}`">
+            <IconGallery :size="mode ==='hero' ? 'large' : 'small'" :strokeClass="contrastMode" />
+            <span class="symbolText">{{item.symbol}}</span>
           </div>
           <div :class="`${mode ==='hero' ? 'cardContent' : 'column col-100'}`">
-            <div class="row small">
-              <div class="column name">{{item.name}}</div>
+            <div class="nameRow row small">
+              <div class="name">{{item.name}} <Address :address="item.id" shrink fill v-if="!item.name"/> </div>
             </div>
-            <div class="row subtitle xsmall address"><Address :address="item.id" shrink fill /></div>
-            <div class="ownerFlag" v-if="item && userAddress && isOwner(userAddress, item.owner)"><IconUser size="small" :strokeClass="contrastMode"/></div>
-            <div class="followingFlag" v-if="item && userAddress && !isOwner(userAddress, item.owner)"><IconHeart size="small" :strokeClass="contrastMode" :active="true"/></div>
+            <div class="metaRow row">
+              <div class="column col-10">
+                <div class="row subtitle xsmall count">
+                    <IconGallery size="small" :strokeClass="contrastMode"/><span>{{item.count}}</span>
+                </div>
+              </div>
+              <div class="dividerColumn" /> 
+              <div class="column col-50">
+                <div class="row subtitle xsmall address">
+                  <div class="column col-100">
+                    <!-- <IconLink size="small" :strokeClass="contrastMode" /> -->
+                    <Address :address="item.id" shrink fill />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ownerFlag" v-if="item && userAddress && isOwner(userAddress, item.owner)">
+              <IconUser size="small" :strokeClass="contrastMode"/>
+            </div>
+            <div class="followingFlag" v-if="item && userAddress && !isOwner(userAddress, item.owner)">
+              <IconHeart size="small" :strokeClass="contrastMode" :active="true" />
+            </div>
           </div>
           </nuxt-link>
     </div>
@@ -59,6 +79,9 @@
       font-variation-settings: 'wght' 600;
       flex-basis: 10%;
     }
+    .cardImage{
+      
+    }
     .cardContent{
       padding-left: .5rem;;
       flex-basis: 90%;
@@ -68,14 +91,65 @@
       white-space: nowrap;
     }
     .address{
-      
+      opacity: .75; 
+      .column{
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+      }
+    }
+    .count{
+      opacity: .5;
     }
     .ownerFlag, .followingFlag{
       position: absolute;
       top: .5rem;
       right: .5rem;
       border-radius: 1rem;
-
+    }
+    .countFlag{
+      position: absolute;
+      top: .5rem;
+      left: .5rem;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      font-variation-settings: 'wght' 600;
+      font-size: .75rem;
+      svg{
+        opacity: .5;
+      }
+    }
+    .nameRow{
+      flex-grow: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      min-height: 1.5rem;
+    }
+    .metaRow{
+      margin-top: .5rem;
+      border-top: 1px solid var(--fill-color);
+      width: 100%;
+      align-items: center;
+      justify-content: space-around;
+      flex-grow: 0;
+      flex-shrink: 0;
+      min-height: 1.5rem;
+      > .column{
+        padding: .125rem .5rem;
+      }
+      .dividerColumn{
+        width: 1px;
+        flex-grow: 0;
+        flex-shrink: 0;
+        height: 100%;
+        border-left: 1px solid var(--fill-color);
+      }
     }
   }
   
@@ -85,13 +159,17 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-    
+      .cardImage{
+        display: flex;
+        min-height: 4rem;
+        flex-grow: 1;
+        padding-top: 1rem;
+      }
       .symbol{
         flex-basis: auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 4rem;
       }
       .cardContent{
         flex-basis: auto;
@@ -100,6 +178,9 @@
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
+        min-height: 3rem;
+        width: 100%;
+        
       }
       &:hover{
         border: 1px solid var(--text-color);

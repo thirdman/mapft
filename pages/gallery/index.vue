@@ -43,7 +43,14 @@
         
         <client-only>
         <div class="clampWidth">
-          <h4 v-if="usedContracts">Following</h4>
+          <div class="row">
+            <div class="column col-75">
+              <h4 v-if="usedContracts">Following</h4>
+            </div>
+            <div class="column col-25" style="display: flex; justify-content: flex-end;">
+              <Button @click="getAllContractsMeta" mode="hollow" >Refresh Info</Button>
+            </div>
+          </div>
           <div v-if="devMode && usedContractsObj">
             <GalleriesUserMenu
               mode="hero"
@@ -66,14 +73,14 @@
               />
           </div>
           <!-- <h4 v-if="usedContracts">Your Contracts </h4>
-          
-          <div v-if="devMode && usedContractsObj">
-            <GalleriesUserMenu mode="hero" :contractsArray="usedContractsObj" :contrastMode="contrastMode" :activeContractId="activeContractId" />
+           -->
+          <!-- <div v-if="devMode && usedContractsObj">
+            <GalleriesUserMenu mode="hero" :contractsArray="tempUsedContractsObj" :contrastMode="contrastMode" :activeContractId="activeContractId" />
           </div> -->
-          <h4 v-if="usedContracts">Previoulsy used</h4>
+          <!-- <h4 v-if="usedContracts">Previously used</h4>
           <div>
             <GalleriesUserMenu mode="hero" :contracts="usedContracts" :contrastMode="contrastMode" :activeContractId="activeContractId" />
-          </div>
+          </div> -->
         </div>
         </client-only>
       </div>
@@ -130,6 +137,7 @@ export default {
       activeContractId: "ui/activeContractId",
       usedContracts: "ui/usedContracts",
       usedContractsObj: "ui/usedContractsObj",
+      tempUsedContractsObj: "ui/tempUsedContractsObj",
       walletAddress: "ui/walletAddress",
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
@@ -150,6 +158,7 @@ export default {
     }),
     ...mapActions({
       updateUsedContractsObj: 'ui/updateUsedContractsObj',
+      getAllContractsMeta: 'ui/getAllContractsMeta',
     }),
     handleLoad(contractId) {
       if(!contractId){return}
