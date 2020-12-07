@@ -183,7 +183,9 @@
         
       }
       &:hover{
-        border: 1px solid var(--text-color);
+        border: 1px solid var(--ui-color);
+        box-shadow: 0 0 0 2px var(--fill-color), 0px 2px 1rem 0 rgba(0,0,0,.3);
+        background: var(--fill-color);
       }
     }
   }
