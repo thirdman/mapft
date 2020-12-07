@@ -193,6 +193,7 @@
 .codeInput{
   background: #222;
   color: #eee;
+  font-family: monospace;
 }
 </style>
 
