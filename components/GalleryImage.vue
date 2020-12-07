@@ -48,7 +48,7 @@
 import movieImage from "~/assets/images/defaultImageMovie.png"
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
 export default {
-  props: ['src', 'thumbnail'],
+  props: ['src', 'thumbnail', 'poster'],
   data() {
     return {
       // nothing to see here

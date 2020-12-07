@@ -398,7 +398,37 @@ export const actions = {
     });
     // readAdditionalMeta(params)
   },
+  updateFollowing({ state }, payload) {
+    const { id, name, symbol, owner } = payload;
+    const { walletAddress } = state;
+
+    console.log("updateFollowing.payload", payload);
+    console.log("updateFollowing", id);
+    console.log("updateFollowing", state.usedContractsObj);
+    const tempUsedContractsObj =
+      (state.usedContractsObj && state.usedContractsObj.slice()) || [];
+    const filteredContracts = tempUsedContractsObj.filter(
+      (item) => item.id === payload.id
+    );
+    const itemExists = filteredContracts.length;
+    const isOwner = owner && owner === walletAddress;
+    console.log("itemExists", itemExists);
+    console.log("isOwner", isOwner);
+    if (id && name && symbol && owner) {
+      this.dispatch("ui/updateUsedContractsObj", {
+        data: payload,
+        remove: false,
+      });
+    }
+    if (itemExists && !isOwner) {
+      this.dispatch("ui/updateUsedContractsObj", {
+        data: payload,
+        remove: true,
+      });
+    }
+  },
   updateUsedContractsObj(dispatch, props) {
+    console.log("updateUsedContractsObj props:", props);
     const { state } = dispatch;
     const { data, remove } = props;
     console.log("updateUsedContractsObj data:", data);
@@ -407,6 +437,7 @@ export const actions = {
     const filteredContracts = tempUsedContractsObj.filter(
       (item) => item.id === data.id
     );
+
     if (filteredContracts.length) {
       if (remove) {
         console.log("REMOVE");
@@ -416,6 +447,7 @@ export const actions = {
         this.commit("ui/setUsedContractsObj", newArray);
       }
     } else {
+      console.log("doesnt exist, so Adding");
       tempUsedContractsObj.push(data);
       this.commit("ui/setUsedContractsObj", tempUsedContractsObj);
     }

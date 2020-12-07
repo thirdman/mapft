@@ -1,10 +1,11 @@
 <template>
   <div class="galleriesMenu userGalleriesMenu noAfter" :class="mode">
-    <div v-for="(item, index) in contractsArray" :key="`item${index}`" class="listItem">
-      
+    <div v-for="(item, index) in (show ? filterItems(contractsArray, show) : contractsArray)" :key="`item${index}`" class="listItem">
         <nuxt-link
           :to="`/gallery/${item.id}`"
           :class="`contractLink ${
+            userAddress && item.owner && item.owner.toLowerCase() === userAddress.toLowerCase() ? 'owner' : 'following'
+          } ${
               galleryContractId === item.id
               ? 'active'
               : 'notActive'
@@ -13,17 +14,17 @@
           "
           >
           <div :class="`${mode ==='hero' ? 'symbol' : 'column col-25 symbol'}`">
-            <span>{{item.symbol}}</span>
+            <IconGallery :size="mode ==='hero' ? 'large' : 'small'" :strokeClass="contrastMode" /><span>{{item.symbol}}</span>
           </div>
           <div :class="`${mode ==='hero' ? 'cardContent' : 'column col-100'}`">
-            <div class="row xsmall">
+            <div class="row small">
               <div class="column name">{{item.name}}</div>
             </div>
-            <div class="row subtitle xsmall address">{{item.id}}</div>
+            <div class="row subtitle xsmall address"><Address :address="item.id" shrink fill /></div>
+            <div class="ownerFlag" v-if="item && userAddress && isOwner(userAddress, item.owner)"><IconUser size="small" :strokeClass="contrastMode"/></div>
+            <div class="followingFlag" v-if="item && userAddress && !isOwner(userAddress, item.owner)"><IconHeart size="small" :strokeClass="contrastMode" :active="true"/></div>
           </div>
-          </nuxt-link
-        >
-      
+          </nuxt-link>
     </div>
     <div v-for="(item, index) in contracts" :key="index" class="listItem">
         <nuxt-link
@@ -52,7 +53,7 @@
 <style lang="scss">
 .galleriesMenu{
   .contractLink{
-    
+    position: relative;
     .symbol{
       text-transform: uppercase;
       font-variation-settings: 'wght' 600;
@@ -63,11 +64,18 @@
       flex-basis: 90%;
     }
     .name{
-      
+      font-variation-settings: 'wght' 600;
       white-space: nowrap;
     }
     .address{
       
+    }
+    .ownerFlag, .followingFlag{
+      position: absolute;
+      top: .5rem;
+      right: .5rem;
+      border-radius: 1rem;
+
     }
   }
   
@@ -80,6 +88,10 @@
     
       .symbol{
         flex-basis: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 4rem;
       }
       .cardContent{
         flex-basis: auto;
@@ -106,7 +118,7 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
-  props: ["galleryContractId", "userAddress", "contracts", "contractsArray", "mode", 'contrastMode', 'activeContractId'],
+  props: ["galleryContractId", "userAddress", "contracts", "contractsArray", "mode", 'contrastMode', 'activeContractId', "show"],
   computed: {
     // ...mapGetters({
     //   usedContracts: "ui/usedContracts",
@@ -124,7 +136,26 @@ export default {
     //   const displayAddress = this.shrinkAddress(address);
     //   return displayAddress.toString() || '...'
     // }
-    
+  filterItems(itemsArray, show){
+    const userAddress = this.userAddress;
+    if(show === 'owner'){
+      const ownerArray = itemsArray.filter(item => 
+        this.isOwner(userAddress, item.owner)
+      )
+      return ownerArray;
+    }
+    if(show === 'following'){
+      const followingArray = itemsArray.filter(item => 
+        !this.isOwner(userAddress, item.owner)
+      )
+      return followingArray;
+    }
+  },
+  isOwner(userAddress, ownerAddress) {
+    const isOwner = userAddress && ownerAddress && userAddress.toLowerCase() === ownerAddress.toLowerCase();
+    return isOwner
+  },
+  
   }
 };
 </script>

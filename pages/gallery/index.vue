@@ -40,24 +40,37 @@
           <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
           <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
         </div>
-        <client-only>
-        <div v-if="devMode">
-          <div class="clampWidth">
-            <Button @click="updateUsedContractsObj({data: {
-              id: '0x12345',
-              name: 'test name',
-              symbol: 'TEST'
-            }, remove: true})"><span>test updateCOntractsObj</span>
-            </Button>
-          </div>
-        </div>
-        </client-only>
+        
         <client-only>
         <div class="clampWidth">
-          <h4 v-if="usedContracts">Your Contracts </h4>
+          <h4 v-if="usedContracts">Following</h4>
+          <div v-if="devMode && usedContractsObj">
+            <GalleriesUserMenu
+              mode="hero"
+              :userAddress="walletAddress"
+              :contractsArray="usedContractsObj"
+              :contrastMode="contrastMode"
+              :activeContractId="activeContractId"
+              show="following"
+              />
+          </div>
+          <h4 v-if="usedContracts">User Contracts</h4>
+          <div v-if="devMode && usedContractsObj">
+            <GalleriesUserMenu
+              mode="hero"
+              :userAddress="walletAddress"
+              :contractsArray="usedContractsObj"
+              :contrastMode="contrastMode"
+              :activeContractId="activeContractId"
+              show="owner"
+              />
+          </div>
+          <!-- <h4 v-if="usedContracts">Your Contracts </h4>
+          
           <div v-if="devMode && usedContractsObj">
             <GalleriesUserMenu mode="hero" :contractsArray="usedContractsObj" :contrastMode="contrastMode" :activeContractId="activeContractId" />
-          </div>
+          </div> -->
+          <h4 v-if="usedContracts">Previoulsy used</h4>
           <div>
             <GalleriesUserMenu mode="hero" :contracts="usedContracts" :contrastMode="contrastMode" :activeContractId="activeContractId" />
           </div>

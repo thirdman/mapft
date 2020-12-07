@@ -591,8 +591,19 @@ const readThatMeta = async (params, context) => {
       console.error("getTotalTokens error", err);
       throw err;
     });
+  const getOwner = contract.methods
+    .owner()
+    .call()
+    .then((result) => {
+      console.log("owner result is", result);
+      return result;
+    })
+    .catch((err) => {
+      console.error("owner error", err);
+      throw err;
+    });
 
-  const promiseArray = [getName, getSymbol, getTotalTokens];
+  const promiseArray = [getName, getSymbol, getTotalTokens, getOwner];
   console.log("readMeta: promiseArray", promiseArray);
   const allMeta = await Promise.allSettled(promiseArray)
     .then((values) => {
@@ -601,6 +612,7 @@ const readThatMeta = async (params, context) => {
         name: values[0].value,
         symbol: values[1].value,
         count: values[2].value,
+        owner: values[3].value,
         // ...(values[1] && values[1].value),
         // ...(values[2] && values[2].value),
         // ownerAddress: values[3] && values[3].value,

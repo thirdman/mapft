@@ -7,17 +7,25 @@
           <div class="primaryMeta">
             <div class="metaItem">
               <label>Gallery</label>
-              <div class="small">
-                <span style="display: inline-block" class="galleryIdWrap">
-                <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span>
-                </span>
-                <Button @click="handleCopy" mode="hollow" v-if="!hasCopied">
-                  <IconCopy size="small"/>
-                </Button>
-                <div class="hiddenInputWrap" style="visibility: visible; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; position: relative;">
-                  <input type="text" id="copy-string" :value="galleryContractId" style=" position: absolute; z-index: -1">
+              <div class="row">
+                <div class="column col-90">
+                  <div class="small">
+                    <span style="display: inline-block" class="galleryIdWrap">
+                    <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span>
+                    </span>
+                    <Button @click="handleCopy" mode="hollow" v-if="!hasCopied">
+                      <IconCopy size="small"/>
+                    </Button>
+                    <div class="hiddenInputWrap" style="visibility: visible; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; position: relative;">
+                      <input type="text" id="copy-string" :value="galleryContractId" style=" position: absolute; z-index: -1">
+                    </div>
+                  </div>
+                </div>
+                <div class="column col-10">
+                  <Button mode="hollow" @click="updateFollowing({id: galleryContractId, name: galleryMeta.name, symbol: galleryMeta.symbol, owner: galleryMeta.owner})"><IconHeart size="small" :strokeClass="contrastMode" :active="false" /></Button>
                 </div>
               </div>
+              
             </div>
             <div class="loadingWrap" v-if="isLoadingMeta">
               <Loading fillClass="light" />
@@ -29,6 +37,10 @@
               <div class="small symbol">{{galleryMeta.symbol}}</div>
               <label>Tokens</label>
               <div class="small">{{galleryMeta.count}}</div>
+              <label>Owner</label>
+              <div class="small">
+                <Address shrink :address="galleryMeta.owner"/>
+              </div>
             </div>
           </div>
         </div>
@@ -239,6 +251,7 @@ export default {
       contrastMode: 'ui/contrastMode',
       walletAddress: 'ui/walletAddress',
       usedContracts: 'ui/usedContracts',
+      usedContractsObj: 'ui/usedContractsObj',
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
       galleryStatus: 'galleryStore/galleryStatus',
@@ -258,6 +271,7 @@ export default {
     }),
     ...mapActions({
       handleGalleryMeta: 'ui/handleGalleryMeta',
+      updateFollowing: 'ui/updateFollowing',
     }),
     handleRefresh() {
       console.log('refresh');
@@ -314,6 +328,10 @@ export default {
       console.log('metaData: ', metaData);
       this.galleryMeta = metaData
       this.isLoadingMeta = false;
+    },
+    handleFollowing(id){
+      console.log('toggleFollowing', id)
+      console.log('usedContractsObj', this.usedContractsObj)
     }
   },
 }
