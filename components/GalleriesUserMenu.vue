@@ -47,7 +47,7 @@
           </nuxt-link>
     </div>
     <div v-if="show && !filterItems(contractsArray, show).length">
-      <p>nothing found</p>
+      <p class="help">-</p>
       </div>
     <div v-for="(item, index) in contracts" :key="index" class="listItem">
         <nuxt-link
