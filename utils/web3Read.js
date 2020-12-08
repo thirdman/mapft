@@ -618,7 +618,6 @@ const readThatMeta = async (params, context) => {
         count: values[2].value,
         owner: values[3].value,
       };
-      // console.log("read: all data", data);
       return data;
     })
     .catch((error) => {
@@ -722,8 +721,7 @@ const readThatShit = async (params, context) => {
       .getImageLink(tokenId)
       .call()
       .then((resultLinks) => {
-        console.info("imageLinkData resultLinks ", resultLinks);
-
+        // console.info("imageLinkData resultLinks ", resultLinks);
         const linkData = {
           fileArweaveUrl: resultLinks.fileArweaveURL,
           fileIpfsUrl: resultLinks.fileIPFSURL,
@@ -770,7 +768,7 @@ const readThatShit = async (params, context) => {
         ownerOfToken,
         imageLinkData,
       ];
-  console.log("read: promiseArray", promiseArray);
+  // console.log("read: promiseArray", promiseArray);
   const allData = await Promise.allSettled(promiseArray)
     .then((values) => {
       console.log("READ: values:", values);
@@ -781,7 +779,7 @@ const readThatShit = async (params, context) => {
         ownerAddress: values[3] && values[3].value,
         ...(values[4] && values[4].value),
       };
-      console.log("read: all data", data);
+      // console.log("read: all data", data);
       return data;
     })
     .catch((error) => {
@@ -969,12 +967,6 @@ const readImageLink = (params, context) => {
       console.error(err);
       throw err;
     });
-  // imageLinkData
-  //   .then((result) => {
-  //     console.log('link result', result)
-  //   })
-  //   .catch((error) => console.log(error))
-  // console.log("here!", imageLinkData);
 
   return imageLinkData;
 };

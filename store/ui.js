@@ -384,7 +384,7 @@ export const actions = {
     console.log("about tot readThatShit with params: ", params);
     this.commit("ui/setViewStatus", "loading");
     await readThatShit(params, this).then((result) => {
-      console.log("readthatshit viewResult result", result);
+      // console.log("readthatshit viewResult result", result);
       let resultData = result;
       let linkDataAlpha = {};
       if (isAlpha) {
@@ -396,7 +396,7 @@ export const actions = {
         console.log("ISALPHA", linkDataAlpha);
       }
       resultData = { ...resultData, ...linkDataAlpha };
-      console.log("resultData is", resultData);
+      // console.log("resultData is", resultData);
       // if (!result.ownerAddress) {
       if (!resultData.fileArweaveHash) {
         console.log("no data?");

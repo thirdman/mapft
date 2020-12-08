@@ -330,7 +330,7 @@ export default {
 
   data() {
     return {
-      showDevInfo: true,
+      showDevInfo: false,
       rootUrl: "",
       factoryContract: "",
       requiredNetwork: "",

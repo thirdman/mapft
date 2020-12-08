@@ -94,9 +94,7 @@ import { mapGetters, mapMutations } from 'vuex'
 // import { setTheme } from '../utils/theme.js'
 
 const myMixin = {
-  created: () => {
-    // handleLoadStorage()
-  },
+  
   methods: {
     hello: () => {
       console.log('hello from mixin!')

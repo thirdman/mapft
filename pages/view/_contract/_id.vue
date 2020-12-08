@@ -366,7 +366,7 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
-import { humanFileSize } from '../../../utils/misc'
+import { humanFileSize, contentSwitch } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
 import Button from '../../../components/Button.vue';
 
@@ -569,12 +569,12 @@ export default {
     }),
     getContentType(fileType){
       // const type = await this.$store.dispatch('ui/contentType', fileType);
-      const type = this.contentSwitch(fileType);
+      const type = contentSwitch(fileType);
       console.log('type: ', type)
       return type
     },
-    contentSwitch(fileType){
-      console.log("fileType", fileType);
+    contentSwitch2(fileType){
+      // console.log("fileType", fileType);
       switch (fileType) {
         case "glb":
         case "obj":

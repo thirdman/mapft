@@ -1,5 +1,42 @@
 import { setTheme } from "./theme";
 
+/** CONTENT SWITCH
+ * Returns the type of content
+ * Used when mumultiple file types are treated the same
+ * Eg. png, jpg, gif
+ */
+
+const contentSwitch = (fileType) => {
+  console.log("misc fileType", fileType);
+  switch (fileType) {
+    case "glb":
+    case "obj":
+    case "usdz":
+    case "gltf":
+      return "threed";
+      break;
+    case "vox":
+      return "voxel";
+      break;
+    case "mp4":
+    case "mov":
+      return "video";
+      break;
+    case "mp3":
+      return "audio";
+      break;
+    case "pdf":
+      return "pdf";
+      break;
+    case "rtf":
+    case "txt":
+      return "text";
+      break;
+    default:
+      return "image";
+  }
+};
+
 /** truncate
  * returns shorter text if it is longer than the length
  */
@@ -14,71 +51,6 @@ const truncate = (text, length, clamp) => {
     content.length > length ? content.slice(0, length) + clamp : content;
   return returnContent;
 };
-
-/**
- * Get local storage
- * Loads the contract and the theme variables
- */
-
-const handleLoadStorage = () => {
-  // First test is not a server:
-  const isServer = process.env.VUE_ENV === "server";
-  if (!isServer && window && window.localStorage) {
-    const storedTheme = localStorage.getItem("infinftTheme");
-    if (storedTheme) {
-      setTheme("body", storedTheme);
-    }
-    const userContractAddress = localStorage.getItem(
-      "infinftUserContractAddress"
-    );
-    // const userContractAddressElement = document.getElementById(
-    //   'userContractAddress'
-    // )
-    // const footerContractAddressElement = document.getElementById(
-    //   'footerContractElement'
-    // )
-
-    if (localStorage.getItem("infinftUserContractAddress") === null) {
-      return null;
-    }
-    // if (userContractAddressElement) {
-    //   // userContractAddressElement.innerHTML = userContractAddress
-    //   // footerContractAddressElement.innerHTML = userContractAddress
-    //   //   setContract(userContractAddress)
-    // }
-    console.log(
-      "LOAD: localstorage user contract address",
-      userContractAddress
-    );
-    toggleClass("fieldsetContractView", "hidden");
-    toggleClass("fieldsetContract", "hidden");
-    toggleClass("fieldsetImage", "hidden");
-    toggleClass("fieldsetMeta", "hidden");
-    toggleClass("fieldsetAction", "hidden");
-  }
-};
-
-/**
- * Toggle a class - allows to define a classname
- * TODO: unify with the togglevisibility
- *
- */
-
-function toggleClass(targetId, classToToggle) {
-  const targetElement = document.getElementById(targetId);
-  if (!targetElement) {
-    return null;
-  }
-  const hasClass = targetElement.classList.contains(classToToggle);
-  if (!targetElement) {
-    return;
-  }
-  if (hasClass) {
-    targetElement.classList.remove(classToToggle);
-  } else {
-    targetElement.classList.add(classToToggle);
-  }
-}
 
 /**
  * Set Class
@@ -123,9 +95,8 @@ const humanFileSize = (size) => {
 };
 
 export {
-  handleLoadStorage,
+  contentSwitch,
   setClass,
-  toggleClass,
   removeFromArrayById,
   humanFileSize,
   truncate,
