@@ -300,7 +300,7 @@ export const mutations = {
     state.viewStatus = newState;
   },
   setTempViewItem(state, data) {
-    console.log("settempvieitem", data);
+    // console.log("settempvieitem", data);
     if (!data) {
       state.tempViewItem = {};
     } else {

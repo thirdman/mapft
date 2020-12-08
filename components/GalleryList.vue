@@ -338,17 +338,23 @@ export default {
       console.log(`Image failed to load, ${index}`);
     },
     handleLink(item, contractId) {
+      console.log('handleLink', item)
       // const tokenId = item.tokenId
       const tokenId = item.token_id
       const tempItem = {
-        imageUrlOriginal: item.imageUrlOriginal,
-        imageUrlThumbnail: item.imageUrlThumbnail,
-        imagePreviewUrl: item.imagePreviewUrl,
+        animation_url: item.animation_url,
+        image_thumbnail_url: item.image_thumbnail_url,
+        image_preview_url: item.image_preview_url,
+        image_original_url: item.image_original_url,
+        // imageUrlOriginal: item.imageUrlOriginal,
+        // imageUrlThumbnail: item.imageUrlThumbnail,
+        // imagePreviewUrl: item.imagePreviewUrl,
         title: item.name,
         description: item.description,
         tokenId,
         contractId,
       }
+      console.log('handleLink', tempItem)
       // console.log('this.$store', this.$store)
       this.$store.commit('ui/setTempViewItem', tempItem)
     

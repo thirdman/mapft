@@ -1,5 +1,99 @@
 import { setTheme } from "./theme";
 
+/**
+ * Loads an image with progress callback.
+ *
+ * The `onprogress` callback will be called by XMLHttpRequest's onprogress
+ * event, and will receive the loading progress ratio as an whole number.
+ * However, if it's not possible to compute the progress ratio, `onprogress`
+ * will be called only once passing -1 as progress value. This is useful to,
+ * for example, change the progress animation to an undefined animation.
+ *
+ * @param  {string}   imageUrl   The image to load
+ * @param  {Function} onprogress
+ * @return {Promise}
+ */
+const loadImage = (imageUrl, onprogress) => {
+  const tempProgressObj = {
+    total: undefined,
+    loaded: undefined,
+    percent: 1,
+  };
+  onprogress({
+    mode: "image",
+    type: "image",
+    ProgressEvent: { nope: "nope" },
+    progressObj: tempProgressObj,
+  });
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
+    var notifiedNotComputable = false;
+
+    xhr.open("GET", imageUrl, true);
+    xhr.responseType = "arraybuffer";
+
+    xhr.onprogress = function (ev) {
+      const percentLoaded = (ev.loaded / ev.total) * 100;
+      const percentRounded =
+        Math.round((percentLoaded + Number.EPSILON) * 100) / 100;
+      const progressObj = {
+        total: ev.total,
+        loaded: ev.loaded,
+        percent: percentRounded,
+      };
+      onprogress({
+        mode: "image",
+        type: "image",
+        ProgressEvent: ProgressEvent,
+        progressObj: progressObj,
+      });
+      // if (ev.lengthComputable) {
+      //   onprogress(parseInt((ev.loaded / ev.total) * 100));
+      // } else {
+      //   if (!notifiedNotComputable) {
+      //     notifiedNotComputable = true;
+      //     onprogress(-1);
+      //   }
+      // }
+    };
+
+    xhr.onloadend = function () {
+      if (!xhr.status.toString().match(/^2/)) {
+        reject(xhr);
+      } else {
+        if (!notifiedNotComputable) {
+          // onprogress(100);
+          const tempProgressObj = {
+            total: undefined,
+            loaded: undefined,
+            percent: 100,
+          };
+          onprogress({
+            mode: "image",
+            type: "image",
+            ProgressEvent: { nope: "nope" },
+            progressObj: tempProgressObj,
+          });
+        }
+
+        var options = {};
+        var headers = xhr.getAllResponseHeaders();
+        var m = headers.match(/^Content-Type\:\s*(.*?)$/im);
+
+        if (m && m[1]) {
+          options.type = m[1];
+        }
+
+        var blob = new Blob([this.response], options);
+
+        resolve(window.URL.createObjectURL(blob));
+      }
+    };
+
+    xhr.send();
+  });
+};
+
 /** CONTENT SWITCH
  * Returns the type of content
  * Used when mumultiple file types are treated the same
@@ -100,4 +194,5 @@ export {
   removeFromArrayById,
   humanFileSize,
   truncate,
+  loadImage,
 };

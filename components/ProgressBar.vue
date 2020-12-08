@@ -1,6 +1,9 @@
 <template>
   <div class="ProgressBar" >
-    <div v-if="showNumber" class="small">{{percentage}}</div>
+    <div class="row">
+      <div v-if="showNumber" class="column small">{{percentage}}%</div>
+      <div v-if="totalSize" class="column small" style="display: flex; justify-content: flex-end;">{{totalSize}}</div>
+    </div>
     <div class="progressBarOuter">
         <div class="progressBarFill" :class="`fill-${color}`" :style="`width: ${percentage}%`"></div>
     </div>        
@@ -40,7 +43,7 @@
 
 
 export default {
-  props: ['percentage', 'contrastMode', 'showNumber', 'color'],
+  props: ['percentage', 'contrastMode', 'showNumber', 'color', "totalSize"],
   computed: {
     // ...mapGetters({
     // }),

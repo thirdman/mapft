@@ -690,8 +690,6 @@ const mintThatShit = (event, state, rootContext) => {
               if (completedTransaction.status === true) {
                 // setMintStatus('completed')
                 context.commit("mintFormStore/setMintStatus", "completed");
-
-                // toggleClass('completedMintContent', 'hidden')
                 const newAddress = completedTransaction.logs[0].address;
                 const newTokenTopics = completedTransaction.logs[0].topics;
                 const newTokenIdHex = newTokenTopics && newTokenTopics[3];

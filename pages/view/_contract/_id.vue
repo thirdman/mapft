@@ -164,18 +164,18 @@
                   src="~/assets/images/defaultImageTransparent.png"
                   style="width: 100%; height: auto;"
                   class="previewImage"
-                  v-if="!tempViewItem.imageUrlThumbnail"
+                  v-if="!tempViewItem.image_thumbnail_url"
                 />
                 <img
-                  :src="tempViewItem && tempViewItem.imageUrlThumbnail"
+                  :src="tempViewItem && tempViewItem.image_thumbnail_url"
                   style="width: 100%; height: auto;"
                   class="previewImage"
-                  v-if="tempViewItem && tempViewItem.imageUrlThumbnail"
+                  v-if="tempViewItem && tempViewItem.image_thumbnail_url"
                 />
                 <div class="previewLoading">
                   <div class="previewLoadingPill">
                     <Loading
-                      message="Loading Data..."
+                      message="Loading Source..."
                       size="large"
                       :fillClass="contrastMode === 'light' ? 'light' : 'dark'"
                     />
@@ -225,6 +225,7 @@
                 :src="viewData.fileIpfsUrl"
                 :hasImageOptimization="hasImageOptimization"
                 :imageOptimizationUrl="imageOptimizationUrl"
+                :resolution="this.resolution"
                 optimization="width=800"
               />
               <RenderItem
@@ -234,12 +235,18 @@
                 :src="viewData.fileIpfsUrl"
                 :hasImageOptimization="false"
               />
-              <div class="optimisationToggle" v-if="hasImageOptimization && getContentType(viewData.fileType) === 'image'">
+              
+              <div class="optimisationToggle row">
+                <div class="buttonGroup">
+                  <Button mode="hollow" :filled="resolution === 'thumbnail'" @click="setResolution('thumbnail')" size="small" >Thumbnail</Button>
+                  <Button mode="hollow" :filled="resolution === 'preview'" @click="setResolution('preview')" size="small">Preview</Button>
+                  <Button mode="hollow" :filled="resolution === 'full'" @click="setResolution('full')" size="small">Full</Button>
+                </div>
+                <!-- <div class="optimisationToggleOld column" v-if="hasImageOptimization && getContentType(viewData.fileType) === 'image'">
                 <Button v-if="!fullResolution" mode="hollow" size="small" @click="viewFullResolution(true)"><IconExpand size="small" :strokeClass="contrastMode" />&nbsp;<span>Full Resolution</span></Button>
                 <Button v-if="fullResolution" mode="hollow" size="small" @click="viewFullResolution(false)"><IconContract size="small" :strokeClass="contrastMode" />&nbsp;<span>View Preview Resolution</span></Button>
-                <!-- <div v-if="viewData && viewData.fileType">contentType is: {{getContentType(viewData.fileType)}}</div> -->
+              </div> -->
               </div>
-              
               
             </div>
           </div>
@@ -383,6 +390,7 @@ export default {
       etherscanUrlBase: "https://etherscan.io/",
       showExpandedDescription: false,
       fullResolution: false,
+      resolution: 'preview'
     }
   },
   head() {
@@ -563,6 +571,7 @@ export default {
       setShowSearch: 'ui/setShowSearch',
       setSearchParams: 'ui/setSearchParams',
       setViewStatus: 'ui/setViewStatus',
+      
     }),
     ...mapActions({
       contentType: 'ui/contentType',
@@ -614,6 +623,10 @@ export default {
       console.log('set Full Resolution', value)
       this.fullResolution = value
     },
+    setResolution(value){
+      console.log('setResolution', value)
+      this.resolution = value
+    },
     doTest() {
       this.$store.dispatch('ui/handleSearch')
     },
@@ -635,8 +648,6 @@ export default {
       return encodeURIComponent(fullUrl);
     },
     getDescription(content){
-      console.log('getdescription')
-      console.log('viewData.description', this.viewData.description);
       const tempDescription = this.tempViewItem && this.tempViewItem.description
       const description = this.viewData && this.viewData.description
       return description || tempDescription;

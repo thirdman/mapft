@@ -95,6 +95,7 @@
               class="column col-100 imageColumn"
               v-if="viewStatus !== 'ready' && !viewData && tempViewItem"
             >
+            <transition name="fade" appear>
               <div class="previewWrap">
                 <img
                   :src="tempViewItem.imageUrlThumbnail"
@@ -107,6 +108,7 @@
                   </div>
                 </div>
               </div>
+            </transition>
             </div>
             <div
               class="column col-100 imageColumn"

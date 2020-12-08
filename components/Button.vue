@@ -91,6 +91,29 @@
     &.filled{
       background: var(--line-color);
     }
+    .buttonGroup & {
+      border-radius: 0;
+      
+      &:nth-child(1n + 1){
+        border-right-width: 0px;
+      }
+      &:first-child{
+        border-radius: 1rem 0 0 1rem;
+        
+      }
+      &:last-child{
+        border-radius: 0 1rem  1rem 0;
+        border-right-width: 1px;
+      }
+      &.filled:nth-child(1n + 1){
+        border-right-width: 1px;
+      }
+      &.filled + .btnhollow{
+        border-left-width: 0px;
+        // border-right-width: 1px;
+        
+      }
+    }
   }
   // HOVER
   &:not(.iconButton):hover {
