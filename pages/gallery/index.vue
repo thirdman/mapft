@@ -51,7 +51,7 @@
               <Button @click="getAllContractsMeta" mode="hollow" >Refresh Info</Button>
             </div>
           </div>
-          <div v-if="devMode && usedContractsObj">
+          <div v-if="usedContractsObj">
             <GalleriesUserMenu
               mode="hero"
               :userAddress="walletAddress"
@@ -62,7 +62,7 @@
               />
           </div>
           <h4 v-if="usedContracts">User Contracts</h4>
-          <div v-if="devMode && usedContractsObj">
+          <div v-if="usedContractsObj">
             <GalleriesUserMenu
               mode="hero"
               :userAddress="walletAddress"
