@@ -1,51 +1,6 @@
 <template>
   <div class="pageContainer">
     <Header />
-    <div id="searchRow" class="row searchRow" v-if="showSearch && 1===2">
-      <div class="form entry">
-        <div class="w3-row row">
-          <div class="formItem column col-50">
-            <label for="searchContractId">Art Contract</label>
-            <input
-              name="Contract Id"
-              oldId="ww"
-              id="searchContractId"
-              class="hero"
-              type="string"
-              max="99"
-              required
-              placeholder="0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
-              v-model="searchContractId"
-            />
-          </div>
-
-          <div class="formItem column col-50">
-            <label for="searchTokenId">Token ID</label>
-            <input
-              name="Token Id"
-              oldId="w"
-              id="searchTokenId"
-              type="number"
-              min="1"
-              class="hero small"
-              placeholder="1"
-              v-model="searchTokenId"
-            />
-          </div>
-
-          <div class="formItem column col-66">
-            <label>&nbsp;</label>
-            <button id="xx" type="submit" class="w3-black btn-large" @click="doTest">
-              <!-- onClick='toggleVisibility("searchRow", "hidden")' -->
-              READ
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- <button @click="setViewStatus('loading')">set loading</button> -->
     <section id="read" class="read showMeta borderBottom">
       <div class="tertiary" >
         <Button @click="apiData(this)">get api data</Button>
@@ -61,6 +16,9 @@
           >
             <IconExternalLink :strokeClass="contrastMode" size="small" />
           </a>
+          <Button mode="hollow" @click="handleShare(true)">
+            <IconExternalLink :strokeClass="contrastMode" size="small" />
+          </Button>
         </div>
         <div v-if="uiMode !== 'none'" class="primaryMeta">
           <div class="metaItem">
@@ -359,6 +317,17 @@
       </div>
     </section>
     <Footer />
+    <client-only>
+      <share-modal
+        content="blah"
+        mode="token"
+        :contractId="contractId"
+        :tokenId="tokenId"
+        url="https://sdf"
+        :uiMode="uiMode"
+        :uiTheme="uiTheme"
+      />
+    </client-only>
   </div>
 </template>
 
@@ -497,6 +466,7 @@ export default {
       description: `InfiNFT | data.description` || "",
       previewImage: `${BASE_URL}${ogImage}`,
       previewUrl: data.image_preview_url,
+      resolution: 'full'
     }
     console.log('async tempData', tempData)
     return tempData;
@@ -659,6 +629,15 @@ export default {
       const returnContent = content.length > length ? content.slice(0, length) + clamp : content;
       // console.log('truncate: returncontent:', returnContent)
       return returnContent;
+    },
+    handleShare(newState) {
+      console.log('handle share')
+      if(newState){
+        this.$modal.show('share-modal');
+      } else {
+        this.$modal.hide('share-modal');
+
+      }
     },
     async apiData() {
     const context = this;

@@ -48,6 +48,13 @@
       }
     }
   }
+  .pageContainer section#read .secondary,
+  .pageContainer section#read .tertiary {
+    min-height: 1rem;
+  }
+  section#read .primary {
+    padding: 0;
+  }
 }
 
 #body.lg {

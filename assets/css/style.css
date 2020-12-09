@@ -2119,6 +2119,15 @@ textarea,
   outline: none;
 }
 
+input[type="number"].invert,
+input[type="string"].invert,
+textarea.invert,
+.file-custom {
+  color: var(--ui-color);
+  background: var(--background-color);
+  box-shadow: 0 0 0px 2px var(--border-color, #111);
+}
+
 input[type="number"]:focus,
 input[type="string"]:focus {
   border: 0px solid var(--secondary-color, #111);
