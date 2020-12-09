@@ -3,7 +3,9 @@
     <Header />
     <section id="read" class="read showMeta borderBottom">
       <div class="tertiary" >
-        <Button @click="apiData(this)">get api data</Button>
+        <div v-if="devMode">
+          <Button @click="apiData(this)">test api data</Button>
+        </div>
         <div class="galleryLinkWrap" v-if="uiMode !== 'none'">
           <nuxt-link :to="/gallery/ + contractId" class="galleryLink asButton">
             <IconBack :strokeClass="contrastMode" />
