@@ -16,7 +16,7 @@
           </div>
         </div>
       <div class="primary">
-        <div class="row">
+        <div class="row" v-if="walletAddress">
           <SvgForm />
           <PreviewSvg :code="svgCode" v-if="showPreview" :previewData="previewData" />
           
@@ -45,6 +45,7 @@ export default {
     ...mapGetters({
       //UI
       devMode: "ui/devMode",
+      walletAddress: "ui/walletAddress",
       // SVG
       previewBytes: "svgFormStore/previewBytes",
       showPreview: "svgFormStore/showPreview",

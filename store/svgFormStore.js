@@ -540,9 +540,9 @@ const defaultCode = `<?xml version="1.0" encoding="UTF-8"?>
 </svg>`;
 
 export const state = () => ({
-  svgStatus: "",
   svgData: {},
-  svgStatusMessage: "Ready to mint!",
+  svgStatus: "",
+  svgStatusMessage: null,
   canMintSvg: true,
   showPreview: false,
   svgFee: 0.1,
@@ -550,6 +550,7 @@ export const state = () => ({
   svgCreator: "",
   svgDescription: "",
   svgCode: defaultCode,
+  svgTransactionId: null,
   previewBytes: null,
   calculatedFee: null,
   // statusMap: this.statusMap,
@@ -557,15 +558,15 @@ export const state = () => ({
 
 export const getters = {
   canMintSvg: (state) => state.canMintSvg,
-  svgMintedData: (state) => state.svgMintedData,
-  svgStatus: (state) => state.svgMintStatus,
-  mintStatusMessage: (state) => state.mintStatusMessage,
+  svgData: (state) => state.svgData,
+  svgStatus: (state) => state.svgStatus,
+  svgStatusMessage: (state) => state.svgStatusMessage,
   showPreview: (state) => state.showPreview,
   svgCode: (state) => state.svgCode,
   svgFee: (state) => state.svgFee,
   previewBytes: (state) => state.previewBytes,
   calculatedFee: (state) => state.calculatedFee,
-
+  svgTransactionId: (state) => state.svgTransactionId,
   getActiveContractId(state, getters, rootState) {
     const activeContractId = rootState.ui.activeContractId;
     return activeContractId;
@@ -610,16 +611,18 @@ export const mutations = {
     state.calculatedFee = value;
   },
   setSvgTransactionId(state, value) {
-    state.mintTransactionId = value;
+    console.log("setSvgTransactionId", value);
+    state.svgTransactionId = value;
   },
   setSvgStatus(state, statusObj) {
     const { status } = statusObj;
     console.log("statusObj", statusObj);
     console.log("status", status);
     console.log("statusMap", statusMap);
-    console.log("statusMap.ready", statusMap.ready);
-    console.log("statusMap.ready.text", statusMap.ready.text);
+    console.log("statusMap[status]", statusMap[status]);
+    console.log("statusMap[status].text", statusMap[status].text);
     const message = statusMap && statusMap[status].text;
+    console.log("message: ", message);
     state.svgStatus = status;
     if (message) {
       state.svgStatusMessage = message;
@@ -664,7 +667,7 @@ export const actions = {
       console.error("canMint is false");
       return null;
     }
-    const transactionId = contractSVG.createNFT(
+    const createTransationId = contractSVG.createNFT(
       svgTitle,
       svgCreator,
       svgDescription,
@@ -673,12 +676,17 @@ export const actions = {
       (err, result) => {
         if (err) {
           console.log("contractSVG err", err);
+          return null;
         } else {
           console.log("contractSVG result", result);
           // const mintTransactionId = result;
+          context.commit("setSvgStatus", { status: "working" });
+          context.commit("setSvgTransactionId", result);
+          return result;
         }
       }
     );
+    console.log("createTransationId id: ", createTransationId);
   },
   canMint(context, parameters) {
     console.log("parameters", parameters);

@@ -18,7 +18,7 @@
       </button>
     </div>
 
-    <h3>{{ mintStatusTitle || title}}</h3>
+    <h3>{{ mintStatus || title}}</h3>
     <div class="statusRow">
       <div class="statusIcon iconPostion">
         <Loading
@@ -54,7 +54,7 @@
       
       </div>
       </div>
-    <div class="transactionInfo" v-if="this.mintTransactionId">
+    <div class="transactionInfo" v-if="this.svgTransactionId">
       <label class="mintTransactionLabel">Transaction Id</label>
 
       <div>
@@ -184,46 +184,42 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
 export default {
-  name: 'StatusInformation',
+  name: 'StatusInformationSvg',
   props: ['displayMode', 'message', 'title', 'status'], // possibly redundant.
   computed: {
     ...mapGetters({
       devMode: 'ui/devMode',
       contrastMode: 'ui/contrastMode',
       walletNetwork: 'ui/walletNetwork',
-      mintTransactionId: 'mintFormStore/mintTransactionId',
-      mintStatus: 'mintFormStore/mintStatus',
-      mintStatusTitle: 'mintFormStore/mintStatusTitle',
-      mintStatusMessage: 'mintFormStore/mintStatusMessage',
+      svgTransactionId: 'svgFormStore/svgTransactionId',
+      mintStatus: 'svgFormStore/svgStatus',
+      mintStatusMessage: 'svgFormStore/svgStatusMessage',
       statusModalMode: 'ui/statusModalMode',
       activeContractId: 'ui/activeContractId',
     }),
    
     etherscanLink() {
+      console.log('requiredNetwork: ', this.$config.requiredNetwork);
       console.log('walletNetwork', this.walletNetwork)
-      console.log('mintTransactionId', this.mintTransactionId)
-      // console.log(this.$store.state.mintFormStore.walletNetwork)
+      console.log('svgTransactionId', this.svgTransactionId)
       const requiredNetwork = this.$config.requiredNetwork;
-      if (!this.mintTransactionId) {
+      if (!this.svgTransactionId) {
         return null
       }
       const link =
         requiredNetwork === 'rinkeby'
-          ? `https://rinkeby.etherscan.io/tx/${this.mintTransactionId}`
-          : `https://etherscan.io/tx/${this.mintTransactionId}`
+          ? `https://rinkeby.etherscan.io/tx/${this.svgTransactionId}`
+          : `https://etherscan.io/tx/${this.svgTransactionId}`
       return link
     },
   },
   methods: {
     ...mapMutations({
-      setMintStatus: 'mintFormStore/setMintStatus',
+      setSvgStatus: 'svgFormStore/setSvgStatus',
       setStatusModalMode: 'ui/setStatusModalMode',
-      setActiveContractId: 'ui/setActiveContractId',
+      // setActiveContractId: 'ui/setActiveContractId',
     }),
-    ...mapActions({
-      showStatusModal: 'mintFormStore/showStatusModal',
-    }),
-     showPuppy() {
+    showPuppy() {
       const puppyArray = [
         'waiting',
         'working',
@@ -238,19 +234,15 @@ export default {
     },
     handleStatusModal(newState) {
       if (newState) {
-        // this.$store.commit('mintFormStore/setShowStatusModal', newState)
         this.$store.commit('ui/setStatusModalMode', 'fixed')
-        // this.$modal.show('status-modal')
       } else {
-        // this.$store.commit('mintFormStore/setShowStatusModal', newState)
         this.$store.commit('ui/setStatusModalMode', 'inline')
-        // this.$modal.hide('status-modal')
       }
     },
     handleReset(id){
       console.log('todo', id)
-      this.$store.commit('ui/setActiveContractId', id);
-      this.$store.commit('mintFormStore/setMintStatus', 'ready');
+      // this.$store.commit('ui/setActiveContractId', id);
+      this.$store.commit('svgFormStore/setSvgStatus', 'ready');
     }
   },
 }

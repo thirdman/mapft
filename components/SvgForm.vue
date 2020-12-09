@@ -4,7 +4,24 @@
     class="form column shadow"
     :class="svgStatus === 'error' ? 'error' : ''"
   >
-    <!-- <DeployStatusInformation v-if="deployStatus !== 'ready'" /> -->
+    
+    <StatusInformationSvg
+      displayMode="inline"
+      :title="svgStatus"
+      :status="svgStatus"
+      :message="
+        svgStatusMessage"
+      :mintTransactionId="svgTransactionId"
+      v-if="
+        svgStatus === 'confirming' ||
+        svgStatus === 'working' ||
+        svgStatus === 'stillWorking' ||
+        svgStatus === 'stillWorkingMore' ||
+        svgStatus === 'checkTransaction' ||
+        svgStatus === 'noContract' ||
+        svgStatus === 'error'
+      "
+    />
     
     <div class="fieldset codeContent" v-if="svgStatus !== 'completed'">
       <div class="sectionNumber">1.</div>
@@ -149,7 +166,8 @@
     <div class="devContent fieldset" v-if="devMode">
       <div class="row">
         <button @click="setSvgStatus({status: 'confirming'})">set confirming</button>
-        <button @click="setSvgStatus({status: 'working'})">set waiting</button>
+        <button @click="setSvgStatus({status: 'working'})">set working</button>
+        <button @click="setSvgStatus({status: 'completed'})">set completed</button>
         
       </div>
     </div>
@@ -239,6 +257,7 @@ export default {
       svgStatus: "svgFormStore/svgStatus",
       svgStatusMessage: "svgFormStore/svgStatusMessage",
       svgFormStatusMessage: "svgFormStore/svgFormStatusMessage",
+      svgTransactionId: "svgFormStore/svgTransactionId",
     }),
     
     
