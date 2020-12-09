@@ -57,6 +57,7 @@
     <!-- <button @click="setViewStatus('loading')">set loading</button> -->
     <section id="read" class="read showMeta borderBottom">
       <div class="tertiary">
+        <Button @click="apiData(this)">get api data</Button>
         <div class="galleryLinkWrap" v-if="uiMode !== 'none'">
           <nuxt-link :to="/gallery/ + contractId" class="galleryLink asButton">
             <IconBack strokeClass="contrastMode" />
@@ -523,6 +524,7 @@ export default {
     // })
     // .catch((error) => console.error(error))
   },
+  
 
   computed: {
     ...mapGetters({
@@ -664,8 +666,36 @@ export default {
       const returnContent = content.length > length ? content.slice(0, length) + clamp : content;
       // console.log('truncate: returncontent:', returnContent)
       return returnContent;
+    },
+    async apiData() {
+    const context = this;
+    console.log('this', this)
+    const { params = {}, $axios } = context;
+    const requiredNetwork = context.$config.requiredNetwork;
+    const openseaUrl =
+      requiredNetwork === "main"
+        ? "https://api.opensea.io"
+        : "https://rinkeby-api.opensea.io";
+    const apiUrl = "https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=0x8a84b6381B2b4cDc2DaCcd8c337096fbe28a9325"
+    const options = {
+      contractId: params.contract || '0x8a84b6381B2b4cDc2DaCcd8c337096fbe28a9325',
+      tokenId: parseInt(params.id) || 1,
     }
-
+    
+    const theUrl = `${openseaUrl}/api/v1/asset/${params.contract}/${params.id}/`
+    const { data } = await $axios.get(apiUrl);
+    console.log('api data result: ', data)
+    // console.log('BASE_URL', BASE_URL)
+    // const tempData = {
+    //   title: `InfiNFT | ${data.name}` || "InfiiNFT: View Token",
+    //   description: `InfiNFT | data.description` || "",
+    //   previewImage: `${BASE_URL}${ogImage}`,
+    //   previewUrl: data.image_preview_url,
+    // }
+    // console.log('async tempData', tempData)
+    return tempData;
+    
+  },
      
   },
   
