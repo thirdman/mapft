@@ -68,10 +68,10 @@
               id="metadata2"
               class="theTitle"
               v-if="uiMode === 'full'"
-            >{{ (viewData && viewData.title) || tempViewItem.title || '' }}</h2>
+            >{{ (viewData && viewData.title) || tempViewItem && tempViewItem.title || '' }}</h2>
             <h6 id="metadata2" class="theTitle" v-if="uiMode !== 'full'">
               <label style="display: block;">Title</label>
-              {{ (viewData && viewData.title) || tempViewItem.title || '' }}
+              {{ (viewData && viewData.title) || tempViewItem && tempViewItem.title || '' }}
             </h6>
             <div v-if="viewStatus === 'loading' && !viewData" class="loadingPlaceholder">
               <Loading text="lo" size="small" :fillClass="contrastMode" />
@@ -371,6 +371,7 @@ import Button from '../../../components/Button.vue';
 
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
 import ogImagePreview from '~/assets/images/preview.jpg'
+import { required } from 'vee-validate/dist/rules';
 
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
@@ -404,15 +405,15 @@ export default {
     }
   },
   beforeMount() {
-    console.log("before create", this.tempViewItem)
+    // console.log("before create", this.tempViewItem)
     // SET THE DATA FOR META
     if(this.tempViewItem){
-      console.log('before mount setting data');
+      // console.log('before mount setting data');
       this.test = "mounted"
       this.description = this.tempViewItem.description;
       // this.previewImage = this.tempViewItem.imagePreviewUrl
       this.title = this.tempViewItem.title && `InfiNFT: ${this.tempViewItem.title}`
-      console.log('before mount ', this)
+      // console.log('before mount ', this)
     }
   },
   mounted() {
@@ -476,6 +477,7 @@ export default {
   async asyncData(context) {
     const { params, $axios } = context
     const requiredNetwork = context.$config.requiredNetwork;
+    console.log('requiredNetworkk', requiredNetwork);
     const openseaUrl =
       requiredNetwork === "main"
         ? "https://api.opensea.io"
@@ -496,7 +498,7 @@ export default {
       previewImage: `${BASE_URL}${ogImage}`,
       previewUrl: data.image_preview_url,
     }
-    // console.log('async tempData', tempData)
+    console.log('async tempData', tempData)
     return tempData;
     // console.log('async Web3', Web3)
     // if (!Web3) {
@@ -660,21 +662,31 @@ export default {
     },
     async apiData() {
     const context = this;
-    console.log('this', this)
+    // console.log('this', this)
     const { params = {}, $axios } = context;
+    const tempParams = {
+      contract: this.$route.params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
+      id: this.$route.params.id || '1'
+    }
+    let axiosConfig = {
+      headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          "Access-Control-Allow-Origin": "*",
+      }
+    };
     const requiredNetwork = context.$config.requiredNetwork;
     const openseaUrl =
       requiredNetwork === "main"
         ? "https://api.opensea.io"
         : "https://rinkeby-api.opensea.io";
-    const apiUrl = "https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=0xB95Af9b2Afd751760e5031C93F18ebD7aB406815"
+    const apiUrl = `https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=${tempParams.contract}`
     const options = {
       contractId: params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
       tokenId: parseInt(params.id) || 1,
     }
     
     const theUrl = `${openseaUrl}/api/v1/asset/${params.contract}/${params.id}/`
-    const { data } = await $axios.get(apiUrl);
+    const data = await $axios.post(apiUrl, axiosConfig).then(result => {return result}).catch(error => console.log('error: ', error));
     console.log('api data result: ', data)
     // console.log('BASE_URL', BASE_URL)
     // const tempData = {
@@ -684,7 +696,7 @@ export default {
     //   previewUrl: data.image_preview_url,
     // }
     // console.log('async tempData', tempData)
-    return tempData;
+    // return tempData;
     
   },
      
