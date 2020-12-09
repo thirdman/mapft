@@ -44,20 +44,11 @@
       </div>
     </div>
 
-    <!-- <section id="readStart" class="read borderBottom" v-if="!viewData">
-      <div class="tertiary"></div>
-      <div class="primary">
-        <div class="loadingWrap" v-if="viewStatus === 'loading'">
-          <Loading message="Loading Content" />
-        </div>
-      </div>
-      <div class="secondary"></div>
-    </section>-->
 
     <!-- <button @click="setViewStatus('loading')">set loading</button> -->
     <section id="read" class="read showMeta borderBottom">
       <div class="tertiary">
-        <Button @click="apiData(this)">get api data</Button>
+        <Button @click="apiData(this)" v-if="devMode">get api data</Button>
         <div class="galleryLinkWrap" v-if="uiMode !== 'none'">
           <nuxt-link :to="/gallery/ + contractId" class="galleryLink asButton">
             <IconBack strokeClass="contrastMode" />
@@ -676,9 +667,9 @@ export default {
       requiredNetwork === "main"
         ? "https://api.opensea.io"
         : "https://rinkeby-api.opensea.io";
-    const apiUrl = "https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=0x8a84b6381B2b4cDc2DaCcd8c337096fbe28a9325"
+    const apiUrl = "https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=0xB95Af9b2Afd751760e5031C93F18ebD7aB406815"
     const options = {
-      contractId: params.contract || '0x8a84b6381B2b4cDc2DaCcd8c337096fbe28a9325',
+      contractId: params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
       tokenId: parseInt(params.id) || 1,
     }
     
