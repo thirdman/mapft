@@ -47,8 +47,8 @@
 
     <!-- <button @click="setViewStatus('loading')">set loading</button> -->
     <section id="read" class="read showMeta borderBottom">
-      <div class="tertiary">
-        <Button @click="apiData(this)" v-if="devMode">get api data</Button>
+      <div class="tertiary" >
+        <Button @click="apiData(this)">get api data</Button>
         <div class="galleryLinkWrap" v-if="uiMode !== 'none'">
           <nuxt-link :to="/gallery/ + contractId" class="galleryLink asButton">
             <IconBack strokeClass="contrastMode" />
@@ -670,7 +670,6 @@ export default {
     }
     let axiosConfig = {
       headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
           "Access-Control-Allow-Origin": "*",
       }
     };
@@ -686,7 +685,7 @@ export default {
     }
     
     const theUrl = `${openseaUrl}/api/v1/asset/${params.contract}/${params.id}/`
-    const data = await $axios.post(apiUrl, axiosConfig).then(result => {return result}).catch(error => console.log('error: ', error));
+    const data = await $axios.get(apiUrl, axiosConfig).then(result => {return result}).catch(error => console.log('error: ', error));
     console.log('api data result: ', data)
     // console.log('BASE_URL', BASE_URL)
     // const tempData = {
