@@ -6,18 +6,18 @@
         <Button @click="apiData(this)">get api data</Button>
         <div class="galleryLinkWrap" v-if="uiMode !== 'none'">
           <nuxt-link :to="/gallery/ + contractId" class="galleryLink asButton">
-            <IconBack strokeClass="contrastMode" />
-            <span>Back to gallery</span>
+            <IconBack :strokeClass="contrastMode" />
+            <span>Gallery</span>
           </nuxt-link>
-          <a 
+          <!-- <a 
             target="_blank" 
             :href="`https://twitter.com/intent/tweet?url=${getUrl()}&text=${viewData && viewData.title + ' on InfiNFT: ' + viewData.description}&related=nft4ever,nft42`" 
             class="shareLink asButton" 
           >
             <IconExternalLink :strokeClass="contrastMode" size="small" />
-          </a>
-          <Button mode="hollow" @click="handleShare(true)">
-            <IconExternalLink :strokeClass="contrastMode" size="small" />
+          </a> -->
+          <Button mode="hollow" @click="handleShare(true)" style="flex-basis: 20%;">
+            <IconExternalLink :strokeClass="contrastMode" />
           </Button>
         </div>
         <div v-if="uiMode !== 'none'" class="primaryMeta">
@@ -32,7 +32,7 @@
               {{ (viewData && viewData.title) || tempViewItem && tempViewItem.title || '' }}
             </h6>
             <div v-if="viewStatus === 'loading' && !viewData" class="loadingPlaceholder">
-              <Loading text="lo" size="small" :fillClass="contrastMode" />
+              <Loading text="loading" size="small" :fillClass="contrastMode" />
             </div>
           </div>
 
@@ -84,13 +84,13 @@
         
         <div v-if="viewData && uiMode !== 'none'" class="pagingNav">
           <a @click="navigate(parseInt(tokenId) - 1)" class="galleryLink asButton prev">
-            <IconChevron strokeClass="contrastMode" />
+            <IconChevron :strokeClass="contrastMode" />
             <span>Prev</span>
           </a>
           <a @click="navigate(parseInt(tokenId) + 1)" class="galleryLink asButton next transparent">
             <!-- :to="`/view/${contractId}/${parseInt(tokenId) + 1}`" -->
             <span>Next</span>
-            <IconChevron strokeClass="contrastMode" />
+            <IconChevron :strokeClass="contrastMode" />
           </a>
         </div>
         <ViewControls :fileType="viewData && viewData.fileType" />
@@ -105,6 +105,7 @@
         <div id="readContent" class="output">
           <!-- {{tempViewItem.imageUrlThumbnail}} | {{viewStatus}} |  {{viewData && viewData.fileIpfsHash  ? " has view data" : " no view data"}} -->
           <div class="row readContentRow">
+            
             <div
               class="column col-100 imageColumn"
               v-if="(!viewData || viewData && !viewData.fileIpfsHash) && viewStatus !== 'error'"
@@ -126,8 +127,7 @@
                   <div class="previewLoadingPill">
                     <Loading
                       message="Loading Source..."
-                      size="large"
-                      :fillClass="contrastMode === 'light' ? 'light' : 'dark'"
+                      :fillClass="contrastMode"
                     />
                   </div>
                 </div>
@@ -144,7 +144,7 @@
                 </p>
                 <div class="row">
                   <nuxt-link :to="/gallery/ + contractId" class="galleryLink asButton">
-                    <IconBack strokeClass="contrastMode" />
+                    <IconBack :strokeClass="contrastMode" />
                     <span>Back to gallery</span>
                   </nuxt-link>
                   <nuxt-link
@@ -153,12 +153,12 @@
                     }`"
                     class="galleryLink asButton prev"
                   >
-                    <IconChevron strokeClass="contrastMode" />
+                    <IconChevron :strokeClass="contrastMode" />
 
                     <span>Previous Token</span>
                   </nuxt-link>
                   <nuxt-link :to="`/view/${contractId}/${1}`" class="galleryLink asButton prev">
-                    <IconChevron strokeClass="contrastMode" />
+                    <IconChevron :strokeClass="contrastMode" />
 
                     <span>First Token</span>
                   </nuxt-link>
@@ -326,6 +326,8 @@
         url="https://sdf"
         :uiMode="uiMode"
         :uiTheme="uiTheme"
+        :title="viewData.title"
+        :description="viewData.description"
       />
     </client-only>
   </div>
@@ -391,10 +393,7 @@ export default {
     //   this.$store.state.ui.viewData
     // )
     
-    console.log(
-      'this',
-      this
-    )
+    
     //&& !this.$store.state.ui.viewData
     if (process.client) {
       console.log('mounted client and no viewData')
@@ -469,6 +468,7 @@ export default {
       resolution: 'full'
     }
     console.log('async tempData', tempData)
+    
     return tempData;
     // console.log('async Web3', Web3)
     // if (!Web3) {
@@ -609,7 +609,7 @@ export default {
       const myUrl = BASE_URL + this.$route.fullPath;
       const tempUiMode = this.uiMode || "minimal";
       const tempUiTheme = this.uiTheme || "charcoal";
-      const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
+      const fullUrl = myUrl + '?ui=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
     getDescription(content){
@@ -698,7 +698,7 @@ export default {
   border: none;
 }
 .galleryLink {
-  width: 100%;
+  flex-basis: 50%;
   border: none;
   font-size: 0.875rem;
   display: flex;
@@ -706,6 +706,7 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   cursor: pointer;
+  margin-right: .25rem;;
 }
 .galleryLink .icon {
   flex-grow: 0;

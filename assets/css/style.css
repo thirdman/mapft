@@ -366,13 +366,13 @@ footer {
 }
 
 .buttonGroup .swatch {
-  padding-left: 2rem;
+  /* padding-left: 2rem; */
   /* box-shadow: 0 0 0 2px #111; */
   color: var(--background-color, #eee);
-  font-size: 0.675rem;
+  /* font-size: 0.675rem;
   position: relative;
   line-height: 1.5rem;
-  padding-right: 0;
+  padding-right: 0; */
 }
 .buttonGroup .swatch .swatchLabel {
   position: absolute;

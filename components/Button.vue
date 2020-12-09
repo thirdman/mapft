@@ -93,7 +93,7 @@
     }
     .buttonGroup & {
       border-radius: 0;
-      
+      transform: none !important;
       &:nth-child(1n + 1){
         border-right-width: 0px;
       }

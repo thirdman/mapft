@@ -250,30 +250,38 @@
           <div class="column col-66">Color Theme</div>
           <div class="column col-33">
             <div class="buttonGroup themeGroup">
-              <div class="swatch lemon" @click="setUiTheme('lemon')">
+              <!-- <div class="swatch lemon" @click="setUiTheme('lemon')">
                 <span class="swatchLabel">Lemon</span>
-              </div>
-              <div class="swatch violet" @click="setUiTheme('violet')">
+              </div> -->
+              <Swatch name="Lemon" id="lemon" />
+              <Swatch name="Violet" id="violet" />
+              <!-- <div class="swatch violet" @click="setUiTheme('violet')">
                 <span class="swatchLabel">Violet</span>
-              </div>
-              <div class="swatch peach" @click="setUiTheme('peach')">
+              </div> -->
+              <Swatch name="Peach" id="peach" />
+              <!-- <div class="swatch peach" @click="setUiTheme('peach')">
                 <span class="swatchLabel">Peach</span>
-              </div>
-              <div class="swatch sand" @click="setUiTheme('sand')">
+              </div> -->
+              <Swatch name="Sand" id="Sand" />
+              <!-- <div class="swatch sand" @click="setUiTheme('sand')">
                 <span class="swatchLabel">Sand</span>
-              </div>
-              <div class="swatch greyscale" @click="setUiTheme('gryscale')">
+              </div> -->
+              <Swatch name="Grayscale" id="greyscale" />
+              <!-- <div class="swatch greyscale" @click="setUiTheme('gryscale')">
                 <span class="swatchLabel">Gray</span>
-              </div>
-              <div class="swatch turquoise" @click="setUiTheme('turquoise')">
+              </div> -->
+              <Swatch name="Turquoise" id="turquoise" />
+              <!-- <div class="swatch turquoise" @click="setUiTheme('turquoise')">
                 <span class="swatchLabel">Turquoise</span>
-              </div>
-              <div class="swatch teal" @click="setUiTheme('teal')">
+              </div> -->
+              <Swatch name="Teal" id="teal" />
+              <!-- <div class="swatch teal" @click="setUiTheme('teal')">
                 <span class="swatchLabel">Teal</span>
-              </div>
-              <div class="swatch charcoal" @click="setUiTheme('charcoal')">
+              </div> -->
+              <Swatch name="Charcoal" id="charcoal" />
+              <!-- <div class="swatch charcoal" @click="setUiTheme('charcoal')">
                 <span class="swatchLabel">Charcoal</span>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

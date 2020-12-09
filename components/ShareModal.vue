@@ -28,7 +28,18 @@
       <div class="modalSection">
         <label>Share</label>
         <div class="xsmall" v-if="devMode">{{this.createUrl(false)}}</div>
-        <div class="row">
+        <client-only>
+          <div class="row contentRow">
+            <a 
+                target="_blank" 
+                :href="`https://twitter.com/intent/tweet?url=${createUrl(true)}&text=${title + ' on InfiNFT: ' + description}&related=nft4ever,nft42`" 
+                class="shareLink asButton full" 
+              >
+              <IconExternalLink :strokeClass="contrastMode" size="small" /> <span size="small">Twitter</span>
+            </a>
+        </div>
+        </client-only>
+        <div class="row contentRow">
           <div class="column col-66">
             <input
               name="Url"
@@ -38,7 +49,8 @@
               :value="this.createUrl(false)"
             />
           </div>
-          <div class="column col-33">
+
+          <div class="column col-33" v-if="devMode">
             <Button @click="openLink" mode="hero">Open in new tab</Button>
           </div>
         </div>
@@ -51,9 +63,41 @@
           </a> -->
         <div>
           <label>Advanced</label>
-          <div class="row">
+          <div class="row contentRow">
             <div class="column">Theme</div>
-            <div class="column">{{uiTheme}}</div>
+            <div class="column" style="align-items: center; justify-content: flex-start; display: flex;">
+              <Swatch :name="uiTheme" :id="uiTheme" v-if="!showThemeSelector" :selected="true" />
+              <SwatchSelector :selected="uiTheme" v-if="showThemeSelector"/>
+              <Button size="small" mode="secondary" @click="toggleSelector">{{showThemeSelector ? "Close" : "Change"}}</Button>
+            </div>
+          </div>
+          <div class="row contentRow">
+            <div class="column col-50">Interface Mode</div>
+            <div class="column col-50">
+              <div class="buttonGroup uiMode">
+                <Button
+                  @click="setUiMode('full')"
+                  mode="hollow"
+                  :filled="uiMode === 'full'"
+                >
+                  Full
+                </Button>
+                <Button
+                  @click="setUiMode('minimal')"
+                  mode="hollow"
+                  :filled="uiMode === 'minimal'"
+                >
+                  Minimal
+                </Button>
+                <Button
+                  @click="setUiMode('none')"
+                  mode="hollow"
+                  :filled="uiMode === 'none'"
+                >
+                  None
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
         <div v-if="devMode">
@@ -74,7 +118,7 @@ import { mapMutations, mapGetters } from "vuex";
 
 export default {
   name: "ShareModal",
-  props: ['content', 'children', 'mode', 'contractId', 'tokenId', 'url', 'uiMode', "uiTheme"],
+  props: ['content', 'children', 'mode', 'contractId', 'tokenId', 'url',  "uiTheme", "title", "description"],
   mounted() {
     if(this.$config){
       const requiredNetwork = this.$config.requiredNetwork;
@@ -96,19 +140,23 @@ export default {
       desiredNetwork: "main",
       baseUrl: "",
       path: "",
-      fullUrl: "blh"
+      fullUrl: "blh",
+      showThemeSelector: false,
     };
   },
   computed: {
     ...mapGetters({
       devMode: "ui/devMode",
+      uiMode: "ui/uiMode",
       walletNetwork: "ui/walletNetwork",
       walletAddress: "ui/walletAddress",
       contrastMode: "ui/contrastMode",
     }),
   },
   methods: {
-    ...mapMutations({}),
+    ...mapMutations({
+      setUiMode: "ui/setUiMode",
+    }),
     
     closeModal() {
       alert("This funciton is incomplete!");
@@ -125,7 +173,7 @@ export default {
       const myUrl = base + this.$route.fullPath;
       const tempUiMode = this.uiMode || "minimal";
       const tempUiTheme = this.uiTheme || "charcoal";
-      const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
+      const fullUrl = myUrl + '?ui=' + tempUiMode + '&theme=' + tempUiTheme;
       return encode ? encodeURIComponent(fullUrl) : fullUrl;
     },
     openLink(){
@@ -134,6 +182,9 @@ export default {
       const url = this.createUrl(false);
       console.log('url', url)
       window && window.open(url);
+    },
+    toggleSelector(){
+      this.showThemeSelector = !this.showThemeSelector
     }
   },
 };

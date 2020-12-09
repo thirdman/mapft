@@ -290,7 +290,7 @@ export default {
       const myUrl = BASE_URL + this.$route.fullPath;
       const tempUiMode = this.uiMode || "minimal";
       const tempUiTheme = this.uiTheme || "charcoal";
-      const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
+      const fullUrl = myUrl + '?ui=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
     handleCopy () {
