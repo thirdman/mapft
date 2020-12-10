@@ -545,10 +545,10 @@ var abiART = [
 const testThatShit = (payload) => {
   const { data, state, useData = true } = payload;
   console.log("testThatShit:", { data, state, useData });
-  const useThumbnailDefault =
-    state.fileType === "glb" ||
-    state.fileType === "gltf" ||
-    state.fileType === "mp3";
+  // const useThumbnailDefault =
+  //   state.fileType === "glb" ||
+  //   state.fileType === "gltf" ||
+  //   state.fileType === "mp3";
 
   console.log("state", state);
   // MAP STATE INTO EXISTING MIT FORM VARIABLES
@@ -566,20 +566,21 @@ const testThatShit = (payload) => {
     state.thumbnailIpfsHash || state.thumbnailIpfsHashDefault;
   const thumbnailArweaveHash =
     state.thumbnailArweaveHash || state.thumbnailArweaveHashDefault;
+
   const userContractAddress = state.activeContractId;
   console.log("isNan(royaltyfee)", isNaN(royaltyFee));
   console.log("MINT: royaltyFee", royaltyFee);
   const isValidRoyalty = !Number.isNaN(royaltyFee);
   const thumbnailHashToUse = thumbnailArweaveHash;
 
+  console.log("MINT userContractAddress", userContractAddress);
   console.log("MINT isValidRoyalty", isValidRoyalty);
   console.log("MINT fileIPFSHash: ", fileIPFSHash);
-  console.log("MINT useThumbnailDefault", useThumbnailDefault);
+  // console.log("MINT useThumbnailDefault", useThumbnailDefault);
   console.log("MINT thumbnailIPFSHash: ", thumbnailIPFSHash);
   console.log("MINT thumbnailArweaveHash: ", thumbnailArweaveHash);
   console.log("MINT thumbnailHashToUse: ", thumbnailHashToUse);
-
-  if (
+  let isMissingVariables =
     !artTitle ||
     !artistName ||
     !imageName ||
@@ -588,8 +589,8 @@ const testThatShit = (payload) => {
     !isValidRoyalty ||
     !totalCap ||
     !fileType ||
-    !userContractAddress
-  ) {
+    !userContractAddress;
+  if (isMissingVariables) {
     console.error("missing variable... ", {
       artTitle,
       artistName,
@@ -601,6 +602,8 @@ const testThatShit = (payload) => {
       fileType,
       userContractAddress,
     });
+  } else {
+    console.log("no missing variables");
   }
   const mintData = {
     fileIPFSHash,
@@ -613,6 +616,11 @@ const testThatShit = (payload) => {
     royaltyFee,
     totalCap,
     fileType,
+    // ADDITIONAL DATA
+    userContractAddress: userContractAddress,
+    isMissingVariables: isMissingVariables,
+    thumbnailArweaveHash: thumbnailArweaveHash,
+    thumbnailIPFSHash: thumbnailIPFSHash,
   };
   return mintData;
 };

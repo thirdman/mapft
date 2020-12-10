@@ -650,7 +650,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
           <div class="xsmall">'royaltyFee'</div>
         </div>
         {{testMintData.royaltyFee}}
-        <div v-if="!testMintData.royaltyFee" class="undefinedContent">Undefined</div>
+        <div v-if="Number.isNaN(testMintData.royaltyFee)" class="undefinedContent">Undefined/Not a number</div>
       </div>
       <div class="contentRow">
         <div class="contentLabel">editions:<br>
@@ -666,9 +666,44 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         {{testMintData.fileType}}
         <div v-if="!testMintData.fileType" class="undefinedContent">Undefined</div>
       </div>
-      <Button mode="hollow" @click="toggleTestData(!showTestMintData)">
-        Hide Preview
-      </Button>
+      <hr />
+      <div class="contentRow">
+        <div class="contentLabel">Contract Address:<br>
+          <div class="xsmall">'userContractAddress'</div>
+        </div>
+        {{testMintData.userContractAddress}}
+        <div v-if="!testMintData.userContractAddress" class="undefinedContent">Undefined</div>
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">isMissingVariables:<br>
+          <div class="xsmall">'isMissingVariables'</div>
+        </div>
+        {{testMintData.isMissingVariables ? "" : "no"}}
+        <div v-if="testMintData.isMissingVariables" class="undefinedContent">YES</div>
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">thumbnailArweaveHash:<br>
+          <div class="xsmall">'thumbnailArweaveHash'</div>
+        </div>
+        {{testMintData.thumbnailArweaveHash}}
+        <!-- <div v-if="!testMintData.thumbnailArweaveHash" class="undefinedContent">Undefined</div> -->
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">thumbnailIPFSHash:<br>
+          <div class="xsmall">'thumbnailIPFSHash'</div>
+        </div>
+        {{testMintData.thumbnailIPFSHash}}
+        <!-- <div v-if="!testMintData.fileType" class="undefinedContent">Undefined</div> -->
+      </div>
+      <hr />
+      <div class="actions">
+        <Button mode="hollow" @click="toggleTestData(!showTestMintData)">
+          Hide Preview
+        </Button>
+        <Button mode="hollow" @click="handleTest">
+          Re-Test
+        </Button>
+      </div>
     </div>
     <div
       class="fieldset actionContent formContent"
@@ -716,6 +751,8 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
 }
 .undefinedContent{
   color: var(--danger-color, red);
+  font-size: .75rem;
+  font-family: monospace;
 }
 
 /* Enter and leave animations can use different */
