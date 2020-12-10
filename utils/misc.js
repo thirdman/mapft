@@ -101,7 +101,6 @@ const loadImage = (imageUrl, onprogress) => {
  */
 
 const contentSwitch = (fileType) => {
-  console.log("misc fileType", fileType);
   switch (fileType) {
     case "glb":
     case "obj":

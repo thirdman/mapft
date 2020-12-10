@@ -319,20 +319,20 @@ export default {
     },
     async getGalleryMeta(contractId, source){
       const galleryArray = this.galleryAssets;
-      console.log('readThatMeta', readThatMeta);
+      // console.log('readThatMeta', readThatMeta);
       // const lastId = galleryArray.length ? galleryArray.length : 1;
       const lastId = galleryArray[0] && galleryArray[0].token_id || 1;
-      console.log('getGalleryMeta', lastId)
+      // console.log('getGalleryMeta', lastId)
       const params = {
         contractId: contractId,
         tokenId: lastId
       }
-      console.log('params: ', params)
+      // console.log('params: ', params)
       this.isLoadingMeta = true
       const metaData = await this.handleGalleryMeta(params).then(result => {
         return result
       }).catch(error => console.error(error));
-      console.log('metaData: ', metaData);
+      // console.log('metaData: ', metaData);
       this.galleryMeta = metaData
       this.isLoadingMeta = false;
     },

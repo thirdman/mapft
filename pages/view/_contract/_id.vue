@@ -398,15 +398,10 @@ export default {
     
     //&& !this.$store.state.ui.viewData
     if (process.client) {
-      console.log('mounted client and no viewData')
+      // console.log('mounted client and no viewData')
       const asyncTokenId = this.$route.params.id
       const asyncContractId = this.$route.params.contract
       this.$store.commit('ui/setViewStatus', 'loading')
-      console.log(
-        'mounted client asyncTokenId && asyncContractId',
-        asyncTokenId,
-        asyncContractId
-      )
       if (!asyncTokenId || !asyncContractId) {
         return null
       }
@@ -432,7 +427,7 @@ export default {
       }
     }
     if (process.server) {
-      console.log('VIEW server mount. Context:', context)
+      // console.log('VIEW server mount. Context:', context)
       // const { req, res, beforeNuxtRender } = context
       // console.log('created server')
       // console.log('this.$scopedSlots', this.$scopedSlots)
@@ -447,7 +442,7 @@ export default {
   async asyncData(context) {
     const { params, $axios } = context
     const requiredNetwork = context.$config.requiredNetwork;
-    console.log('requiredNetworkk', requiredNetwork);
+    // console.log('requiredNetworkk', requiredNetwork);
     const openseaUrl =
       requiredNetwork === "main"
         ? "https://api.opensea.io"
@@ -469,25 +464,9 @@ export default {
       previewUrl: data.image_preview_url,
       resolution: 'full'
     }
-    console.log('async tempData', tempData)
+    // console.log('async tempData', tempData)
     
     return tempData;
-    // console.log('async Web3', Web3)
-    // if (!Web3) {
-    //   console.log('no Web3')
-    //   return null
-    // }
-    // const { data } = await axios.get(`https://my-api/posts/${params.id}`)
-    // return { title: data.title }
-
-    // const asyncData = await readThatShit(options, this)
-    // console.log('data', asyncData)
-    // .then((result) => {
-    //   console.log('asyncDat result', result)
-    //   // this.commit('ui/setViewData', result)
-    //   // this.commit('ui/setViewStatus', 'loaded')
-    // })
-    // .catch((error) => console.error(error))
   },
   
 
@@ -544,40 +523,8 @@ export default {
       contentType: 'ui/contentType',
     }),
     getContentType(fileType){
-      // const type = await this.$store.dispatch('ui/contentType', fileType);
       const type = contentSwitch(fileType);
-      console.log('type: ', type)
       return type
-    },
-    contentSwitch2(fileType){
-      // console.log("fileType", fileType);
-      switch (fileType) {
-        case "glb":
-        case "obj":
-        case "usdz":
-        case "gltf":
-          return "threed";
-          break;
-        case "vox":
-          return "voxel";
-          break;
-        case "mp4":
-        case "mov":
-          return "video";
-          break;
-        case "mp3":
-          return "audio";
-          break;
-        case "pdf":
-          return "pdf";
-          break;
-        case "rtf":
-        case "txt":
-          return "text";
-          break;
-        default:
-          return "image";
-      }
     },
     getTokenId() {
       console.log('this', this)

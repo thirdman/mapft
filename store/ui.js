@@ -289,7 +289,6 @@ export const mutations = {
       state.viewData = {};
     }
     if (data) {
-      console.log("setting viewdata: ", data);
       state.viewData = data;
     }
   },
@@ -381,7 +380,7 @@ export const actions = {
 
     // const imageLink = await readImageLink(params, this)
     // console.log('imageLink', imageLink)
-    console.log("about tot readThatShit with params: ", params);
+    // console.log("about tot readThatShit with params: ", params);
     this.commit("ui/setViewStatus", "loading");
     await readThatShit(params, this).then((result) => {
       // console.log("readthatshit viewResult result", result);
@@ -393,7 +392,7 @@ export const actions = {
           fileIpfsUrl: `https://gateway.pinata.cloud/ipfs/${result.fileIpfsHash}`,
           thumbnailUrl: result.thumbnailUrl,
         };
-        console.log("ISALPHA", linkDataAlpha);
+        // console.log("ISALPHA", linkDataAlpha);
       }
       resultData = { ...resultData, ...linkDataAlpha };
       // console.log("resultData is", resultData);

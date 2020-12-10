@@ -49,24 +49,31 @@ export default {
   methods: {
     contentType: (fileType) => {
       switch (fileType) {
-        case 'glb':
-        case 'obj':
-        case 'usdz':
-        case 'gltf':
-          return 'threed'
-          break
-        case 'mp4':
-        case 'mov':
-          return 'video'
-          break
-        case 'mp3':
-          return 'audio'
-          break
-        case 'pdf':
-          return 'pdf'
-          break
+        case "glb":
+        case "obj":
+        case "usdz":
+        case "gltf":
+          return "threed";
+          break;
+        case "vox":
+          return "voxel";
+          break;
+        case "mp4":
+        case "mov":
+          return "video";
+          break;
+        case "mp3":
+          return "audio";
+          break;
+        case "pdf":
+          return "pdf";
+          break;
+        case "rtf":
+        case "txt":
+          return "text";
+          break;
         default:
-          return 'image'
+          return "image";
       }
     },
   },

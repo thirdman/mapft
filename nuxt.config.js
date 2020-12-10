@@ -98,12 +98,13 @@ export default {
       {
         src: "https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js",
       },
-      {
-        src: "/arweaveFinal.js",
-      },
+
       {
         src: "https://cdn.rawgit.com/daishihmr/vox.js/1.0.1/build/vox.min.js",
       },
+      // {
+      //   src: "/arweaveFinal.js",
+      // },
       // {
       //   src: "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js",
       //   type: "module",
@@ -128,7 +129,6 @@ export default {
     { src: "~plugins/vue-js-modal.js" }, // mode: 'client'
     // { src: "~plugins/arweaveInit.js" }, // mode: 'client'
     // { src: '~plugins/web3Load.js' },
-    // { src: '~plugins/arweaveFinal.js' },
   ],
   /*
    ** Auto import components

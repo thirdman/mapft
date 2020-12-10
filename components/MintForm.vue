@@ -705,15 +705,7 @@ export default {
   },
   head() {
     return {
-      // script: [
-      //   {
-      //     src:
-      //       'https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js',
-      //   },
-      //   {
-      //     src: 'arweaveFinal.js',
-      //   },
-      // ],
+      
     };
   },
   data() {
