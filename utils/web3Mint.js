@@ -542,6 +542,80 @@ var abiART = [
     type: "function",
   },
 ];
+const testThatShit = (payload) => {
+  const { data, state, useData = true } = payload;
+  console.log("testThatShit:", { data, state, useData });
+  const useThumbnailDefault =
+    state.fileType === "glb" ||
+    state.fileType === "gltf" ||
+    state.fileType === "mp3";
+
+  console.log("state", state);
+  // MAP STATE INTO EXISTING MIT FORM VARIABLES
+  const artTitle = state.title;
+  const artistName = state.authorName;
+  const imageName = state.title || state.fileName;
+  const artistNote = state.description;
+  const exhibition = state.series || " ";
+  const royaltyFee = state.royaltyFee;
+  const totalCap = state.editions;
+  const fileType = state.fileType;
+  const fileIPFSHash = state.fileIpfsHash;
+  const fileArweaveHash = state.fileArweaveHash;
+  const thumbnailIPFSHash =
+    state.thumbnailIpfsHash || state.thumbnailIpfsHashDefault;
+  const thumbnailArweaveHash =
+    state.thumbnailArweaveHash || state.thumbnailArweaveHashDefault;
+  const userContractAddress = state.activeContractId;
+  console.log("isNan(royaltyfee)", isNaN(royaltyFee));
+  console.log("MINT: royaltyFee", royaltyFee);
+  const isValidRoyalty = !Number.isNaN(royaltyFee);
+  const thumbnailHashToUse = thumbnailArweaveHash;
+
+  console.log("MINT isValidRoyalty", isValidRoyalty);
+  console.log("MINT fileIPFSHash: ", fileIPFSHash);
+  console.log("MINT useThumbnailDefault", useThumbnailDefault);
+  console.log("MINT thumbnailIPFSHash: ", thumbnailIPFSHash);
+  console.log("MINT thumbnailArweaveHash: ", thumbnailArweaveHash);
+  console.log("MINT thumbnailHashToUse: ", thumbnailHashToUse);
+
+  if (
+    !artTitle ||
+    !artistName ||
+    !imageName ||
+    !artistNote ||
+    !exhibition ||
+    !isValidRoyalty ||
+    !totalCap ||
+    !fileType ||
+    !userContractAddress
+  ) {
+    console.error("missing variable... ", {
+      artTitle,
+      artistName,
+      imageName,
+      artistNote,
+      exhibition,
+      royaltyFee,
+      totalCap,
+      fileType,
+      userContractAddress,
+    });
+  }
+  const mintData = {
+    fileIPFSHash,
+    fileArweaveHash,
+    thumbnailHashToUse,
+    artistName,
+    imageName,
+    artistNote,
+    exhibition,
+    royaltyFee,
+    totalCap,
+    fileType,
+  };
+  return mintData;
+};
 
 const mintThatShit = (event, state, rootContext) => {
   const doIt = true;
@@ -860,4 +934,4 @@ function decodeHexSequence(hash) {
   return result;
 }
 
-export { mintThatShit, getTransactionStatus };
+export { mintThatShit, testThatShit, getTransactionStatus };

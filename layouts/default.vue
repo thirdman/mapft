@@ -44,7 +44,6 @@ export default {
     const uiModeQueryItem = this.$route.query.ui
     const uiThemeQueryItem = this.$route.query.theme
     const devModeQueryItem = this.$route.query.devMode
-    console.log('devModeQueryItem', devModeQueryItem);
     if (uiModeQueryItem) {
       this.$store.commit('ui/setUiMode', uiModeQueryItem)
     }

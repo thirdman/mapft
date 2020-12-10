@@ -564,6 +564,9 @@ export default {
   padding: 0.25rem 0;
   font-size: .875rem;
 }
+.contentRow .contentLabel{
+  font-variation-settings: 'wght' 600;
+}
 .modalSection {
   padding: 1rem;
 }

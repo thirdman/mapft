@@ -593,6 +593,56 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
     </div>
     <!-- ACTIONS -->
     <div
+      class="fieldset formContent"
+      style="padding-top: 0.5rem"
+      v-if="showTestMintData"
+    >
+    <label>Data To be Minted</label>
+      <div class="contentRow">
+        <div class="contentLabel">IPFS Hash:<br>
+          <div class="xsmall">'fileIPFSHash'</div></div> {{testMintData.fileIPFSHash}}
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">Arweave Hash:<br>
+          <div class="xsmall">'fileArweaveHash'</div></div> {{testMintData.fileArweaveHash}}
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">Thumbnail Hash:<br>
+        <div class="xsmall">'thumbnailHashToUse' (only used if needed)</div>
+        </div> {{testMintData.thumbnailHashToUse}}
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">Artist Name:<br>
+          <div class="xsmall">'artistName'</div></div> {{testMintData.artistName}}
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">Title:<br>
+          <div class="xsmall">'imageName'</div></div> {{testMintData.imageName}}
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">Description:<br>
+          <div class="xsmall">'artistNote'</div></div> {{testMintData.artistNote}}
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">Exhibition:<br>
+          <div class="xsmall">'exhibition'</div></div> {{testMintData.exhibition}}
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">Royalty Fee:<br>
+          <div class="xsmall">'royaltyFee'</div></div> {{testMintData.royaltyFee}}
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">editions:<br>
+          <div class="xsmall">'totalCap'</div>
+        </div>
+          {{testMintData.totalCap}}
+
+      </div>
+      <div class="contentRow">
+        <div class="contentLabel">fileType:</div> {{testMintData.fileType}}
+      </div>
+    </div>
+    <div
       class="fieldset actionContent formContent"
       id="fieldsetAction"
       style="padding-top: 0.5rem"
@@ -607,9 +657,16 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
           MINT
         </button>
       </h1>
-      <button class="w3-button w3-block w3-black" id="resetFormButton">
+
+      <div class="row" style="justify-content: center">
+      <Button mode="hollow" @click="handleTest">
+        Preview Data
+      </Button>
+      
+      <!-- <button class="w3-button w3-block w3-black" id="resetFormButton" style="margin-left: .25rem;">
         Reset Form
-      </button>
+      </button> -->
+      </div>
     </div>
     </div>
   </div>
@@ -673,7 +730,7 @@ import {
   dataURLtoFile,
 } from "../utils/files.js";
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { mintThatShit } from "../utils/web3Mint.js";
+import { mintThatShit, testThatShit } from "../utils/web3Mint.js";
 import { mapFields } from "vuex-map-fields";
 import { ValidationProvider, extend } from "vee-validate";
 import vueFilePond from "vue-filepond";
@@ -715,6 +772,8 @@ export default {
       classes: [],
       uploadFiles: [],
       thumbnailUploadLabel: `Drag & Drop your file or <span class="filepond--label-action"> Browse </span>`,
+      testMintData: {},
+      showTestMintData: false,
       // fileIpfsProgress: undefined,
       // fileArweaveProgress: undefined,
       // thumbnailIpfsProgress: '6',
@@ -1106,6 +1165,19 @@ export default {
       const setShowThumbnailField = this.setShowThumbnailField;
       const isImage = imageTypes.includes(fileType);
       setShowThumbnailField(!isImage);
+    },
+    handleTest(){
+      const state = this.$store.state.mintFormStore;
+      if(this.activeContractId && !userContractAddress ){
+        this.$store.commit("ui/setActiveContractId", this.activeContractId);
+      }
+      const testMintData = testThatShit({
+        data: {},
+        state: state,
+        useData: false
+      })
+      this.testMintData = testMintData;
+      this.showTestMintData = true;
     },
     handleMint() {
       const state = this.$store.state.mintFormStore;
