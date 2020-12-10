@@ -73,7 +73,7 @@
             <label>Set</label>
             <div id="metadata4" class="aside">
               <p>
-                <nuxt-link :to="`/gallery/${contractId}/${viewData.exhibition}`" class="asButton">
+                <nuxt-link :to="`/gallery/${contractId}/${viewData.exhibition}`" class="asButton pill">
                 {{viewData.exhibition}}
                 </nuxt-link>
               </p>
@@ -360,10 +360,7 @@ export default {
       fullResolution: false,
       resolution: 'preview',
       isValidating: false,
-      validationData: {
-          "contract": "0xB95Af9b2Afd751760e5031C93F18ebD7aB406815",
-          "id": "4"
-        },
+      validationData: null,
     }
   },
   head() {
@@ -621,7 +618,7 @@ export default {
       requiredNetwork === "main"
         ? "https://api.opensea.io"
         : "https://rinkeby-api.opensea.io";
-    const apiUrl = `https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=${tempParams.contract}&id=24`; //"${tempParams.id}
+    const apiUrl = `https://infinft.azurewebsites.net/api/HttpTrigger?artContract=${tempParams.contract}&id=${tempParams.id}`; //"${tempParams.id}
     console.log('url: ', apiUrl)
     const data = await $axios.get(apiUrl).then(result => {
       console.log('validation result:', result);
