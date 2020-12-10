@@ -24,6 +24,7 @@
                 <div class="column col-10">
                   <Button
                     mode="hollow"
+                    v-if="this.useGallerymeta"
                     :filled="activityId === galleryContractId" 
                     @click="updateFollowing({id: galleryContractId, name: galleryMeta.name, symbol: galleryMeta.symbol, owner: galleryMeta.owner})">
                       <IconHeart size="small" :strokeClass="contrastMode" :active="isFollowing(usedContractsObj, galleryContractId)" />
@@ -229,6 +230,7 @@ export default {
       galleryMeta: null,
       galleryName: "",
       isLoadingMeta: false,
+      useGallerymeta: false,
     }
   },
   async mounted() {
@@ -239,11 +241,12 @@ export default {
       contractId: contractId,
       tokenId: 1
     }
-    // const metaData = await this.handleGalleryMeta(params).then(result => {
-    //     return result
-    //   }).catch(error => console.error(error));
-    // this.galleryMeta = metaData
-    // this.galleryName = metaData && metaData.name
+    console.log('useGallerymeta', this.useGallerymeta);
+    const metaData = await this.handleGalleryMeta(params).then(result => {
+        return result
+      }).catch(error => console.error(error));
+    this.galleryMeta = metaData
+    this.galleryName = metaData && metaData.name
     this.isLoadingMeta = false;
   },
 
