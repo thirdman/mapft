@@ -55,7 +55,7 @@
       </div>
       <transition name="fade" appear>
     <img
-        v-if="resolution === 'full'"
+        v-if="resolution === 'full' && loadedSrc"
         :src="loadedSrc"
         @load="onLoad('full')"
         @error="imageLoadError('full')"
