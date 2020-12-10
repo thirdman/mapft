@@ -597,50 +597,78 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       style="padding-top: 0.5rem"
       v-if="showTestMintData"
     >
-    <label>Data To be Minted</label>
+      <label>Data To be Minted</label>
       <div class="contentRow">
         <div class="contentLabel">IPFS Hash:<br>
-          <div class="xsmall">'fileIPFSHash'</div></div> {{testMintData.fileIPFSHash}}
+          <div class="xsmall">'fileIPFSHash'</div>
+        </div>
+        {{testMintData.fileIPFSHash}} <div v-if="!testMintData.fileIPFSHash" class="undefinedContent">Undefined</div>
       </div>
       <div class="contentRow">
         <div class="contentLabel">Arweave Hash:<br>
-          <div class="xsmall">'fileArweaveHash'</div></div> {{testMintData.fileArweaveHash}}
+          <div class="xsmall">'fileArweaveHash'</div></div>
+          {{testMintData.fileArweaveHash}}
+          <div v-if="!testMintData.fileArweaveHash" class="undefinedContent">Undefined</div>
       </div>
       <div class="contentRow">
         <div class="contentLabel">Thumbnail Hash:<br>
-        <div class="xsmall">'thumbnailHashToUse' (only used if needed)</div>
-        </div> {{testMintData.thumbnailHashToUse}}
+          <div class="xsmall">'thumbnailHashToUse' (only used if needed)</div>
+        </div>
+        {{testMintData.thumbnailHashToUse}}
+        <div v-if="!testMintData.thumbnailHashToUse" class="undefinedContent">Undefined</div>
       </div>
       <div class="contentRow">
         <div class="contentLabel">Artist Name:<br>
-          <div class="xsmall">'artistName'</div></div> {{testMintData.artistName}}
+          <div class="xsmall">'artistName'</div>
+        </div>
+        {{testMintData.artistName}}
+        <div v-if="!testMintData.artistName" class="undefinedContent">Undefined</div>
       </div>
       <div class="contentRow">
         <div class="contentLabel">Title:<br>
-          <div class="xsmall">'imageName'</div></div> {{testMintData.imageName}}
+          <div class="xsmall">'imageName'</div>
+        </div>
+        {{testMintData.imageName}}
+        <div v-if="!testMintData.imageName" class="undefinedContent">Undefined</div>
       </div>
       <div class="contentRow">
         <div class="contentLabel">Description:<br>
-          <div class="xsmall">'artistNote'</div></div> {{testMintData.artistNote}}
+          <div class="xsmall">'artistNote'</div>
+        </div>
+        {{testMintData.artistNote}}
+        <div v-if="!testMintData.artistNote" class="undefinedContent">Undefined</div>
       </div>
       <div class="contentRow">
         <div class="contentLabel">Exhibition:<br>
-          <div class="xsmall">'exhibition'</div></div> {{testMintData.exhibition}}
+          <div class="xsmall">'exhibition'</div>
+        </div>
+        {{testMintData.exhibition}}
+        <div v-if="!testMintData.exhibition" class="undefinedContent">Undefined</div>
       </div>
       <div class="contentRow">
         <div class="contentLabel">Royalty Fee:<br>
-          <div class="xsmall">'royaltyFee'</div></div> {{testMintData.royaltyFee}}
+          <div class="xsmall">'royaltyFee'</div>
+        </div>
+        {{testMintData.royaltyFee}}
+        <div v-if="!testMintData.royaltyFee" class="undefinedContent">Undefined</div>
       </div>
       <div class="contentRow">
         <div class="contentLabel">editions:<br>
           <div class="xsmall">'totalCap'</div>
         </div>
           {{testMintData.totalCap}}
-
+          <div v-if="!testMintData.totalCap" class="undefinedContent">Undefined</div>
       </div>
       <div class="contentRow">
-        <div class="contentLabel">fileType:</div> {{testMintData.fileType}}
+        <div class="contentLabel">File Type:<br>
+          <div class="xsmall">'fileType'</div>
+        </div>
+        {{testMintData.fileType}}
+        <div v-if="!testMintData.fileType" class="undefinedContent">Undefined</div>
       </div>
+      <Button mode="hollow" @click="toggleTestData(!showTestMintData)">
+        Hide Preview
+      </Button>
     </div>
     <div
       class="fieldset actionContent formContent"
@@ -685,6 +713,9 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
 .defaultThumbnail {
   width: 120px;
   height: 120px;
+}
+.undefinedContent{
+  color: var(--danger-color, red);
 }
 
 /* Enter and leave animations can use different */
@@ -1026,6 +1057,10 @@ export default {
     },
     setMintStatus(status) {
       this.$store.commit("mintFormStore/setMintStatus", status);
+    },
+
+    toggleTestData(newState){
+      this.showTestMintData = newState
     },
 
     renderImage(fileType, src, parent) {
