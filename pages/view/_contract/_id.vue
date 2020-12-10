@@ -100,6 +100,7 @@
           <h4>Error</h4>
           <p>No token found.</p>
         </div>
+        <CodeView :code="validationData" title="Validation Data" v-if="this.validationData" :onClose="setValidation" />
 
         <div id="readContent" class="output">
           <!-- {{tempViewItem.imageUrlThumbnail}} | {{viewStatus}} |  {{viewData && viewData.fileIpfsHash  ? " has view data" : " no view data"}} -->
@@ -359,6 +360,10 @@ export default {
       fullResolution: false,
       resolution: 'preview',
       isValidating: false,
+      validationData: {
+          "contract": "0xB95Af9b2Afd751760e5031C93F18ebD7aB406815",
+          "id": "4"
+        },
     }
   },
   head() {
@@ -568,6 +573,9 @@ export default {
       const description = this.viewData && this.viewData.description
       return description || tempDescription;
     },
+    setValidation(){
+      this.validationData = null
+    },
     setExpandDescription(newState){
       this.showExpandedDescription = newState
     },
@@ -593,7 +601,7 @@ export default {
     async apiData() {
     const context = this;
     console.log('getting api data', this.$route.params)
-    this.isValidating = false;
+    this.isValidating = true;
     const { params = {}, $axios } = context;
     const tempParams = {
       contract: this.$route.params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
@@ -617,6 +625,7 @@ export default {
     console.log('url: ', apiUrl)
     const data = await $axios.get(apiUrl).then(result => {
       console.log('validation result:', result);
+      this.validationData = result;
       })
       .catch(error => {
         console.log('error: ', error)

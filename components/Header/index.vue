@@ -196,7 +196,7 @@
     </div>
   </client-only>
   <client-only>
-  <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><br />
+  <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><Button @click="setDevMode(false)" mode="secondary" size="small">Switch Off</Button><br />
     <div v-if="showDevInfo">
         Environment: {{VERCEL_ENV}}<br />
         rootUrl: {{rootUrl}}<br />
@@ -415,6 +415,7 @@ export default {
       setShowSearch: "ui/setShowSearch",
       toggleHiddenUi: "ui/toggleHiddenUi",
       setWalletChain: "ui/setWalletChain",
+      setDevMode: "ui/setDevMode"
     }),
 
     ...mapActions({
