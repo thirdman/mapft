@@ -313,11 +313,8 @@
             </div>
           </ToggleSection>
           <div class="row contentRow">
-            <div v-if="devMode">
-              <Button mode="hollow" @click="apiData">Validate</Button>
-              <Loading message="Retrieving Data..." :fillClass="contrastMode" />
-            </div>
-            
+              <Button mode="hollow" :full="true" size="small" @click="apiData" v-if="!isValidating">Validate</Button>
+              <Loading message="Retrieving Data..." :fillClass="contrastMode" v-if="isValidating" />
           </div>
         </div>
       </div>
@@ -595,13 +592,17 @@ export default {
     },
     async apiData() {
     const context = this;
-    console.log('getting api data')
-    this.isValidating = true;
+    console.log('getting api data', this.$route.params)
+    this.isValidating = false;
     const { params = {}, $axios } = context;
     const tempParams = {
       contract: this.$route.params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
       id: this.$route.params.id || '1'
     }
+    // const options = {
+    //   contractId: params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
+    //   tokenId: parseInt(params.id) || 1,
+    // }
     // let axiosConfig = {
     //   headers: {
     //       "Access-Control-Allow-Origin": "*",
@@ -612,15 +613,10 @@ export default {
       requiredNetwork === "main"
         ? "https://api.opensea.io"
         : "https://rinkeby-api.opensea.io";
-    const apiUrl = `https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=${tempParams.contract}&id="${tempParams.id}`
-    const options = {
-      contractId: params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
-      tokenId: parseInt(params.id) || 1,
-    }
-    
-    const theUrl = `${openseaUrl}/api/v1/asset/${params.contract}/${params.id}/`
+    const apiUrl = `https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=${tempParams.contract}&id=24`; //"${tempParams.id}
+    console.log('url: ', apiUrl)
     const data = await $axios.get(apiUrl).then(result => {
-      return result
+      console.log('validation result:', result);
       })
       .catch(error => {
         console.log('error: ', error)

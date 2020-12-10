@@ -1,7 +1,7 @@
 <template>
   <button
     class="btn"
-    :class="`btn${mode} ${className} ${size} ${filled ? 'filled' : ''} ${fill ? 'fill' : ''}`"
+    :class="`btn${mode} ${className} ${size} ${filled ? 'filled' : ''} ${fill ? 'fill' : ''} ${full ? 'full' : ''} `"
     @click="$emit('click')"
     :disabled="disabled"
   >
@@ -23,7 +23,7 @@
   &:not(.iconButton) {
     box-shadow: 0 0px 0 0px var(--ui-color, #111);
   }
-  &.fill {
+  &.fill, &.full {
     width: 100%;
   }
   &.transparent {
@@ -136,6 +136,7 @@ export default {
     size: { default: 'medium' },
     filled: { default: false, type: Boolean }, // filled the background
     fill: { default: false, type: Boolean }, // makes it 100% width
+    full: { default: false, type: Boolean }, // makes it 100% width
     disabled: { default: false, type: Boolean },
     className: { type: String, default: '' },
     // click: { type: Function },
