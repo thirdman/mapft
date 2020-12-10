@@ -126,9 +126,9 @@ export default {
       this.desiredNetwork = requiredNetwork;
       this.baseUrl = rootUrl;
     }
-    console.log('MOUNTED this.$config', this.$config)
-    console.log('MOUNTED baseUrl', process.env.baseUrl)
-    console.log('MOUNTED route: ', this.$route)
+    // console.log('MOUNTED this.$config', this.$config)
+    // console.log('MOUNTED baseUrl', process.env.baseUrl)
+    // console.log('MOUNTED route: ', this.$route)
     const rootUrl = this.$config.rootUrl
     const path = this.$route.path
     this.path = path;
@@ -168,7 +168,7 @@ export default {
         return ""
       }
       // const '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
-      console.log('this.$route.fullPath', this.$route.fullPath)
+      // console.log('this.$route.fullPath', this.$route.fullPath)
       let base = this.baseUrl.replace(/\/$/, "");
       const myUrl = base + this.$route.fullPath;
       const tempUiMode = this.uiMode || "minimal";
@@ -180,7 +180,7 @@ export default {
       // console.log(this)
       // (`${this.fullUrl}`)
       const url = this.createUrl(false);
-      console.log('url', url)
+      // console.log('url', url)
       window && window.open(url);
     },
     toggleSelector(){
