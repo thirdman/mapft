@@ -239,11 +239,11 @@ export default {
       contractId: contractId,
       tokenId: 1
     }
-    const metaData = await this.handleGalleryMeta(params).then(result => {
-        return result
-      }).catch(error => console.error(error));
-    this.galleryMeta = metaData
-    this.galleryName = metaData && metaData.name
+    // const metaData = await this.handleGalleryMeta(params).then(result => {
+    //     return result
+    //   }).catch(error => console.error(error));
+    // this.galleryMeta = metaData
+    // this.galleryName = metaData && metaData.name
     this.isLoadingMeta = false;
   },
 
