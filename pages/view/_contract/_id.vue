@@ -3,9 +3,6 @@
     <Header />
     <section id="read" class="read showMeta borderBottom">
       <div class="tertiary" >
-        <!-- <div v-if="devMode">
-          <Button @click="apiData(this)">test api data</Button>
-        </div> -->
         <div class="galleryLinkWrap" v-if="uiMode !== 'none'">
           <nuxt-link :to="/gallery/ + contractId" class="galleryLink asButton">
             <IconBack :strokeClass="contrastMode" />
@@ -315,6 +312,13 @@
               </div>
             </div>
           </ToggleSection>
+          <div class="row contentRow">
+            <div v-if="devMode">
+              <Button mode="hollow" @click="apiData">Validate</Button>
+              <Loading message="Retrieving Data..." :fillClass="contrastMode" />
+            </div>
+            
+          </div>
         </div>
       </div>
     </section>
@@ -356,7 +360,8 @@ export default {
       etherscanUrlBase: "https://etherscan.io/",
       showExpandedDescription: false,
       fullResolution: false,
-      resolution: 'preview'
+      resolution: 'preview',
+      isValidating: false,
     }
   },
   head() {
@@ -590,31 +595,39 @@ export default {
     },
     async apiData() {
     const context = this;
-    // console.log('this', this)
+    console.log('getting api data')
+    this.isValidating = true;
     const { params = {}, $axios } = context;
     const tempParams = {
       contract: this.$route.params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
       id: this.$route.params.id || '1'
     }
-    let axiosConfig = {
-      headers: {
-          "Access-Control-Allow-Origin": "*",
-      }
-    };
+    // let axiosConfig = {
+    //   headers: {
+    //       "Access-Control-Allow-Origin": "*",
+    //   }
+    // };
     const requiredNetwork = context.$config.requiredNetwork;
     const openseaUrl =
       requiredNetwork === "main"
         ? "https://api.opensea.io"
         : "https://rinkeby-api.opensea.io";
-    const apiUrl = `https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=${tempParams.contract}`
+    const apiUrl = `https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=${tempParams.contract}&id="${tempParams.id}`
     const options = {
       contractId: params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
       tokenId: parseInt(params.id) || 1,
     }
     
     const theUrl = `${openseaUrl}/api/v1/asset/${params.contract}/${params.id}/`
-    const data = await $axios.get(apiUrl, axiosConfig).then(result => {return result}).catch(error => console.log('error: ', error));
+    const data = await $axios.get(apiUrl).then(result => {
+      return result
+      })
+      .catch(error => {
+        console.log('error: ', error)
+        this.isValidating = false;
+      });
     console.log('api data result: ', data)
+    this.isValidating = false;
     // console.log('BASE_URL', BASE_URL)
     // const tempData = {
     //   title: `InfiNFT | ${data.name}` || "InfiiNFT: View Token",
