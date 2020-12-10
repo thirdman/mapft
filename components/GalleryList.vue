@@ -397,7 +397,7 @@ export default {
         const exhibition = this.getTrait(asset.traits, 'exhibition')
 
         if (!exhibition) {
-          console.log('exhibition is null')
+          // console.log('exhibition is null')
           return
         }
         const thisSet = allSets.filter((set) => set.name === exhibition)

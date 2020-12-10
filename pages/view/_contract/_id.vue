@@ -659,7 +659,7 @@ export default {
       requiredNetwork === "main"
         ? "https://api.opensea.io"
         : "https://rinkeby-api.opensea.io";
-    const apiUrl = `https://infinft-test.azurewebsites.net/api/HttpTrigger?artContract=${tempParams.contract}`
+    const apiUrl = `https://infinft.azurewebsites.net/api/HttpTrigger?artContract=${tempParams.contract}`
     const options = {
       contractId: params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
       tokenId: parseInt(params.id) || 1,
