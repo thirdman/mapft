@@ -9,8 +9,9 @@
       </Button>
     </div>
     <div class="codeView" >
-      <pre><code>{{code && JSON.stringify(code)}}</code></pre>
+      <pre><code>{{code}}</code></pre>
     </div>
+      <!-- && JSON.stringify(code) -->
   </div>
   
 </template>
@@ -22,6 +23,8 @@
   padding: 1rem;
   font-size: .875rem;
   margin-bottom: .5rem;
+  overflow: scroll;
+  min-height: 20rem;
 }
 </style>
 
