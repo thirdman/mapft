@@ -617,7 +617,7 @@ export default {
     console.log('requiredNetwork', requiredNetwork)
     const apiRootUrl =
       requiredNetwork === "main"
-        ? "https://infinftrinkeby.net"
+        ? "https://infinft.azurewebsites.net"
         : "https://infinftrinkeby.azurewebsites.net";
     const apiUrl = `${apiRootUrl}/api/HttpTrigger?artContract=${tempParams.contract}&id=${tempParams.id}`; //"${tempParams.id}
     console.log('url: ', apiUrl)
