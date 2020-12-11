@@ -614,6 +614,7 @@ export default {
     //   }
     // };
     const requiredNetwork = context.$config.requiredNetwork;
+    console.log('requiredNetwork', requiredNetwork)
     const apiRootUrl =
       requiredNetwork === "main"
         ? "https://infinftrinkeby.net"
