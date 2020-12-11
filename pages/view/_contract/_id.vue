@@ -614,11 +614,11 @@ export default {
     //   }
     // };
     const requiredNetwork = context.$config.requiredNetwork;
-    const openseaUrl =
+    const apiRootUrl =
       requiredNetwork === "main"
-        ? "https://api.opensea.io"
-        : "https://rinkeby-api.opensea.io";
-    const apiUrl = `https://infinft.azurewebsites.net/api/HttpTrigger?artContract=${tempParams.contract}&id=${tempParams.id}`; //"${tempParams.id}
+        ? "https://infinftrinkeby.net"
+        : "https://infinftrinkeby.azurewebsites.net";
+    const apiUrl = `${apiRootUrl}/api/HttpTrigger?artContract=${tempParams.contract}&id=${tempParams.id}`; //"${tempParams.id}
     console.log('url: ', apiUrl)
     const data = await $axios.get(apiUrl).then(result => {
       console.log('validation result:', result);
