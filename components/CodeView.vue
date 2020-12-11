@@ -9,22 +9,26 @@
       </Button>
     </div>
     <div class="codeView" >
-      <pre><code>{{code}}</code></pre>
+      <pre><code>{{code && code.data}}</code></pre>
     </div>
       <!-- && JSON.stringify(code) -->
   </div>
   
 </template>
   
-<style>
+<style lang="scss">
 .codeView {
   background: #111;
   color: #ddd;
-  padding: 1rem;
-  font-size: .875rem;
+  padding: .25rem 1rem;
+  font-size: .75rem;
   margin-bottom: .5rem;
   overflow: scroll;
-  min-height: 20rem;
+  min-height: 10rem;
+  max-height: 20rem;
+  code, pre{
+    font-size: .75rem;
+  }
 }
 </style>
 
