@@ -230,7 +230,7 @@ export default {
       galleryMeta: null,
       galleryName: "",
       isLoadingMeta: false,
-      useGallerymeta: false,
+      useGallerymeta: true,
     }
   },
   async mounted() {
