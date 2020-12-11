@@ -24,7 +24,7 @@
                 <div class="column col-10">
                   <Button
                     mode="hollow"
-                    v-if="this.useGallerymeta"
+                    v-if="this.useGallerymeta && galleryAssets && galleryAssets.length > 0"
                     :filled="activityId === galleryContractId" 
                     @click="updateFollowing({id: galleryContractId, name: galleryMeta.name, symbol: galleryMeta.symbol, owner: galleryMeta.owner})">
                       <IconHeart size="small" :strokeClass="contrastMode" :active="isFollowing(usedContractsObj, galleryContractId)" />
