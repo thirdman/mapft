@@ -7,6 +7,7 @@
       </div>
       <div class="visualTitle">
         <h6>{{ title }}</h6>
+        <div class="small">{{description}}</div>
       </div>
     </div>
     <!-- <figcaption>{{ title }}</figcaption> -->
@@ -86,7 +87,7 @@
 <script>
 // import jsmediatags from 'jsmediatags'
 export default {
-  props: ['src', 'title', 'thumbnailSrc'],
+  props: ['src', 'title', 'description', 'thumbnailSrc'],
   mounted() {
     // console.log('this', this)
     // console.log('this.src', this.src)

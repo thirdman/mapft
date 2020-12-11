@@ -47,6 +47,7 @@
       v-if="getContentType(fileType) === 'audio'"
       :src="item.fileIpfsUrl"
       :title="item.title"
+      :description="item.description"
       :imageSrc="item.thumbnailUrl"
       :thumbnailSrc="item.thumbnailUrl"
       :thumbnailHash="item.thumbnailHash"
