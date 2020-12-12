@@ -356,7 +356,6 @@ export default {
       this.$store.commit("deployFormStore/addMetaTemplate", obj);
     },
     setShowNewMetaTemplate(newState) {
-      console.log("setting setShowNewMetaTemplate to", newState);
       this.$store.commit("deployFormStore/setShowNewMetaTemplate", newState);
     },
     handleDeploy2() {
