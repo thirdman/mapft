@@ -703,9 +703,6 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         <Button mode="hollow" @click="handleTest">
           Re-Test
         </Button>
-        <div v-if="showCustomMintButton()">
-          show custom mint
-        </div>
       </div>
     </div>
     <div
@@ -723,7 +720,17 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
           MINT
         </button>
       </h1>
-
+      <div v-if="this.customButtonId">
+        <div class="customMintButton">
+          <Button 
+            @click="handleCustomMint" 
+            mode="hero" 
+            size="large" 
+            :full="true"
+            :disabled="!canMint"
+            >Custom Mint: {{customButtonId}}</Button>
+        </div>
+      </div>
       <div class="row" style="justify-content: center">
       <Button mode="hollow" @click="handleTest">
         Preview Data
@@ -787,6 +794,9 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
 </style>
 
 <script>
+  import { mintThatShit, testThatShit } from "../utils/web3Mint.js";
+  import { mintThatShitGarethDev } from "../utils/web3Mint-garethDev.js";
+
 import {
   openFile,
   openThumbnail,
@@ -801,21 +811,31 @@ import {
   dataURLtoFile,
 } from "../utils/files.js";
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { mintThatShit, testThatShit } from "../utils/web3Mint.js";
 import { mapFields } from "vuex-map-fields";
 import { ValidationProvider, extend } from "vee-validate";
 import vueFilePond from "vue-filepond";
 import { required, min, max, email } from "vee-validate/dist/rules";
 import "filepond/dist/filepond.min.css";
 const customMinterMap = {
-  "0x83c6AA518316CEe7672d385dD20Af015f6fb28c0": {
-    id: "gareth",
+  "0xcd8a0e29514910532db4b500ad109927262f54d8": {
+    id: "garethProd",
     mintfile: "mint-hackatoa.js",
   },
-  "0xDbB59151b18Dd72E9AC092706e93De5b5d7a9325": {
-    id: "trislit",
+  "0xB95Af9b2Afd751760e5031C93F18ebD7aB406815": {
+    id: "garethStaging",
     mintfile: "mint-hackatoa.js",
-  }
+  },
+  "0x83c6AA518316CEe7672d385dD20Af015f6fb28c0": {
+    id: "garethDev",
+    mintfile: "mint-hackatoa.js",
+    function: mintThatShitGarethDev
+  },
+  
+  "0xae056092fa7068dfcd60bb9016d0e2d2448a635e": {
+    id: "trislit-prod",
+    mintfile: "mint-hackatoa.js",
+  },
+  
 };
 
 const FilePond = vueFilePond();
@@ -847,6 +867,9 @@ export default {
       
     };
   },
+  mounted(){
+    this.initCustomMint();
+  },
   data() {
     return {
       // These are the validation arrays
@@ -856,6 +879,7 @@ export default {
       thumbnailUploadLabel: `Drag & Drop your file or <span class="filepond--label-action"> Browse </span>`,
       testMintData: {},
       showTestMintData: false,
+      customButtonId: '',
       // fileIpfsProgress: undefined,
       // fileArweaveProgress: undefined,
       // thumbnailIpfsProgress: '6',
@@ -900,14 +924,6 @@ export default {
       showThumbnailField: "mintFormStore/showThumbnailField",
       showCropper: "mintFormStore/showCropper",
     }),
-
-    showCustomMintButton() {
-      const id = this.activeContractId
-      console.log('customMinterMap show custom mint id', id)
-      console.log('customMinterMap', customMinterMap)
-      console.log('customMinterMap[id]', customMinterMap[id])
-      return true
-    },
 
     showEditContract() {
       if (this.$store.state.ui.activeContractId) {
@@ -961,6 +977,16 @@ export default {
       getTransactionStatus: "arweaveStore/getTransactionStatus",
       getTransactionData: "arweaveStore/getTransactionData",
     }),
+    initCustomMint(){
+      const id = this.activeContractId
+      console.log('customMinterMap show custom mint id', id)
+      console.log('customMinterMap', customMinterMap)
+      console.log('customMinterMap[id]', customMinterMap[id])
+      const showButtonId = customMinterMap[id] && customMinterMap[id].id
+      if(showButtonId){
+        this.customButtonId = showButtonId
+      }
+    },
     shouldHideForm() {
       const activeArray = [
         'confirming',
@@ -1276,16 +1302,31 @@ export default {
     handleMint() {
       const state = this.$store.state.mintFormStore;
       const userContractAddress = state.activeContractId;
-      // const tempAddress = this.activeContractId;
-      // console.log('tempAddress? ', tempAddress);
-      // console.log('userContractAddress? ', userContractAddress);
-      // console.log('does it have active contract address? ', userContractAddress ? "yep" : "nope");
       if(this.activeContractId && !userContractAddress ){
         this.$store.commit("ui/setActiveContractId", this.activeContractId);
       }
-      // this.$nextTick().then(() => alert('ggg'));
-      // console.log('state', state)
       mintThatShit(event, state, this);
+    },
+    handleCustomMint(id) {
+      console.log('custommint id: ', id)
+      console.log('custommint this.customButtonId: ', this.customButtonId)
+      console.log('this', this);
+      const customId = this.customButtonId;
+      const state = this.$store.state.mintFormStore;
+      const userContractAddress = state.activeContractId;
+      if(this.activeContractId && !userContractAddress ){
+        this.$store.commit("ui/setActiveContractId", this.activeContractId);
+      }
+      if(!customId){return}
+      if(customId ==='garethDev'){
+        console.log('customMinterMap', customMinterMap)
+        const theObj = customMinterMap[this.activeContractId];
+        const theFunction = theObj.function;
+        console.log('theObj', theObj)
+        console.log('mintThatShitGarethDev', mintThatShitGarethDev)
+        console.log('theFunction: ', theFunction)
+        theFunction(event, state, this);
+      }
     },
 
     handlePinThumbnailFiletoIPFS(file) {
