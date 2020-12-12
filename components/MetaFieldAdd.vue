@@ -49,21 +49,15 @@
           <button class="w3-black btn btn-small" @click="addAction(fieldData)">
             Add
           </button>
-          <!--onClick="addMetaField()"-->
         </div>
         <div class="column btn-column" style="padding-top: 0.25rem;">
           <label>&nbsp;</label>
           <button class="w3-black btn btn-small" @click="cancelAction(false)">
             Cancel
           </button>
-          <!--onClick="hideNewMetaField()" -->
         </div>
       </div>
 
-      <!-- <label>help Text</label>
-                <input class="w3-input " id="newHelpText" type="string" max="999"
-                onChange='console.log(event, "optional");'
-                > -->
       <div class="itemHelp">
         <div class="helpIcon"><IconHelp strokeClass="light" /></div>
         <div class="helpContent">
