@@ -95,7 +95,7 @@ export const actions = {
     console.log("arUploadFile context: ", context);
     // const validated = validateArweaveKey(context);
     // const key = this.$config.ARWEAVE_WALLET_KEY;
-    console.log("validated", validated);
+    // console.log("validated", validated);
     console.groupEnd();
     const key = {
       kty: "RSA",

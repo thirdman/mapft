@@ -99,9 +99,9 @@ export default {
         src: "https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js",
       },
 
-      {
-        src: "https://cdn.rawgit.com/daishihmr/vox.js/1.0.1/build/vox.min.js",
-      },
+      // {
+      //   src: "https://cdn.rawgit.com/daishihmr/vox.js/1.0.1/build/vox.min.js",
+      // },
       // {
       //   src: "/arweaveFinal.js",
       // },
