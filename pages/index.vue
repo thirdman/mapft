@@ -45,7 +45,6 @@
             <h6>Existing Users</h6>
             <div class="small">
               <a href="/files/updating_image_links_on_existing_contracts.pdf" target="_blank">Click here for infomation</a> about migrating to our new image upload toolset.
-              <a href="https://staging.infinft.app/_nuxt/assets/img/updating_image_links_on_existing_contracts.pdf" target="_blank">Click here for infomation</a> about migrating to our new image upload toolset.
             </div>
           </div>
           <br />
