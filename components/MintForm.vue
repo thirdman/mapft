@@ -703,6 +703,9 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         <Button mode="hollow" @click="handleTest">
           Re-Test
         </Button>
+        <div v-if="showCustomMintButton()">
+          show custom mint
+        </div>
       </div>
     </div>
     <div
@@ -804,6 +807,16 @@ import { ValidationProvider, extend } from "vee-validate";
 import vueFilePond from "vue-filepond";
 import { required, min, max, email } from "vee-validate/dist/rules";
 import "filepond/dist/filepond.min.css";
+const customMinterMap = {
+  "0x83c6AA518316CEe7672d385dD20Af015f6fb28c0": {
+    id: "gareth",
+    mintfile: "mint-hackatoa.js",
+  },
+  "0xDbB59151b18Dd72E9AC092706e93De5b5d7a9325": {
+    id: "trislit",
+    mintfile: "mint-hackatoa.js",
+  }
+};
 
 const FilePond = vueFilePond();
 const imageTypes = ["jpg", "png", "gif"];
@@ -828,6 +841,7 @@ export default {
     // VueCropper,
     // FilePond,
   },
+  
   head() {
     return {
       
@@ -886,6 +900,14 @@ export default {
       showThumbnailField: "mintFormStore/showThumbnailField",
       showCropper: "mintFormStore/showCropper",
     }),
+
+    showCustomMintButton() {
+      const id = this.activeContractId
+      console.log('customMinterMap show custom mint id', id)
+      console.log('customMinterMap', customMinterMap)
+      console.log('customMinterMap[id]', customMinterMap[id])
+      return true
+    },
 
     showEditContract() {
       if (this.$store.state.ui.activeContractId) {

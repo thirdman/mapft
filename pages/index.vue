@@ -44,7 +44,7 @@
           <div class="existingUserPrompt">
             <h6>Existing Users</h6>
             <div class="small">
-              <a href="/files/updating_image_links_on_existing_contracts.pdf" target="_blank">Click here for infomation</a> about migrating to our new image upload toolset.
+              <a href="https://drive.google.com/file/d/1HaWwYfLNN5p1sXG6sjFF_4R0iJzVoI13/view?usp=sharing" target="_blank">Click here for infomation</a> about migrating to our new image upload toolset.
             </div>
           </div>
           <br />

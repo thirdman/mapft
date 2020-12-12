@@ -302,7 +302,8 @@ export default {
      }
    },
    mounted() {
-     // console.log(this.usedContracts)
+     console.log('mint mounted ', this)
+     console.log('mint mounted ', this.$config)
      if(this.usedContracts && this.usedContracts.length){
        this.setSelectedPanel('existing')
      } else {
