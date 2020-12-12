@@ -797,6 +797,8 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
   import { mintThatShit, testThatShit } from "../utils/web3Mint.js";
   import { mintThatShitGarethDev } from "../utils/web3Mint-garethDev.js";
   import { mintThatShitGarethProd } from "../utils/web3Mint-garethProd.js";
+  import { mintThatShitGarethStaging } from "../utils/web3Mint-garethStaging.js";
+  import { mintThatShitTrislitProd } from "../utils/web3Mint-trislitProd.js";
 
 import {
   openFile,
@@ -820,22 +822,24 @@ import "filepond/dist/filepond.min.css";
 const customMinterMap = {
   "0xcd8a0e29514910532db4b500ad109927262f54d8": {
     id: "garethProd",
-    mintfile: "mint-hackatoa.js",
+    label: "gareth Prod button",
     function: mintThatShitGarethProd
   },
   "0xB95Af9b2Afd751760e5031C93F18ebD7aB406815": {
     id: "garethStaging",
-    mintfile: "mint-hackatoa.js",
+    label: "gareth Staging button",
+    function: mintThatShitGarethStaging
   },
   "0x83c6AA518316CEe7672d385dD20Af015f6fb28c0": {
     id: "garethDev",
-    mintfile: "mint-hackatoa.js",
+    label: "gareth Staging button",
     function: mintThatShitGarethDev
   },
   
   "0xae056092fa7068dfcd60bb9016d0e2d2448a635e": {
-    id: "trislit-prod",
-    mintfile: "mint-hackatoa.js",
+    id: "trislitProd",
+    label: "Trislits special button",
+    function: mintThatShitTrislitProd
   },
   
 };
