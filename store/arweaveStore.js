@@ -91,11 +91,11 @@ export const actions = {
   async arUploadFile(storeContext, payload) {
     const { context, file, mode = "file", setProgress } = payload;
     console.group("arUploadFile");
-      console.log("props", payload);
-      console.log("arUploadFile context: ", context);
-      const validated = validateArweaveKey(context);
-      // const key = this.$config.ARWEAVE_WALLET_KEY;
-      console.log('validated', validated)
+    console.log("props", payload);
+    console.log("arUploadFile context: ", context);
+    // const validated = validateArweaveKey(context);
+    // const key = this.$config.ARWEAVE_WALLET_KEY;
+    console.log("validated", validated);
     console.groupEnd();
     const key = {
       kty: "RSA",
@@ -163,22 +163,22 @@ export const actions = {
     }
     return transaction.id;
   },
-  validateArweaveKey(context){
-    const doIt = false;
-    if(!doIt){return}
-    console.log('validateArweaveKey');
+  // validateArweaveKey(context){
+  //   const doIt = false;
+  //   if(!doIt){return}
+  //   console.log('validateArweaveKey');
 
-    const envKey =
-    context && context.$config && context.$config.ARWEAVE_WALLET_KEY;
-    if (envKey) {
-    console.log(
-      "arUploadFile, envKey is it a string: ",
-      typeof envKey === "string"
-    );
-    const isString = typeof envKey === "string";
-    const keyAsObj = (envKey && isString && JSON.parse(envKey)) || envKey;
-    
-  },
+  //   const envKey =
+  //   context && context.$config && context.$config.ARWEAVE_WALLET_KEY;
+  //   if (envKey) {
+  //   console.log(
+  //     "arUploadFile, envKey is it a string: ",
+  //     typeof envKey === "string"
+  //   );
+  //   const isString = typeof envKey === "string";
+  //   const keyAsObj = (envKey && isString && JSON.parse(envKey)) || envKey;
+
+  // },
   async lastTransaction(context, payload) {
     const arweaveWalletId = this.$config && this.$config.ARWEAVE_WALLET_ID;
     if (!this.$config) {
