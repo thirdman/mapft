@@ -638,8 +638,6 @@ const testThatShit = (payload) => {
 };
 
 const mintThatShitGarethStaging = (event, state, rootContext) => {
-  alert("mintThatShitGarethProd");
-
   const doIt = true;
   const context = rootContext.$store;
   const network = context.$config.requiredNetwork || "main";

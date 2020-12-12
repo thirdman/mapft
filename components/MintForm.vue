@@ -728,7 +728,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
             size="large" 
             :full="true"
             :disabled="!canMint"
-            >Custom Mint: {{customButtonId}}</Button>
+            >{{this.customButtonLabel}}</Button>
         </div>
       </div>
       <div class="row" style="justify-content: center">
@@ -886,6 +886,7 @@ export default {
       testMintData: {},
       showTestMintData: false,
       customButtonId: '',
+      customButtonLabel: '',
       // fileIpfsProgress: undefined,
       // fileArweaveProgress: undefined,
       // thumbnailIpfsProgress: '6',
@@ -989,8 +990,10 @@ export default {
       console.log('customMinterMap', customMinterMap)
       console.log('customMinterMap[id]', customMinterMap[id])
       const showButtonId = customMinterMap[id] && customMinterMap[id].id
+      const showButtonLabel = customMinterMap[id] && customMinterMap[id].label
       if(showButtonId){
         this.customButtonId = showButtonId
+        this.customButtonLabel = showButtonLabel
       }
     },
     shouldHideForm() {
