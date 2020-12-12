@@ -14,6 +14,7 @@
         </div>
       </div>
       <div class="primary ">
+        <h1>test</h1>
         <h4>Load Gallery Contract</h4>
         <div class="loadContractRow row clampWidth">
           <div class="column col-75">
