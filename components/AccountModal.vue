@@ -422,7 +422,6 @@ export default {
       return state ? "active" : "inactive";
     },
     setHasVerticalGrid(value){
-      console.log('value', value)
       this.hasVerticalGrid = value
       this.$store.commit("ui/setHasVerticalGridLines", value);
     },
