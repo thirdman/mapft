@@ -178,9 +178,7 @@ export const actions = {
     const isString = typeof envKey === "string";
     const keyAsObj = (envKey && isString && JSON.parse(envKey)) || envKey;
     
-    
-  }
-  }
+  },
   async lastTransaction(context, payload) {
     const arweaveWalletId = this.$config && this.$config.ARWEAVE_WALLET_ID;
     if (!this.$config) {
