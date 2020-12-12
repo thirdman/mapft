@@ -796,6 +796,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
 <script>
   import { mintThatShit, testThatShit } from "../utils/web3Mint.js";
   import { mintThatShitGarethDev } from "../utils/web3Mint-garethDev.js";
+  import { mintThatShitGarethProd } from "../utils/web3Mint-garethProd.js";
 
 import {
   openFile,
@@ -820,6 +821,7 @@ const customMinterMap = {
   "0xcd8a0e29514910532db4b500ad109927262f54d8": {
     id: "garethProd",
     mintfile: "mint-hackatoa.js",
+    function: mintThatShitGarethProd
   },
   "0xB95Af9b2Afd751760e5031C93F18ebD7aB406815": {
     id: "garethStaging",
@@ -1317,16 +1319,13 @@ export default {
       if(this.activeContractId && !userContractAddress ){
         this.$store.commit("ui/setActiveContractId", this.activeContractId);
       }
-      if(!customId){return}
-      if(customId ==='garethDev'){
-        console.log('customMinterMap', customMinterMap)
-        const theObj = customMinterMap[this.activeContractId];
-        const theFunction = theObj.function;
-        console.log('theObj', theObj)
-        console.log('mintThatShitGarethDev', mintThatShitGarethDev)
-        console.log('theFunction: ', theFunction)
-        theFunction(event, state, this);
-      }
+        if(!customId){return}
+      const theObj = customMinterMap[this.activeContractId];
+      const theFunction = theObj.function;
+      console.log('theObj', theObj)
+      console.log('mintThatShitGarethDev', mintThatShitGarethDev)
+      console.log('theFunction: ', theFunction)
+      theFunction(event, state, this);
     },
 
     handlePinThumbnailFiletoIPFS(file) {
