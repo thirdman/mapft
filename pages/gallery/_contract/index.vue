@@ -210,7 +210,7 @@ export default {
     // console.log('this.$store.ui', this.$store.state.ui.walletNetwork)
     
     if (process.client) {
-      console.log('triger on created: ')
+      console.log('GALLERY created: ')
 
       this.$store.commit(
         'galleryStore/setGalleryContractId',

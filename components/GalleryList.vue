@@ -395,10 +395,16 @@ export default {
       const allSets = []
       assets.map((asset) => {
         const exhibition = this.getTrait(asset.traits, 'exhibition')
-        console.log('exhibtion: ', exhibition)
         if (!exhibition) {
           return
         }
+        
+        // console.log('exhibtion: ', exhibition)
+        // const regex = /^[\w\-\s]+$/;
+        // const cleanedExhibition = exhibition && exhibition.replace(regex, "+");
+        // console.log('replaced', cleanedExhibition);
+
+        
         const thisSet = allSets.filter((set) => set.name === exhibition)
         const thisSetIndex = allSets.findIndex((set) => set.name === exhibition)
         let newSet

@@ -414,8 +414,7 @@
       <div class="sectionTitle">
         <h6>Optional Data</h6>
       </div>
-      <ValidationProvider >
-        <!-- rules="regex" -->
+      <ValidationProvider rules="regex">
         <div class="formItem" :class="classes" slot-scope="{ classes, errors }">
           <label>Exhibition / Set</label>
           <input

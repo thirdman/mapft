@@ -32,7 +32,6 @@ export default {
       if(address.length < 8){
         return address
       }
-      console.log('address', address)
       const first = address && address.slice(0, 6) || "";
       const last = address && address.slice(-4) || "";
       const returnValue = `${first}...${last}`;
