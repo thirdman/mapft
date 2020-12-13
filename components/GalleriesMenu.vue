@@ -1,6 +1,6 @@
 <template>
   <div class="galleriesMenu" :class="mode" :environment="environment">
-    <div class="listItem featured">
+    <!-- <div class="listItem featured">
       <nuxt-link
         to="/alpha"
         class="featuredLink"
@@ -11,7 +11,7 @@
         "
         ><div class="galleryImgWrap"><img src="~/static/images/alpha.jpg" width="200px" /></div> Alpha Series</nuxt-link
       >
-    </div>
+    </div> -->
     <div class="listItem" v-if="environment === 'main'">
       <nuxt-link
         to="/gallery/0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
