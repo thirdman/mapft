@@ -414,9 +414,9 @@
       <div class="sectionTitle">
         <h6>Optional Data</h6>
       </div>
-      <ValidationProvider rules>
+      <ValidationProvider rules="regex">
         <div class="formItem" :class="classes" slot-scope="{ classes, errors }">
-          <label>Exhibition / Series</label>
+          <label>Exhibition / Set</label>
           <input
             class="w3-input"
             type="string"
@@ -426,10 +426,6 @@
             oldId="d"
             v-model="series"
           />
-          <!--
-          onChange='updatePreview(event, "series");validateMintForm(event)'
-            
-          -->
           <div>
             <span class="validationMessage">{{ errors && errors[0] }}</span>
           </div>
@@ -817,7 +813,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import { ValidationProvider, extend } from "vee-validate";
 import vueFilePond from "vue-filepond";
-import { required, min, max, email } from "vee-validate/dist/rules";
+import { required, min, max, email, regex } from "vee-validate/dist/rules";
 import "filepond/dist/filepond.min.css";
 const customMinterMap = {
   "0xcd8a0e29514910532db4b500ad109927262f54d8": {
@@ -859,6 +855,10 @@ extend("max", {
 extend("required", {
   ...required,
   message: "This field is required",
+});
+extend("regex", {
+  validate: value => value.match(/^[\w\-\s]+$/) !== null,
+  message: "Limited to alpha-numeric, underscore, dash, and spaces.",
 });
 
 export default {
