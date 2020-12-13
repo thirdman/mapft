@@ -14,7 +14,7 @@
                     <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span>
                     </span>
                     <Button @click="handleCopy" mode="hollow" v-if="!hasCopied" >
-                      <IconCopy size="small"/>
+                      <IconCopy size="small" :strokeClass="contrastMode"/>
                     </Button>
                     <div class="hiddenInputWrap" style="visibility: visible; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; position: relative;">
                       <input type="text" id="copy-string" :value="galleryContractId" style=" position: absolute; z-index: -1">
@@ -82,7 +82,7 @@
         <div class="sidebarSection">
           <label>Display</label>
           <div>
-          <div class="buttonGroup uiMode" :class="contrastMode" direction="column">
+          <div class="buttonGroup uiMode full" :class="contrastMode" direction="column">
             <button
               @click="setGalleryDisplayMode('compact')"
               class="small toggleItem"
@@ -130,47 +130,7 @@
       </div>
 
       <div class="secondary" >
-        <!-- <label>Gallery Contract</label>
-        <div
-          class="help"
-          style="width: 10rem; overflow: hidden; text-overflow: ellipsis;"
-        >
-          <span>{{ galleryContractId }}</span>
-          <div>
-            <a 
-              target="_blank" 
-              :href="`https://twitter.com/intent/tweet?url=${getUrl()}&text=${'A gallery on InfiNFT'}&related=nft4ever,nft42`" 
-              class="shareLink asButton full" 
-              >
-                <IconExternalLink :strokeClass="contrastMode" size="small" /> Share
-            </a>
-        </div>
-        </div>
-        <label>Display</label>
-        <div class="buttonGroup uiMode" :class="contrastMode">
-          <button
-            @click="setGalleryDisplayMode('compact')"
-            class="small toggleItem"
-            :class="galleryDisplayMode === 'compact' ? 'active' : 'notActive'"
-          >
-            Compact
-          </button>
-          <button
-            @click="setGalleryDisplayMode('expanded')"
-            class="small toggleItem"
-            :class="galleryDisplayMode === 'expanded' ? 'active' : 'notActive'"
-          >
-            Expanded
-          </button>
-          <button
-            @click="setGalleryDisplayMode('list')"
-            class="small toggleItem"
-            :class="galleryDisplayMode === 'list' ? 'active' : 'notActive'"
-          >
-            Full
-          </button>
-        </div> -->
-
+        
       </div>
     </section>
 

@@ -36,7 +36,7 @@
         </div>
         <div class="sidebarSection">
           <label>Display</label>
-          <div class="buttonGroup uiMode" :class="contrastMode" direction="column">
+          <div class="buttonGroup uiMode full" :class="contrastMode" direction="column">
             <button
               @click="setGalleryDisplayMode('compact')"
               class="small toggleItem"

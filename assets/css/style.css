@@ -134,6 +134,10 @@ a.asButton {
   padding: 2px 1rem;
   border: 1px solid var(--line-color);
   text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .danger {
@@ -363,6 +367,12 @@ footer {
   font-size: 0.875rem;
   position: relative;
   min-height: 2rem;
+}
+.buttonGroup.full {
+  flex-direction: row;
+}
+.buttonGroup.full button {
+  flex-basis: 50%;
 }
 
 .buttonGroup .swatch {

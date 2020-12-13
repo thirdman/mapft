@@ -187,7 +187,7 @@
               />
               
               <div class="optimisationToggle row" v-if="getContentType(viewData.fileType) === 'image'">
-                <div class="buttonGroup">
+                <div class="buttonGroup full">
                   <Button mode="hollow" :filled="resolution === 'thumbnail'" @click="setResolution('thumbnail')" size="small" >Thumbnail</Button>
                   <Button mode="hollow" :filled="resolution === 'preview'" @click="setResolution('preview')" size="small">Preview</Button>
                   <Button mode="hollow" :filled="resolution === 'full'" @click="setResolution('full')" size="small">Full</Button>
