@@ -36,7 +36,31 @@
         ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>Example Posters</nuxt-link
       >
     </div>
+    <div class="listItem" v-if="environment === 'main'">
+      <nuxt-link
+        to="/gallery/0xb52c98c13be439d667f723c825fb41e0dc47aaba"
+        class="featuredLink"
+        ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>NFT Poems</nuxt-link
+      >
+    </div>
+    <div class="listItem" v-if="environment === 'main'">
+      <nuxt-link
+        to="/gallery/0xae056092fa7068dfcd60bb9016d0e2d2448a635e"
+        class="featuredLink"
+        ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>Trislits' Fine Art Collection</nuxt-link
+      >
+    </div>
+    <div class="listItem" v-if="environment === 'main'">
+      <nuxt-link
+        to="/gallery/0xcbe642d1b28caeff5f8377560db29e43ba7ac200"
+        class="featuredLink"
+        ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>ManWithNoName</nuxt-link
+      >
+    </div>
 
+
+
+    <!-- RINKEBY -->
     <div class="listItem" v-if="environment === 'rinkeby'">
       <nuxt-link
         to="/gallery/0xa0AfEDcC9446fD1F41706EaA4931512bDb2efAe7"
