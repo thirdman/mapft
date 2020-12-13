@@ -395,15 +395,12 @@ export default {
       const allSets = []
       assets.map((asset) => {
         const exhibition = this.getTrait(asset.traits, 'exhibition')
-
+        console.log('exhibtion: ', exhibition)
         if (!exhibition) {
-          // console.log('exhibition is null')
           return
         }
         const thisSet = allSets.filter((set) => set.name === exhibition)
         const thisSetIndex = allSets.findIndex((set) => set.name === exhibition)
-        // console.log('thisSet', thisSet)
-        // console.log('thisSetIndex', thisSetIndex)
         let newSet
         if (thisSetIndex > -1) {
           let currentSet = allSets[thisSetIndex]
