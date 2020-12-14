@@ -463,7 +463,7 @@ export default {
     // console.log('BASE_URL', BASE_URL)
     const tempData = {
       title: `InfiNFT | ${data.name}` || "InfiiNFT: View Token",
-      description: `InfiNFT | data.description` || "",
+      description: `InfiNFT | ${data.description}` || "",
       previewImage: `${BASE_URL}${ogImage}`,
       previewUrl: data.image_preview_url,
       resolution: 'full'
