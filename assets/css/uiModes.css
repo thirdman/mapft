@@ -170,7 +170,7 @@ footer.minimal .corpLink > span.defaultCorpMessage {
   'NONE' OVERRIDES
 */
 #body .pageContainer {
-  /* min-height: 100vh; */
+  min-height: 100vh;
 }
 #body.minimal {
   --header-height: var(--header-height-minimal, 2rem);
