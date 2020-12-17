@@ -81,6 +81,14 @@ Over time I intend to migrate to main.scss
   --charcoal-text-color: #c0c0c0;
   --charcoal-background-color: hsl(320, 6%, 90%);
   --charcoal-mode: dark;
+
+  --custom-color: #eee;
+  --custom-fill-color: #ddd;
+  --custom-light-color: #f9f9f9;
+  --custom-ui-color: #111111;
+  --custom-text-color: #333333;
+  --custom-background-color: #eee;
+  --custom-mode: light;
 }
 /* STRUCTURE */
 html {
@@ -269,6 +277,25 @@ strong {
     var(--charcoal-color) 80%
   );
   color: var(--charcoal-text-color, #fff);
+}
+
+#body.custom {
+  --background-color: var(--custom-color, #ccc);
+  --background-color: var(--custom-background-color, #000);
+  --fill-color: var(--custom-fill-color, #f7e6da);
+  --light-color: var(--custom-light-color, #f3f3f3);
+  --text-color: var(--custom-text-color, #fff);
+  --ui-color: var(--custom-ui-color, #f7e6da);
+  --line-color: rgb(0 0 0 / 18%);
+  --contrast-mode: var(--custom-mode, dark);
+}
+#body.charcoal .pageContainer {
+  background-image: linear-gradient(
+    -70deg,
+    var(--custom-dark-color) 20%,
+    var(--custom-color) 80%
+  );
+  color: var(--custom-text-color, #fff);
 }
 
 .pageContainer {

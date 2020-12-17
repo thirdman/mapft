@@ -250,9 +250,6 @@
           <div class="column col-66">Color Theme</div>
           <div class="column col-33">
             <div class="buttonGroup themeGroup">
-              <!-- <div class="swatch lemon" @click="setUiTheme('lemon')">
-                <span class="swatchLabel">Lemon</span>
-              </div> -->
               <Swatch name="Lemon" id="lemon" />
               <Swatch name="Violet" id="violet" />
               <!-- <div class="swatch violet" @click="setUiTheme('violet')">
@@ -262,7 +259,7 @@
               <!-- <div class="swatch peach" @click="setUiTheme('peach')">
                 <span class="swatchLabel">Peach</span>
               </div> -->
-              <Swatch name="Sand" id="Sand" />
+              <Swatch name="Sand" id="sand" />
               <!-- <div class="swatch sand" @click="setUiTheme('sand')">
                 <span class="swatchLabel">Sand</span>
               </div> -->
@@ -304,6 +301,18 @@
             >
               on
             </button>
+          </div>
+        </div>
+        <div class="row contentRow" v-if="isDevAddress">
+          <div class="column">fancy:</div>
+          <div class="column">
+            <button
+              class="btn small"
+              @click="handleCustomTheme()"
+            >
+              Generate Theme
+            </button>
+            <Swatch name="Custom" id="custom" /> (click to apply)
           </div>
         </div>
         <div class="row contentRow" v-if="isDevAddress">
@@ -352,6 +361,7 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import {generateTheme, hexToHSL, getRandomInt} from "../utils/misc"
 
 export default {
   name: "AccountModal",
@@ -465,7 +475,21 @@ export default {
       // this.$router.push({
       //   path: `/gallery/${contractId}`,
       // })
+    },
+    handleCustomTheme(color = "#09aa4c") {
+      const generatedHue = getRandomInt(0, 360);
+      const customTheme = generateTheme({color: null, hue: generatedHue });
+      document.querySelector(':root').style.setProperty( '--custom-hue', customTheme.hue);
+      document.querySelector(':root').style.setProperty( '--custom-color', customTheme.color);
+      document.querySelector(':root').style.setProperty( '--custom-ui-color', customTheme.uiColor);
+      document.querySelector(':root').style.setProperty( '--custom-fill-color', customTheme.fillColor);
+      document.querySelector(':root').style.setProperty( '--custom-dark-color', customTheme.darkColor);
+      document.querySelector(':root').style.setProperty( '--custom-light-color', customTheme.lightColor);
+      document.querySelector(':root').style.setProperty( '--custom-text-color', customTheme.textColor);
+      document.querySelector(':root').style.setProperty( '--custom-background-color', customTheme.backgroundColor);
+      document.querySelector(':root').style.setProperty( '--color-mode', 'light');
     }
+
   },
 };
 </script>
