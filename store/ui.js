@@ -68,6 +68,8 @@ export const state = () => ({
   viewData: "",
   viewData2: "", // to refactor out.
   viewStatus: "",
+  // DRAFTS
+  draftsArray: [],
 });
 
 export const getters = {
@@ -98,6 +100,7 @@ export const getters = {
   usedContracts: (state) => state.usedContracts,
   usedContractsObj: (state) => state.usedContractsObj,
   tempUsedContractsObj: (state) => state.tempUsedContractsObj,
+  draftsArray: (state) => state.draftsArray,
   activityId: (state) => state.activityId,
   tempViewItem: (state) => state.tempViewItem,
   searchData: (state) => {
@@ -236,6 +239,9 @@ export const mutations = {
     });
     console.log("ui state is now", state);
   },
+  setDrafts(state, array) {
+    state.draftsArray = array;
+  },
   setUsedContractsObj(state, array) {
     state.usedContractsObj = array;
   },
@@ -306,6 +312,7 @@ export const mutations = {
       state.tempViewItem = data;
     }
   },
+
   setAllowRotation(state, newState) {
     console.log("setAllowRotation", newState);
     state.allowRotation = newState;
@@ -509,5 +516,32 @@ export const actions = {
     const filledContractsArray = await Promise.all(flattenedArray);
     console.log("filledContractsArray", filledContractsArray);
     this.commit("ui/setUsedContractsObj", filledContractsArray);
+  },
+
+  updateDrafts(dispatch, payload) {
+    console.log("updateDrafts:", payload);
+    const { state } = dispatch;
+    const { data, action } = payload;
+    console.log("updateDrafts data:", data);
+
+    const tempDraftsArray =
+      (state.draftsArray && state.draftsArray.slice()) || [];
+    const filteredDrafts = tempDraftsArray.filter(
+      (item) => item.draftId === data.draftId
+    );
+
+    if (!filteredDrafts?.length) {
+      console.log("this would add");
+      tempDraftsArray.push(data);
+      this.commit("ui/setDrafts", tempDraftsArray);
+    } else {
+      console.log("this would start remove");
+      if (action === "remove") {
+        console.log("REMOVE");
+        const newArray = tempDraftsArray.filter((item) => item.id !== data.id);
+        this.commit("ui/setDrafts", newArray);
+      }
+    }
+    console.log("tempDraftsArray is now: ", tempDraftsArray);
   },
 };

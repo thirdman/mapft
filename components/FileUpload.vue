@@ -14,6 +14,7 @@
         :onaddfile="handleAddFile"
         :onupdatefiles="handleUpdateFiles"
       />
+      
     </client-only>
   </div>
 </template>
@@ -51,11 +52,13 @@ export default {
     labelIdle: {type: String, default: "Drag & Drop your file or <span class='filepond--label-action'> Browse </span>"},
     server: { type: Object },
     // ipfsStatus: { type: String },
+    ipfshHash: { type: String },
+    arweaveHash: { type: String },
     // arweaveStatus: { type: String },
     fileTypes: { type: Array, default: () => ["jpg", "png", "gif"] },
     allowMultiple: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
-    // files: { type: Array },
+    initialFiles: { type: Array },
     // setUploadStatus: { type: Function },
     renderImage: { type: Function },
     setFileInfo: { type: Function },
@@ -69,9 +72,15 @@ export default {
   },
   data() {
     return {
-      files: [],
+      myFiles: ['cat.jpeg'],
+      files: this.initialFiles || [],
       // mode: props.mode || "file",
     };
+  },
+  mounted(){
+    console.log('this.initialFiles', this.initialFiles)
+    console.log('this.myFiles', this.myFiles)
+    console.log('this.files', this.files)
   },
   computed: {
     ...mapGetters({

@@ -5,8 +5,18 @@
     class="column"
     style="flex-basis: 100%"
   >
-    <div class="contractSection" v-if="1==2">
+  <div class="drafts">
+    <div v-if="activeDraftId" class="loadDraft">
+      <label>Load Draft</label>
+      <p class="small">This will load a draft, replacing all content. Are you sure?</p>
+      <div>
+        <Button @click="loadDraftData(activeDraftId)">Yes, Load Data</Button>
+        <Button @click="clearDraftId()" mode="secondary">Cancel</Button>
+      </div>
+    </div>
+  </div>
         <!-- SECTION TO DISPLAY ACTIVE CONTRACT-->
+    <!-- <div class="contractSection" v-if="1==2">
     <div
       class="fieldset formContent"
       id="fieldsetContractView"
@@ -28,8 +38,9 @@
         </div>
       </div>
     </div>
-
-    <!-- FORM FOR LOADING CONTRACT-->
+  
+  
+    
     <div
       class="fieldset contractContent"
       id="fieldsetContract"
@@ -85,8 +96,15 @@
         </p>
       </div>
     </div>
-    
+
+
+  {{activeDraftId}}
+    {{this.activeDraftId}}
+    <div v-if="activeDraftId">
+      <p>active draft: {{activeDraftId}}</p>
     </div>
+
+    </div> -->
     <div
     id="mintForm"
     class="form create column shadow"
@@ -156,6 +174,9 @@
             :setUploadStatus="setUploadStatus"
             :allowMultiple="false"
             :files="uploadFiles || []"
+            :initialFiles="uploadFiles || []"
+            :ipfsHash="fileIpfsHash"
+            :arweaveHash="fileArweaveHash"
             :handleAddFile="handleAddFile"
             :onRequestSave="onRequestSave"
             :onRequestClear="onRequestClear"
@@ -598,9 +619,17 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         <Button mode="hollow" @click="toggleTestData(!showTestMintData)">
           Hide Preview
         </Button>
+        <Button mode="hollow" @click="handleSaveDraft" v-if="devMode">
+          Save As Draft
+        </Button>
         <Button mode="hollow" @click="handleTest">
           Re-Test
         </Button>
+      </div>
+      <div v-if="hasSavedDraft">
+        <h4>Succes</h4>
+        <p class="small">Your draft is saved to your local browser storage. You can view & restore it from the drafts interface</p>
+        <Button @click="toggleHasSavedDraft(false)">close</Button>
       </div>
     </div>
     <div
@@ -633,17 +662,21 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       <Button mode="hollow" @click="handleTest">
         Preview Data
       </Button>
+      <Button mode="hollow" @click="toggleDraft" v-if="devMode">
+        Save Draft...
+      </Button>
       
       <!-- <button class="w3-button w3-block w3-black" id="resetFormButton" style="margin-left: .25rem;">
         Reset Form
       </button> -->
       </div>
+      
     </div>
     </div>
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .menu {
   display: flex;
   flex-direction: row;
@@ -661,6 +694,14 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
   color: var(--danger-color, red);
   font-size: .75rem;
   font-family: monospace;
+}
+.drafts{
+  .loadDraft{
+    margin: 1rem 0;
+    border: 1px solid red;
+    background: #fff;
+    padding: .5rem;
+  }
 }
 
 /* Enter and leave animations can use different */
@@ -692,6 +733,13 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
 </style>
 
 <script>
+/** BEWARE
+ * Aplogies to all who enter here. :D 
+ * This file is a bit of a monstor, having started with the fill inline html/js
+ * version that was the original POC. Somw work need to go into
+ * cleaning up and refactoring into more useful chunks of code, but
+ * in the meantime you'll have to wade through the following.
+ */
   import { mintThatShit, testThatShit } from "../utils/web3Mint.js";
   import { mintThatShitGarethDev } from "../utils/web3Mint-garethDev.js";
   import { mintThatShitGarethProd } from "../utils/web3Mint-garethProd.js";
@@ -714,8 +762,10 @@ import {
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import { ValidationProvider, extend } from "vee-validate";
-import vueFilePond from "vue-filepond";
 import { required, min, max, email, regex } from "vee-validate/dist/rules";
+import vueFilePond from "vue-filepond";
+import { v4 as uuidv4 } from 'uuid';
+
 import "filepond/dist/filepond.min.css";
 const customMinterMap = {
   "0xcd8a0e29514910532db4b500ad109927262f54d8": {
@@ -766,8 +816,6 @@ extend("regex", {
 export default {
   components: {
     ValidationProvider,
-    // VueCropper,
-    // FilePond,
   },
   
   head() {
@@ -776,6 +824,12 @@ export default {
     };
   },
   mounted(){
+    console.log('this.$route.query', this.$route.query);
+    console.log('this.$route.query.draft', this.$route.query.draft);
+    const theDraftId = this.$route.query.draft;
+    if(theDraftId){
+      this.activeDraftId = theDraftId
+    }
     this.initCustomMint();
   },
   data() {
@@ -787,8 +841,11 @@ export default {
       thumbnailUploadLabel: `Drag & Drop your file or <span class="filepond--label-action"> Browse </span>`,
       testMintData: {},
       showTestMintData: false,
+      showDraftSave: false,
+      hasSavedDraft: false,
       customButtonId: '',
       customButtonLabel: '',
+      activeDraftId: null,
       // fileIpfsProgress: undefined,
       // fileArweaveProgress: undefined,
       // thumbnailIpfsProgress: '6',
@@ -803,6 +860,7 @@ export default {
       contrastMode: "ui/contrastMode",
       statusModalMode: "ui/statusModalMode",
       activeContractId: "ui/activeContractId",
+      draftsArray: "ui/draftsArray",
       // showEditContract: 'mintFormStore/showEditContract',
       // mint form ...,
       mintedData: "mintFormStore/mintedData",
@@ -832,6 +890,7 @@ export default {
       thumbnailSource: "mintFormStore/thumbnailSource",
       showThumbnailField: "mintFormStore/showThumbnailField",
       showCropper: "mintFormStore/showCropper",
+      
     }),
 
     showEditContract() {
@@ -888,9 +947,9 @@ export default {
     }),
     initCustomMint(){
       const id = this.activeContractId
-      console.log('customMinterMap show custom mint id', id)
-      console.log('customMinterMap', customMinterMap)
-      console.log('customMinterMap[id]', customMinterMap[id])
+      // console.log('customMinterMap show custom mint id', id)
+      // console.log('customMinterMap', customMinterMap)
+      // console.log('customMinterMap[id]', customMinterMap[id])
       const showButtonId = customMinterMap[id] && customMinterMap[id].id
       const showButtonLabel = customMinterMap[id] && customMinterMap[id].label
       if(showButtonId){
@@ -1248,7 +1307,44 @@ export default {
       const inputElement = document.getElementById("thumbnailFile");
       startUploadThumbnailProcess(inputElement, this, "thumbnail");
     },
-    
+    toggleDraft(){
+      console.log('this.show', this.showDraftSave);
+      this.showDraftSave = !this.showDraftSave
+    },
+    handleSaveDraft() {
+      console.log('save as draft')
+      const newDraftId = uuidv4();
+      const dataToSave = {
+        draftId: newDraftId,
+        data: this.testMintData
+      }
+      console.log('dataToSave: ', dataToSave);
+      this.$store.dispatch("ui/updateDrafts", {data: dataToSave, action: "add"})
+        .then(() => {
+          console.log('DONE')
+          this.hasSavedDraft = true;
+          })
+        .catch(error => console.error(error));
+    },
+    toggleHasSavedDraft(newState){
+      this.hasSavedDraft = newState
+    },
+    loadDraftData(draftId){
+      
+      console.log('draftsArray', this.draftsArray);
+      const draftDataObj = this.draftsArray.find(item => item.draftId === draftId);
+      const draftData = draftDataObj.data;
+      console.log('draftData', draftData);
+      
+      if(draftData){
+        this.$store.commit("mintFormStore/setDraftData", draftData);
+        this.activeDraftId = null;
+      }
+
+    },
+    clearDraftId(){
+      this.activeDraftId = null
+    },
     // ...mapActions({
     //   setArweaveStatus: 'mintFormStore/setArweaveStatus',
     // })

@@ -198,6 +198,55 @@ export const getters = {
 
 export const mutations = {
   updateField,
+  setDraftData(state, data) {
+    console.log("SET DRAFT DATA: ", data);
+    if (data.imageName) {
+      state.title = data.imageName;
+    }
+    if (data.artistName) {
+      state.authorName = data.artistName;
+    }
+    if (data.artistNote) {
+      state.description = data.artistNote;
+    }
+    if (data.exhibition) {
+      state.series = data.exhibition;
+    }
+    if (data.totalCap) {
+      state.editions = data.totalCap;
+    }
+    if (data.royaltyFee) {
+      state.royaltyFee = data.royaltyFee;
+    }
+    if (data.fileType) {
+      state.fileType = data.fileType;
+    }
+    if (data.fileIPFSHash) {
+      state.fileIpfsHash = data.fileIPFSHash;
+      state.uploadStatus = "uploaded";
+      state.ipfsStatus = "uploaded";
+      state.fileArweaveProgress = 100;
+      state.uploadStatusTitle = "Set by Draft";
+    }
+    if (data.fileArweaveHash) {
+      state.fileArweaveHash = data.fileArweaveHash;
+      state.arweaveStatus = "uploaded";
+      state.fileArweaveProgress = "100";
+      state.uploadStatusTitle = "Set by Draft";
+    }
+    if (data.thumbnailIPFSHash) {
+      state.thumbnailIpfsHash = data.thumbnailIPFSHash;
+      state.thumbnailIpfsStatus = "uploaded";
+      state.thumbnailIpfsProgress = 100;
+      state.uploadThumbnailStatusTitle = "Set by Draft";
+    }
+    if (data.thumbnailArweaveHash) {
+      state.thumbnailArweaveHash = data.thumbnailArweaveHash;
+      state.thumbnailArweaveStatus = "uploaded";
+      state.thumbnailArweaveProgress = "100";
+      state.uploadThumbnailStatusTitle = "Set by Draft";
+    }
+  },
   setShowStatusModal(state, value) {
     console.log("settingsstatusmodal show", value);
     state.showStatusModal = value;
