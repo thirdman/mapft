@@ -98,7 +98,7 @@ export default {
       {
         src: "https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js",
       },
-
+      { src: "https://unpkg.com/3box/dist/3box.api.min.js", mode: "client" },
       // {
       //   src: "https://cdn.rawgit.com/daishihmr/vox.js/1.0.1/build/vox.min.js",
       // },
@@ -127,6 +127,7 @@ export default {
   plugins: [
     { src: "~/plugins/localStorage.js", ssr: false },
     { src: "~plugins/vue-js-modal.js" }, // mode: 'client'
+
     // { src: "~plugins/arweaveInit.js" }, // mode: 'client'
     // { src: '~plugins/web3Load.js' },
   ],

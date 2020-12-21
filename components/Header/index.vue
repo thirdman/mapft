@@ -396,6 +396,7 @@ export default {
     }
     if (process.client) {
       this.walletCheck();
+      this.getProfileData(this.walletAddress);
     }
   },
 
@@ -491,6 +492,7 @@ export default {
     ...mapActions({
       showStatusModal: "mintFormStore/showStatusModal",
       showCropperModal: "mintFormStore/showCropperModal",
+      getProfileData: "ui/getProfileData"
     }),
     toggleDevInfo(){
       this.showDevInfo = !this.showDevInfo

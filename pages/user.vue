@@ -12,7 +12,7 @@
           <p>
             User data is stored <strong>only</strong> in your browser local storage.
           </p>
-          
+          <!-- <Button @click="getProfileData(walletAddress)">get profile</Button> -->
         </div>
       </div>
       <div class="primary">
@@ -33,8 +33,8 @@
           </transition>
           <AccountHeader v-if="walletAddress" />
 
-          <label v-if="activeContractId">Active Contract</label>
-          <div class="activeContractWrap shadow" v-if="activeContractId">
+          <label v-if="walletAddresss && activeContractId">Active Contract</label>
+          <div class="activeContractWrap shadow" v-if="walletAddress && activeContractId">
             <div class="row" v-if="activeContractSymbol">
               <div class="column col-50">
                 <label class="subtitle">SYMBOL</label>
@@ -130,12 +130,19 @@ export default {
       clearActiveContractId: "ui/clearActiveContractId",
       removeUsedContractId: "ui/removeUsedContractId",
     }),
+    ...mapActions({
+      getProfileData: "ui/getProfileData"
+    }),
     goToGallery(contractId){
       this.$router.push({
         path: `/gallery/${contractId}`,
       })
     },
-    
+    // getProfileData(){
+    //   console.log('this', this)
+    //   console.log('Box', window)
+    //   console.log('Box', window.Box)
+    // }
   },
 };
 </script>

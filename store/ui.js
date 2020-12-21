@@ -1,4 +1,5 @@
 // import * as Web3 from 'web3'
+
 import { getField, updateField } from "vuex-map-fields";
 import {
   readThatShit,
@@ -32,6 +33,7 @@ export const state = () => ({
   walletStatus: "",
   walletProvider: null,
   walletNetwork: null,
+  profileObject: null,
   ensName: "",
   activeContractId: "",
   activeContractName: "",
@@ -86,6 +88,7 @@ export const getters = {
   walletNetwork: (state) => state.walletNetwork,
   walletStatus: (state) => state.walletStatus,
   ensName: (state) => state.ensName,
+  profileObject: (state) => state.profileObject,
   showSearch: (state) => state.showSearch,
   viewData: (state) => state.viewData,
   viewStatus: (state) => state.viewStatus,
@@ -171,6 +174,32 @@ export const mutations = {
   setEnsName(state, value) {
     console.log("setting ens name, ", value);
     state.ensName = value;
+  },
+  setProfileObject(state, profileObject) {
+    if (!profileObject) {
+      return;
+    }
+    const { name, description, website } = profileObject;
+    const profileImageHash =
+      profileObject &&
+      profileObject.image &&
+      profileObject.image[0] &&
+      profileObject.image[0].contentUrl["/"];
+    const profileCoverHash =
+      profileObject &&
+      profileObject.coverPhoto &&
+      profileObject.coverPhoto[0] &&
+      profileObject.coverPhoto[0].contentUrl["/"];
+
+    const tempObj = {
+      name,
+      description,
+      website,
+      profileImageHash,
+      profileCoverHash,
+    };
+
+    state.profileObject = tempObj;
   },
 
   setWalletStatus(state, value) {
@@ -546,5 +575,21 @@ export const actions = {
       }
     }
     console.log("tempDraftsArray is now: ", tempDraftsArray);
+  },
+
+  async getProfileData(dispatch, walletAddress) {
+    if (!window) {
+      return;
+    }
+    if (!walletAddress) {
+      console.log("no walletAddress");
+      return;
+    }
+    const profileObject = await BoxAPI.getProfile(walletAddress);
+    if (profileObject) {
+      console.log("dispatch", dispatch);
+      this.profileObject = profileObject;
+      dispatch.commit("setProfileObject", profileObject);
+    }
   },
 };
