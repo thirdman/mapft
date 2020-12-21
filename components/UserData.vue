@@ -173,12 +173,13 @@
   }
   .draftRow{
     border: 1px solid var(--line-color, #111);
-    padding: .25rem;
+    padding: .5rem;
     font-size: .75rem;
     border-radius: .25rem;
     margin-bottom: .5rem;
-    
     align-items: flex-start !important; // overrides the .between class alignment
+    background: var(--background-color, #eee);
+    
     .draftDate{
       display: flex;
       flex-direction: row;
@@ -261,7 +262,11 @@ export default {
   methods: {
     ...mapMutations({
       getAllContractsMeta: 'ui/getAllContractsMeta',
+      setActiveContractId: "ui/setActiveContractId",
+      clearActiveContractId: "ui/clearActiveContractId",
+      removeUsedContractId: "ui/removeUsedContractId",
     }),
+    
     setSelectedPanel(newId){
       this.selectedPanel = newId;
     },
@@ -287,7 +292,15 @@ export default {
       this.$router.push({
         path: `/gallery/${contractId}`,
       })
-    }
+    },
+    goToContract(contractId){
+      const requiredNetwork = this.$config.requiredNetwork;
+      const etherScanUrl = requiredNetwork === 'main' ? 'https://etherscan.io' : 'https://rinkeby.etherscan.io'
+      const theUrl = `${etherScanUrl}/token/${contractId}#writeContract`
+      if(window){
+        window.open(theUrl, '_blank');
+      }
+    },
   },
 
 }

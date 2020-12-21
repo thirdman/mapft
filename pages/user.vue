@@ -23,27 +23,40 @@
               </div>
               <div class="connectBody">
                 <h3>Not Connected</h3>
-                <p >Connect your Ethereum Wallet to use InfiNFT minting</p>
-                <Button
-                  fill
-                  size="large"
-                  mode="primary"
-                  @click="
-                    connectWallet({
-                      setWallet,
-                      setWalletStatus,
-                      setWalletChain,
-                      setNetworkName,
-                      setEnsName,
-                    })
-                  "
-                >
-                  Connect
-                </Button>
+                <p >Connect your Ethereum Wallet to use InfiNFT</p>
+               
               </div>
             </div>
           </transition>
           <AccountHeader v-if="walletAddress" />
+
+          <label v-if="activeContractId">Active Contract</label>
+          <div class="activeContractWrap shadow" v-if="activeContractId">
+            <div class="row" v-if="activeContractSymbol">
+              <div class="column col-50">
+                <label class="subtitle">SYMBOL</label>
+                <div>{{ activeContractSymbol || "-" }}</div>
+              </div>
+              <div class="column col-50">
+                <label class="subtitle">Name</label>
+                <div>{{ activeContractName || "-" }}</div>
+              </div>
+            </div>
+            <label class="subtitle">Address</label>
+            <div class="row between">
+              <div class="subtitle">
+                {{ activeContractId || "None Selected" }}
+              </div>
+              <Button
+                @click="clearActiveContractId(null)"
+                size="small"
+                class="inactive"
+                v-if="activeContractId"
+              >
+                Disconnnect
+              </Button>
+            </div>
+          </div>
           <div v-if="walletAddress" class="row">
             <UserData :selected="selected" />
           </div>
@@ -98,6 +111,9 @@ export default {
       devMode: "ui/devMode",
       walletAddress: "ui/walletAddress",
       activeContractId: "ui/activeContractId",
+      activeContractId: "ui/activeContractId",
+      activeContractName: "ui/activeContractName",
+      activeContractSymbol: "ui/activeContractSymbol",
       contrastMode: "ui/contrastMode",
       usedContracts: "ui/usedContracts",
     }),
@@ -105,13 +121,18 @@ export default {
   methods: {
     connectWallet,
     ...mapMutations({
-      
+      setWallet: "ui/setWallet",
+      setWalletChain: "ui/setWalletChain",
+      setActiveContractId: "ui/setActiveContractId",
+      clearActiveContractId: "ui/clearActiveContractId",
+      removeUsedContractId: "ui/removeUsedContractId",
     }),
     goToGallery(contractId){
       this.$router.push({
         path: `/gallery/${contractId}`,
       })
-    }
+    },
+    
   },
 };
 </script>

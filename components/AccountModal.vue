@@ -24,7 +24,7 @@
           />
         </button>
       </div>
-      <AccountHeader v-if="walletAddress" />
+      <!-- <AccountHeader v-if="walletAddress" /> -->
 
       <div class="account-content modalSection" v-if="walletAddress">
         <label>Active Contract</label>

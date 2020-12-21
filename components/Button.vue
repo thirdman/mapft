@@ -47,6 +47,14 @@
     // box-shadow: 0 0 0 1px var(--fill-color), 0 0 0 2px var(--ui-color);
     box-shadow: 0 0 0 1px var(--fill-color), 0 0 0 3px red;
   }
+  &:disabled{
+    outline: none;
+    cursor: not-allowed;
+    transition: none;
+    &:hover{
+      box-shadow: 0 0 0 0px var(--shadow-color, #111) !important;
+    }
+  }
   //sizes
   &.small {
     font-size: 0.75rem;

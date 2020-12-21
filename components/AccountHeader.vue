@@ -49,9 +49,13 @@ export default {
     }),
   },
   methods: {
-    // ...mapMutations({
-    // }),
-
+    ...mapMutations({
+      setWallet: "ui/setWallet",
+      setWalletChain: "ui/setWalletChain",
+      setWalletStatus: "ui/setWalletStatus",
+      setNetworkName: "ui/setNetworkName",
+      setWalletChain: "ui/setWalletChain",
+    }),
     handleDisconnect() {
       this.setWallet(null);
       this.setWalletChain("");

@@ -1020,14 +1020,6 @@ ul.heroList {
 .ctaWrap .btn.secondary:hover {
   opacity: 0.7;
 }
-#connectButton {
-  background: var(--background-color, #fff);
-  color: var(--ui-color, #111);
-  border-radius: 2rem;
-  border: 2px solid var(--ui-color);
-  text-transform: uppercase;
-  font-size: 0.75rem;
-}
 
 .aside {
   font-size: 1rem;
@@ -1232,9 +1224,8 @@ ul.heroList {
   padding: 0 0.25rem;
 }
 .headerRow .networkName {
-  position: absolute;
   display: inline-flex;
-  right: 5rem;
+  margin-right: 0.5rem;
   top: 0.95rem;
   text-transform: uppercase;
   background: var(--fill-color, #eee);
@@ -1323,15 +1314,15 @@ ul.heroList {
 
 .headerRow .profile {
   flex-basis: calc(16rem - 2px);
-  /* flex-basis: calc(6rem - 2px); */
   flex-shrink: 0;
   flex-grow: 1;
   padding: 0;
   padding-top: 0.25rem;
+  padding-right: 1rem;
   border-left: 1px dotted var(--highlight-color, #eee);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   position: relative;
 }
 
@@ -1367,17 +1358,6 @@ ul.heroList {
 .accountItem .itemIcon {
   flex-basis: 2rem;
   flex-shrink: 0;
-}
-
-.itemContent .walletLoggedOut {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-.itemContent .walletLoggedOut span,
-.itemContent .walletLoggedOut button {
-  flex-basis: 50%;
 }
 
 #accountElement {
@@ -1546,7 +1526,7 @@ ul.heroList {
 */
 @media (max-width: 568px) {
   .headerRow .profile {
-    display: none;
+    display: block;
   }
 }
 @media (max-width: 768px) {

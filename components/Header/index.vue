@@ -85,23 +85,65 @@
       <div class="profile">
         <client-only>
           <div class="modaltest" v-if="hasChainSelect">
-            <Button size="small" mode="secondary" @click="handleChainModal"
+            <Button
+              size="small"
+              mode="secondary"
+              @click="handleChainModal"
+
               >connect</Button
             >
+          </div>
+          <div class="walletInfo ">
+              <Button
+                id="connectButton"
+                mode="hero"
+                v-if="!walletAddress"
+                @click="
+                  connectWallet({
+                    setWallet,
+                    setWalletStatus,
+                    setWalletChain,
+                    setNetworkName,
+                  })
+                "
+              >
+                Connect
+              </Button>
+              <!-- <button
+                id="connectButton"
+                class="w3-button w3-block w3-black"
+                @click="
+                  connectWallet({
+                    setWallet,
+                    setWalletStatus,
+                    setWalletChain,
+                    setNetworkName,
+                  })
+                "
+              >
+                Connect
+              </button> -->
+              <span class="errorMsg danger" v-if="walletStatus === 'denied'"
+                >Wallet Denied</span
+              >
           </div>
           <div class="networkItem networkName" v-if="walletAddress && uiMode !== 'full'">
             {{walletNetwork}}
           </div>
-          <div class="minimalIcon" v-if="hasWallet && uiMode === 'minimal'">
+          <!-- <div class="minimalIcon" v-if="hasWallet && uiMode === 'minimal'">
             <button @click="handleModal" class="btn iconButton">
               <IconUser :strokeClass="contrastMode" />
             </button>
             <button @click="handleModal" class="btn iconButton caretPosition">
               <IconCaret :strokeClass="contrastMode" />
             </button>
-          </div>
+          </div> -->
+          <ProfileButton />
+          <button @click="handleModal" class="btn iconButton minimalButton">
+            <IconSettings :strokeClass="contrastMode === 'dark' ? 'light' : 'dark'" />
+          </button>
 
-          <div id="accountWrap" class="accountWrap">
+          <!-- <div id="accountWrap" class="accountWrap">
             <div id="footerAccountWrap">
               <div class="itemContent" v-if="!hasWallet">
                 <label id="footerWalletLabel" class="footerUserLabel"
@@ -139,6 +181,10 @@
                   <button @click="handleModal" class="btn iconButton">
                     <IconUser :strokeClass="contrastMode" />
                   </button>
+                  <button @click="handleModal" class="btn iconButton">
+                    <IconSettings :strokeClass="contrastMode" />
+                    <IconCaret :strokeClass="contrastMode" />
+                  </button>
                 </div>
                 
                 <div class="itemContent">
@@ -154,6 +200,7 @@
                     <button @click="handleModal" class="btn iconButton">
                       <IconSettings :strokeClass="contrastMode" />
                     </button>
+                    
                   </div>
                 </div>
               </div>
@@ -179,7 +226,7 @@
                 </svg>
               </div>
             </div>
-          </div>
+          </div> -->
         </client-only>
 
         <div class="wedgeWrap">
@@ -226,7 +273,7 @@
   </header>
 </template>
 
-<style>
+<style lang="scss">
 .header .footerUserLabel {
   display: flex;
   flex-direction: row;
@@ -273,6 +320,29 @@
   padding: 0.25rem; 
   margin: 0;
 }
+.walletInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: .5rem;
+  flex-shrink: 0;
+  
+  span, button{
+    flex-basis: 50%;
+  }
+}
+    #connectButton{
+        background: var(--background-color, #fff);
+    color: var(--ui-color, #111);
+    border-radius: 2rem;
+    border: 2px solid var(--ui-color);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+      min-width: 5rem;
+    }
+
+
 </style>
 
 <script>
