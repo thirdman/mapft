@@ -4,10 +4,13 @@
     
     <section  class="">
       <div class="tertiary">
-        <h2>User</h2>
+        <!-- <h2>&nbsp;</h2> -->
+        <br/>
+        <br/>
+        <br/>
         <div class="aside">
           <p>
-            User data are stored <strong>only</strong> in your browser local storage.
+            User data is stored <strong>only</strong> in your browser local storage.
           </p>
           
         </div>
