@@ -235,6 +235,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    > .row {
+      width: 100%;
+    }
   }
   .connectSelect{
     margin-left: -1rem;;
@@ -244,14 +248,18 @@
       display: flex;
       align-items: center;
       flex-direction: column;
+      border-left: 1px solid var(--ui-color);
       border-bottom: 1px solid var(--ui-color);
       cursor: pointer;
       p, h4{
         margin: 0;
       }
-      &:nth-child(2){
-        border-left: 1px solid var(--ui-color);
+      &:first-child{
+        border-left: 0px solid var(--ui-color);
       }
+      // &:nth-child(2){
+      //   border-left: 1px solid var(--ui-color);
+      // }
       &.selected{
         border-bottom: 1px solid transparent;
       }

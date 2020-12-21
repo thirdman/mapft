@@ -133,6 +133,7 @@
     // grid-template-rows: repeat(auto-fit, minmax(4rem, 10rem));
     grid-column-gap: 0;
     grid-row-gap: 1rem;
+    width: 100%;
     .listItem {
       display: flex;
       min-height: 5rem;

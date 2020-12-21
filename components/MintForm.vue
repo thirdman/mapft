@@ -627,9 +627,10 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         </Button>
       </div>
       <div v-if="hasSavedDraft">
-        <h4>Succes</h4>
+        <h4>Success</h4>
         <p class="small">Your draft is saved to your local browser storage. You can view & restore it from the drafts interface</p>
-        <Button @click="toggleHasSavedDraft(false)">close</Button>
+        <Button @click="goTo('/user?selected=drafts')">View Drafts</Button>
+        <Button @click="handleFinishDraft()" mode="secondary">Close & Reset</Button>
       </div>
     </div>
     <div
@@ -658,11 +659,11 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
             >{{this.customButtonLabel}}</Button>
         </div>
       </div>
-      <div class="row" style="justify-content: center">
+      <div class="row actions" style="justify-content: center">
       <Button mode="hollow" @click="handleTest">
         Preview Data
       </Button>
-      <Button mode="hollow" @click="toggleDraft" v-if="devMode">
+      <Button mode="hollow" @click="saveDraft">
         Save Draft...
       </Button>
       
@@ -936,6 +937,7 @@ export default {
       setThumbnailSource: "mintFormStore/setThumbnailSource",
       setFileInfo: "mintFormStore/setFileInfo",
       setProgress: "mintFormStore/setProgress",
+      resetMintForm: 'mintFormStore/resetMintForm',
     }),
     ...mapActions({
       // ARWEAVE
@@ -945,6 +947,9 @@ export default {
       getTransactionStatus: "arweaveStore/getTransactionStatus",
       getTransactionData: "arweaveStore/getTransactionData",
     }),
+    goTo(path){
+      this.$router.push(path);
+    },
     initCustomMint(){
       const id = this.activeContractId
       // console.log('customMinterMap show custom mint id', id)
@@ -1307,15 +1312,18 @@ export default {
       const inputElement = document.getElementById("thumbnailFile");
       startUploadThumbnailProcess(inputElement, this, "thumbnail");
     },
-    toggleDraft(){
-      console.log('this.show', this.showDraftSave);
-      this.showDraftSave = !this.showDraftSave
+    saveDraft(){
+      this.showDraftSave = true;
+      this.handleTest();
+      this.handleSaveDraft()
     },
     handleSaveDraft() {
       console.log('save as draft')
       const newDraftId = uuidv4();
+      const dateModified = new Date();
       const dataToSave = {
         draftId: newDraftId,
+        dateModified: dateModified,
         data: this.testMintData
       }
       console.log('dataToSave: ', dataToSave);
@@ -1344,6 +1352,12 @@ export default {
     },
     clearDraftId(){
       this.activeDraftId = null
+    },
+    handleFinishDraft(){
+      // hide confirmation, hide preview data, and reset the form
+      this.toggleHasSavedDraft(false);
+      this.toggleTestData(false);
+      this.resetMintForm();
     },
     // ...mapActions({
     //   setArweaveStatus: 'mintFormStore/setArweaveStatus',

@@ -43,12 +43,9 @@
               </div>
             </div>
           </transition>
-          
-         
-         
-        
+          <AccountHeader v-if="walletAddress" />
           <div v-if="walletAddress" class="row">
-            <UserData selectPanel="drafts" />
+            <UserData :selected="selected" />
           </div>
         </client-only>
       </div>
@@ -87,11 +84,14 @@ export default {
    },
    data(){
      return {
-       selectedPanel: 'drafts'
+       selected: 'contracts'
      }
    },
    mounted() {
-
+    console.log('userpage route:', this.$route);
+    console.log('userpage params:', this.$route.query);
+    const selectedQueryPanel = this.$route.query.selected;
+    this.selected = selectedQueryPanel || "contracts"
    },
   computed: {
     ...mapGetters({
@@ -100,7 +100,6 @@ export default {
       activeContractId: "ui/activeContractId",
       contrastMode: "ui/contrastMode",
       usedContracts: "ui/usedContracts",
-      draftsArray: "mintFormStore/draftsArray",
     }),
   },
   methods: {

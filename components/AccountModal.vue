@@ -24,31 +24,7 @@
           />
         </button>
       </div>
-      <div class="account-header" v-if="walletAddress">
-        <div class="row titleRow">
-          <div class="userAvatar shadow">
-            <IconUser
-              :strokeClass="contrastMode === 'dark' ? 'light' : 'dark'"
-              size="large"
-            />
-          </div>
-          <h4>User Settings</h4>
-        </div>
-        <div class="subtitle row contentRow between">
-          <div class="column">{{ walletName }}</div>
-          <Button
-            @click="handleDisconnect"
-            size="small"
-            mode="secondary"
-            v-if="walletAddress"
-          >
-            Disconnect
-          </Button>
-          
-          <!-- <div class="column">
-          </div> -->
-        </div>
-      </div>
+      <AccountHeader v-if="walletAddress" />
 
       <div class="account-content modalSection" v-if="walletAddress">
         <label>Active Contract</label>

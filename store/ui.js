@@ -538,7 +538,10 @@ export const actions = {
       console.log("this would start remove");
       if (action === "remove") {
         console.log("REMOVE");
-        const newArray = tempDraftsArray.filter((item) => item.id !== data.id);
+        const newArray = tempDraftsArray.filter(
+          (item) => item.draftId !== data.draftId
+        );
+        console.log("newArray", newArray);
         this.commit("ui/setDrafts", newArray);
       }
     }
