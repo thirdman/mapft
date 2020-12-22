@@ -48,9 +48,6 @@
         <div class="navItem">
           <nuxt-link to="/view" class="w3-button navLink">View</nuxt-link>
         </div>
-        <div class="navItem" v-if="!walletAddress">
-          <nuxt-link to="/apply" class="w3-button navLink">Apply</nuxt-link>
-        </div>
         <div class="navItem" v-if="devMode">
           <nuxt-link to="/svg" class="w3-button navLink">SVG</nuxt-link>
         </div>
