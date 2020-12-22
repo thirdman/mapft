@@ -58,6 +58,8 @@ export const state = () => ({
   showThumbnailField: false,
   showCropper: true,
   showNewMetaField: false,
+  showManualEdit: false,
+  tokenPreviewMode: "upload",
   uploadStatus: null,
   uploadStatusTitle: "",
   uploadThumbnailStatus: null,
@@ -136,10 +138,12 @@ export const getters = {
   showCropper: (state) => state.showCropper,
   thumbnailSource: (state) => state.thumbnailSource,
   cropOutputSource: (state) => state.cropOutputSource,
+  tokenPreviewMode: (state) => state.tokenPreviewMode,
   metaFieldsObj: (state) => {
     return JSON.parse(state.metaFieldsJson);
   },
   showEditContract: (state) => state.showEditContract,
+  showManualEdit: (state) => state.showManualEdit,
   getActiveContractId(state, getters, rootState) {
     const activeContractId = rootState.ui.activeContractId;
     return activeContractId;
@@ -162,8 +166,13 @@ export const getters = {
     }
     return canWeMintShit;
   },
-  previewData: (state) => {
+  tokenPreviewData: (state) => {
     const {
+      tokenPreviewMode,
+      fileIpfsHash,
+      fileArweaveHash,
+      thumbnailArweaveHash,
+      thumbnailIPFSHash,
       showThumbnailField,
       uploadStatus,
       activeContractId,
@@ -179,6 +188,11 @@ export const getters = {
     } = state;
 
     return {
+      tokenPreviewMode,
+      fileIpfsHash,
+      fileArweaveHash,
+      thumbnailArweaveHash,
+      thumbnailIPFSHash,
       showThumbnailField,
       uploadStatus,
       activeContractId,
@@ -227,25 +241,69 @@ export const mutations = {
       state.ipfsStatus = "uploaded";
       state.fileArweaveProgress = 100;
       state.uploadStatusTitle = "Set by Draft";
+      state.tokenPreviewMode = "hash";
     }
     if (data.fileArweaveHash) {
       state.fileArweaveHash = data.fileArweaveHash;
       state.arweaveStatus = "uploaded";
       state.fileArweaveProgress = "100";
       state.uploadStatusTitle = "Set by Draft";
+      state.tokenPreviewMode = "hash";
     }
     if (data.thumbnailIPFSHash) {
       state.thumbnailIpfsHash = data.thumbnailIPFSHash;
       state.thumbnailIpfsStatus = "uploaded";
       state.thumbnailIpfsProgress = 100;
       state.uploadThumbnailStatusTitle = "Set by Draft";
+      state.tokenPreviewMode = "hash";
     }
     if (data.thumbnailArweaveHash) {
       state.thumbnailArweaveHash = data.thumbnailArweaveHash;
       state.thumbnailArweaveStatus = "uploaded";
       state.thumbnailArweaveProgress = "100";
       state.uploadThumbnailStatusTitle = "Set by Draft";
+      state.tokenPreviewMode = "hash";
     }
+  },
+  setManualData(state, data) {
+    console.log("setManualData", data);
+    const { fileIPFSHash, fileArweaveHash } = data;
+    if (fileIPFSHash) {
+      state.fileIPFSHash = fileIPFSHash;
+      state.tokenPreviewMode = "hash";
+    }
+    if (fileArweaveHash) {
+      state.fileArweaveHash = fileArweaveHash;
+      state.tokenPreviewMode = "hash";
+    }
+    if (data.fileIPFSHash) {
+      state.fileIpfsHash = data.fileIPFSHash;
+      state.uploadStatus = "uploaded";
+      state.ipfsStatus = "uploaded";
+      state.fileArweaveProgress = 100;
+      state.uploadStatusTitle = "Set by Manual Edit";
+    }
+    if (data.fileArweaveHash) {
+      state.fileArweaveHash = data.fileArweaveHash;
+      state.arweaveStatus = "uploaded";
+      state.fileArweaveProgress = "100";
+      state.uploadStatusTitle = "Set by Manual Edit";
+    }
+    if (data.thumbnailIPFSHash) {
+      state.thumbnailIpfsHash = data.thumbnailIPFSHash;
+      state.thumbnailIpfsStatus = "uploaded";
+      state.thumbnailIpfsProgress = 100;
+      state.uploadThumbnailStatusTitle = "Set by Manual Edit";
+    }
+    if (data.thumbnailArweaveHash) {
+      state.thumbnailArweaveHash = data.thumbnailArweaveHash;
+      state.thumbnailArweaveStatus = "uploaded";
+      state.thumbnailArweaveProgress = "100";
+      state.uploadThumbnailStatusTitle = "Set by Manual Edit";
+    }
+  },
+  setTokenPreviewMode(state, value) {
+    state.tokenPreviewMode = value;
   },
   setShowStatusModal(state, value) {
     console.log("settingsstatusmodal show", value);
@@ -279,6 +337,11 @@ export const mutations = {
   setShowNewMetaField(state, newState) {
     state.showNewMetaField = newState;
   },
+  setShowManualEdit(state, newState) {
+    console.log("setshowManualEdit", newState);
+    state.showManualEdit = newState;
+  },
+
   setIpfsStatus(state, data) {
     console.log("setting ipfs status ", data);
     const { mode = "file", status } = data;
@@ -550,6 +613,8 @@ export const mutations = {
     state.thumbnailArweaveStatus = "";
     state.thumbnailArweaveHash = "";
     state.thumbnailArweaveProgress = null;
+
+    state.tokenPreviewMode = "upload";
   },
 };
 
@@ -598,5 +663,9 @@ export const actions = {
     const shouldShow = showCropper && showThumbnailField ? true : false;
     console.log("should show cropper? ", shouldShow);
     return shouldShow;
+  },
+  applyManualData(context, data) {
+    console.log("apply manual data, ", data);
+    context.commit("setManualData", data);
   },
 };

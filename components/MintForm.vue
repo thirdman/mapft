@@ -169,6 +169,7 @@
         <client-only>
           <FileUpload
             mode="file"
+            v-if="!showManualEdit"
             :arweaveStatus="arweaveStatus"
             :ipfsStatus="ipfsStatus"
             :setUploadStatus="setUploadStatus"
@@ -184,6 +185,36 @@
         </client-only>
         
       </div>
+      <modal
+        name="manual-modal"
+        class="manual-modal"
+        :adaptive="false"
+        :min-width="200"
+        :min-height="200"
+        :scrollable="true"
+        :reset="true"
+        width="600px"
+        height="auto"
+        :focus-trap="true"
+        :clickToClose="true"
+      >
+        <div class="top-right">
+          <button
+            @click="handleManual(false)"
+            class="btn iconButton"
+            tabindex="0"
+          >
+            <IconClose
+              :strokeClass="contrastMode"
+            />
+          </button>
+        </div>
+        <div class="modal-content">
+          <ManualEditForm /> 
+          <!-- v-if="showManualEdit"  -->
+        </div>
+      </modal>
+      
       <UploadStatus
         displayMode="inline"
         :title="uploadStatusTitle"
@@ -195,6 +226,16 @@
         :ipfsHash="fileIpfsHash"
         :contrastMode="contrastMode"
       />
+      <div class="actions fileActions">
+        <Button 
+          size="small"
+          v-if="!showManualEdit"
+          mode="hollow"
+          @click="handleManual(true)"
+        >
+          <IconEdit size="small" :strokeClass="contrastMode" /> Enter Custom Data...
+        </Button>
+      </div>
       <div class="formItem block" style="margin-top: .5rem;" v-if="devMode">
         <Button 
         size="small"
@@ -666,7 +707,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       <Button mode="hollow" @click="saveDraft">
         Save Draft...
       </Button>
-      
+      <Button @click="resetMintForm()" mode="hollow">Reset</Button>
       <!-- <button class="w3-button w3-block w3-black" id="resetFormButton" style="margin-left: .25rem;">
         Reset Form
       </button> -->
@@ -695,6 +736,12 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
   color: var(--danger-color, red);
   font-size: .75rem;
   font-family: monospace;
+}
+.fileActions{
+  margin-top: .25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .drafts{
   .loadDraft{
@@ -891,7 +938,7 @@ export default {
       thumbnailSource: "mintFormStore/thumbnailSource",
       showThumbnailField: "mintFormStore/showThumbnailField",
       showCropper: "mintFormStore/showCropper",
-      
+      showManualEdit: "mintFormStore/showManualEdit",
     }),
 
     showEditContract() {
@@ -933,11 +980,13 @@ export default {
       setIpfsHash: "mintFormStore/setIpfsHash",
       setArweaveHash: "mintFormStore/setArweaveHash",
       setShowEditContract: "mintFormStore/setShowEditContract",
+      setShowManualEdit: "mintFormStore/setShowManualEdit",
       setThumbnailUploadStatus: "mintFormStore/setThumbnailUploadStatus",
       setThumbnailSource: "mintFormStore/setThumbnailSource",
       setFileInfo: "mintFormStore/setFileInfo",
       setProgress: "mintFormStore/setProgress",
       resetMintForm: 'mintFormStore/resetMintForm',
+      setTokenPreviewMode: 'mintFormStore/setTokenPreviewMode',
     }),
     ...mapActions({
       // ARWEAVE
@@ -1161,9 +1210,11 @@ export default {
       var output = document.getElementById(parent);
       output.innerHTML = "";
       output.appendChild(read);
+      this.$store.commit("mintFormStore/setTokenPreviewMode", "upload");
     },
     unRenderImage(mode, parent = "output") {
       var output = document.getElementById(parent);
+      console.log('output', output);
       if (output) {
         output.innerHTML = "";
       }
@@ -1358,6 +1409,15 @@ export default {
       this.toggleHasSavedDraft(false);
       this.toggleTestData(false);
       this.resetMintForm();
+    },
+    handleManual(newState){
+      console.log('handleManual', newState)
+      if(newState === true){
+        this.$modal.show('manual-modal');
+      } else {
+        this.$modal.hide('manual-modal');        
+      }
+        // this.setShowManualEdit(newState);
     },
     // ...mapActions({
     //   setArweaveStatus: 'mintFormStore/setArweaveStatus',

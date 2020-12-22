@@ -92,6 +92,9 @@
   .imageLoadingWrap{
     flex-direction: column;
   }
+  #thumbnailImageElement{
+    object-fit: contain;
+  }
 }
 
 .devImageContent2{

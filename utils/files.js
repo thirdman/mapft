@@ -33,6 +33,7 @@ const openFile = async (file, context) => {
   setFileInfo({ fileName, fileType });
   toggleThumbnail(fileType);
   triggerUploadProcess();
+
   // startUploadProcess()
 };
 
