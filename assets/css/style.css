@@ -1925,38 +1925,6 @@ ul.heroList {
   border: 2px solid var(--danger-color, red);
 }
 
-/* CONTRACT SETION */
-.contractSection {
-}
-.contractSection #fieldsetContractView {
-  margin-bottom: 0.5rem;
-  background: var(--ui-color);
-  color: var(--background-color);
-  padding: 0.5rem;
-}
-.contractSection #fieldsetContractView .col-66 {
-  text-align: left;
-  flex-grow: false;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 0.75rem;
-}
-
-#userContractAddress {
-  width: 100%;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.contractSection #fieldsetContractView .col-33 {
-  text-align: right;
-  padding: 2px;
-}
-.contractSection #fieldsetContractView .btn.light {
-  border-radius: 0;
-  color: var(--ui-color);
-  font-size: 0.875rem;
-  background: var(--background-color) !important;
-}
 
 /* GENERAL FIELDSETS */
 .form .fieldset {

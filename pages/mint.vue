@@ -91,40 +91,8 @@
             </div>
           </transition>
 
-        
-          <div v-if="walletAddress" class="row">
-            <div class="contractSection column" style="flex-basis: 100%">
-              <div
-                class="fieldset formContent"
-                id="fieldsetContractView"
-                v-if="activeContractId && deployStatus !== 'completed'"
-              >
-                <!-- v-if="!showEditContract" -->
-                <label>Active Contract </label>
-                <div class="row">
-                  <div class="column col-66">
-                    <div id="userContractAddress">{{ activeContractId }}</div>
-                  </div>
-                  <div class="column col-33">
-                    <Button
-                      mode="hollow"
-                      size="small"
-                      @click="goToGallery(activeContractId)"
-                    >
-                      View Gallery
-                    </Button>
-                    <button
-                      class="btn"
-                      id="editUserContractButton"
-                      @click="handleAccountModal(true)"
-                    >
-                      <IconEdit strokeClass="light" size="small" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ActiveContractInfo v-if="walletAddress && deployStatus !== 'completed'" />
+
           <div v-if="walletAddress && deployStatus !== 'completed'" class="row">
               
             <MintForm />

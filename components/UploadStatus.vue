@@ -121,7 +121,6 @@ export default {
   props: ["displayMode", "contrastMode", "title", "ipfsStatus", "arweaveStatus", "ipfsHash", "arweaveHash", "ipfsProgress", "arweaveProgress"],
   computed: {
     ...mapGetters({
-      contrastMode: 'ui/contrastMode',
       statusModalMode: 'ui/statusModalMode',
     }),
   }

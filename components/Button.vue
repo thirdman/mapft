@@ -99,6 +99,9 @@
     &.filled{
       background: var(--line-color);
     }
+    svg{
+      margin-right: .25rem;
+    }
     .buttonGroup & {
       border-radius: 0;
       transform: none !important;

@@ -46,9 +46,9 @@
                   <p class="xsmall draftDate" v-if="item.dateModified"><IconCalendar size="small" :strokeClass="contrastMode" /> {{new Date(item.dateModified)}}</p>
                 </div>
                 <div class="column col-33 actions" v-if="item !== activeContractId">
-                  <button class="btn inactive" @click="logIt(item)">
+                  <!-- <button class="btn inactive" @click="logIt(item)">
                     log
-                  </button>
+                  </button> -->
                   <button class="btn inactive" @click="loadDraft(item)">
                     Select
                   </button>

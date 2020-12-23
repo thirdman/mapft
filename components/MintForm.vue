@@ -5,6 +5,18 @@
     class="column"
     style="flex-basis: 100%"
   >
+  <div class="errorMessage" v-if="errorMessage">
+    <div>{{this.errorMessage}}</div>
+    <Button mode="hollow" @click="() => {
+      this.activeDraftId = '';
+      this.errorMessage = '';
+      }">Close</Button>
+    <Button mode="hollow" @click="() => {
+        this.errorMessage = '';
+        this.activeDraftId = '';
+        goTo('/user?selected=drafts');
+      }">View Drafts</Button>
+  </div>
   <div class="drafts">
     <div v-if="activeDraftId" class="loadDraft">
       <label>Load Draft</label>
@@ -702,12 +714,12 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       </div>
       <div class="row actions" style="justify-content: center">
       <Button mode="hollow" @click="handleTest">
-        Preview Data
+        Preview Mint Data
       </Button>
       <Button mode="hollow" @click="saveDraft">
         Save Draft...
       </Button>
-      <Button @click="resetMintForm()" mode="hollow">Reset</Button>
+      <Button @click="resetMintForm()" mode="hollow">Reset Form</Button>
       <!-- <button class="w3-button w3-block w3-black" id="resetFormButton" style="margin-left: .25rem;">
         Reset Form
       </button> -->
@@ -722,6 +734,13 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
 .menu {
   display: flex;
   flex-direction: row;
+}
+.errorMessage{
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  background: var(--danger-color, red);
+  font-size: .875rem;
+  font-variation-settings: 'wght' 500;
 }
 .devContent {
   padding: 1rem;
@@ -872,13 +891,11 @@ export default {
     };
   },
   mounted(){
-    console.log('this.$route.query', this.$route.query);
-    console.log('this.$route.query.draft', this.$route.query.draft);
     const theDraftId = this.$route.query.draft;
     if(theDraftId){
       this.activeDraftId = theDraftId
     }
-    this.initCustomMint();
+    this.initCustomMint(); // this handles loading buttons if custom contracts are needed
   },
   data() {
     return {
@@ -894,6 +911,7 @@ export default {
       customButtonId: '',
       customButtonLabel: '',
       activeDraftId: null,
+      errorMessage: "",
       // fileIpfsProgress: undefined,
       // fileArweaveProgress: undefined,
       // thumbnailIpfsProgress: '6',
@@ -1392,12 +1410,14 @@ export default {
       
       console.log('draftsArray', this.draftsArray);
       const draftDataObj = this.draftsArray.find(item => item.draftId === draftId);
-      const draftData = draftDataObj.data;
+      const draftData = draftDataObj && draftDataObj.data;
       console.log('draftData', draftData);
       
       if(draftData){
         this.$store.commit("mintFormStore/setDraftData", draftData);
         this.activeDraftId = null;
+      } else {
+        this.errorMessage = "Error loading draft: Invalid data or draft no longer exists";
       }
 
     },

@@ -250,6 +250,7 @@ export const mutations = {
       state.uploadStatusTitle = "Set by Draft";
       state.tokenPreviewMode = "hash";
     }
+
     if (data.thumbnailIPFSHash) {
       state.thumbnailIpfsHash = data.thumbnailIPFSHash;
       state.thumbnailIpfsStatus = "uploaded";
