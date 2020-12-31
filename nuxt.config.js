@@ -127,6 +127,7 @@ export default {
   plugins: [
     { src: "~/plugins/localStorage.js", ssr: false },
     { src: "~plugins/vue-js-modal.js" }, // mode: 'client'
+    { src: "~plugins/web3ModalPlugin.js", mode: "client" }, // mode: 'client'
 
     // { src: "~plugins/arweaveInit.js" }, // mode: 'client'
     // { src: '~plugins/web3Load.js' },

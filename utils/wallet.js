@@ -20,7 +20,6 @@ const connectWallet = async (props) => {
   if (typeof window.ethereum !== "undefined") {
     // Get web3 instance
     provider = window.ethereum;
-    // console.log('provider: ', provider)
 
     try {
       // Request account access
@@ -83,6 +82,28 @@ const connectWallet = async (props) => {
 // }
 
 // Set the connected network
+const getConnectedNetwork = (net) => {
+  const connectedNetwork = Number(net);
+  switch (connectedNetwork) {
+    case 1:
+      // setNetworkClass('main-network')
+      // setNetworkName("main");
+      return "main";
+      break;
+    case 4:
+      // setNetwork("Rinkeby Test Network");
+      // setNetworkClass('rinkeby-network')
+      setNetworkName("rinkeby");
+      return "rinkeby";
+      break;
+    default:
+      // setNetwork("Private network");
+      // setNetworkClass('private-network')
+      // setNetworkName("private");
+      return "private";
+  }
+};
+
 const setConnectedNetwork = (net, setNetworkName) => {
   const connectedNetwork = Number(net);
   switch (connectedNetwork) {
@@ -142,4 +163,35 @@ const resolveEns = (address, provider, setEnsName) => {
   // }
 };
 
-export { connectWallet, handleAccountLink, setConnectedNetwork, resolveEns };
+/**GET PROVIDER TYPE
+ * gets string name of wallet
+ */
+const getProviderType = (provider) => {
+  console.log("provider", provider);
+  if (!provider) {
+    return null;
+  }
+  let providerType;
+  if (provider.isFortmatic) {
+    providerType = "fortmatic";
+  }
+  if (provider.isDapper) {
+    providerType = "dapper";
+  }
+  if (provider.isMetaMask) {
+    providerType = "metamask";
+  }
+  if (provider.is3idProvider) {
+    providerType = "3id";
+  }
+  return providerType;
+};
+
+export {
+  connectWallet,
+  handleAccountLink,
+  setConnectedNetwork,
+  resolveEns,
+  getProviderType,
+  getConnectedNetwork,
+};

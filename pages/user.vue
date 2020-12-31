@@ -33,7 +33,7 @@
           </transition>
           <AccountHeader v-if="walletAddress" />
 
-          <label v-if="walletAddresss && activeContractId">Active Contract</label>
+          <label v-if="walletAddress && activeContractId">Active Contract</label>
           <div class="activeContractWrap shadow" v-if="walletAddress && activeContractId">
             <div class="row" v-if="activeContractSymbol">
               <div class="column col-50">

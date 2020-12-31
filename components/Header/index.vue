@@ -81,6 +81,9 @@
 
       <div class="profile">
         <client-only>
+          <Button @click="handleWeb3Connect" mode="secondary">web 3</Button>
+        </client-only>
+        <client-only>
           <div class="modaltest" v-if="hasChainSelect">
             <Button
               size="small"
@@ -104,22 +107,9 @@
                   })
                 "
               >
-                Connect
+                Connect 
               </Button>
-              <!-- <button
-                id="connectButton"
-                class="w3-button w3-block w3-black"
-                @click="
-                  connectWallet({
-                    setWallet,
-                    setWalletStatus,
-                    setWalletChain,
-                    setNetworkName,
-                  })
-                "
-              >
-                Connect
-              </button> -->
+             
               <span class="errorMsg danger" v-if="walletStatus === 'denied'"
                 >Wallet Denied</span
               >
@@ -343,29 +333,14 @@
 </style>
 
 <script>
+import Web3 from "web3";
+import Web3Modal from "web3modal";
 
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { connectWallet, handleAccountLink, setConnectedNetwork } from "../../utils/wallet.js";
-
+import { connectWallet, handleAccountLink, setConnectedNetwork, getProviderType, getConnectedNetwork } from "../../utils/wallet.js";
+// import {providerOptions, connectModalTheme} from "../../utils/providerOptions";
 export default {
-  // mixins: [myMixin],
-  components: {
-    // ExampleModal,
-  }, 
-  // created() {
-  //   if (process.client) {
-  //     // handle client side
-  //     // console.log('created client')
-  //     // console.log('this.$scopedSlots', this.$scopedSlots)
-  //     // console.log('MOUNTED modal refs', this.$modal)
-  //     // this.$modal.show("cropper-modal");
-  //   }
-  //   if (process.server) {
-  //     // const { req, res, beforeNuxtRender } = context
-  //     // console.log("created server");
-  //     // console.log('this.$scopedSlots', this.$scopedSlots)
-  //   }
-  // },
+  
   mounted() {
     mounted: () => {
       this.$refs.modal.show();
@@ -410,6 +385,8 @@ export default {
       VERCEL_GIT_COMMIT_MESSAGE: "",
       VERCEL_URL: "",
       showIt: false,
+      connectStatus: "",
+      connectError: "",
     };
   },
   computed: {
@@ -499,6 +476,121 @@ export default {
         path: `/`,
       })
     },
+    async handleWeb3Connect(){
+      if(!document){
+        console('no document')
+        return
+      }
+      const web3Modal = this.$web3Modal
+      // this.$hello('mounted')
+      if(!web3Modal){
+        return
+      }
+      this.connectStatus="connecting";
+      const network = "rinkeby"// "mainnet" // rinkeby
+      // const web3Modal = new Web3Modal({
+      //   network: network, 
+      //   cacheProvider: false, // optional
+      //   providerOptions, // required
+      //   theme: connectModalTheme,
+      //   disableInjectedProvider: false,
+      // });
+      web3Modal.clearCachedProvider();
+      const provider = await web3Modal.connect().catch((error) => {
+        console.log("error here:", error);
+        this.connectStatus="error";
+        this.connectError=error;
+        this.setWalletStatus("denied");
+        // setErrorType("modalClosed");
+        // setErrorMessage(errorTypes["modalClosed"].message);
+      });
+      console.log('provider', provider);
+      this.connectStatus="connected";
+      const providerType = getProviderType(provider);
+      console.log('providerType', providerType);
+      
+      provider.autoRefreshOnNetworkChange = true;
+      const accts = await provider.enable();
+      console.log('accts', accts)
+      if (!accts[0]) {
+        console.log("error", provider);
+        throw "missing account";
+      }
+      // setAccount(accts[0])
+      this.setWalletChain("eth");
+      this.setWallet(accts[0]);
+
+      // Listen for change of account
+      if (provider && provider.on) {
+        provider.on("accountsChanged", (accts) => {
+          setWallet(accts[0]);
+        });
+      }
+      // Get network
+      const net = provider.networkVersion;
+      const connectedNetwork = getConnectedNetwork(net);
+      console.log('connectedNetwork', connectedNetwork);
+      this.setNetworkName(connectedNetwork);
+      this.setNetworkName(connectedNetwork);
+  
+  //                   setWalletStatus,
+  //                   setWalletChain,
+  //                   setNetworkName,
+    },
+  
+
+  //   web3Modal.clearCachedProvider();
+  //   const provider = await web3Modal.connect().catch((error) => {
+  //     console.log("error here:", error);
+  //     setPageStatus("error");
+  //     setErrorType("modalClosed");
+  //     setErrorMessage(errorTypes["modalClosed"].message);
+  //   });
+  //   const providerType = getProviderType(provider);
+
+  //   const web3 = new Web3(provider);
+  //   console.log("web3", web3);
+  //   if (!web3) {
+  //     console.error("no web3 provider");
+  //     setPageStatus("error");
+  //     setErrorType("noWeb3");
+  //     setErrorMessage(errorTypes["noWeb3"].message);
+  //     return null;
+  //   }
+  //   setLocalWeb3(web3);
+  //   const accounts = await web3.eth.getAccounts().catch((error) => {
+  //     console.log(error);
+  //   });
+  //   if (!accounts) {
+  //     console.log("No accounts, aborting");
+  //     return null;
+  //   }
+  //   if (accounts && accounts.length < 1) {
+  //     console.log("accounts.length < 1");
+  //   }
+  //   if (providerType === "dapper" && accounts.length < 1) {
+  //     console.error("dapper not logged in");
+  //     setPageStatus("error");
+  //     setErrorType("notSignedIn");
+  //     setErrorMessage(errorTypes["notSignedIn"].message);
+  //     return null;
+  //   }
+  //   // const currentProvider = window.web3 && window.web3.currentProvider;
+  //   const walletAddress = accounts && accounts[0];
+  //   if (!walletAddress) {
+  //     console.error("no wallet address");
+  //     setPageStatus("error");
+  //     setErrorType("noWalletAddress");
+  //     setErrorMessage(errorTypes["noWalletAddress"].message);
+  //     return null;
+  //   }
+  //   ViewerStore.walletAddress = walletAddress;
+  //   ViewerStore.provider = provider;
+
+  //   if (walletAddress) {
+  //     handleOnConnected(walletAddress);
+  //   }
+  // };
     walletCheck(){
       if(this.$route && this.$route.path === '/mint'){
         if (typeof window.ethereum !== "undefined") {

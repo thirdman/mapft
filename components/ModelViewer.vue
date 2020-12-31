@@ -160,6 +160,8 @@ export default {
   },
   methods: {
     modelData(){
+      // console.log('modelData: ', this.$props.data)
+      // console.log('modelData this.viewData:  ', this.viewData)
       const dataToReturn = this.$props.data || this.viewData
       return dataToReturn
     },
