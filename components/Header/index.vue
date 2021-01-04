@@ -487,7 +487,7 @@ export default {
         return
       }
       this.connectStatus="connecting";
-      const network = "rinkeby"// "mainnet" // rinkeby
+      const network = "mainnet"// "mainnet" // rinkeby
       // const web3Modal = new Web3Modal({
       //   network: network, 
       //   cacheProvider: false, // optional
@@ -508,9 +508,12 @@ export default {
       this.connectStatus="connected";
       const providerType = getProviderType(provider);
       console.log('providerType', providerType);
-      
-      provider.autoRefreshOnNetworkChange = true;
-      const accts = await provider.enable();
+      const accts = await web3.eth.getAccounts((error, accounts) => {
+        console.log('accts', accts);
+      }).catch((error) => {
+        console.log("error here:", error);
+      });
+      // const accts = await provider.enable();
       console.log('accts', accts)
       if (!accts[0]) {
         console.log("error", provider);
@@ -519,7 +522,8 @@ export default {
       // setAccount(accts[0])
       this.setWalletChain("eth");
       this.setWallet(accts[0]);
-
+      provider.autoRefreshOnNetworkChange = true;
+      
       // Listen for change of account
       if (provider && provider.on) {
         provider.on("accountsChanged", (accts) => {

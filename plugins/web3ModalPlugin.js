@@ -5,6 +5,13 @@ import Portis from "@portis/web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 let web3Modal;
+const requiredNetwork =
+  process.env.PROD_NETWORK ||
+  process.env.STAGING_NETWORK ||
+  process.env.DEV_NETWORK ||
+  "rinkeby";
+console.log("PLUGIN", requiredNetwork);
+
 // Vue.use(Portis);
 // Vue.use(WalletConnectProvider);
 
@@ -42,6 +49,10 @@ let web3Modal;
 function init() {
   console.log("WalletConnectProvider is", WalletConnectProvider);
   console.log("Portis is", Portis);
+  let web3ModalNetwork = "mainnet";
+  if (requiredNetwork !== "main") {
+    web3ModalNetwork = "rinkeby";
+  }
   // console.log("Fortmatic is", Fortmatic);
   // console.log(
   //   "window.web3 is",
@@ -87,6 +98,7 @@ function init() {
 
   web3Modal = new Web3Modal({
     cacheProvider: false, // optional
+    network: web3ModalNetwork,
     providerOptions, // required
     disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
   });
