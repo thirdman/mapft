@@ -10,31 +10,9 @@ const requiredNetwork =
   process.env.STAGING_NETWORK ||
   process.env.DEV_NETWORK ||
   "rinkeby";
-console.log("PLUGIN", requiredNetwork);
 
 // Vue.use(Portis);
 // Vue.use(WalletConnectProvider);
-
-// const providerOptions = {
-//   walletconnect: {
-//     package: WalletConnectProvider, // required
-//     options: {
-//       infuraId: "27e484dcd9e3efcfd25a83a78777cdf1", // required
-//     },
-//   },
-//   portis: {
-//     package: Portis, // required
-//     options: {
-//       id: "4a848529-8cb2-4d9a-8001-6e0b5172fd3c", // required
-//     },
-//   },
-//   // fortmatic: {
-//   //   package: Fortmatic, // required
-//   //   options: {
-//   //     key: "pk_live_759CBA1F99C7B3A1", // required
-//   //   },
-//   // },
-// };
 
 // const connectModalTheme = {
 //   background: "#f9f9f9",
@@ -53,23 +31,6 @@ function init() {
   if (requiredNetwork !== "main") {
     web3ModalNetwork = "rinkeby";
   }
-  // console.log("Fortmatic is", Fortmatic);
-  // console.log(
-  //   "window.web3 is",
-  //   window.web3,
-  //   "window.ethereum is",
-  //   window.ethereum
-  // );
-
-  // Check that the web page is run in a secure context,
-  // as otherwise MetaMask won't be available
-  // if (location.protocol !== "https:") {
-  //   // https://ethereum.stackexchange.com/a/62217/620
-  //   // const alert = document.querySelector("#alert-error-https");
-  //   // alert.style.display = "block";
-  //   // document.querySelector("#btn-connect").setAttribute("disabled", "disabled");
-  //   return;
-  // }
 
   // Tell Web3modal what providers we have available.
   // Built-in web browser provider (only one can exist as a time)

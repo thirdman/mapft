@@ -487,14 +487,10 @@ export default {
         return
       }
       this.connectStatus="connecting";
-      const network = "mainnet"// "mainnet" // rinkeby
-      // const web3Modal = new Web3Modal({
-      //   network: network, 
-      //   cacheProvider: false, // optional
-      //   providerOptions, // required
-      //   theme: connectModalTheme,
-      //   disableInjectedProvider: false,
-      // });
+      const requiredNetwork = this.$config.requiredNetwork;
+      // console.log('requiredNetwork', requiredNetwork)
+      // const network = "mainnet"// "mainnet" // rinkeby
+      
       web3Modal.clearCachedProvider();
       const provider = await web3Modal.connect().catch((error) => {
         console.log("error here:", error);
@@ -535,11 +531,10 @@ export default {
       const connectedNetwork = getConnectedNetwork(net);
       console.log('connectedNetwork', connectedNetwork);
       this.setNetworkName(connectedNetwork);
-      this.setNetworkName(connectedNetwork);
   
-  //                   setWalletStatus,
-  //                   setWalletChain,
-  //                   setNetworkName,
+      //                   setWalletStatus,
+      //                   setWalletChain,
+      //                   setNetworkName,
     },
   
 
