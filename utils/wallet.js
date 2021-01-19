@@ -1,6 +1,38 @@
-// import Vuex from 'vuex'
+/**
+ * INIT WEB3
+ * initialises the web3js,
+ * due to a bug in the way vercel deploys nuxt,
+ * we cannot just import as a node module.
+ * I hope this gets fixed soon.
+ *
+ * TODO: revisit
+ */
 
-// var ENS = require("ethereum-ens");
+function initWeb3(requiredNetwork = "main", infuraUrl) {
+  console.info("WEB3INIT", requiredNetwork);
+  if (window && window.web3Read) {
+    // console.log('web3read: ', window.web3Read)
+    console.info("web3read exists. Version: ", window.web3Read.version);
+    return;
+  }
+  if (!window.Web3) {
+    console.info("cannot init Web3 yet - not in window");
+    return;
+  }
+
+  const Web3 = window.Web3;
+  const web3Implementation = new Web3(
+    new Web3.providers.HttpProvider(infuraUrl)
+  );
+  if (typeof web3 !== "undefined") {
+    console.log("Web3 Detected! Current provider: ", web3.currentProvider); // eslint-disable-line
+    console.log("Web3 Detected! " + web3.currentProvider.constructor.name); // eslint-disable-line
+  } else {
+    console.log("No Web3 Detected... using HTTP Provider");
+  }
+  window.web3Read = web3Implementation;
+}
+
 /**
  * CONNECT WALLET
  */
@@ -188,6 +220,7 @@ const getProviderType = (provider) => {
 };
 
 export {
+  initWeb3,
   connectWallet,
   handleAccountLink,
   setConnectedNetwork,

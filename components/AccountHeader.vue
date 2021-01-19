@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="column titleColumn">
-            <h4>{{profileObject && profileObject.name || User}}</h4>
+            <h4>{{profileObject && profileObject.name}}</h4>
             <div class="subtitle">{{ walletName }}</div>
           </div>
           <div class="column actionColumn">

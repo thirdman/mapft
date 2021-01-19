@@ -95,9 +95,12 @@ export default {
       {
         src: "https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js",
       },
+
       {
+        type: "module",
         src: "https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js",
       },
+
       { src: "https://unpkg.com/3box/dist/3box.api.min.js", mode: "client" },
       // {
       //   src: "https://cdn.rawgit.com/daishihmr/vox.js/1.0.1/build/vox.min.js",
@@ -127,10 +130,11 @@ export default {
   plugins: [
     { src: "~/plugins/localStorage.js", ssr: false },
     { src: "~plugins/vue-js-modal.js" }, // mode: 'client'
-    { src: "~plugins/web3ModalPlugin.js", mode: "client" }, // mode: 'client'
+    { src: "~plugins/web3ModalPlugin.js", mode: "client" },
+    { src: "~plugins/web3Load.js", mode: "client" },
+    { src: "~/plugins/vue-tooltip.js", mode: "client" },
 
     // { src: "~plugins/arweaveInit.js" }, // mode: 'client'
-    // { src: '~plugins/web3Load.js' },
   ],
   /*
    ** Auto import components

@@ -81,16 +81,16 @@
 
       <div class="profile">
         <client-only>
-          <Button @click="handleWeb3Connect" mode="secondary">web 3</Button>
+          <Button @click="handleWeb3Connect" mode="secondary" v-tooltip="'Connect your Web3 Wallet'">Connnect</Button>
         </client-only>
         <client-only>
-          <div class="modaltest" v-if="hasChainSelect">
+          <div class="modaltest" v-if="hasChainSelect" >
             <Button
               size="small"
               mode="secondary"
               @click="handleChainModal"
 
-              >connect</Button
+              >Connect</Button
             >
           </div>
           <div class="walletInfo ">
@@ -114,7 +114,7 @@
                 >Wallet Denied</span
               >
           </div>
-          <div class="networkItem networkName" v-if="walletAddress && uiMode !== 'full'">
+          <div class="networkItem networkName" v-if="walletAddress && uiMode !== 'full'" v-tooltip="'Your current network'">
             {{walletNetwork}}
           </div>
           <!-- <div class="minimalIcon" v-if="hasWallet && uiMode === 'minimal'">
@@ -126,7 +126,7 @@
             </button>
           </div> -->
           <ProfileButton />
-          <button @click="handleModal" class="btn iconButton minimalButton">
+          <button @click="handleModal" class="btn iconButton minimalButton" v-tooltip="'Manage your settings'">
             <IconSettings :strokeClass="contrastMode === 'dark' ? 'light' : 'dark'" />
           </button>
 
@@ -338,7 +338,8 @@ import Web3Modal from "web3modal";
 
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { connectWallet, handleAccountLink, setConnectedNetwork, getProviderType, getConnectedNetwork } from "../../utils/wallet.js";
-// import {providerOptions, connectModalTheme} from "../../utils/providerOptions";
+
+
 export default {
   
   mounted() {
@@ -482,14 +483,11 @@ export default {
         return
       }
       const web3Modal = this.$web3Modal
-      // this.$hello('mounted')
       if(!web3Modal){
         return
       }
       this.connectStatus="connecting";
       const requiredNetwork = this.$config.requiredNetwork;
-      // console.log('requiredNetwork', requiredNetwork)
-      // const network = "mainnet"// "mainnet" // rinkeby
       
       web3Modal.clearCachedProvider();
       const provider = await web3Modal.connect().catch((error) => {
@@ -497,18 +495,17 @@ export default {
         this.connectStatus="error";
         this.connectError=error;
         this.setWalletStatus("denied");
-        // setErrorType("modalClosed");
-        // setErrorMessage(errorTypes["modalClosed"].message);
       });
       console.log('provider', provider);
       this.connectStatus="connected";
       const providerType = getProviderType(provider);
       console.log('providerType', providerType);
-      const accts = await web3.eth.getAccounts((error, accounts) => {
-        console.log('accts', accts);
-      }).catch((error) => {
-        console.log("error here:", error);
-      });
+      const accts = await provider.enable()
+      // const accts = await web3.eth.getAccounts((error, accounts) => {
+      //   console.log('accts', accts);
+      // }).catch((error) => {
+      //   console.log("error here:", error);
+      // });
       // const accts = await provider.enable();
       console.log('accts', accts)
       if (!accts[0]) {

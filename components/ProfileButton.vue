@@ -1,7 +1,7 @@
 <template>
   <div class="ProfileButton">
     <div :class="`minimalButton ${profileObject && profileObject.profileImageHash ? 'hasAvatar' : ''}`" v-if="walletAddress">
-        <button @click="handleNav('/user')" class="btn iconButton ">
+        <button @click="handleNav('/user')" class="btn iconButton " v-tooltip="'View your profile'">
           <img class="userAvatarImage"
             :src="getProfileImage(profileObject.profileImageHash)"
             v-if="profileObject && profileObject.profileImageHash"

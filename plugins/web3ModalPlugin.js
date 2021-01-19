@@ -63,8 +63,6 @@ function init() {
     providerOptions, // required
     disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
   });
-
-  console.log("Web3Modal instance is", web3Modal);
 }
 
 // Vue.use(web3Modal);
@@ -76,12 +74,12 @@ function init() {
 
 export default async ({ app, store, $axios, isHMR }, inject) => {
   if (process.client) {
-    console.log("INIT");
+    // console.log("INIT");
 
     init();
 
-    inject("hello", (msg) => console.log(`Hello ${msg}!`));
+    // inject("hello", (msg) => console.log(`Hello ${msg}!`));
     inject("web3Modal", web3Modal);
   }
-  console.log("WHAT");
+  // console.log("WHAT");
 };
