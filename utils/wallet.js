@@ -35,6 +35,8 @@ function initWeb3(requiredNetwork = "main", infuraUrl) {
 
 /**
  * CONNECT WALLET
+ * This is the older version.
+ * TODO: refactor out
  */
 
 const connectWallet = async (props) => {

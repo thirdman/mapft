@@ -479,7 +479,6 @@ export default {
     },
     async handleWeb3Connect(){
       if(!document){
-        console('no document')
         return
       }
       const web3Modal = this.$web3Modal
@@ -501,13 +500,8 @@ export default {
       const providerType = getProviderType(provider);
       console.log('providerType', providerType);
       const accts = await provider.enable()
-      // const accts = await web3.eth.getAccounts((error, accounts) => {
-      //   console.log('accts', accts);
-      // }).catch((error) => {
-      //   console.log("error here:", error);
-      // });
-      // const accts = await provider.enable();
-      console.log('accts', accts)
+      
+      // console.log('accts', accts)
       if (!accts[0]) {
         console.log("error", provider);
         throw "missing account";
@@ -528,7 +522,7 @@ export default {
       const connectedNetwork = getConnectedNetwork(net);
       console.log('connectedNetwork', connectedNetwork);
       this.setNetworkName(connectedNetwork);
-  
+      this.walletCheck(true)
       //                   setWalletStatus,
       //                   setWalletChain,
       //                   setNetworkName,
@@ -587,8 +581,10 @@ export default {
   //     handleOnConnected(walletAddress);
   //   }
   // };
-    walletCheck(){
-      if(this.$route && this.$route.path === '/mint'){
+    walletCheck(enforceCheck = false){
+      const isMintRoute = this.$route && this.$route.path === '/mint'
+      console.log({enforceCheck, isMintRoute})
+      if(isMintRoute || enforceCheck){
         if (typeof window.ethereum !== "undefined") {
           if(!this.walletNetwork){
             const newNetwork = this.setNetwork()
