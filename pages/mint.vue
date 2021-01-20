@@ -283,8 +283,10 @@ export default {
      } else {
        this.setSelectedPanel('new')
      }
-     
+    const selectedPanel = this.$route.query.selected;
+    this.selectedConnectPanel= selectedPanel || "existing" 
    },
+   
   computed: {
     ...mapGetters({
       devMode: "ui/devMode",

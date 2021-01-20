@@ -22,6 +22,7 @@
   background: var(--ui-color, #111);
   &:not(.iconButton) {
     box-shadow: 0 0px 0 0px var(--ui-color, #111);
+    border: none;
   }
   &.fill, &.full {
     width: 100%;
@@ -33,6 +34,7 @@
   }
   &:not(.iconButton):active{
     box-shadow: unset;
+    border: none;
     transform: translateY(1px) scale(.9);
     transition-duration: .1s;
     &:hover{
@@ -58,7 +60,7 @@
   //sizes
   &.small {
     font-size: 0.75rem;
-    padding: 1px 0.25rem;
+    padding: 1px 0.35rem;
   }
   &.medium {
     font-size: 0.875rem;
@@ -74,14 +76,16 @@
     // box-shadow: 0 0px 0 2px var(--ui-color, #111);
   }
   &.inactive {
-    border: 1px solid var(--ui-color, #111);
+    border: none;
+    box-shadow: 0 0 0 2px var(--ui-color, #111);
     // box-shadow: 0 0px 0 1px var(--ui-color, #111);
   }
   // MODES
   &.btnprimary {
   }
   &.btnsecondary {
-    border: 1px solid var(--ui-color, #111);
+    // border: 1px solid var(--ui-color, #111);
+    box-shadow: 0 0 0 1px var(--ui-color, #111);
     // box-shadow: 0px 0px 0 2px var(--ui-color);
     background: var(--background-color);
     color: var(--ui-color, #111);
@@ -89,7 +93,8 @@
   &.btnhollow {
     // REPLICATED a.asButton
     border-radius: 1rem;
-    border: 1px solid var(--line-color, #111);
+    border: 0px solid var(--line-color, #111);
+    box-shadow: 0 0 0 1px var(--line-color);
     background: transparent;
     padding: 2px .5rem;
     color: currentColor;
@@ -99,8 +104,8 @@
     &.filled{
       background: var(--line-color);
     }
-    svg{
-      margin-right: .25rem;
+    svg + span, svg + div{
+      margin-left: .25rem;
     }
     .buttonGroup & {
       border-radius: 0;
@@ -130,11 +135,12 @@
   &:not(.iconButton):hover {
     transform: translateY(-2px);
     // box-shadow: 0 2px 0 0px var(--shadow-color, #111);
+    border: 0px solid var(--ui-color, #111);
     box-shadow: 0 0 0 2px var(--shadow-color, #111);
   }
   &:not(.iconButton).active:hover {
     transform: translateY(-2px);
-    border: 2px solid var(--ui-color, #111);
+    border: 0px solid var(--ui-color, #111);
     box-shadow: 2px 2px 0 0px var(--shadow-color);
     // box-shadow: 0 0px 0 2px var(--ui-color, #111);
   }

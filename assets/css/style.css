@@ -786,6 +786,11 @@ a.iconButton {
   display: inline-block;
   vertical-align: middle;
 }
+.iconButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .iconButton + .iconButton {
   margin-left: 0.125rem;
 }

@@ -115,25 +115,18 @@ const connectWallet = async (props) => {
 //   }
 // }
 
-// Set the connected network
+// Get the connected network
+// Note: other networks exist and could be considered in the future
 const getConnectedNetwork = (net) => {
   const connectedNetwork = Number(net);
   switch (connectedNetwork) {
     case 1:
-      // setNetworkClass('main-network')
-      // setNetworkName("main");
       return "main";
       break;
     case 4:
-      // setNetwork("Rinkeby Test Network");
-      // setNetworkClass('rinkeby-network')
-      setNetworkName("rinkeby");
       return "rinkeby";
       break;
     default:
-      // setNetwork("Private network");
-      // setNetworkClass('private-network')
-      // setNetworkName("private");
       return "private";
   }
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="ProfileButton">
-    <div :class="`minimalButton ${profileObject && profileObject.profileImageHash ? 'hasAvatar' : ''}`" v-if="walletAddress">
+    <div :class="`minimalButton ${contrastMode} ${profileObject && profileObject.profileImageHash ? 'hasAvatar' : ''}`" v-if="walletAddress">
         <button @click="handleNav('/user')" class="btn iconButton " v-tooltip="'View your profile'">
           <img class="userAvatarImage"
             :src="getProfileImage(profileObject.profileImageHash)"
@@ -11,9 +11,6 @@
             :strokeClass="contrastMode === 'light' ? 'dark' : 'light'"
             />
         </button>
-        <!-- <button @click="handleModal" class="btn iconButton caretPosition">
-          <IconCaret :strokeClass="contrastMode" :fillClass="contrastMode" />
-        </button> -->
       </div>
   </div>
 </template>
@@ -80,9 +77,19 @@ export default {
     flex-shrink: 0;
     box-shadow: 0 0 0 1px var(--ui-color, #111);
     transition: box-shadow .3s ease-out;
-    svg{
-      // transform: scale(1);
-      // transition: transform .3s ease-out;
+    
+    // STUPID OVERRIDES FOR HEADER BUTTONS
+    &.light{
+      // background: var(--ui-color, #111);
+      background: transparent;
+      box-shadow: 0 0 0 1px var(--background-color, #111);
+      &:hover{
+      box-shadow: 0 0 0 3px var(--background-color, #111);
+      }
+    }
+    &.dark{
+      background: var(--background-color, #111);
+      box-shadow: 0 0 0 1px var(--ui-color, #111);
     }
     &:hover{
       // background: var(--fill-color, #111);

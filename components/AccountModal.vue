@@ -24,9 +24,8 @@
           />
         </button>
       </div>
-      <!-- <AccountHeader v-if="walletAddress" /> -->
-
-      <div class="account-content modalSection" v-if="walletAddress">
+      
+      <!-- <div class="account-content modalSection" v-if="walletAddress">
         <label>Active Contract</label>
         <p class="help" style="margin: 0" v-if="!activeContractId">None Selected</p>
         <div class="activeContractWrap shadow" v-if="activeContractId">
@@ -126,8 +125,7 @@
           </div>
         </div>
         
-        
-      </div>
+      </div> -->
 
       <div class="settings-content modalSection" v-if="walletAddress">
         <label>Settings</label>
@@ -514,15 +512,7 @@ export default {
   margin-bottom: 1rem;;
 }
 
-.addInterface {
-  padding: 0.5rem;
-  margin-bottom: .5rem;
-  align-items: center;
-  background: var(--fill-color, #eee);
-}
-.addInterface .btn {
-  margin-left: 0.5rem;
-}
+
 
 .activeTag {
   color: var(--success-color, #ccc);

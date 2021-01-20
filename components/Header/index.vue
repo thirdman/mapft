@@ -81,7 +81,13 @@
 
       <div class="profile">
         <client-only>
-          <Button @click="handleWeb3Connect" mode="secondary" v-tooltip="'Connect your Web3 Wallet'">Connnect</Button>
+          <Button
+          @click="handleWeb3Connect"
+          v-if="!walletAddress"
+          mode="secondary"
+          v-tooltip="'Connect your Web3 Wallet'"
+          id="connectButton"
+          >Connnect</Button>
         </client-only>
         <client-only>
           <div class="modaltest" v-if="hasChainSelect" >
@@ -89,12 +95,11 @@
               size="small"
               mode="secondary"
               @click="handleChainModal"
-
               >Connect</Button
             >
           </div>
           <div class="walletInfo ">
-              <Button
+              <!-- <Button
                 id="connectButton"
                 mode="hero"
                 v-if="!walletAddress"
@@ -108,7 +113,7 @@
                 "
               >
                 Connect 
-              </Button>
+              </Button> -->
              
               <span class="errorMsg danger" v-if="walletStatus === 'denied'"
                 >Wallet Denied</span
@@ -117,18 +122,16 @@
           <div class="networkItem networkName" v-if="walletAddress && uiMode !== 'full'" v-tooltip="'Your current network'">
             {{walletNetwork}}
           </div>
-          <!-- <div class="minimalIcon" v-if="hasWallet && uiMode === 'minimal'">
-            <button @click="handleModal" class="btn iconButton">
-              <IconUser :strokeClass="contrastMode" />
-            </button>
-            <button @click="handleModal" class="btn iconButton caretPosition">
-              <IconCaret :strokeClass="contrastMode" />
-            </button>
-          </div> -->
           <ProfileButton />
-          <button @click="handleModal" class="btn iconButton minimalButton" v-tooltip="'Manage your settings'">
-            <IconSettings :strokeClass="contrastMode === 'dark' ? 'light' : 'dark'" />
-          </button>
+          
+          <Button
+            @click.native="handleModal"
+            class="btn iconButton minimalButton"
+            :class="contrastMode"
+            v-tooltip="'Manage your settings'"
+            >
+            <IconSettings :strokeClass="contrastMode" />
+          </Button>
 
           <!-- <div id="accountWrap" class="accountWrap">
             <div id="footerAccountWrap">
@@ -337,7 +340,7 @@ import Web3 from "web3";
 import Web3Modal from "web3modal";
 
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { connectWallet, handleAccountLink, setConnectedNetwork, getProviderType, getConnectedNetwork } from "../../utils/wallet.js";
+import { connectWallet, handleAccountLink, setConnectedNetwork, getProviderType, getConnectedNetwork, initWeb3 } from "../../utils/wallet.js";
 
 
 export default {
@@ -460,7 +463,9 @@ export default {
       setShowAccount: "ui/setShowAccount",
       setShowSearch: "ui/setShowSearch",
       toggleHiddenUi: "ui/toggleHiddenUi",
+      setWallet: "ui/setWallet",
       setWalletChain: "ui/setWalletChain",
+      setNetworkName: "ui/setNetworkName",
       setDevMode: "ui/setDevMode"
     }),
 
@@ -477,10 +482,14 @@ export default {
         path: `/`,
       })
     },
+
     async handleWeb3Connect(){
-      if(!document){
-        return
-      }
+      if(!document){return}
+      // RESET
+      this.connectStatus="";
+      this.connectError=null;
+      this.setWalletStatus("");
+
       const web3Modal = this.$web3Modal
       if(!web3Modal){
         return
@@ -489,24 +498,33 @@ export default {
       const requiredNetwork = this.$config.requiredNetwork;
       
       web3Modal.clearCachedProvider();
-      const provider = await web3Modal.connect().catch((error) => {
+      console.log('window.web3', window.web3);
+      let provider
+      if(window.web3){
+        provider = window.web3.currentProvider;
+      }
+      provider = await web3Modal.connect().catch((error) => {
         console.log("error here:", error);
         this.connectStatus="error";
         this.connectError=error;
         this.setWalletStatus("denied");
+        return
       });
       console.log('provider', provider);
+      if(!provider){
+        // In case the user cancelled or rejected
+        return
+      }
       this.connectStatus="connected";
       const providerType = getProviderType(provider);
-      console.log('providerType', providerType);
+      // finally, get the user account
       const accts = await provider.enable()
       
-      // console.log('accts', accts)
       if (!accts[0]) {
         console.log("error", provider);
         throw "missing account";
       }
-      // setAccount(accts[0])
+      
       this.setWalletChain("eth");
       this.setWallet(accts[0]);
       provider.autoRefreshOnNetworkChange = true;
@@ -517,77 +535,26 @@ export default {
           setWallet(accts[0]);
         });
       }
-      // Get network
+          
+      // Get network, and check it matches the requires one for the active environment
+      // ie. dev, staging or prod
       const net = provider.networkVersion;
       const connectedNetwork = getConnectedNetwork(net);
-      console.log('connectedNetwork', connectedNetwork);
       this.setNetworkName(connectedNetwork);
       this.walletCheck(true)
-      //                   setWalletStatus,
-      //                   setWalletChain,
-      //                   setNetworkName,
     },
   
 
-  //   web3Modal.clearCachedProvider();
-  //   const provider = await web3Modal.connect().catch((error) => {
-  //     console.log("error here:", error);
-  //     setPageStatus("error");
-  //     setErrorType("modalClosed");
-  //     setErrorMessage(errorTypes["modalClosed"].message);
-  //   });
-  //   const providerType = getProviderType(provider);
 
-  //   const web3 = new Web3(provider);
-  //   console.log("web3", web3);
-  //   if (!web3) {
-  //     console.error("no web3 provider");
-  //     setPageStatus("error");
-  //     setErrorType("noWeb3");
-  //     setErrorMessage(errorTypes["noWeb3"].message);
-  //     return null;
-  //   }
-  //   setLocalWeb3(web3);
-  //   const accounts = await web3.eth.getAccounts().catch((error) => {
-  //     console.log(error);
-  //   });
-  //   if (!accounts) {
-  //     console.log("No accounts, aborting");
-  //     return null;
-  //   }
-  //   if (accounts && accounts.length < 1) {
-  //     console.log("accounts.length < 1");
-  //   }
-  //   if (providerType === "dapper" && accounts.length < 1) {
-  //     console.error("dapper not logged in");
-  //     setPageStatus("error");
-  //     setErrorType("notSignedIn");
-  //     setErrorMessage(errorTypes["notSignedIn"].message);
-  //     return null;
-  //   }
-  //   // const currentProvider = window.web3 && window.web3.currentProvider;
-  //   const walletAddress = accounts && accounts[0];
-  //   if (!walletAddress) {
-  //     console.error("no wallet address");
-  //     setPageStatus("error");
-  //     setErrorType("noWalletAddress");
-  //     setErrorMessage(errorTypes["noWalletAddress"].message);
-  //     return null;
-  //   }
-  //   ViewerStore.walletAddress = walletAddress;
-  //   ViewerStore.provider = provider;
-
-  //   if (walletAddress) {
-  //     handleOnConnected(walletAddress);
-  //   }
-  // };
     walletCheck(enforceCheck = false){
       const isMintRoute = this.$route && this.$route.path === '/mint'
       console.log({enforceCheck, isMintRoute})
       if(isMintRoute || enforceCheck){
         if (typeof window.ethereum !== "undefined") {
           if(!this.walletNetwork){
-            const newNetwork = this.setNetwork()
+            console.log('here', window.web3)
+            // const newNetwork = this.setNetwork()
+            // initWeb3(requiredNetwork, infuraUrl);
           }
           // Get web3 instance
           const provider = window.ethereum;
@@ -603,30 +570,27 @@ export default {
         }
       }
     },
-    setNetwork(){
-      const provider = window.ethereum;
-      const networkVersion = provider.networkVersion;
-      const requiredNetwork = this.$config.requiredNetwork;
-      setConnectedNetwork(networkVersion, this.setNetworkName)
-      // console.log('this.networkVersion', this.walletNetwork)
-      return this.walletNetwork;
-    },
+    // setNetwork(){
+    //   const provider = window.ethereum;
+    //   const networkVersion = provider.networkVersion;
+    //   const requiredNetwork = this.$config.requiredNetwork;
+    //   console.log('setNetworkName', setNetworkName)
+    //   setConnectedNetwork(networkVersion, this.setNetworkName)
+    //   // console.log('this.networkVersion', this.walletNetwork)
+    //   return this.walletNetwork;
+    // },
     clearActiveContractId(value) {
       this.$store.commit("ui/clearActiveContractId", value);
       this.$store.commit("mintFormStore/clearActiveContractId", value);
     },
-    setWallet(value) {
-      this.$store.commit("ui/setWallet", value);
-    },
+    
     setWalletStatus(value) {
       this.$store.commit("ui/setWalletStatus", value);
     },
     setProvider(value) {
       this.$store.commit("ui/setWalletProvider", value);
     },
-    setNetworkName(value) {
-      this.$store.commit("ui/setNetworkName", value);
-    },
+    
     handleNetworkWarning() {
       this.$modal.show("info-modal");
     },

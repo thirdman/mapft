@@ -10,28 +10,12 @@
         <div class="column col-66">
           <div id="userContractAddress">{{ activeContractId }}</div>
         </div>
-        <!-- <div class="column col-33">
-          <Button
-            mode="hollow"
-            size="small"
-            @click="goToGallery(activeContractId)"
-          >
-            View Gallery
-          </Button>
-          <button
-            class="btn"
-            id="editUserContractButton"
-            @click="handleAccountModal(true)"
-          >
-            <IconEdit strokeClass="light" size="small" />
-          </button>
-        </div> -->
       </div>
       <div class="row actions">
         <Button
             mode="hollow"
             size="small"
-            @click="handleAccountModal(true)"
+            @click="goTo('/user?selected=contracts')"
           >
             <IconEdit :strokeClass="contrastMode" size="small" /> Change Contract
           </Button>
@@ -59,7 +43,7 @@ import { mapMutations, mapGetters } from "vuex";
 
 
 export default {
-  name: "this.activeDraftId = '';",
+  name: "ActiveContractInfo",
   data() {
     return {
       

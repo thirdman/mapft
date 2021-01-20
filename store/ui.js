@@ -161,6 +161,7 @@ export const mutations = {
     state.showAccount = value;
   },
   setWalletChain(state, value) {
+    console.log("setting wallet chain: ", value);
     state.walletChain = value;
   },
   setWallet(state, account) {

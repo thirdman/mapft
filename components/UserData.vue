@@ -118,6 +118,40 @@
                 </div>
               </div>
             </div>
+            <div class="borderTop">
+              <AddContract />
+<!-- <div class="row contentRow">
+          <Button
+            @click="toggleAddInterface(true)"
+            size="small"
+            mode="secondary"
+            v-if="!showAddInterface"
+          >
+            Add custom contract...
+          </Button>
+        </div>
+        <div class="addInterface row" v-if="showAddInterface">
+          <div class="column col-100">
+            <input
+              name="Custom Contract ID"
+              id="customTokenId"
+              class="w3-input"
+              type="string"
+              max="99"
+              required
+              placeholder="Eg. 0xd0c402bcbcb5e701576..."
+              v-model="customContractId"
+            />
+          </div>
+          <div class="column col-25">
+            <Button @click="addContract">Add</Button>
+            <Button @click="toggleAddInterface(false)" mode="secondary"
+              >Cancel</Button
+            >
+          </div>
+        </div> -->
+
+            </div>
             <div class="emptyState" v-if="!usedContracts || usedContracts.length === 0">
               <div class="small">No Contracts Saved.</div>
             </div>
