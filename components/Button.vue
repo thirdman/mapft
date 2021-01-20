@@ -140,7 +140,7 @@
   }
   &:not(.iconButton).active:hover {
     transform: translateY(-2px);
-    border: 0px solid var(--ui-color, #111);
+    border: 2px solid var(--ui-color, #111);
     box-shadow: 2px 2px 0 0px var(--shadow-color);
     // box-shadow: 0 0px 0 2px var(--ui-color, #111);
   }

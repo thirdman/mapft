@@ -133,17 +133,17 @@
           <div class="column col-66">Image Optimization:<br />
             <div class="xsmall">High resolution images will be reduced for presentation purposes. <br />This does not effect original files.</div>
           </div>
-          <div class="column col-33">
+          <div class="column col-33 buttonGroup uiMode" >
             <button
-              class="btn small"
-              :class="hasImageOptimization ? 'active' : 'inactive'"
+              class="  small toggleItem"
+              :class="hasImageOptimization ? 'active' : 'notActive'"
               @click="setHasImageOptimization(true)"
             >
               Yes
             </button>
             <button
-              class="btn small"
-              :class="hasImageOptimization ? 'inactive' : 'active'"
+              class="  small toggleItem"
+              :class="hasImageOptimization ? 'notActive' : 'active'"
               @click="setHasImageOptimization(false)"
             >
               No
@@ -153,17 +153,17 @@
         </div>
         <div class="row contentRow">
           <div class="column col-66">Status Information:</div>
-          <div class="column col-33">
+          <div class="column col-33 buttonGroup uiMode">
             <button
-              class="btn small"
-              :class="statusModalMode === 'fixed' ? 'active' : 'inactive'"
+              class="toggleItem small"
+              :class="statusModalMode === 'fixed' ? 'active' : 'notActive'"
               @click="setStatusModalMode('fixed')"
             >
               Modal
             </button>
             <button
-              class="btn small"
-              :class="statusModalMode === 'inline' ? 'active' : 'inactive'"
+              class="toggleItem small"
+              :class="statusModalMode === 'inline' ? 'active' : 'notActive'"
               @click="setStatusModalMode('inline')"
             >
               Inline
@@ -442,6 +442,7 @@ export default {
       document.querySelector(':root').style.setProperty( '--custom-light-color', customTheme.lightColor);
       document.querySelector(':root').style.setProperty( '--custom-text-color', customTheme.textColor);
       document.querySelector(':root').style.setProperty( '--custom-background-color', customTheme.backgroundColor);
+      document.querySelector(':root').style.setProperty( '--custom-line-color', customTheme.lineColor);
       document.querySelector(':root').style.setProperty( '--color-mode', 'light');
     }
 

@@ -84,6 +84,7 @@ Over time I intend to migrate to main.scss
 
   --custom-color: #eee;
   --custom-fill-color: #ddd;
+  --custom-line-color: rgba(0, 0, 0, 0.2);
   --custom-light-color: #f9f9f9;
   --custom-dark-color: #fafafa;
   --custom-ui-color: #111111;
@@ -286,7 +287,7 @@ strong {
   --light-color: var(--custom-light-color, #f3f3f3);
   --text-color: var(--custom-text-color, #fff);
   --ui-color: var(--custom-ui-color, #f7e6da);
-  --line-color: rgb(0 0 0 / 18%);
+  --line-color: var(--custom-line-color, red);
   --contrast-mode: var(--custom-mode, dark);
 }
 #body.custom .pageContainer {

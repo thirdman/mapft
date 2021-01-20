@@ -180,6 +180,7 @@ const generateTheme = (config) => {
     lightColor: `hsl(${tempHue}, 43%, 92%)`,
     textColor: `hsl(${tempHue}, 4%, 7%)`,
     backgroundColor: `hsl(${tempHue}, 34%, 91%)`,
+    lineColor: `hsla(${tempHue}, 50%, 10%, 0.3)`,
   };
   console.log("themeObj", themeObj);
   return themeObj;
