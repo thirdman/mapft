@@ -70,12 +70,12 @@ Over time I intend to migrate to main.scss
 
   /* --charcoal-color: hsl(330, 7%, 20%); */
   /* --charcoal-color: hsl(330, 5%, 15%); */
-  --charcoal-color: hsl(330, 5%, 14%);
   /* --charcoal-dark-color: hsl(330, 25%, 7%); */
-  --charcoal-dark-color: hsl(330, 15%, 8%);
   /* --charcoal-light-color: hsl(330, 10%, 8%); */
-  --charcoal-light-color: hsl(330, 2%, 30%);
 
+  --charcoal-color: hsl(330, 5%, 14%);
+  --charcoal-dark-color: hsl(330, 15%, 8%);
+  --charcoal-light-color: hsl(330, 2%, 30%);
   --charcoal-fill-color: hsl(330, 0%, 24%);
   --charcoal-ui-color: hsl(330, 4%, 7%);
   --charcoal-text-color: #c0c0c0;
@@ -85,6 +85,7 @@ Over time I intend to migrate to main.scss
   --custom-color: #eee;
   --custom-fill-color: #ddd;
   --custom-light-color: #f9f9f9;
+  --custom-dark-color: #fafafa;
   --custom-ui-color: #111111;
   --custom-text-color: #333333;
   --custom-background-color: #eee;
@@ -266,7 +267,6 @@ strong {
   --light-color: var(--charcoal-light-color, #f3f3f3);
   --text-color: var(--charcoal-text-color, #fff);
   --ui-color: var(--charcoal-ui-color, #f7e6da);
-  /* --line-color: rgb(233 233 233 / 28%); */
   --line-color: rgb(233 233 233 / 18%);
   --contrast-mode: var(--charcoal-mode, dark);
 }
@@ -289,11 +289,11 @@ strong {
   --line-color: rgb(0 0 0 / 18%);
   --contrast-mode: var(--custom-mode, dark);
 }
-#body.charcoal .pageContainer {
+#body.custom .pageContainer {
   background-image: linear-gradient(
     -70deg,
-    var(--custom-dark-color) 20%,
-    var(--custom-color) 80%
+    var(--custom-background-color) 20%,
+    var(--custom-background-color) 80%
   );
   color: var(--custom-text-color, #fff);
 }

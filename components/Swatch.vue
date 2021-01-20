@@ -91,7 +91,7 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   props: ['name', 'id', 'action', 'selected'],
   mounted(){
-    console.log('this.action', this.action)
+    // console.log('this.action', this.action)
   },
   methods: {
     ...mapMutations({
@@ -99,7 +99,6 @@ export default {
     }),
     handleAction(){
       const hasAction = this.action ? true : false;
-      console.log('hasAction: ', hasAction);
       if(hasAction){
         this.action
       } else {

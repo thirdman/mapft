@@ -50,7 +50,7 @@ export const state = () => ({
   hasVerticalGridLines: false,
   statusModalMode: "fixed",
   uiMode: "minimal",
-  uiTheme: "teal",
+  uiTheme: "charcoal",
   contrastMode: "light",
   allowRotation: true,
   hideUi: true, // used in 'none' uiMode
@@ -139,6 +139,7 @@ export const mutations = {
     }
   },
   setUiTheme(state, value, rootState) {
+    console.log("setUitheme", value);
     state.uiTheme = value;
     if (process.client) {
       const doContrast = () => {
