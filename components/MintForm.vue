@@ -27,96 +27,7 @@
       </div>
     </div>
   </div>
-        <!-- SECTION TO DISPLAY ACTIVE CONTRACT-->
-    <!-- <div class="contractSection" v-if="1==2">
-    <div
-      class="fieldset formContent"
-      id="fieldsetContractView"
-      v-if="!showEditContract"
-    >
-      <label>Active Contract </label>
-      <div class="row">
-        <div class="column col-66">
-          <div id="userContractAddress">{{ activeContractId }}</div>
-        </div>
-        <div class="column col-33">
-          <button
-            class="btn"
-            id="editUserContractButton"
-            @click="handleAccountModal(true)"
-          >
-            <IconEdit strokeClass="light" size="small" />
-          </button>
-        </div>
-      </div>
-    </div>
-  
-  
     
-    <div
-      class="fieldset contractContent"
-      id="fieldsetContract"
-      v-if="showEditContract && 1===2"
-    >
-      <ValidationProvider rules="required">
-        <div
-          class="formItem required"
-          :class="classes"
-          slot-scope="{ classes, errors }"
-        >
-          <label>Contract Id</label>
-          <div>
-            <input
-              name="Contract ID"
-              oldId="j"
-              id="temporaryContractId"
-              class="w3-input"
-              type="string"
-              max="99"
-              required
-              placeholder="Eg. 0x1235..."
-              style="text-transform: uppercase"
-              v-model="temporaryContractId"
-            />
-            <div>
-              <span class="validationMessage">{{ errors && errors[0] }}</span>
-            </div>
-          </div>
-          <FormItemHelp
-            required="true"
-            message="Tokens will be minted using this contract. If you do not have one,
-              use the section below to create."
-          />
-        </div>
-      </ValidationProvider>
-
-      <div>
-        <button
-          id="loadContractButton"
-          class="w3-button w3-block w3-padding-large w3-black w3-margin-bottom"
-          @click="setActiveContractId(temporaryContractId)"
-        >
-          Load Contract
-        </button>
-      </div>
-      <div class="ctaWrap" style="padding: 0">
-        <p style="font=size: 0.875rem; margin: 0 0 0.5rem">
-          Don't have a contract ID yet?
-        </p>
-        <p>
-          <a href="#deploy" class="btn hero">Get Started »</a>
-        </p>
-      </div>
-    </div>
-
-
-  {{activeDraftId}}
-    {{this.activeDraftId}}
-    <div v-if="activeDraftId">
-      <p>active draft: {{activeDraftId}}</p>
-    </div>
-
-    </div> -->
     <div
     id="mintForm"
     class="form create column shadow"
@@ -662,16 +573,39 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       </div>
     </div>
     <!-- ACTIONS -->
-    <div
-      class="fieldset formContent"
-      style="padding-top: 0.5rem"
-      v-if="showTestMintData"
-    >
-      <ValidationInfo :testMintData="testMintData" v-if="showTestMintData" />
-      <div class="actions">
-        <Button mode="hollow" @click="toggleTestData(!showTestMintData)">
-          Hide Preview
+      <modal
+        name="validation-modal"
+        class="validation-modal"
+        :adaptive="false"
+        :min-width="200"
+        :min-height="200"
+        :scrollable="true"
+        :reset="true"
+        width="60%"
+        height="80%"
+        :focus-trap="true"
+        :clickToClose="true"
+      >
+        <div class="top-right">
+          <button
+            @click="handlePreviewModal(false)"
+            class="btn iconButton"
+            tabindex="0"
+          >
+            <IconClose
+              :strokeClass="contrastMode"
+            />
+          </button>
+        </div>
+        
+        <div class="modal-content">
+          
+          <ValidationInfo :testMintData="testMintData"  />
+          <div class="actions">
+        <Button mode="hollow" @click="handlePreviewModal(false)">
+          Hide Preview Data
         </Button>
+        
         <Button mode="hollow" @click="handleSaveDraft" v-if="devMode">
           Save As Draft
         </Button>
@@ -679,6 +613,33 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
           Re-Test
         </Button>
       </div>
+      <div v-if="hasSavedDraft">
+        <h4>Success</h4>
+        <p class="small">Your draft is saved to your local browser storage. You can view & restore it from the drafts interface</p>
+        <Button @click="goTo('/user?selected=drafts')">View Drafts</Button>
+        <Button @click="handleFinishDraft()" mode="secondary">Close & Reset</Button>
+      </div>
+        
+        </div>
+      </modal>
+    <div
+      class="fieldset formContent"
+      style="padding-top: 0.5rem"
+      v-if="showTestMintData"
+    >
+      <!-- <ValidationInfo :testMintData="testMintData" v-if="showTestMintData" />
+      <div class="actions">
+        <Button mode="hollow" @click="handlePreviewModal(!showTestMintData)">
+          Hide Preview
+        </Button>
+        
+        <Button mode="hollow" @click="handleSaveDraft" v-if="devMode">
+          Save As Draft
+        </Button>
+        <Button mode="hollow" @click="handleTest">
+          Re-Test
+        </Button>
+      </div> -->
       <div v-if="hasSavedDraft">
         <h4>Success</h4>
         <p class="small">Your draft is saved to your local browser storage. You can view & restore it from the drafts interface</p>
@@ -713,9 +674,12 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         </div>
       </div>
       <div class="row actions" style="justify-content: center">
-      <Button mode="hollow" @click="handleTest">
+        <Button mode="hollow" @click="handlePreviewModal(true)">
+          Preview Mint Data
+        </Button>
+      <!-- <Button mode="hollow" @click="handleTest">
         Preview Mint Data
-      </Button>
+      </Button> -->
       <Button mode="hollow" @click="saveDraft">
         Save Draft...
       </Button>
@@ -769,6 +733,17 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
     background: #fff;
     padding: .5rem;
   }
+}
+.validation-modal{
+  .modal-content{
+    padding: .5rem;
+    overflow: scroll;
+    height: 100%;
+  }
+  
+}
+.vm--modal{
+  overflow-y: auto;
 }
 
 /* Enter and leave animations can use different */
@@ -1438,6 +1413,14 @@ export default {
         this.$modal.hide('manual-modal');        
       }
         // this.setShowManualEdit(newState);
+    },
+     handlePreviewModal(newState){
+       this.handleTest();
+      if(newState === true){
+        this.$modal.show('validation-modal');
+      } else {
+        this.$modal.hide('validation-modal');        
+      }
     },
     // ...mapActions({
     //   setArweaveStatus: 'mintFormStore/setArweaveStatus',

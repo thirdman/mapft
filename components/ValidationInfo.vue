@@ -2,6 +2,10 @@
   <div
       class=""
     >
+    <p class="help small" style="max-width: 24rem;">
+      This shows the data that will be sent to your minting function. Minting will return an error if any items are red.
+    </p>
+    <hr class="dividerItem" />
       <label>Data To be Minted</label>
       <div class="contentRow">
         <div class="contentLabel">IPFS Hash:<br>
@@ -60,7 +64,7 @@
         <div v-if="Number.isNaN(testMintData.royaltyFee)" class="undefinedContent">Undefined/Not a number</div>
       </div>
       <div class="contentRow">
-        <div class="contentLabel">editions:<br>
+        <div class="contentLabel">Editions:<br>
           <div class="xsmall">'totalCap'</div>
         </div>
           {{testMintData.totalCap}}
