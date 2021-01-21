@@ -1,23 +1,26 @@
 <template>
-  <div class="AddContract contentRow row actions">  
-    <Button
-      @click="toggleAddInterface(true)"
-      size="small"
-      mode="secondary"
-      v-if="!showAddInterface"
-    >
-      Add Existing Contract Id...
-    </Button>
-    <Button
-      @click="() => {
-        clearActiveContractId(null);
-        goTo('/mint?selected=new');
-        }"
-      size="small"
-      mode="secondary"
-    >
-      Generate New Contract
-    </Button>
+  <div>
+    <div class="AddContract contentRow row actions">  
+      <Button
+        @click="toggleAddInterface(true)"
+        size="small"
+        mode="secondary"
+        v-if="!showAddInterface"
+      >
+        Add Existing Contract Id...
+      </Button>
+      <Button
+        @click="() => {
+          clearActiveContractId(null);
+          goTo('/mint?selected=new');
+          }"
+        size="small"
+        mode="secondary"
+      >
+        Generate New Contract
+      </Button>
+    </div>
+  
     <div class="addInterface row" v-if="showAddInterface">
       <div class="column col-66">
         <input

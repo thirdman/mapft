@@ -129,7 +129,7 @@
 
       <div class="settings-content modalSection" v-if="walletAddress">
         <label>Settings</label>
-        <div class="row contentRow">
+        <div class="row contentRow ">
           <div class="column col-66">Image Optimization:<br />
             <div class="xsmall">High resolution images will be reduced for presentation purposes. <br />This does not effect original files.</div>
           </div>
@@ -151,7 +151,7 @@
             
           </div>
         </div>
-        <div class="row contentRow">
+        <div class="row contentRow  borderTop">
           <div class="column col-66">Status Information:</div>
           <div class="column col-33 buttonGroup uiMode">
             <button
@@ -173,7 +173,7 @@
       </div>
       <div class="settings-ui modalSection">
         <label>UI</label>
-        <div class="row contentRow">
+        <div class="row contentRow  ">
           <div class="column col-66">Interface Mode</div>
           <div class="column col-33">
             <div class="buttonGroup uiMode">
@@ -201,7 +201,7 @@
             </div>
           </div>
         </div>
-        <div class="row contentRow">
+        <div class="row contentRow borderTop">
           <div class="column col-66">Color Theme</div>
           <div class="column col-33">
             <div class="buttonGroup themeGroup">
@@ -535,6 +535,15 @@ export default {
 .contentRow {
   padding: 0.25rem 0;
   font-size: .875rem;
+}
+.contentRow.borderTop{
+  padding-top: .5rem;
+  border-top: 1px dotted var(--line-color)
+}
+.contentRow.borderBottom{
+  padding-bottom: .5rem;
+  border-bottom: 1px dotted var(--line-color)
+  
 }
 .contentRow .contentLabel{
   font-variation-settings: 'wght' 600;
