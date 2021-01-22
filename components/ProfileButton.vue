@@ -48,7 +48,8 @@ export default {
     handleModal() {
       this.$modal.show("account-modal");
     },
-    getProfileImage(hash){
+    getProfileImage(hash = "QmawLNCbgvpqYvLSF9nvzbJacSuxF5taSdidfGVST8rG1F"){
+      // use defualt hash if non provided
       return `https://ipfs.io/ipfs/${hash}`
     }
   }

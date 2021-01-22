@@ -31,7 +31,7 @@
               <div class="connectBody">
                 <h3>Not Connected</h3>
                 <p >Connect your Ethereum Wallet to use InfiNFT minting</p>
-                <Button
+                <!-- <Button
                   fill
                   size="large"
                   mode="primary"
@@ -46,7 +46,7 @@
                   "
                 >
                   Connect
-                </Button>
+                </Button> -->
               </div>
             </div>
           </transition>
@@ -130,7 +130,7 @@
           <div v-if="!walletAddress" class="noAccess">
             <h4>No Wallet found.</h4>
             <p>Connect an ethereum wallet to mint tokens</p>
-            <Button
+            <!-- <Button
               size="large"
               mode="primary"
               @click="
@@ -144,7 +144,7 @@
               "
             >
               Connect
-            </Button>
+            </Button> -->
           </div>
           <div v-if="walletAddress" class="row">
             <DeployForm  />
@@ -250,7 +250,7 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { connectWallet, handleAccountLink } from "../utils/wallet";
+import { handleAccountLink } from "../utils/wallet";
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
 import ogImagePreview from '~/assets/images/preview.jpg'
 
@@ -300,7 +300,7 @@ export default {
     }),
   },
   methods: {
-    connectWallet,
+    // connectWallet,
     ...mapMutations({
       setShowAccount: "ui/setShowAccount",
       setShowSearch: "ui/setShowSearch",

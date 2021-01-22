@@ -1703,6 +1703,7 @@ ul.heroList {
   font-size: 0.875rem;
   text-align: center;
   padding: 2px 0.5rem;
+  transition: background 0.2s ease-out;
 }
 .toggleItem.selected {
   background: rgba(0, 0, 0, 0.3);

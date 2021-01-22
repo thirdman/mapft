@@ -71,13 +71,13 @@
     padding: 0.5rem 1rem;
   }
   &.active {
-    border: 2px solid var(--ui-color, #111);
-    box-shadow: 2px 2px 0 0px var(--ui-color);
+    border: 1px solid var(--ui-color, #111);
+    box-shadow: 0px 2px 0 0px var(--ui-color);
     // box-shadow: 0 0px 0 2px var(--ui-color, #111);
   }
   &.inactive {
     border: none;
-    box-shadow: 0 0 0 2px var(--ui-color, #111);
+    box-shadow: 0 0 0 1px var(--ui-color, #111);
     // box-shadow: 0 0px 0 1px var(--ui-color, #111);
   }
   // MODES
@@ -133,15 +133,15 @@
   }
   // HOVER
   &:not(.iconButton):hover {
-    transform: translateY(-2px);
+    transform: translateY(0px);
     // box-shadow: 0 2px 0 0px var(--shadow-color, #111);
     border: 0px solid var(--ui-color, #111);
-    box-shadow: 0 0 0 2px var(--shadow-color, #111);
+    box-shadow: 0 0 0 2px var(--ui-color, #111);
   }
   &:not(.iconButton).active:hover {
     transform: translateY(-2px);
     border: 2px solid var(--ui-color, #111);
-    box-shadow: 2px 2px 0 0px var(--shadow-color);
+    box-shadow: 2px 2px 0 0px var(--ui-color);
     // box-shadow: 0 0px 0 2px var(--ui-color, #111);
   }
 }

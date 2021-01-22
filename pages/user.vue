@@ -85,7 +85,7 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { connectWallet, handleAccountLink } from "../utils/wallet";
+import {  handleAccountLink } from "../utils/wallet";
 
 
 export default {
@@ -122,7 +122,6 @@ export default {
     }),
   },
   methods: {
-    connectWallet,
     ...mapMutations({
       setWallet: "ui/setWallet",
       setWalletChain: "ui/setWalletChain",

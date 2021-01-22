@@ -99,22 +99,6 @@
             >
           </div>
           <div class="walletInfo ">
-              <!-- <Button
-                id="connectButton"
-                mode="hero"
-                v-if="!walletAddress"
-                @click="
-                  connectWallet({
-                    setWallet,
-                    setWalletStatus,
-                    setWalletChain,
-                    setNetworkName,
-                  })
-                "
-              >
-                Connect 
-              </Button> -->
-             
               <span class="errorMsg danger" v-if="walletStatus === 'denied'"
                 >Wallet Denied</span
               >
@@ -133,90 +117,6 @@
             <IconSettings :strokeClass="contrastMode" />
           </Button>
 
-          <!-- <div id="accountWrap" class="accountWrap">
-            <div id="footerAccountWrap">
-              <div class="itemContent" v-if="!hasWallet">
-                <label id="footerWalletLabel" class="footerUserLabel"
-                  >Wallet</label
-                >
-                <div class="walletLoggedOut">
-                  <span class="loggedOutMsg">No Wallet</span>
-
-                  <button
-                    id="connectButton"
-                    class="w3-button w3-block w3-black"
-                    @click="
-                      connectWallet({
-                        setWallet,
-                        setWalletStatus,
-                        setWalletChain,
-                        setNetworkName,
-                      })
-                    "
-                  >
-                    Connect
-                  </button>
-                  <span class="errorMsg danger" v-if="walletStatus === 'denied'"
-                    >Wallet Denied</span
-                  >
-                  <button @click="handleModal" class="btn iconButton">
-                    <IconSettings :strokeClass="contrastMode" />
-                    <IconCaret :strokeClass="contrastMode" />
-                  </button>
-                </div>
-              </div>
-              
-              <div class="accountItem" v-if="hasWallet && uiMode !== 'minimal'">
-                <div class="itemIcon">
-                  <button @click="handleModal" class="btn iconButton">
-                    <IconUser :strokeClass="contrastMode" />
-                  </button>
-                  <button @click="handleModal" class="btn iconButton">
-                    <IconSettings :strokeClass="contrastMode" />
-                    <IconCaret :strokeClass="contrastMode" />
-                  </button>
-                </div>
-                
-                <div class="itemContent">
-                  <label id="footerWalletLabel" class="footerUserLabel"
-                    >Wallet</label
-                  >
-                  <div
-                    id="accountElement"
-                    class="user profileElement"
-                    v-if="hasWallet"
-                  >
-                    <span class="accountAddress">{{ walletName }}</span>
-                    <button @click="handleModal" class="btn iconButton">
-                      <IconSettings :strokeClass="contrastMode" />
-                    </button>
-                    
-                  </div>
-                </div>
-              </div>
-              <div class="accountItem" v-if="hasWallet && uiMode !== 'minimal'">
-                <div class="itemIcon"></div>
-                <div class="itemContent">
-                  <label id="footerContractLabel" class="footerUserLabel"
-                    >Contract</label
-                  >
-                  <div id="contractElement" class="userContent profileElement">
-                    <span>{{ activeContractId || "No User Contract" }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="wedgeWrap">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 100 100"
-                  class="wedgeSvg"
-                  preserveAspectRatio="none"
-                >
-                  <polygon fill="#000" points="0,0 100,0 100,100" />
-                </svg>
-              </div>
-            </div>
-          </div> -->
         </client-only>
 
         <div class="wedgeWrap">
@@ -340,7 +240,7 @@ import Web3 from "web3";
 import Web3Modal from "web3modal";
 
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { connectWallet, handleAccountLink, setConnectedNetwork, getProviderType, getConnectedNetwork, initWeb3 } from "../../utils/wallet.js";
+import {  handleAccountLink, setConnectedNetwork, getProviderType, getConnectedNetwork, initWeb3 } from "../../utils/wallet.js";
 
 
 export default {
@@ -458,7 +358,7 @@ export default {
     },
   },
   methods: {
-    connectWallet,
+    // connectWallet,
     ...mapMutations({
       setShowAccount: "ui/setShowAccount",
       setShowSearch: "ui/setShowSearch",
@@ -575,7 +475,7 @@ export default {
     //   const networkVersion = provider.networkVersion;
     //   const requiredNetwork = this.$config.requiredNetwork;
     //   console.log('setNetworkName', setNetworkName)
-    //   setConnectedNetwork(networkVersion, this.setNetworkName)
+    
     //   // console.log('this.networkVersion', this.walletNetwork)
     //   return this.walletNetwork;
     // },

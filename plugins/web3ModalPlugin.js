@@ -24,7 +24,8 @@ const requiredNetwork =
 
 // export default { providerOptions, connectModalTheme };
 
-function init() {
+function init(requiredNetwork, infuraUrl) {
+  console.log("init web3modal", requiredNetwork, infuraUrl);
   console.log("WalletConnectProvider is", WalletConnectProvider);
   console.log("Portis is", Portis);
   let web3ModalNetwork = "mainnet";
@@ -75,8 +76,8 @@ function init() {
 export default async ({ app, store, $axios, isHMR }, inject) => {
   if (process.client) {
     // console.log("INIT");
-
-    init();
+    const { requiredNetwork, infuraUrl } = app.$config;
+    init(requiredNetwork, infuraUrl);
 
     // inject("hello", (msg) => console.log(`Hello ${msg}!`));
     inject("web3Modal", web3Modal);

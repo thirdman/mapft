@@ -127,7 +127,8 @@ const getConnectedNetwork = (net) => {
       return "rinkeby";
       break;
     default:
-      return "private";
+      // return "private";
+      return "main";
   }
 };
 
@@ -210,6 +211,9 @@ const getProviderType = (provider) => {
   }
   if (provider.is3idProvider) {
     providerType = "3id";
+  }
+  if (provider.wc && provider.wc.protocol === "wc") {
+    providerType = "walletconnect";
   }
   return providerType;
 };
