@@ -104,8 +104,6 @@ export default {
      }
    },
    mounted() {
-    console.log('userpage route:', this.$route);
-    console.log('userpage params:', this.$route.query);
     const selectedQueryPanel = this.$route.query.selected;
     this.selected = selectedQueryPanel || "contracts"
    },
@@ -137,11 +135,6 @@ export default {
         path: `/gallery/${contractId}`,
       })
     },
-    // getProfileData(){
-    //   console.log('this', this)
-    //   console.log('Box', window)
-    //   console.log('Box', window.Box)
-    // }
   },
 };
 </script>

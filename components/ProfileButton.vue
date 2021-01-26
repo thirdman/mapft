@@ -1,6 +1,7 @@
 <template>
   <div class="ProfileButton">
     <div :class="`minimalButton ${contrastMode} ${profileObject && profileObject.profileImageHash ? 'hasAvatar' : ''}`" v-if="walletAddress">
+
         <button @click="handleNav('/user')" class="btn iconButton " v-tooltip="'View your profile'">
           <img class="userAvatarImage"
             :src="getProfileImage(profileObject.profileImageHash)"
@@ -8,6 +9,7 @@
           />
           <IconUser
             v-if="!profileObject || profileObject.profileImageHash"
+            :data-mode="contrastMode"
             :strokeClass="contrastMode === 'light' ? 'dark' : 'light'"
             />
         </button>

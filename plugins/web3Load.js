@@ -11,5 +11,7 @@ export default async ({ app, store, $axios, isHMR }, inject) => {
   if (process.client) {
     const { requiredNetwork, infuraUrl } = app.$config;
     await init(requiredNetwork, infuraUrl);
+    // const accounts = await ethereum.request({ method: "eth_accounts" });
+    // console.log("accounts", accounts);
   }
 };

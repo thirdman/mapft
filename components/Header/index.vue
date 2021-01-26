@@ -358,7 +358,6 @@ export default {
     },
   },
   methods: {
-    // connectWallet,
     ...mapMutations({
       setShowAccount: "ui/setShowAccount",
       setShowSearch: "ui/setShowSearch",
@@ -398,12 +397,10 @@ export default {
       const requiredNetwork = this.$config.requiredNetwork;
       
       web3Modal.clearCachedProvider();
-      console.log('window.web3', window.web3);
-      let provider
-      if(window.web3){
-        provider = window.web3.currentProvider;
-      }
-      provider = await web3Modal.connect().catch((error) => {
+      
+      console.log('window.ethereum', window.ethereum);
+      
+      let provider = await web3Modal.connect().catch((error) => {
         console.log("error here:", error);
         this.connectStatus="error";
         this.connectError=error;
@@ -419,7 +416,7 @@ export default {
       const providerType = getProviderType(provider);
       // finally, get the user account
       const accts = await provider.enable()
-      
+      console.log('accts', accts);
       if (!accts[0]) {
         console.log("error", provider);
         throw "missing account";
@@ -448,20 +445,22 @@ export default {
 
     walletCheck(enforceCheck = false){
       const isMintRoute = this.$route && this.$route.path === '/mint'
-      console.log({enforceCheck, isMintRoute})
+      // console.log({enforceCheck, isMintRoute})
       if(isMintRoute || enforceCheck){
         if (typeof window.ethereum !== "undefined") {
+          console.log('WALLET CHECK',  window.ethereum)
           if(!this.walletNetwork){
-            console.log('here', window.web3)
             // const newNetwork = this.setNetwork()
             // initWeb3(requiredNetwork, infuraUrl);
           }
           // Get web3 instance
           const provider = window.ethereum;
           const networkVersion = provider.networkVersion;
-          const userNetwork = this.walletNetwork;
+          //const userNetwork = this.walletNetwork;
+          const userNetwork = getConnectedNetwork(networkVersion);
           const requiredNetwork = this.$config.requiredNetwork;
-
+          // console.log('networkVersion', networkVersion)
+          // console.log('userNetwork', userNetwork)
           if(requiredNetwork !== userNetwork){
             this.$nextTick(() => {
               this.handleNetworkWarning();

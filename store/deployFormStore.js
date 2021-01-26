@@ -182,10 +182,5 @@ export const actions = {
 //   // remove(state, { todo }) {
 //   //   state.list.splice(state.list.indexOf(todo), 1)
 //   // },
-//   // setWallet(state, account) {
-//   //   console.log('set account state', account)
-//   //   console.log(account ? 'setting account true' : 'settings account false')
-//   //   state.hasWallet = account ? true : false
-//   //   state.walletAddress = account ? account : null
-//   // },
+
 // }

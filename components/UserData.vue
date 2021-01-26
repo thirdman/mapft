@@ -25,7 +25,7 @@
         <div class="connectBody"  v-if="selectedPanel === 'drafts'">
           <label>Drafts</label>
           <transition-group name="card" appear tag="div" class="listWrap">
-          <div v-for="(item, index) in draftsArray" :key="index" class="card">
+          <div v-for="(item) in draftsArray" :key="`draftItem${item.draftId}`" class="card">
               <div class="row between draftRow">
                 <div class="column col-66" style="flex-direction: column; align-items: flex-start;">
                   

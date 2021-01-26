@@ -31,22 +31,6 @@
               <div class="connectBody">
                 <h3>Not Connected</h3>
                 <p >Connect your Ethereum Wallet to use InfiNFT minting</p>
-                <!-- <Button
-                  fill
-                  size="large"
-                  mode="primary"
-                  @click="
-                    connectWallet({
-                      setWallet,
-                      setWalletStatus,
-                      setWalletChain,
-                      setNetworkName,
-                      setEnsName,
-                    })
-                  "
-                >
-                  Connect
-                </Button> -->
               </div>
             </div>
           </transition>
@@ -130,21 +114,6 @@
           <div v-if="!walletAddress" class="noAccess">
             <h4>No Wallet found.</h4>
             <p>Connect an ethereum wallet to mint tokens</p>
-            <!-- <Button
-              size="large"
-              mode="primary"
-              @click="
-                connectWallet({
-                  setWallet,
-                  setWalletStatus,
-                  setWalletChain,
-                  setNetworkName,
-                  setEnsName,
-                })
-              "
-            >
-              Connect
-            </Button> -->
           </div>
           <div v-if="walletAddress" class="row">
             <DeployForm  />
@@ -300,7 +269,6 @@ export default {
     }),
   },
   methods: {
-    // connectWallet,
     ...mapMutations({
       setShowAccount: "ui/setShowAccount",
       setShowSearch: "ui/setShowSearch",

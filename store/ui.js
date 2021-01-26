@@ -138,13 +138,15 @@ export const mutations = {
       state.hideUi = true;
     }
   },
-  setUiTheme(state, value, rootState) {
-    console.log("setUitheme", value);
+  setUiTheme(state, value) {
+    console.log("setUitheme setting to: ", value);
     state.uiTheme = value;
     if (process.client) {
       const doContrast = () => {
         const mode = getContrast();
-        this.commit("ui/setUiContrast", mode);
+        console.log("setting contrast to", mode);
+        // this.commit("ui/setUiContrast", mode);
+        state.contrastMode = mode;
       };
       setTimeout(() => doContrast(), 30);
     }
@@ -162,11 +164,9 @@ export const mutations = {
     state.showAccount = value;
   },
   setWalletChain(state, value) {
-    console.log("setting wallet chain: ", value);
     state.walletChain = value;
   },
   setWallet(state, account) {
-    console.log("set account state", account);
     console.log(account ? "setting account true" : "settings account false");
     state.hasWallet = account ? true : false;
     state.walletAddress = account ? account : null;
@@ -205,7 +205,7 @@ export const mutations = {
   },
 
   setWalletStatus(state, value) {
-    console.log("setting wallet status", value);
+    // console.log("setting wallet status", value);
     state.walletStatus = value;
   },
   setProvider(state, value) {
@@ -589,7 +589,6 @@ export const actions = {
     }
     const profileObject = await BoxAPI.getProfile(walletAddress);
     if (profileObject) {
-      console.log("dispatch", dispatch);
       this.profileObject = profileObject;
       dispatch.commit("setProfileObject", profileObject);
     }

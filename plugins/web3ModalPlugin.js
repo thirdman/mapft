@@ -11,9 +11,7 @@ const requiredNetwork =
   process.env.DEV_NETWORK ||
   "rinkeby";
 
-// Vue.use(Portis);
-// Vue.use(WalletConnectProvider);
-
+// SET MODAL THEME COLORS
 // const connectModalTheme = {
 //   background: "#f9f9f9",
 //   main: "#009fc4",
@@ -22,12 +20,8 @@ const requiredNetwork =
 //   hover: "#eee",
 // };
 
-// export default { providerOptions, connectModalTheme };
-
+//
 function init(requiredNetwork, infuraUrl) {
-  console.log("init web3modal", requiredNetwork, infuraUrl);
-  console.log("WalletConnectProvider is", WalletConnectProvider);
-  console.log("Portis is", Portis);
   let web3ModalNetwork = "mainnet";
   if (requiredNetwork !== "main") {
     web3ModalNetwork = "rinkeby";
@@ -49,13 +43,6 @@ function init(requiredNetwork, infuraUrl) {
         id: "4a848529-8cb2-4d9a-8001-6e0b5172fd3c", // required
       },
     },
-    // fortmatic: {
-    //   package: Fortmatic,
-    //   options: {
-    //     // Mikko's TESTNET api key
-    //     key: "pk_test_391E26A3B43A3350",
-    //   },
-    // },
   };
 
   web3Modal = new Web3Modal({
@@ -65,13 +52,6 @@ function init(requiredNetwork, infuraUrl) {
     disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
   });
 }
-
-// Vue.use(web3Modal);
-
-// export default ({ app }, inject) => {
-//   // Inject $hello(msg) in Vue, context and store.
-//   inject("hello", (msg) => console.log(`Hello ${msg}!`));
-// };
 
 export default async ({ app, store, $axios, isHMR }, inject) => {
   if (process.client) {
