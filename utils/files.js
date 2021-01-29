@@ -1,4 +1,3 @@
-// import '../scripts/arweaveFinal.js'
 const axios = require("axios").default;
 
 /**

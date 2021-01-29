@@ -28,16 +28,7 @@ function initWeb3(requiredNetwork = "main", infuraUrl) {
   if (typeof Web3Ethereum !== "undefined") {
     console.log("Web3Ethereum detected", Web3Ethereum);
   }
-  // if (typeof web3 !== "undefined") {
-  //   console.log("Web3 Detected! Current provider: ", web3); // eslint-disable-line
-  //   console.log("Web3 Detected! Current provider: ", web3.currentProvider); // eslint-disable-line
-  //   console.log("Web3 Detected! " + web3.currentProvider.constructor.name); // eslint-disable-line
-  //   if (web3.__isMetaMaskShim__) {
-  //     console.log("is metamask shim");
-  //   }
-  // } else {
-  //   console.log("No Web3 Detected... using HTTP Provider");
-  // }
+
   window.web3Read = web3Implementation;
 }
 
