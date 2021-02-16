@@ -898,6 +898,7 @@ export default {
       hasWallet: "ui/hasWallet",
       devMode: "ui/devMode",
       uiMode: "ui/uiMode",
+      walletAddress: "ui/walletAddress",
       contrastMode: "ui/contrastMode",
       statusModalMode: "ui/statusModalMode",
       activeContractId: "ui/activeContractId",
@@ -1324,7 +1325,7 @@ export default {
       if(this.activeContractId && !userContractAddress ){
         this.$store.commit("ui/setActiveContractId", this.activeContractId);
       }
-      mintThatShit(event, state, this);
+      mintThatShit(state, this, this.walletAddress);
     },
     handleCustomMint(id) {
       console.log('custommint id: ', id)

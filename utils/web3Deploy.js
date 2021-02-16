@@ -143,7 +143,7 @@ const deployThatShit = (state, context, walletAddress) => {
   //   "IF this is staging the factory contract should be 0x8af1b8e9dff9e2a9cfaf31766fcddb3e24040671"
   // );
 
-  const doIt = false;
+  const doIt = true;
   const web3Write = window.web3Write;
   const infuraUrl = context.$config.infuraUrl;
   // console.log("DEPLOY: infuraUrl", infuraUrl);
@@ -238,10 +238,14 @@ const deployThatShit = (state, context, walletAddress) => {
       })
       .catch((error) => {
         console.log("error", error);
-        // commit("setTransactionStatus", "error")
-        // commit("setTransactionError", error.message)
-        // commit("setPendingToken", null)
-        // commit("setTransactionId", null)
+
+        context.commit(
+          "deployFormStore/setDeployStatus",
+          "error",
+          error.message
+        );
+        context.commit("deployFormStore/setDeployErrorMessage", error);
+        console.error("the error is: ", error);
         // return error
       });
   }
