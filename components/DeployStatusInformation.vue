@@ -119,9 +119,12 @@
       >
         Get Minting
       </Button>
-      <Button size="large" :fill="false" @click="handleModal" mode="secondary">
+      <Button size="large" :fill="false" @click="goTo('/user')"  mode="secondary">
         View Settings
       </Button>
+      <!-- <Button size="large" :fill="false" @click="handleModal" mode="secondary">
+        View Settings
+      </Button> -->
     </div>
   </div>
 </template>
@@ -255,6 +258,9 @@ export default {
         this.$store.commit('ui/setStatusModalMode', 'inline')
         // this.$modal.hide('status-modal')
       }
+    },
+    goTo(path){
+      this.$router.push(path);
     },
     handleModal() {
       this.$store.commit('deployFormStore/resetDeployForm')

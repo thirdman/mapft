@@ -652,7 +652,6 @@ export const actions = {
     var contractSVG = web3.eth.contract(abiSVG).at(svgContractAddressRinkeby);
     console.log("active contract: ", contractSVG);
     // const tempData = { name: state.name, symbol: state.symbol }
-    // deployThatShit(event, state, this);
     const weiValue = 50000000000000000; // rinkeby
     // const weiValue = 100000000000000000 // main
     const canMint = await context.dispatch("canMint", {

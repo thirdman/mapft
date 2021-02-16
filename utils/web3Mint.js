@@ -709,14 +709,6 @@ const mintThatShit = (event, state, rootContext) => {
     totalCap,
     fileType,
   });
-  // artistName = document.getElementById('a');
-  // imageName = document.getElementById('b');
-  // artistNote = document.getElementById('c');
-  // exhibition = document.getElementById('d');
-  // royaltyFee = document.getElementById('e');
-  // totalCap = document.getElementById('f');
-  // fileType = document.getElementById('g');
-  // mintButton = document.getElementById('h');
   console.log("context: ", context);
   context.commit("mintFormStore/setMintStatus", "confirming");
   if (doIt) {

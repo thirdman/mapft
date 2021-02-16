@@ -19,7 +19,7 @@ function initWeb3(requiredNetwork = "main", infuraUrl) {
     console.info("cannot init Web3 yet - not in window");
     return;
   }
-
+  const Web3 = window.Web3;
   const Web3Ethereum = window.ethereum;
   const web3Implementation = new Web3(
     new Web3.providers.HttpProvider(infuraUrl)

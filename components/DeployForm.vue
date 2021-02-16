@@ -361,7 +361,8 @@ export default {
     handleDeploy2() {
       // this is to pass through context. Probably can be refctored
       const state = this.$store.state.mintFormStore;
-      this.$store.dispatch("deployFormStore/handleDeploy", event, state, this);
+      const walletAddress = this.walletAddress
+      this.$store.dispatch("deployFormStore/handleDeploy",  {walletAddress});
     },
     ...mapMutations({
       setDeployStatus: "deployFormStore/setDeployStatus",

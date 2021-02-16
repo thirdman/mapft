@@ -127,31 +127,33 @@ var abiDEPLOY = [
  * The main deploy function.
  * Most UI functionality is moved out of here, and  called using 'context'
  */
-const deployThatShit = (state, context, walletAddress) => {
-  // console.log("DEPLOYTHTATSHIT context: ", context);
+const deployThatShit = (event, state, context) => {
+  console.log("DEPLOYTHTATSHIT context: ", context);
   const network = context.$config.network;
   const requiredNetwork = context.$config.requiredNetwork;
   const factoryContract = context.$config.factoryContract;
   const ENV = context.$config.VERCEL_ENV || "development";
-  // console.log("requiredNetwork", requiredNetwork);
-  // console.log("factoryContract", factoryContract);
-  // console.log("ENV", ENV);
-  // console.log(
-  //   "IF this is production the factory contract should be 0x677444A94D7ba549aCAB94dA8767E1145E001AaA"
-  // );
-  // console.log(
-  //   "IF this is staging the factory contract should be 0x8af1b8e9dff9e2a9cfaf31766fcddb3e24040671"
-  // );
+  console.log("requiredNetwork", requiredNetwork);
+  console.log("factoryContract", factoryContract);
+  console.log("ENV", ENV);
+  console.log(
+    "IF this is production the factory contract should be 0x677444A94D7ba549aCAB94dA8767E1145E001AaA"
+  );
+  console.log(
+    "IF this is staging the factory contract should be 0x8af1b8e9dff9e2a9cfaf31766fcddb3e24040671"
+  );
 
-  const doIt = false;
-  const web3Write = window.web3Write;
+  const doIt = true;
   const infuraUrl = context.$config.infuraUrl;
-  // console.log("DEPLOY: infuraUrl", infuraUrl);
-  // console.log("factoryContract: ", factoryContract);
-  // console.log("walletAddress: ", walletAddress);
-  if (!web3Write) {
-    alert("no writable web3. Pls reload. If error persists contact discord");
-  }
+  console.log("DEPLOY: infuraUrl", infuraUrl);
+
+  // TODO: move this into .env variables
+  // const masterContractAddress =
+  //   network === "rinkeby"
+  //     ? CONSTANTS.InfinftContract.rinkeby
+  //     : CONSTANTS.InfinftContract.main;
+  // console.log("masterContractAddress: ", masterContractAddress);
+  console.log("factoryContract: ", factoryContract);
   if (!network) {
     console.error("no wallet network set");
     context.commit(
@@ -166,6 +168,10 @@ const deployThatShit = (state, context, walletAddress) => {
   }
 
   context.commit("deployFormStore/setDeployStatus", "confirming");
+  // OLD WAY USING METAMASK eth
+  // var contract = web3.eth
+  //   .contract(abiDEPLOY)
+  //   .at('0x677444A94D7ba549aCAB94dA8767E1145E001AaA')
 
   // MAP STATE INTO EXISTING MIT FORM VARIABLES
   const contractName = state.name;
@@ -178,73 +184,73 @@ const deployThatShit = (state, context, walletAddress) => {
     });
     return null;
   }
+
   if (doIt) {
-    const deployCONTRACTnew = new web3Write.eth.Contract(
-      abiDEPLOY,
-      factoryContract
-    );
-    console.log("deployCONTRACTnew", deployCONTRACTnew);
-    const options = { value: 100000000000000000, from: walletAddress };
-    deployCONTRACTnew.methods
-      .createContract(contractName, contractSymbol)
-      .send(options)
-      .on("transactionHash", function (transactionId) {
-        console.log("transactionId", transactionId);
-        context.commit("deployFormStore/setDeployTransactionId", transactionId);
-        context.commit("deployFormStore/setDeployStatus", "working");
-      })
-      // .on("confirmation", function (confirmationNumber, receipt) {
-      //   console.log("confirmationNumber, receipt", confirmationNumber, receipt);
-      //   // const transactionId = receipt.transactionHash
-      //   // console.log("MINT confirmation: ", receipt);
-      //   if (receipt.status === true) {
-      //     console.log("is true, shoulr return");
-      //     // return
-      //   }
-      //   if (confirmationNumber > 4) {
-      //     context.commit("deployFormStore/setDeployStatus", "stillWorking");
-      //   }
-      //   if (confirmationNumber < 8) {
-      //     context.commit("deployFormStore/setDeployStatus", "stillWorkingMore");
-      //   }
-      //   if (confirmationNumber < 30) {
-      //     context.commit("deployFormStore/setDeployStatus", "checkTransaction");
-      //     // setDeployStatus('checkTransaction')
-      //   }
+    // TODO: move these into env variables
 
-      //   // commit("setTransactionId", transactionId)
-      //   // commit("setPendingCount", 0)
-      //   // commit("setTemplateStatus", "completed")
-      // })
-      .then((completedTransaction) => {
-        console.log("completedTransaction", completedTransaction);
-        if (completedTransaction.status === true) {
-          context.commit("deployFormStore/setDeployStatus", "completed");
-          const events = completedTransaction.events;
-          const ownershipEvent = events.OwnershipTransferred;
-          const newAddress = ownershipEvent[0].address;
-          const contractData = {
-            contractAddress: newAddress,
-            contractName,
-            contractSymbol,
-          };
-          console.log("DEPLOY contract data to set = ", contractData);
+    const contractDEPLOY = web3.eth.contract(abiDEPLOY).at(factoryContract);
+    if (!contractDEPLOY) {
+      console.error("no contractDEPLOY");
+      return null;
+    }
 
-          context.dispatch("deployFormStore/setContractData", contractData);
+    contractDEPLOY.createContract(
+      contractName,
+      contractSymbol,
+      { value: 100000000000000000 },
+      (err, result) => {
+        if (!err) {
+          console.log("contract.createContract deploy result: ", result);
+          const activeTransactionId = result;
+          context.commit(
+            "deployFormStore/setDeployTransactionId",
+            activeTransactionId
+          );
+          context.commit("deployFormStore/setDeployStatus", "working");
+
+          // THIS CALLS THE RECURSIVE FUNCTION UNTIL A RESULT IS FOUND
+          recursiveFunction(60, activeTransactionId, context)
+            .then((completedTransaction) => {
+              console.log(
+                "DEPLOY completed, completedTransaction obj ",
+                completedTransaction
+              );
+              if (completedTransaction.status === true) {
+                context.commit("deployFormStore/setDeployStatus", "completed");
+
+                const newAddress = completedTransaction.logs[0].address;
+                const contractData = {
+                  contractAddress: newAddress,
+                  contractName,
+                  contractSymbol,
+                };
+                console.log("DEPLOY contract data to set = ", contractData);
+
+                context.dispatch(
+                  "deployFormStore/setContractData",
+                  contractData
+                );
+              } else {
+                console.info("NOTE: completedTransaction.status !== true");
+                context.commit("deployFormStore/setDeployStatus", "timeout");
+              }
+            })
+            .catch(function (err) {
+              console.log("oops:" + err);
+            });
         } else {
-          console.info("NOTE: completedTransaction.status !== true");
-          context.commit("deployFormStore/setDeployStatus", "timeout");
+          console.log("Erro: ", err);
+          context.commit(
+            "deployFormStore/setDeployStatus",
+            "error",
+            err.message
+          );
+          context.commit("deployFormStore/setDeployErrorMessage", err);
+          console.error("the error is: ", err);
         }
-      })
-      .catch((error) => {
-        console.log("error", error);
-        // commit("setTransactionStatus", "error")
-        // commit("setTransactionError", error.message)
-        // commit("setPendingToken", null)
-        // commit("setTransactionId", null)
-        // return error
-      });
-  }
+      }
+    );
+  } // end of doit
 };
 
 /**
