@@ -5,8 +5,8 @@
             <div class="userAvatar shadow">
               <img class="userAvatarImage" :src="getProfileImage(profileObject.profileImageHash)" v-if="profileObject && profileObject.profileImageHash" />
               <IconUser
-                v-if="!profileObject || profileObject.profileImageHash"
-                :strokeClass="contrastMode"
+                v-if="!profileObject || !profileObject.profileImageHash"
+                :strokeClass="contrastMode === 'dark' ? 'light' : 'dark'"
                 size="large"
               />
             </div>

@@ -8,9 +8,9 @@
             v-if="profileObject && profileObject.profileImageHash"
           />
           <IconUser
-            v-if="!profileObject || profileObject.profileImageHash"
+            v-if="!profileObject || !profileObject.profileImageHash"
             :data-mode="contrastMode"
-            :strokeClass="contrastMode === 'light' ? 'dark' : 'light'"
+            :strokeClass="contrastMode"
             />
         </button>
       </div>
