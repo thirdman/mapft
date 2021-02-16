@@ -145,8 +145,8 @@ export const mutations = {
       const doContrast = () => {
         const mode = getContrast();
         console.log("setting contrast to", mode);
-        // this.commit("ui/setUiContrast", mode);
-        state.contrastMode = mode;
+        this.commit("ui/setUiContrast", mode);
+        // state.contrastMode = mode;
       };
       setTimeout(() => doContrast(), 30);
     }

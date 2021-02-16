@@ -73,7 +73,7 @@
       
         <div class="connectBody" v-if="selectedPanel === 'contracts'">
           <label>Previously used contracts</label>
-          <div slot="content" class="content">
+          <div slot="content" class="content" style="width: 100%">
             <div v-for="(item, index) in usedContracts" :key="index">
               <div class="row between contractRow">
                 <span class="column col-66">{{ item }}</span>
@@ -212,7 +212,7 @@
     border-radius: .25rem;
     margin-bottom: .5rem;
     align-items: flex-start !important; // overrides the .between class alignment
-    background: var(--background-color, #eee);
+    // background: var(--background-color, #eee);
     
     .draftDate{
       display: flex;

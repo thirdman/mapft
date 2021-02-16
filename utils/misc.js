@@ -184,13 +184,6 @@ const generateTheme = (config) => {
   };
   console.log("themeObj", themeObj);
   return themeObj;
-  // --charcoal-color: hsl(330, 5%, 14%);
-  // --charcoal-dark-color: hsl(330, 15%, 8%);
-  // --charcoal-light-color: hsl(330, 2%, 30%);
-  // --charcoal-fill-color: hsl(330, 0%, 24%);
-  // --charcoal-ui-color: hsl(330, 4%, 7%);
-  // --charcoal-text-color: #c0c0c0;
-  // --charcoal-background-color: hsl(320, 6%, 90%);
 };
 
 /**

@@ -568,6 +568,6 @@ export default {
   font-size: 0.675rem;
 }
 .actions > button {
-  margin: 0.25rem;
+  margin: 0 0.25rem;
 }
 </style>
