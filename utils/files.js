@@ -418,9 +418,9 @@ const pinFileToIPFS = async (file, context, mode = "file") => {
       maxContentLength: "Infinity", //this is needed to prevent axios from erroring out with large files
       headers: {
         "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
-        pinata_api_key: "abd0f6e2c70d4402bd20",
+        pinata_api_key: "d54255ab4e1c81215e4d",
         pinata_secret_api_key:
-          "c64d6fb2448a4cae28ef8e220cf4c86991ea44ce4eab706ae6f02e7a8b3b0fe6",
+          "7d8e12e2996113a9524baa7aae075c5f5ac5e0dc6d64cf7fc95a9b1d3333ecb9",
       },
       withCredentials: true,
       onUploadProgress: (ProgressEvent) => {
@@ -479,9 +479,9 @@ const pinThumbnailFileToIPFS = async (sourceFile, context) => {
       maxContentLength: "Infinity", //this is needed to prevent axios from erroring out with large files
       headers: {
         "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
-        pinata_api_key: "abd0f6e2c70d4402bd20",
+        pinata_api_key: "d54255ab4e1c81215e4d",
         pinata_secret_api_key:
-          "c64d6fb2448a4cae28ef8e220cf4c86991ea44ce4eab706ae6f02e7a8b3b0fe6",
+          "7d8e12e2996113a9524baa7aae075c5f5ac5e0dc6d64cf7fc95a9b1d3333ecb9",
       },
       withCredentials: true,
       onUploadProgress: (ProgressEvent) => {
@@ -509,9 +509,9 @@ const removePinFromIPFS = (hashToUnpin) => {
   return axios
     .delete(url, {
       headers: {
-        pinata_api_key: "abd0f6e2c70d4402bd20",
+        pinata_api_key: "d54255ab4e1c81215e4d",
         pinata_secret_api_key:
-          "c64d6fb2448a4cae28ef8e220cf4c86991ea44ce4eab706ae6f02e7a8b3b0fe6",
+          "7d8e12e2996113a9524baa7aae075c5f5ac5e0dc6d64cf7fc95a9b1d3333ecb9",
       },
     })
     .then((response) => {
