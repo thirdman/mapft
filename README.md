@@ -35,3 +35,9 @@ Notes:
 ```
 npm run build
 ```
+
+### Bugs
+
+Apparently with this combination of npm modules, the sass-loader fails when upgraded past 7.0.1
+
+Currently the version is set in package.json: "sass-loader": "7.0.1",
