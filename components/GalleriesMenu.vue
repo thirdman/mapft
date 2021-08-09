@@ -129,7 +129,7 @@
   &.hero{
     border: 0px solid white;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(200px, 50%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 50px), 1fr));
     // grid-template-rows: repeat(auto-fit, minmax(4rem, 10rem));
     grid-column-gap: 0;
     grid-row-gap: 1rem;
