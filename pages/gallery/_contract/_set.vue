@@ -36,7 +36,7 @@
         </div>
         <div class="sidebarSection">
           <label>Display</label>
-          <div class="buttonGroup uiMode" :class="contrastMode" direction="column">
+          <div class="buttonGroup uiMode full" :class="contrastMode" direction="column">
             <button
               @click="setGalleryDisplayMode('compact')"
               class="small toggleItem"
@@ -171,7 +171,7 @@ export default {
       const myUrl = BASE_URL + this.$route.fullPath;
       const tempUiMode = this.uiMode || "minimal";
       const tempUiTheme = this.uiTheme || "charcoal";
-      const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
+      const fullUrl = myUrl + '?ui=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
   },

@@ -5,88 +5,29 @@
     class="column"
     style="flex-basis: 100%"
   >
-    <div class="contractSection" v-if="1==2">
-        <!-- SECTION TO DISPLAY ACTIVE CONTRACT-->
-    <div
-      class="fieldset formContent"
-      id="fieldsetContractView"
-      v-if="!showEditContract"
-    >
-      <label>Active Contract </label>
-      <div class="row">
-        <div class="column col-66">
-          <div id="userContractAddress">{{ activeContractId }}</div>
-        </div>
-        <div class="column col-33">
-          <button
-            class="btn"
-            id="editUserContractButton"
-            @click="handleAccountModal(true)"
-          >
-            <IconEdit strokeClass="light" size="small" />
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- FORM FOR LOADING CONTRACT-->
-    <div
-      class="fieldset contractContent"
-      id="fieldsetContract"
-      v-if="showEditContract && 1===2"
-    >
-      <ValidationProvider rules="required">
-        <div
-          class="formItem required"
-          :class="classes"
-          slot-scope="{ classes, errors }"
-        >
-          <label>Contract Id</label>
-          <div>
-            <input
-              name="Contract ID"
-              oldId="j"
-              id="temporaryContractId"
-              class="w3-input"
-              type="string"
-              max="99"
-              required
-              placeholder="Eg. 0x1235..."
-              style="text-transform: uppercase"
-              v-model="temporaryContractId"
-            />
-            <div>
-              <span class="validationMessage">{{ errors && errors[0] }}</span>
-            </div>
-          </div>
-          <FormItemHelp
-            required="true"
-            message="Tokens will be minted using this contract. If you do not have one,
-              use the section below to create."
-          />
-        </div>
-      </ValidationProvider>
-
+  <div class="errorMessage" v-if="errorMessage">
+    <div>{{this.errorMessage}}</div>
+    <Button mode="hollow" @click="() => {
+      this.activeDraftId = '';
+      this.errorMessage = '';
+      }">Close</Button>
+    <Button mode="hollow" @click="() => {
+        this.errorMessage = '';
+        this.activeDraftId = '';
+        goTo('/user?selected=drafts');
+      }">View Drafts</Button>
+  </div>
+  <div class="drafts">
+    <div v-if="activeDraftId" class="loadDraft">
+      <label>Load Draft</label>
+      <p class="small">This will load a draft, replacing all content. Are you sure?</p>
       <div>
-        <button
-          id="loadContractButton"
-          class="w3-button w3-block w3-padding-large w3-black w3-margin-bottom"
-          @click="setActiveContractId(temporaryContractId)"
-        >
-          Load Contract
-        </button>
-      </div>
-      <div class="ctaWrap" style="padding: 0">
-        <p style="font=size: 0.875rem; margin: 0 0 0.5rem">
-          Don't have a contract ID yet?
-        </p>
-        <p>
-          <a href="#deploy" class="btn hero">Get Started »</a>
-        </p>
+        <Button @click="loadDraftData(activeDraftId)">Yes, Load Data</Button>
+        <Button @click="clearDraftId()" mode="secondary">Cancel</Button>
       </div>
     </div>
+  </div>
     
-    </div>
     <div
     id="mintForm"
     class="form create column shadow"
@@ -151,11 +92,15 @@
         <client-only>
           <FileUpload
             mode="file"
+            v-if="!showManualEdit"
             :arweaveStatus="arweaveStatus"
             :ipfsStatus="ipfsStatus"
             :setUploadStatus="setUploadStatus"
             :allowMultiple="false"
             :files="uploadFiles || []"
+            :initialFiles="uploadFiles || []"
+            :ipfsHash="fileIpfsHash"
+            :arweaveHash="fileArweaveHash"
             :handleAddFile="handleAddFile"
             :onRequestSave="onRequestSave"
             :onRequestClear="onRequestClear"
@@ -163,6 +108,36 @@
         </client-only>
         
       </div>
+      <modal
+        name="manual-modal"
+        class="manual-modal"
+        :adaptive="false"
+        :min-width="200"
+        :min-height="200"
+        :scrollable="true"
+        :reset="true"
+        width="600px"
+        height="auto"
+        :focus-trap="true"
+        :clickToClose="true"
+      >
+        <div class="top-right">
+          <button
+            @click="handleManual(false)"
+            class="btn iconButton"
+            tabindex="0"
+          >
+            <IconClose
+              :strokeClass="contrastMode"
+            />
+          </button>
+        </div>
+        <div class="modal-content">
+          <ManualEditForm /> 
+          <!-- v-if="showManualEdit"  -->
+        </div>
+      </modal>
+      
       <UploadStatus
         displayMode="inline"
         :title="uploadStatusTitle"
@@ -174,6 +149,16 @@
         :ipfsHash="fileIpfsHash"
         :contrastMode="contrastMode"
       />
+      <div class="actions fileActions">
+        <Button 
+          size="small"
+          v-if="!showManualEdit"
+          mode="hollow"
+          @click="handleManual(true)"
+        >
+          <IconEdit size="small" :strokeClass="contrastMode" /> Enter Custom Data...
+        </Button>
+      </div>
       <div class="formItem block" style="margin-top: .5rem;" v-if="devMode">
         <Button 
         size="small"
@@ -414,9 +399,9 @@
       <div class="sectionTitle">
         <h6>Optional Data</h6>
       </div>
-      <ValidationProvider rules>
+      <ValidationProvider rules="regex">
         <div class="formItem" :class="classes" slot-scope="{ classes, errors }">
-          <label>Exhibition / Series</label>
+          <label>Exhibition / Set</label>
           <input
             class="w3-input"
             type="string"
@@ -426,10 +411,6 @@
             oldId="d"
             v-model="series"
           />
-          <!--
-          onChange='updatePreview(event, "series");validateMintForm(event)'
-            
-          -->
           <div>
             <span class="validationMessage">{{ errors && errors[0] }}</span>
           </div>
@@ -592,6 +573,80 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       </div>
     </div>
     <!-- ACTIONS -->
+      <modal
+        name="validation-modal"
+        class="validation-modal"
+        :adaptive="false"
+        :min-width="200"
+        :min-height="200"
+        :scrollable="true"
+        :reset="true"
+        width="60%"
+        height="80%"
+        :focus-trap="true"
+        :clickToClose="true"
+      >
+        <div class="top-right">
+          <button
+            @click="handlePreviewModal(false)"
+            class="btn iconButton"
+            tabindex="0"
+          >
+            <IconClose
+              :strokeClass="contrastMode"
+            />
+          </button>
+        </div>
+        
+        <div class="modal-content">
+          
+          <ValidationInfo :testMintData="testMintData"  />
+          <div class="actions">
+        <Button mode="hollow" @click="handlePreviewModal(false)">
+          Hide Preview Data
+        </Button>
+        
+        <Button mode="hollow" @click="handleSaveDraft" v-if="devMode">
+          Save As Draft
+        </Button>
+        <Button mode="hollow" @click="handleTest">
+          Re-Test
+        </Button>
+      </div>
+      <div v-if="hasSavedDraft">
+        <h4>Success</h4>
+        <p class="small">Your draft is saved to your local browser storage. You can view & restore it from the drafts interface</p>
+        <Button @click="goTo('/user?selected=drafts')">View Drafts</Button>
+        <Button @click="handleFinishDraft()" mode="secondary">Close & Reset</Button>
+      </div>
+        
+        </div>
+      </modal>
+    <div
+      class="fieldset formContent"
+      style="padding-top: 0.5rem"
+      v-if="showTestMintData"
+    >
+      <!-- <ValidationInfo :testMintData="testMintData" v-if="showTestMintData" />
+      <div class="actions">
+        <Button mode="hollow" @click="handlePreviewModal(!showTestMintData)">
+          Hide Preview
+        </Button>
+        
+        <Button mode="hollow" @click="handleSaveDraft" v-if="devMode">
+          Save As Draft
+        </Button>
+        <Button mode="hollow" @click="handleTest">
+          Re-Test
+        </Button>
+      </div> -->
+      <div v-if="hasSavedDraft">
+        <h4>Success</h4>
+        <p class="small">Your draft is saved to your local browser storage. You can view & restore it from the drafts interface</p>
+        <Button @click="goTo('/user?selected=drafts')">View Drafts</Button>
+        <Button @click="handleFinishDraft()" mode="secondary">Close & Reset</Button>
+      </div>
+    </div>
     <div
       class="fieldset actionContent formContent"
       id="fieldsetAction"
@@ -607,18 +662,49 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
           MINT
         </button>
       </h1>
-      <button class="w3-button w3-block w3-black" id="resetFormButton">
+      <div v-if="this.customButtonId">
+        <div class="customMintButton">
+          <Button 
+            @click="handleCustomMint" 
+            mode="hero" 
+            size="large" 
+            :full="true"
+            :disabled="!canMint"
+            >{{this.customButtonLabel}}</Button>
+        </div>
+      </div>
+      <div class="row actions" style="justify-content: center">
+        <Button mode="hollow" @click="handlePreviewModal(true)">
+          Preview Mint Data
+        </Button>
+      <!-- <Button mode="hollow" @click="handleTest">
+        Preview Mint Data
+      </Button> -->
+      <Button mode="hollow" @click="saveDraft">
+        Save Draft...
+      </Button>
+      <Button @click="resetMintForm()" mode="hollow">Reset Form</Button>
+      <!-- <button class="w3-button w3-block w3-black" id="resetFormButton" style="margin-left: .25rem;">
         Reset Form
-      </button>
+      </button> -->
+      </div>
+      
     </div>
     </div>
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .menu {
   display: flex;
   flex-direction: row;
+}
+.errorMessage{
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  background: var(--danger-color, red);
+  font-size: .875rem;
+  font-variation-settings: 'wght' 500;
 }
 .devContent {
   padding: 1rem;
@@ -628,6 +714,36 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
 .defaultThumbnail {
   width: 120px;
   height: 120px;
+}
+.undefinedContent{
+  color: var(--danger-color, red);
+  font-size: .75rem;
+  font-family: monospace;
+}
+.fileActions{
+  margin-top: .25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.drafts{
+  .loadDraft{
+    margin: 1rem 0;
+    border: 1px solid red;
+    background: #fff;
+    padding: .5rem;
+  }
+}
+.validation-modal{
+  .modal-content{
+    padding: .5rem;
+    overflow: scroll;
+    height: 100%;
+  }
+  
+}
+.vm--modal{
+  overflow-y: auto;
 }
 
 /* Enter and leave animations can use different */
@@ -659,6 +775,19 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
 </style>
 
 <script>
+/** BEWARE
+ * Aplogies to all who enter here. :D 
+ * This file is a bit of a monstor, having started with the fill inline html/js
+ * version that was the original POC. Somw work need to go into
+ * cleaning up and refactoring into more useful chunks of code, but
+ * in the meantime you'll have to wade through the following.
+ */
+  import { mintThatShit, testThatShit } from "../utils/web3Mint.js";
+  import { mintThatShitGarethDev } from "../utils/web3Mint-garethDev.js";
+  import { mintThatShitGarethProd } from "../utils/web3Mint-garethProd.js";
+  import { mintThatShitGarethStaging } from "../utils/web3Mint-garethStaging.js";
+  import { mintThatShitTrislitProd } from "../utils/web3Mint-trislitProd.js";
+
 import {
   openFile,
   openThumbnail,
@@ -673,12 +802,37 @@ import {
   dataURLtoFile,
 } from "../utils/files.js";
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { mintThatShit } from "../utils/web3Mint.js";
 import { mapFields } from "vuex-map-fields";
 import { ValidationProvider, extend } from "vee-validate";
+import { required, min, max, email, regex } from "vee-validate/dist/rules";
 import vueFilePond from "vue-filepond";
-import { required, min, max, email } from "vee-validate/dist/rules";
+import { v4 as uuidv4 } from 'uuid';
+
 import "filepond/dist/filepond.min.css";
+const customMinterMap = {
+  "0xcd8a0e29514910532db4b500ad109927262f54d8": {
+    id: "garethProd",
+    label: "gareth Prod button",
+    function: mintThatShitGarethProd
+  },
+  "0xB95Af9b2Afd751760e5031C93F18ebD7aB406815": {
+    id: "garethStaging",
+    label: "gareth Staging button",
+    function: mintThatShitGarethStaging
+  },
+  "0x83c6AA518316CEe7672d385dD20Af015f6fb28c0": {
+    id: "garethDev",
+    label: "gareth Staging button",
+    function: mintThatShitGarethDev
+  },
+  
+  "0xae056092fa7068dfcd60bb9016d0e2d2448a635e": {
+    id: "trislitProd",
+    label: "Trislits special button",
+    function: mintThatShitTrislitProd
+  },
+  
+};
 
 const FilePond = vueFilePond();
 const imageTypes = ["jpg", "png", "gif"];
@@ -696,25 +850,27 @@ extend("required", {
   ...required,
   message: "This field is required",
 });
+extend("regex", {
+  validate: value => value.match(/^[\w\-\s]+$/) !== null,
+  message: "Limited to alpha-numeric, underscore, dash, and spaces.",
+});
 
 export default {
   components: {
     ValidationProvider,
-    // VueCropper,
-    // FilePond,
   },
+  
   head() {
     return {
-      // script: [
-      //   {
-      //     src:
-      //       'https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js',
-      //   },
-      //   {
-      //     src: 'arweaveFinal.js',
-      //   },
-      // ],
+      
     };
+  },
+  mounted(){
+    const theDraftId = this.$route.query.draft;
+    if(theDraftId){
+      this.activeDraftId = theDraftId
+    }
+    this.initCustomMint(); // this handles loading buttons if custom contracts are needed
   },
   data() {
     return {
@@ -723,6 +879,14 @@ export default {
       classes: [],
       uploadFiles: [],
       thumbnailUploadLabel: `Drag & Drop your file or <span class="filepond--label-action"> Browse </span>`,
+      testMintData: {},
+      showTestMintData: false,
+      showDraftSave: false,
+      hasSavedDraft: false,
+      customButtonId: '',
+      customButtonLabel: '',
+      activeDraftId: null,
+      errorMessage: "",
       // fileIpfsProgress: undefined,
       // fileArweaveProgress: undefined,
       // thumbnailIpfsProgress: '6',
@@ -734,9 +898,11 @@ export default {
       hasWallet: "ui/hasWallet",
       devMode: "ui/devMode",
       uiMode: "ui/uiMode",
+      walletAddress: "ui/walletAddress",
       contrastMode: "ui/contrastMode",
       statusModalMode: "ui/statusModalMode",
       activeContractId: "ui/activeContractId",
+      draftsArray: "ui/draftsArray",
       // showEditContract: 'mintFormStore/showEditContract',
       // mint form ...,
       mintedData: "mintFormStore/mintedData",
@@ -766,6 +932,7 @@ export default {
       thumbnailSource: "mintFormStore/thumbnailSource",
       showThumbnailField: "mintFormStore/showThumbnailField",
       showCropper: "mintFormStore/showCropper",
+      showManualEdit: "mintFormStore/showManualEdit",
     }),
 
     showEditContract() {
@@ -807,10 +974,13 @@ export default {
       setIpfsHash: "mintFormStore/setIpfsHash",
       setArweaveHash: "mintFormStore/setArweaveHash",
       setShowEditContract: "mintFormStore/setShowEditContract",
+      setShowManualEdit: "mintFormStore/setShowManualEdit",
       setThumbnailUploadStatus: "mintFormStore/setThumbnailUploadStatus",
       setThumbnailSource: "mintFormStore/setThumbnailSource",
       setFileInfo: "mintFormStore/setFileInfo",
       setProgress: "mintFormStore/setProgress",
+      resetMintForm: 'mintFormStore/resetMintForm',
+      setTokenPreviewMode: 'mintFormStore/setTokenPreviewMode',
     }),
     ...mapActions({
       // ARWEAVE
@@ -820,6 +990,21 @@ export default {
       getTransactionStatus: "arweaveStore/getTransactionStatus",
       getTransactionData: "arweaveStore/getTransactionData",
     }),
+    goTo(path){
+      this.$router.push(path);
+    },
+    initCustomMint(){
+      const id = this.activeContractId
+      // console.log('customMinterMap show custom mint id', id)
+      // console.log('customMinterMap', customMinterMap)
+      // console.log('customMinterMap[id]', customMinterMap[id])
+      const showButtonId = customMinterMap[id] && customMinterMap[id].id
+      const showButtonLabel = customMinterMap[id] && customMinterMap[id].label
+      if(showButtonId){
+        this.customButtonId = showButtonId
+        this.customButtonLabel = showButtonLabel
+      }
+    },
     shouldHideForm() {
       const activeArray = [
         'confirming',
@@ -977,6 +1162,10 @@ export default {
       this.$store.commit("mintFormStore/setMintStatus", status);
     },
 
+    toggleTestData(newState){
+      this.showTestMintData = newState
+    },
+
     renderImage(fileType, src, parent) {
       let read;
       const previewTypes = ["video", "threeD"];
@@ -1015,9 +1204,11 @@ export default {
       var output = document.getElementById(parent);
       output.innerHTML = "";
       output.appendChild(read);
+      this.$store.commit("mintFormStore/setTokenPreviewMode", "upload");
     },
     unRenderImage(mode, parent = "output") {
       var output = document.getElementById(parent);
+      console.log('output', output);
       if (output) {
         output.innerHTML = "";
       }
@@ -1115,19 +1306,44 @@ export default {
       const isImage = imageTypes.includes(fileType);
       setShowThumbnailField(!isImage);
     },
-    handleMint() {
+    handleTest(){
       const state = this.$store.state.mintFormStore;
-      const userContractAddress = state.activeContractId;
-      // const tempAddress = this.activeContractId;
-      // console.log('tempAddress? ', tempAddress);
-      // console.log('userContractAddress? ', userContractAddress);
-      // console.log('does it have active contract address? ', userContractAddress ? "yep" : "nope");
       if(this.activeContractId && !userContractAddress ){
         this.$store.commit("ui/setActiveContractId", this.activeContractId);
       }
-      // this.$nextTick().then(() => alert('ggg'));
-      // console.log('state', state)
-      mintThatShit(event, state, this);
+      const testMintData = testThatShit({
+        data: {},
+        state: state,
+        useData: false
+      })
+      this.testMintData = testMintData;
+      this.showTestMintData = true;
+    },
+    handleMint() {
+      const state = this.$store.state.mintFormStore;
+      const userContractAddress = state.activeContractId;
+      if(this.activeContractId && !userContractAddress ){
+        this.$store.commit("ui/setActiveContractId", this.activeContractId);
+      }
+      mintThatShit(state, this, this.walletAddress);
+    },
+    handleCustomMint(id) {
+      console.log('custommint id: ', id)
+      console.log('custommint this.customButtonId: ', this.customButtonId)
+      console.log('this', this);
+      const customId = this.customButtonId;
+      const state = this.$store.state.mintFormStore;
+      const userContractAddress = state.activeContractId;
+      if(this.activeContractId && !userContractAddress ){
+        this.$store.commit("ui/setActiveContractId", this.activeContractId);
+      }
+        if(!customId){return}
+      const theObj = customMinterMap[this.activeContractId];
+      const theFunction = theObj.function;
+      console.log('theObj', theObj)
+      console.log('mintThatShitGarethDev', mintThatShitGarethDev)
+      console.log('theFunction: ', theFunction)
+      theFunction(event, state, this);
     },
 
     handlePinThumbnailFiletoIPFS(file) {
@@ -1141,7 +1357,72 @@ export default {
       const inputElement = document.getElementById("thumbnailFile");
       startUploadThumbnailProcess(inputElement, this, "thumbnail");
     },
-    
+    saveDraft(){
+      this.showDraftSave = true;
+      this.handleTest();
+      this.handleSaveDraft()
+    },
+    handleSaveDraft() {
+      console.log('save as draft')
+      const newDraftId = uuidv4();
+      const dateModified = new Date();
+      const dataToSave = {
+        draftId: newDraftId,
+        dateModified: dateModified,
+        data: this.testMintData
+      }
+      console.log('dataToSave: ', dataToSave);
+      this.$store.dispatch("ui/updateDrafts", {data: dataToSave, action: "add"})
+        .then(() => {
+          console.log('DONE')
+          this.hasSavedDraft = true;
+          })
+        .catch(error => console.error(error));
+    },
+    toggleHasSavedDraft(newState){
+      this.hasSavedDraft = newState
+    },
+    loadDraftData(draftId){
+      
+      console.log('draftsArray', this.draftsArray);
+      const draftDataObj = this.draftsArray.find(item => item.draftId === draftId);
+      const draftData = draftDataObj && draftDataObj.data;
+      console.log('draftData', draftData);
+      
+      if(draftData){
+        this.$store.commit("mintFormStore/setDraftData", draftData);
+        this.activeDraftId = null;
+      } else {
+        this.errorMessage = "Error loading draft: Invalid data or draft no longer exists";
+      }
+
+    },
+    clearDraftId(){
+      this.activeDraftId = null
+    },
+    handleFinishDraft(){
+      // hide confirmation, hide preview data, and reset the form
+      this.toggleHasSavedDraft(false);
+      this.toggleTestData(false);
+      this.resetMintForm();
+    },
+    handleManual(newState){
+      console.log('handleManual', newState)
+      if(newState === true){
+        this.$modal.show('manual-modal');
+      } else {
+        this.$modal.hide('manual-modal');        
+      }
+        // this.setShowManualEdit(newState);
+    },
+     handlePreviewModal(newState){
+       this.handleTest();
+      if(newState === true){
+        this.$modal.show('validation-modal');
+      } else {
+        this.$modal.hide('validation-modal');        
+      }
+    },
     // ...mapActions({
     //   setArweaveStatus: 'mintFormStore/setArweaveStatus',
     // })

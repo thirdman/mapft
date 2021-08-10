@@ -62,10 +62,6 @@
           />
         </div>
       </ValidationProvider>
-      <!-- <label>Value</label>
-                    <input class="w3-input " id="newValue" type="string" max="999"
-                    onChange='console.log(event, "optional");'
-                    > -->
       <div class="formItem required">
         <label>Type</label>
         <div class="buttonGroup">

@@ -93,32 +93,10 @@ export const actions = {
     console.group("arUploadFile");
     console.log("props", payload);
     console.log("arUploadFile context: ", context);
-    // console.log("arUploadFile context.$config: ", context.$config);
-    // console.log("arUploadFile file: ", file);
-    /// console.log("arUploadFile mode: ", mode);
-    // console.log("arUploadFile setProgress: ", setProgress);
-    // console.log(
-    //   "arUploadFile config ARWEAVE_WALLET_ID: ",
-    //   context.$config.ARWEAVE_WALLET_ID
-    // );
-    // console.log(
-    //   "arUploadFile config ARWEAVE_WALLET_KEY: ",
-    //   context.$config.ARWEAVE_WALLET_KEY
-    // );
-    const envKey =
-      context && context.$config && context.$config.ARWEAVE_WALLET_KEY;
-    if (envKey) {
-      console.log(
-        "arUploadFile, envKey is it a string: ",
-        typeof envKey === "string"
-      );
-      const isString = typeof envKey === "string";
-      // console.log("envKey:", envKey);
-      const keyAsObj = (envKey && isString && JSON.parse(envKey)) || envKey;
-      // console.log("keyAsObj:", keyAsObj);
-    }
-    console.groupEnd();
+    // const validated = validateArweaveKey(context);
     // const key = this.$config.ARWEAVE_WALLET_KEY;
+    // console.log("validated", validated);
+    console.groupEnd();
     const key = {
       kty: "RSA",
       e: "AQAB",
@@ -185,6 +163,22 @@ export const actions = {
     }
     return transaction.id;
   },
+  // validateArweaveKey(context){
+  //   const doIt = false;
+  //   if(!doIt){return}
+  //   console.log('validateArweaveKey');
+
+  //   const envKey =
+  //   context && context.$config && context.$config.ARWEAVE_WALLET_KEY;
+  //   if (envKey) {
+  //   console.log(
+  //     "arUploadFile, envKey is it a string: ",
+  //     typeof envKey === "string"
+  //   );
+  //   const isString = typeof envKey === "string";
+  //   const keyAsObj = (envKey && isString && JSON.parse(envKey)) || envKey;
+
+  // },
   async lastTransaction(context, payload) {
     const arweaveWalletId = this.$config && this.$config.ARWEAVE_WALLET_ID;
     if (!this.$config) {

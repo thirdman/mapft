@@ -48,9 +48,6 @@
         <div class="navItem">
           <nuxt-link to="/view" class="w3-button navLink">View</nuxt-link>
         </div>
-        <div class="navItem" v-if="!walletAddress">
-          <nuxt-link to="/apply" class="w3-button navLink">Apply</nuxt-link>
-        </div>
         <div class="navItem" v-if="devMode">
           <nuxt-link to="/svg" class="w3-button navLink">SVG</nuxt-link>
         </div>
@@ -84,102 +81,42 @@
 
       <div class="profile">
         <client-only>
-          <div class="modaltest" v-if="hasChainSelect">
-            <Button size="small" mode="secondary" @click="handleChainModal"
-              >connect</Button
+          <Button
+          @click="handleWeb3Connect"
+          v-if="!walletAddress"
+          mode="secondary"
+          v-tooltip="'Connect your Web3 Wallet'"
+          id="connectButton"
+          >Connnect</Button>
+        </client-only>
+        <client-only>
+          <div class="modaltest" v-if="hasChainSelect" >
+            <Button
+              size="small"
+              mode="secondary"
+              @click="handleChainModal"
+              >Connect</Button
             >
           </div>
-          <div class="networkItem networkName" v-if="walletAddress && uiMode !== 'full'">
+          <div class="walletInfo ">
+              <span class="errorMsg danger" v-if="walletStatus === 'denied'"
+                >Wallet Denied</span
+              >
+          </div>
+          <div class="networkItem networkName" v-if="walletAddress && uiMode !== 'full'" v-tooltip="'Your current network'">
             {{walletNetwork}}
           </div>
-          <div class="minimalIcon" v-if="hasWallet && uiMode === 'minimal'">
-            <button @click="handleModal" class="btn iconButton">
-              <IconUser :strokeClass="contrastMode" />
-            </button>
-            <button @click="handleModal" class="btn iconButton caretPosition">
-              <IconCaret :strokeClass="contrastMode" />
-            </button>
-          </div>
+          <ProfileButton />
+          
+          <Button
+            @click.native="handleModal"
+            class="btn iconButton minimalButton"
+            :class="contrastMode"
+            v-tooltip="'Manage your settings'"
+            >
+            <IconSettings :strokeClass="contrastMode" />
+          </Button>
 
-          <div id="accountWrap" class="accountWrap">
-            <div id="footerAccountWrap">
-              <div class="itemContent" v-if="!hasWallet">
-                <label id="footerWalletLabel" class="footerUserLabel"
-                  >Wallet</label
-                >
-                <div class="walletLoggedOut">
-                  <span class="loggedOutMsg">No Wallet</span>
-
-                  <button
-                    id="connectButton"
-                    class="w3-button w3-block w3-black"
-                    @click="
-                      connectWallet({
-                        setWallet,
-                        setWalletStatus,
-                        setWalletChain,
-                        setNetworkName,
-                      })
-                    "
-                  >
-                    Connect
-                  </button>
-                  <span class="errorMsg danger" v-if="walletStatus === 'denied'"
-                    >Wallet Denied</span
-                  >
-                  <button @click="handleModal" class="btn iconButton">
-                    <IconSettings :strokeClass="contrastMode" />
-                    <IconCaret :strokeClass="contrastMode" />
-                  </button>
-                </div>
-              </div>
-              
-              <div class="accountItem" v-if="hasWallet && uiMode !== 'minimal'">
-                <div class="itemIcon">
-                  <button @click="handleModal" class="btn iconButton">
-                    <IconUser :strokeClass="contrastMode" />
-                  </button>
-                </div>
-                
-                <div class="itemContent">
-                  <label id="footerWalletLabel" class="footerUserLabel"
-                    >Wallet</label
-                  >
-                  <div
-                    id="accountElement"
-                    class="user profileElement"
-                    v-if="hasWallet"
-                  >
-                    <span class="accountAddress">{{ walletName }}</span>
-                    <button @click="handleModal" class="btn iconButton">
-                      <IconSettings :strokeClass="contrastMode" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="accountItem" v-if="hasWallet && uiMode !== 'minimal'">
-                <div class="itemIcon"></div>
-                <div class="itemContent">
-                  <label id="footerContractLabel" class="footerUserLabel"
-                    >Contract</label
-                  >
-                  <div id="contractElement" class="userContent profileElement">
-                    <span>{{ activeContractId || "No User Contract" }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="wedgeWrap">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 100 100"
-                  class="wedgeSvg"
-                  preserveAspectRatio="none"
-                >
-                  <polygon fill="#000" points="0,0 100,0 100,100" />
-                </svg>
-              </div>
-            </div>
-          </div>
         </client-only>
 
         <div class="wedgeWrap">
@@ -196,7 +133,7 @@
     </div>
   </client-only>
   <client-only>
-  <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><br />
+  <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><Button @click="setDevMode(false)" mode="secondary" size="small">Switch Off</Button><br />
     <div v-if="showDevInfo">
         Environment: {{VERCEL_ENV}}<br />
         rootUrl: {{rootUrl}}<br />
@@ -220,12 +157,13 @@
     <cropper-modal />
     <chain-modal />
     <info-modal />
+    
     </div>
   </client-only>
   </header>
 </template>
 
-<style>
+<style lang="scss">
 .header .footerUserLabel {
   display: flex;
   flex-direction: row;
@@ -272,32 +210,41 @@
   padding: 0.25rem; 
   margin: 0;
 }
+.walletInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: .5rem;
+  flex-shrink: 0;
+  
+  span, button{
+    flex-basis: 50%;
+  }
+}
+    #connectButton{
+        background: var(--background-color, #fff);
+    color: var(--ui-color, #111);
+    border-radius: 2rem;
+    border: 2px solid var(--ui-color);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+      min-width: 5rem;
+    }
+
+
 </style>
 
 <script>
+import Web3 from "web3";
+import Web3Modal from "web3modal";
 
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { connectWallet, handleAccountLink, setConnectedNetwork } from "../../utils/wallet.js";
+import {  handleAccountLink, setConnectedNetwork, getProviderType, getConnectedNetwork, initWeb3 } from "../../utils/wallet.js";
+
 
 export default {
-  // mixins: [myMixin],
-  components: {
-    // ExampleModal,
-  }, 
-  // created() {
-  //   if (process.client) {
-  //     // handle client side
-  //     // console.log('created client')
-  //     // console.log('this.$scopedSlots', this.$scopedSlots)
-  //     // console.log('MOUNTED modal refs', this.$modal)
-  //     // this.$modal.show("cropper-modal");
-  //   }
-  //   if (process.server) {
-  //     // const { req, res, beforeNuxtRender } = context
-  //     // console.log("created server");
-  //     // console.log('this.$scopedSlots', this.$scopedSlots)
-  //   }
-  // },
+  
   mounted() {
     mounted: () => {
       this.$refs.modal.show();
@@ -325,12 +272,13 @@ export default {
     }
     if (process.client) {
       this.walletCheck();
+      this.getProfileData(this.walletAddress);
     }
   },
 
   data() {
     return {
-      showDevInfo: true,
+      showDevInfo: false,
       rootUrl: "",
       factoryContract: "",
       requiredNetwork: "",
@@ -341,6 +289,8 @@ export default {
       VERCEL_GIT_COMMIT_MESSAGE: "",
       VERCEL_URL: "",
       showIt: false,
+      connectStatus: "",
+      connectError: "",
     };
   },
   computed: {
@@ -408,17 +358,20 @@ export default {
     },
   },
   methods: {
-    connectWallet,
     ...mapMutations({
       setShowAccount: "ui/setShowAccount",
       setShowSearch: "ui/setShowSearch",
       toggleHiddenUi: "ui/toggleHiddenUi",
+      setWallet: "ui/setWallet",
       setWalletChain: "ui/setWalletChain",
+      setNetworkName: "ui/setNetworkName",
+      setDevMode: "ui/setDevMode"
     }),
 
     ...mapActions({
       showStatusModal: "mintFormStore/showStatusModal",
       showCropperModal: "mintFormStore/showCropperModal",
+      getProfileData: "ui/getProfileData"
     }),
     toggleDevInfo(){
       this.showDevInfo = !this.showDevInfo
@@ -428,18 +381,86 @@ export default {
         path: `/`,
       })
     },
-    walletCheck(){
-      if(this.$route && this.$route.path === '/mint'){
+
+    async handleWeb3Connect(){
+      if(!document){return}
+      // RESET
+      this.connectStatus="";
+      this.connectError=null;
+      this.setWalletStatus("");
+
+      const web3Modal = this.$web3Modal
+      if(!web3Modal){
+        return
+      }
+      this.connectStatus="connecting";
+      const requiredNetwork = this.$config.requiredNetwork;
+      
+      web3Modal.clearCachedProvider();
+      
+      console.log('window.ethereum', window.ethereum);
+      
+      let provider = await web3Modal.connect().catch((error) => {
+        console.log("error here:", error);
+        this.connectStatus="error";
+        this.connectError=error;
+        this.setWalletStatus("denied");
+        return
+      });
+      console.log('provider', provider);
+      if(!provider){
+        // In case the user cancelled or rejected
+        return
+      }
+      this.connectStatus="connected";
+      const providerType = getProviderType(provider);
+      // finally, get the user account
+      const accts = await provider.enable()
+      console.log('accts', accts);
+      if (!accts[0]) {
+        console.log("error", provider);
+        throw "missing account";
+      }
+      
+      this.setWalletChain("eth");
+      this.setWallet(accts[0]);
+      provider.autoRefreshOnNetworkChange = true;
+      
+      // Listen for change of account
+      if (provider && provider.on) {
+        provider.on("accountsChanged", (accts) => {
+          setWallet(accts[0]);
+        });
+      }
+          
+      // Get network, and check it matches the requires one for the active environment
+      // ie. dev, staging or prod
+      const net = provider.networkVersion;
+      const connectedNetwork = getConnectedNetwork(net);
+      this.setNetworkName(connectedNetwork);
+      this.walletCheck(true)
+    },
+  
+
+
+    walletCheck(enforceCheck = false){
+      const isMintRoute = this.$route && this.$route.path === '/mint'
+      // console.log({enforceCheck, isMintRoute})
+      if(isMintRoute || enforceCheck){
         if (typeof window.ethereum !== "undefined") {
+          console.log('WALLET CHECK',  window.ethereum)
           if(!this.walletNetwork){
-            const newNetwork = this.setNetwork()
+            // const newNetwork = this.setNetwork()
+            // initWeb3(requiredNetwork, infuraUrl);
           }
           // Get web3 instance
           const provider = window.ethereum;
           const networkVersion = provider.networkVersion;
-          const userNetwork = this.walletNetwork;
+          //const userNetwork = this.walletNetwork;
+          const userNetwork = getConnectedNetwork(networkVersion);
           const requiredNetwork = this.$config.requiredNetwork;
-
+          // console.log('networkVersion', networkVersion)
+          // console.log('userNetwork', userNetwork)
           if(requiredNetwork !== userNetwork){
             this.$nextTick(() => {
               this.handleNetworkWarning();
@@ -448,30 +469,27 @@ export default {
         }
       }
     },
-    setNetwork(){
-      const provider = window.ethereum;
-      const networkVersion = provider.networkVersion;
-      const requiredNetwork = this.$config.requiredNetwork;
-      setConnectedNetwork(networkVersion, this.setNetworkName)
-      // console.log('this.networkVersion', this.walletNetwork)
-      return this.walletNetwork;
-    },
+    // setNetwork(){
+    //   const provider = window.ethereum;
+    //   const networkVersion = provider.networkVersion;
+    //   const requiredNetwork = this.$config.requiredNetwork;
+    //   console.log('setNetworkName', setNetworkName)
+    
+    //   // console.log('this.networkVersion', this.walletNetwork)
+    //   return this.walletNetwork;
+    // },
     clearActiveContractId(value) {
       this.$store.commit("ui/clearActiveContractId", value);
       this.$store.commit("mintFormStore/clearActiveContractId", value);
     },
-    setWallet(value) {
-      this.$store.commit("ui/setWallet", value);
-    },
+    
     setWalletStatus(value) {
       this.$store.commit("ui/setWalletStatus", value);
     },
     setProvider(value) {
       this.$store.commit("ui/setWalletProvider", value);
     },
-    setNetworkName(value) {
-      this.$store.commit("ui/setNetworkName", value);
-    },
+    
     handleNetworkWarning() {
       this.$modal.show("info-modal");
     },

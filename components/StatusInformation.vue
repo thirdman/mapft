@@ -203,11 +203,12 @@ export default {
       console.log('walletNetwork', this.walletNetwork)
       console.log('mintTransactionId', this.mintTransactionId)
       // console.log(this.$store.state.mintFormStore.walletNetwork)
+      const requiredNetwork = this.$config.requiredNetwork;
       if (!this.mintTransactionId) {
         return null
       }
       const link =
-        this.walletNetwork === 'rinkeby'
+        requiredNetwork === 'rinkeby'
           ? `https://rinkeby.etherscan.io/tx/${this.mintTransactionId}`
           : `https://etherscan.io/tx/${this.mintTransactionId}`
       return link

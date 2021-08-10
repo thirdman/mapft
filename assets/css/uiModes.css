@@ -105,7 +105,7 @@ header.minimal .headerRow .profile {
   border-left: none;
 }
 
-header.minimal .headerRow .profile .minimalIcon {
+/* header.minimal .headerRow .profile .minimalIcon {
   border-radius: 2rem;
   border: 1px solid var(--text-color);
   width: 2rem;
@@ -116,7 +116,7 @@ header.minimal .headerRow .profile .minimalIcon {
   flex-shrink: 0;
   position: absolute;
   right: 2rem;
-}
+} */
 header.minimal .headerRow .profile #accountWrap {
   background: transparent;
 }
@@ -126,9 +126,7 @@ header.minimal .headerRow .profile .footerUserLabel {
 header.minimal .headerRow .profile .walletLoggedOut {
   justify-content: flex-end;
 }
-header.minimal .headerRow .profile .walletLoggedOut .loggedOutMsg {
-  display: none;
-}
+
 header.minimal .headerRow .profile #connectButton {
   background: transparent;
   color: var(--text-color, #111);
@@ -170,7 +168,7 @@ footer.minimal .corpLink > span.defaultCorpMessage {
   'NONE' OVERRIDES
 */
 #body .pageContainer {
-  /* min-height: 100vh; */
+  min-height: 100vh;
 }
 #body.minimal {
   --header-height: var(--header-height-minimal, 2rem);
@@ -291,14 +289,6 @@ header.none .headerRow .profile .footerUserLabel {
 }
 header.none .headerRow .profile .walletLoggedOut {
   justify-content: flex-end;
-}
-header.minimal .headerRow .profile .walletLoggedOut .loggedOutMsg {
-  display: none;
-}
-header.minimal .headerRow .profile #connectButton {
-  background: transparent;
-  color: var(--text-color, #111);
-  border: 2px solid var(--text-color);
 }
 
 /* NONE FOOTER*/

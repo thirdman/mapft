@@ -19,15 +19,18 @@
           :class="ipfsStatus"
           v-if="ipfsStatus"
         >
-          <div
-            class="status-icon"
-            :class="ipfsStatus === 'uploaded' ? 'complete' : ''"
-          >
-          <IconCheck :strokeClass="contrastMode" v-if="ipfsStatus === 'uploaded'"/>
+          <div class="row between">
+            <span>
+              <div
+                class="status-icon"
+                :class="ipfsStatus === 'uploaded' ? 'complete' : ''"
+              >
+              <IconCheck :strokeClass="contrastMode" v-if="ipfsStatus === 'uploaded'"/>
+              </div>
+              {{ ipfsStatus === "uploading" ? `Saving to IPFS... ${ipfsProgress && ipfsProgress + '%'}` : `Ipfs File ${ipfsStatus}` }}
+            </span>
+            <a :href="`https://ipfs.io/ipfs/${ipfsHash}`" target="blank" v-if="ipfsHash" class="asButton small"><IconExternalLink size="small" :strokeClass="contrastMode" /> View</a>
           </div>
-          {{ ipfsStatus === "uploading" ? `Saving to IPFS... ${ipfsProgress && ipfsProgress + '%'}` : `Ipfs File ${ipfsStatus}` }}
-          <a :href="`https://ipfs.io/ipfs/${ipfsHash}`" target="blank" v-if="ipfsHash" class="asButton small">Open on IPFS</a>
-          
         </div>
         <ProgressBar
           :percentage="ipfsProgress"
@@ -40,18 +43,22 @@
           :class="arweaveStatus"
           v-if="arweaveStatus"
         >
-          <div
-            class="status-icon"
-            :class="arweaveStatus === 'uploaded' ? 'complete' : ''"
-          >
-            <IconCheck :strokeClass="contrastMode" v-if="arweaveStatus === 'uploaded'" />
-          </div>
-          {{
-            arweaveStatus === "uploading"
-              ? `Saving to Arweave... ${arweaveProgress && arweaveProgress + '%'}`
-              : `Arweave File ${arweaveStatus}`
-          }}
-          <a :href="`https://arweave.net/${arweaveHash}`" target="blank" class="asButton small" v-if="arweaveHash">Open on Arweave</a>
+        <div class="row between">
+          <span>
+            <div
+              class="status-icon"
+              :class="arweaveStatus === 'uploaded' ? 'complete' : ''"
+            >
+              <IconCheck :strokeClass="contrastMode" v-if="arweaveStatus === 'uploaded'" />
+            </div>
+            {{
+              arweaveStatus === "uploading"
+                ? `Saving to Arweave... ${arweaveProgress && arweaveProgress + '%'}`
+                : `Arweave File ${arweaveStatus}`
+            }}
+          </span>
+          <a :href="`https://arweave.net/${arweaveHash}`" target="blank" class="asButton small" v-if="arweaveHash"><IconExternalLink size="small" :strokeClass="contrastMode" /> View</a>
+        </div>
         </div>
           <ProgressBar
           :percentage="arweaveProgress"

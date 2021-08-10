@@ -1,91 +1,124 @@
-// import Vuex from 'vuex'
-
-// var ENS = require("ethereum-ens");
 /**
- * CONNECT WALLET
+ * INIT WEB3
+ * initialises the web3js,
+ * due to a bug in the way vercel deploys nuxt,
+ * we cannot just import as a node module.
+ * I hope this gets fixed soon.
+ *
+ * TODO: revisit
  */
 
-const connectWallet = async (props) => {
-  const {
-    setWallet,
-    setWalletChain,
-    setNetworkName,
-    setWalletStatus,
-    setEnsName,
-  } = props;
+function initWeb3(requiredNetwork = "main", infuraUrl) {
+  console.info("WEB3INIT required:", requiredNetwork);
+  if (window && window.web3Read) {
+    // console.log('web3read: ', window.web3Read)
+    console.info("web3read exists. Version: ", window.web3Read.version);
+    return;
+  }
+  if (!window) {
+    console.info("cannot init Web3 yet - not in window");
+    return;
+  }
+  const Web3 = window.Web3;
+  const Web3Ethereum = window.ethereum;
+  const web3Implementation = new Web3(
+    new Web3.providers.HttpProvider(infuraUrl)
+  );
 
-  let provider, net;
-  // Try to connect Metamask
+  if (typeof Web3Ethereum !== "undefined") {
+    console.log("Web3Ethereum detected", Web3Ethereum);
+  }
 
-  if (typeof window.ethereum !== "undefined") {
-    // Get web3 instance
-    provider = window.ethereum;
-    // console.log('provider: ', provider)
+  window.web3Read = web3Implementation;
+}
 
-    try {
-      // Request account access
-      const accts = await provider.enable();
-      // setWeb3(new Web3(provider));
+/**
+ * CONNECT WALLET
+ * This is the older version.
+ * DEPRECATED
+ */
 
-      provider.autoRefreshOnNetworkChange = false;
-      if (!accts[0]) {
-        console.log("error", provider);
-        throw "missing account";
-      }
-      // setAccount(accts[0])
-      setWalletChain("eth");
-      setWallet(accts[0]);
+// const connectWallet = async (props) => {
+//   const {
+//     setWallet,
+//     setWalletChain,
+//     setNetworkName,
+//     setWalletStatus,
+//     setEnsName,
+//   } = props;
 
-      // Listen for change of account
-      if (provider && provider.on) {
-        provider.on("accountsChanged", (accts) => {
-          // setAccount(accts[0])
-          setWallet(accts[0]);
-        });
-      }
-      // Get network
-      net = provider.networkVersion;
-      setConnectedNetwork(net, setNetworkName);
+//   let provider, net;
+//   // Try to connect Metamask
 
-      // Listen for change of network
-      if (provider && provider.on) {
-        provider.on("networkChanged", function (net) {
-          alert("network changed");
-          setConnectedNetwork(net);
-        });
-      }
-      if (provider && accts[0]) {
-        console.log("provider is:", provider);
-        console.log("web3 is:", window.ethereum);
-        resolveEns(accts[0], provider, setEnsName);
-      }
-    } catch (error) {
-      // User denied account access...
-      console.log("denied. ERROR: ", error);
-      console.log("setWalletStatus: ", setWalletStatus);
-      setWalletStatus("denied");
-    }
+//   if (typeof window.ethereum !== "undefined") {
+//     // Get web3 instance
+//     provider = window.ethereum;
+
+//     try {
+//       // Request account access
+//       const accts = await provider.enable();
+//       // setWeb3(new Web3(provider));
+
+//       provider.autoRefreshOnNetworkChange = false;
+//       if (!accts[0]) {
+//         console.log("error", provider);
+//         throw "missing account";
+//       }
+//       // setAccount(accts[0])
+//       setWalletChain("eth");
+//       setWallet(accts[0]);
+
+//       // Listen for change of account
+//       if (provider && provider.on) {
+//         provider.on("accountsChanged", (accts) => {
+//           // setAccount(accts[0])
+//           setWallet(accts[0]);
+//         });
+//       }
+//       // Get network
+//       net = provider.networkVersion;
+//       setConnectedNetwork(net, setNetworkName);
+
+//       // Listen for change of network
+//       if (provider && provider.on) {
+//         provider.on("networkChanged", function (net) {
+//           alert("network changed");
+//           setConnectedNetwork(net);
+//         });
+//       }
+//       if (provider && accts[0]) {
+//         console.log("provider is:", provider);
+//         console.log("web3 is:", window.ethereum);
+//         resolveEns(accts[0], provider, setEnsName);
+//       }
+//     } catch (error) {
+//       // User denied account access...
+//       console.log("denied. ERROR: ", error);
+//       console.log("setWalletStatus: ", setWalletStatus);
+//       setWalletStatus("denied");
+//     }
+//   }
+// };
+
+// Get the connected network
+// Note: other networks exist and could be considered in the future
+const getConnectedNetwork = (net) => {
+  const connectedNetwork = Number(net);
+  switch (connectedNetwork) {
+    case 1:
+      return "main";
+      break;
+    case 4:
+      return "rinkeby";
+      break;
+    default:
+      // return "private";
+      return "main";
   }
 };
 
-// const setAccount = (account) => {
-//   console.log('setting account...')
-//   console.log('setWallet: ', setWallet)
-
-//   const bodyElement = document.getElementById('body')
-//   if (account) {
-//     bodyElement.classList.add('hasWallet')
-//     bodyElement.classList.remove('enablingWallet')
-//   } else {
-//     bodyElement.classList.add('noWallet')
-//     bodyElement.classList.remove('enablingWallet')
-//   }
-// }
-
-// Set the connected network
 const setConnectedNetwork = (net, setNetworkName) => {
   const connectedNetwork = Number(net);
-  console.log("connectedNetwork", connectedNetwork);
   switch (connectedNetwork) {
     case 1:
       // setNetworkClass('main-network')
@@ -143,4 +176,38 @@ const resolveEns = (address, provider, setEnsName) => {
   // }
 };
 
-export { connectWallet, handleAccountLink, setConnectedNetwork, resolveEns };
+/**GET PROVIDER TYPE
+ * gets string name of wallet
+ */
+const getProviderType = (provider) => {
+  if (!provider) {
+    return null;
+  }
+  let providerType;
+  if (provider.isFortmatic) {
+    providerType = "fortmatic";
+  }
+  if (provider.isDapper) {
+    providerType = "dapper";
+  }
+  if (provider.isMetaMask) {
+    providerType = "metamask";
+  }
+  if (provider.is3idProvider) {
+    providerType = "3id";
+  }
+  if (provider.wc && provider.wc.protocol === "wc") {
+    providerType = "walletconnect";
+  }
+  return providerType;
+};
+
+export {
+  initWeb3,
+  // connectWallet,
+  handleAccountLink,
+  setConnectedNetwork,
+  resolveEns,
+  getProviderType,
+  getConnectedNetwork,
+};

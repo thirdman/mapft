@@ -7,17 +7,31 @@
           <div class="primaryMeta">
             <div class="metaItem">
               <label>Gallery</label>
-              <div class="small">
-                <span style="display: inline-block" class="galleryIdWrap">
-                <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span>
-                </span>
-                <Button @click="handleCopy" mode="hollow" v-if="!hasCopied">
-                  <IconCopy size="small"/>
-                </Button>
-                <div class="hiddenInputWrap" style="visibility: visible; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; position: relative;">
-                  <input type="text" id="copy-string" :value="galleryContractId" style=" position: absolute; z-index: -1">
+              <div class="row">
+                <div class="column col-90">
+                  <div class="small">
+                    <span style="display: inline-block" class="galleryIdWrap">
+                    <Address shrink :address="galleryContractId"/> <span v-if="hasCopied" class="copyConfirm small">Copied!</span>
+                    </span>
+                    <Button @click="handleCopy" mode="hollow" v-if="!hasCopied" >
+                      <IconCopy size="small" :strokeClass="contrastMode"/>
+                    </Button>
+                    <div class="hiddenInputWrap" style="visibility: visible; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; position: relative;">
+                      <input type="text" id="copy-string" :value="galleryContractId" style=" position: absolute; z-index: -1">
+                    </div>
+                  </div>
+                </div>
+                <div class="column col-10">
+                  <Button
+                    mode="hollow"
+                    v-if="this.useGallerymeta && galleryAssets && galleryAssets.length > 0"
+                    :filled="activityId === galleryContractId" 
+                    @click="updateFollowing({id: galleryContractId, name: galleryMeta.name, symbol: galleryMeta.symbol, owner: galleryMeta.owner})">
+                      <IconHeart size="small" :strokeClass="contrastMode" :active="isFollowing(usedContractsObj, galleryContractId)" />
+                    </Button>
                 </div>
               </div>
+              
             </div>
             <div class="loadingWrap" v-if="isLoadingMeta">
               <Loading fillClass="light" />
@@ -29,6 +43,10 @@
               <div class="small symbol">{{galleryMeta.symbol}}</div>
               <label>Tokens</label>
               <div class="small">{{galleryMeta.count}}</div>
+              <label>Owner</label>
+              <div class="small">
+                <Address shrink :address="galleryMeta.owner"/>
+              </div>
             </div>
           </div>
         </div>
@@ -64,7 +82,7 @@
         <div class="sidebarSection">
           <label>Display</label>
           <div>
-          <div class="buttonGroup uiMode" :class="contrastMode" direction="column">
+          <div class="buttonGroup uiMode full" :class="contrastMode" direction="column">
             <button
               @click="setGalleryDisplayMode('compact')"
               class="small toggleItem"
@@ -112,47 +130,7 @@
       </div>
 
       <div class="secondary" >
-        <!-- <label>Gallery Contract</label>
-        <div
-          class="help"
-          style="width: 10rem; overflow: hidden; text-overflow: ellipsis;"
-        >
-          <span>{{ galleryContractId }}</span>
-          <div>
-            <a 
-              target="_blank" 
-              :href="`https://twitter.com/intent/tweet?url=${getUrl()}&text=${'A gallery on InfiNFT'}&related=nft4ever,nft42`" 
-              class="shareLink asButton full" 
-              >
-                <IconExternalLink :strokeClass="contrastMode" size="small" /> Share
-            </a>
-        </div>
-        </div>
-        <label>Display</label>
-        <div class="buttonGroup uiMode" :class="contrastMode">
-          <button
-            @click="setGalleryDisplayMode('compact')"
-            class="small toggleItem"
-            :class="galleryDisplayMode === 'compact' ? 'active' : 'notActive'"
-          >
-            Compact
-          </button>
-          <button
-            @click="setGalleryDisplayMode('expanded')"
-            class="small toggleItem"
-            :class="galleryDisplayMode === 'expanded' ? 'active' : 'notActive'"
-          >
-            Expanded
-          </button>
-          <button
-            @click="setGalleryDisplayMode('list')"
-            class="small toggleItem"
-            :class="galleryDisplayMode === 'list' ? 'active' : 'notActive'"
-          >
-            Full
-          </button>
-        </div> -->
-
+        
       </div>
     </section>
 
@@ -192,7 +170,7 @@ export default {
     // console.log('this.$store.ui', this.$store.state.ui.walletNetwork)
     
     if (process.client) {
-      console.log('triger on created: ')
+      console.log('GALLERY created: ')
 
       this.$store.commit(
         'galleryStore/setGalleryContractId',
@@ -212,6 +190,7 @@ export default {
       galleryMeta: null,
       galleryName: "",
       isLoadingMeta: false,
+      useGallerymeta: true,
     }
   },
   async mounted() {
@@ -222,6 +201,7 @@ export default {
       contractId: contractId,
       tokenId: 1
     }
+    console.log('useGallerymeta', this.useGallerymeta);
     const metaData = await this.handleGalleryMeta(params).then(result => {
         return result
       }).catch(error => console.error(error));
@@ -239,6 +219,9 @@ export default {
       contrastMode: 'ui/contrastMode',
       walletAddress: 'ui/walletAddress',
       usedContracts: 'ui/usedContracts',
+      usedContractsObj: 'ui/usedContractsObj',
+      activityId: "ui/activityId",
+      // GALLERY
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
       galleryStatus: 'galleryStore/galleryStatus',
@@ -258,6 +241,7 @@ export default {
     }),
     ...mapActions({
       handleGalleryMeta: 'ui/handleGalleryMeta',
+      updateFollowing: 'ui/updateFollowing',
     }),
     handleRefresh() {
       console.log('refresh');
@@ -269,7 +253,7 @@ export default {
       const myUrl = BASE_URL + this.$route.fullPath;
       const tempUiMode = this.uiMode || "minimal";
       const tempUiTheme = this.uiTheme || "charcoal";
-      const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
+      const fullUrl = myUrl + '?ui=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
     handleCopy () {
@@ -298,22 +282,33 @@ export default {
     },
     async getGalleryMeta(contractId, source){
       const galleryArray = this.galleryAssets;
-      console.log('readThatMeta', readThatMeta);
+      // console.log('readThatMeta', readThatMeta);
       // const lastId = galleryArray.length ? galleryArray.length : 1;
       const lastId = galleryArray[0] && galleryArray[0].token_id || 1;
-      console.log('getGalleryMeta', lastId)
+      // console.log('getGalleryMeta', lastId)
       const params = {
         contractId: contractId,
         tokenId: lastId
       }
-      console.log('params: ', params)
+      // console.log('params: ', params)
       this.isLoadingMeta = true
       const metaData = await this.handleGalleryMeta(params).then(result => {
         return result
       }).catch(error => console.error(error));
-      console.log('metaData: ', metaData);
+      // console.log('metaData: ', metaData);
       this.galleryMeta = metaData
       this.isLoadingMeta = false;
+    },
+    handleFollowing(id){
+      console.log('toggleFollowing', id)
+      console.log('usedContractsObj', this.usedContractsObj)
+    },
+    isFollowing(contractsArray, targetId, ){
+      if(!contractsArray || !targetId){return false};
+      console.log('isfolowing', targetId, contractsArray);
+      const filtered = contractsArray.filter(item => item.id === targetId);
+      console.log('isfollowing filtered', filtered)
+      return filtered.length > 0
     }
   },
 }

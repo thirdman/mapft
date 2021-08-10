@@ -150,20 +150,13 @@ export default {
       contrastMode: "ui/contrastMode",
       activeContractId: "ui/activeContractId",
       usedContracts: "ui/usedContracts",
-      // showEditContract: "mintFormStore/showEditContract",
-      
-    }),
+      }),
 
     showEditContract() {
-      // console.log('activeContractId: ', this.activeContractId)
-      // console.log('showEditContract: ', this.$store.state.mintFormStore.showEditContract)
       if (this.activeContractId) {
-        // console.log('no active contract Id, should NOT show')
         return false;
       } else {
-        // console.log('no active contract Id, should NOT show')
         return true 
-        // this.$store.state.mintFormStore.showEditContract;
       }
     },
 

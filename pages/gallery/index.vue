@@ -40,27 +40,47 @@
           <GalleriesMenu mode="hero" :contrastMode="contrastMode" />
           <p class="small"><IconHelp :strokeColor="contrastMode" style="vertical-align: middle"/> Talk to us on Discord to be listed here.</p>
         </div>
-        <client-only>
-        <div v-if="devMode">
-          <div class="clampWidth">
-            <Button @click="updateUsedContractsObj({data: {
-              id: '0x12345',
-              name: 'test name',
-              symbol: 'TEST'
-            }, remove: true})"><span>test updateCOntractsObj</span>
-            </Button>
-          </div>
-        </div>
-        </client-only>
+        
         <client-only>
         <div class="clampWidth">
-          <h4 v-if="usedContracts">Your Contracts </h4>
-          <div v-if="devMode && usedContractsObj">
-            <GalleriesUserMenu mode="hero" :contractsArray="usedContractsObj" :contrastMode="contrastMode" :activeContractId="activeContractId" />
+          <div class="row">
+            <div class="column col-75">
+              <h4 v-if="usedContracts">Following</h4>
+            </div>
+            <div class="column col-25" style="display: flex; justify-content: flex-end;">
+              <Button @click="getAllContractsMeta" mode="hollow" >Refresh Info</Button>
+            </div>
           </div>
+          <div v-if="usedContractsObj">
+            <GalleriesUserMenu
+              mode="hero"
+              :userAddress="walletAddress"
+              :contractsArray="usedContractsObj"
+              :contrastMode="contrastMode"
+              :activeContractId="activeContractId"
+              show="following"
+              />
+          </div>
+          <h4 v-if="usedContracts">User Contracts</h4>
+          <div v-if="usedContractsObj">
+            <GalleriesUserMenu
+              mode="hero"
+              :userAddress="walletAddress"
+              :contractsArray="usedContractsObj"
+              :contrastMode="contrastMode"
+              :activeContractId="activeContractId"
+              show="owner"
+              />
+          </div>
+          <!-- <h4 v-if="usedContracts">Your Contracts </h4>
+           -->
+          <!-- <div v-if="devMode && usedContractsObj">
+            <GalleriesUserMenu mode="hero" :contractsArray="tempUsedContractsObj" :contrastMode="contrastMode" :activeContractId="activeContractId" />
+          </div> -->
+          <!-- <h4 v-if="usedContracts">Previously used</h4>
           <div>
             <GalleriesUserMenu mode="hero" :contracts="usedContracts" :contrastMode="contrastMode" :activeContractId="activeContractId" />
-          </div>
+          </div> -->
         </div>
         </client-only>
       </div>
@@ -83,7 +103,6 @@ import ogImagePreview from '~/assets/images/preview.jpg'
 export default {
   name: 'GalleryPage',
   mounted() {
-    console.log('GALLERY MOUNTED', this.activeContractId)
     if(this.activeContractId){
       this.tempContractId = this.activeContractId
     }
@@ -117,6 +136,7 @@ export default {
       activeContractId: "ui/activeContractId",
       usedContracts: "ui/usedContracts",
       usedContractsObj: "ui/usedContractsObj",
+      tempUsedContractsObj: "ui/tempUsedContractsObj",
       walletAddress: "ui/walletAddress",
       galleryContractId: 'galleryStore/galleryContractId',
       galleryAssets: 'galleryStore/galleryAssets',
@@ -137,6 +157,7 @@ export default {
     }),
     ...mapActions({
       updateUsedContractsObj: 'ui/updateUsedContractsObj',
+      getAllContractsMeta: 'ui/getAllContractsMeta',
     }),
     handleLoad(contractId) {
       if(!contractId){return}

@@ -32,7 +32,11 @@
     >
       <h3>Nothing Found</h3>
       <p class="help">This either means that the contract has not created any tokens yet, or the filter returned nothing.</p>
-      <nuxt-link to="/gallery">Gallery Home</nuxt-link>
+      <nuxt-link to="/gallery" class="asButton">Galleries Home</nuxt-link>
+      
+      <div class="newContract help" style="padding-top: 1rem;">
+        <p>Note: In some cases when a contract has just minted it's first token, it can take a while to show up here</p>
+      </div>
     </div>
     <div
       class="galleryGrid"
@@ -48,6 +52,7 @@
           <div class="galleryImageWrap">
             <GalleryImage 
               v-if="item && (item.image_thumbnail_url || item.image_preview_url)"
+              
               :src="
                 displayMode === 'compact'
                   ? item.image_thumbnail_url
@@ -295,7 +300,7 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
 // import { truncate } from '../utils/misc'
-
+// altSrc="https://storage.opensea.io/files/5473dd4729009541701d3dcbedee730b.mp4"
 export default {
   props: ['displayMode'],
   // data() {
@@ -333,17 +338,23 @@ export default {
       console.log(`Image failed to load, ${index}`);
     },
     handleLink(item, contractId) {
+      console.log('handleLink', item)
       // const tokenId = item.tokenId
       const tokenId = item.token_id
       const tempItem = {
-        imageUrlOriginal: item.imageUrlOriginal,
-        imageUrlThumbnail: item.imageUrlThumbnail,
-        imagePreviewUrl: item.imagePreviewUrl,
+        animation_url: item.animation_url,
+        image_thumbnail_url: item.image_thumbnail_url,
+        image_preview_url: item.image_preview_url,
+        image_original_url: item.image_original_url,
+        // imageUrlOriginal: item.imageUrlOriginal,
+        // imageUrlThumbnail: item.imageUrlThumbnail,
+        // imagePreviewUrl: item.imagePreviewUrl,
         title: item.name,
         description: item.description,
         tokenId,
         contractId,
       }
+      console.log('handleLink', tempItem)
       // console.log('this.$store', this.$store)
       this.$store.commit('ui/setTempViewItem', tempItem)
     
@@ -384,15 +395,18 @@ export default {
       const allSets = []
       assets.map((asset) => {
         const exhibition = this.getTrait(asset.traits, 'exhibition')
-
         if (!exhibition) {
-          console.log('exhibition is null')
           return
         }
+        
+        // console.log('exhibtion: ', exhibition)
+        // const regex = /^[\w\-\s]+$/;
+        // const cleanedExhibition = exhibition && exhibition.replace(regex, "+");
+        // console.log('replaced', cleanedExhibition);
+
+        
         const thisSet = allSets.filter((set) => set.name === exhibition)
         const thisSetIndex = allSets.findIndex((set) => set.name === exhibition)
-        // console.log('thisSet', thisSet)
-        // console.log('thisSetIndex', thisSetIndex)
         let newSet
         if (thisSetIndex > -1) {
           let currentSet = allSets[thisSetIndex]
@@ -427,3 +441,4 @@ export default {
   },
 }
 </script>
+

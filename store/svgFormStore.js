@@ -1,6 +1,50 @@
 import { getField, updateField } from "vuex-map-fields";
 import { removeFromArrayById } from "./../utils/misc";
+const svgContractAddressRinkeby = "0xbfa26c102a0fefa2233b2e7d32f6d504bebdf3e5";
 const svgContractAddress = "0xa5425971826f48df6509152cf6ace505776aeb69";
+const statusMap = {
+  ready: {
+    text: "Ready",
+  },
+  confirming: {
+    text: "Please confirm transaction in your Etherem Wallet",
+    title: "Confirmation Required",
+  },
+  working: {
+    text: "Working...",
+    title: "Please Wait",
+  },
+  stillWorking: {
+    text: "Still Working...",
+    title: "Please Wait",
+  },
+  stillWorkingMore: {
+    text: "Waiting... Mint transaction can take some time.",
+    title: "Please Wait",
+  },
+  checkTransaction: {
+    title: "Please Wait",
+    text:
+      "Transaction still pending...  In times of network congestion transactions can take a long time - check the status on etherscan. If something seems wrong, ask us about it on the Infinft Discord.",
+  },
+  done: {
+    title: "Done",
+    text: "Done",
+  },
+  completed: {
+    title: "Done",
+    text: "Transaction Complete",
+  },
+  error: {
+    title: "Error",
+    text: "Error: Something went wrong.",
+  },
+  noContract: {
+    title: "Error",
+    text:
+      "Contract Address is missing. Please load your contract id, or reset it in the account settings modal. This is a temporary error, and occurs when you have reloaded the mint page.",
+  },
+};
 const abiSVG = [
   {
     inputs: [],
@@ -481,8 +525,7 @@ const abiSVG = [
     type: "function",
   },
 ];
-const defaultCode = `
-<?xml version="1.0" encoding="UTF-8"?>
+const defaultCode = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="800px" height="536px" viewBox="0 0 800 536" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <g id="logo_lowres" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Group" transform="translate(0.000000, 1.000000)" fill="#111111" fill-rule="nonzero">
@@ -497,42 +540,51 @@ const defaultCode = `
 </svg>`;
 
 export const state = () => ({
-  svgMintStatus: "",
-  svgMintedData: {},
-  svgMintStatusMessage: "Ready to mint!",
+  svgData: {},
+  svgStatus: "",
+  svgStatusMessage: null,
   canMintSvg: true,
   showPreview: false,
-  svgFee: 0.25,
-  svgTitle: "test",
-  svgCreator: "example title",
-  svgDescription: "This is a cool description",
+  svgFee: 0.1,
+  svgTitle: "",
+  svgCreator: "",
+  svgDescription: "",
   svgCode: defaultCode,
+  svgTransactionId: null,
   previewBytes: null,
   calculatedFee: null,
+  // statusMap: this.statusMap,
 });
 
 export const getters = {
   canMintSvg: (state) => state.canMintSvg,
-  svgMintedData: (state) => state.svgMintedData,
-  svgMintStatus: (state) => state.svgMintStatus,
-  mintStatusMessage: (state) => state.mintStatusMessage,
+  svgData: (state) => state.svgData,
+  svgStatus: (state) => state.svgStatus,
+  svgStatusMessage: (state) => state.svgStatusMessage,
   showPreview: (state) => state.showPreview,
   svgCode: (state) => state.svgCode,
+  svgFee: (state) => state.svgFee,
   previewBytes: (state) => state.previewBytes,
   calculatedFee: (state) => state.calculatedFee,
-
+  svgTransactionId: (state) => state.svgTransactionId,
   getActiveContractId(state, getters, rootState) {
     const activeContractId = rootState.ui.activeContractId;
     return activeContractId;
   },
 
-  previewData: (state) => {
-    const { svgTitle, svgDescription, svgCreator } = state;
-
+  previewData(state, context, rootStore) {
+    const {
+      svgTitle,
+      svgDescription,
+      svgCreator,
+      previewBytes,
+      calculatedFee,
+    } = state;
     return {
       svgTitle,
       svgDescription,
       svgCreator,
+      previewBytes,
     };
   },
   getField,
@@ -558,21 +610,97 @@ export const mutations = {
     console.log("SETTING setCalculatedFee", value);
     state.calculatedFee = value;
   },
+  setSvgTransactionId(state, value) {
+    console.log("setSvgTransactionId", value);
+    state.svgTransactionId = value;
+  },
+  setSvgStatus(state, statusObj) {
+    const { status } = statusObj;
+    console.log("statusObj", statusObj);
+    console.log("status", status);
+    console.log("statusMap", statusMap);
+    console.log("statusMap[status]", statusMap[status]);
+    console.log("statusMap[status].text", statusMap[status].text);
+    const message = statusMap && statusMap[status].text;
+    console.log("message: ", message);
+    state.svgStatus = status;
+    if (message) {
+      state.svgStatusMessage = message;
+    }
+  },
 };
 
 export const actions = {
-  handleMintSvg: function (context2, data) {
-    console.log("mint this: ", this);
-    const context = this;
-    const { state } = context;
+  handleMintSvg: async function (context, data) {
+    // console.log("mint this: ", this);
+    // const context = this;
+    const { state, rootState } = context;
+
+    console.log("context", context);
+    console.log("context.commit", context.commit);
     console.log("data", data);
+    console.log("svgFormStore", context.svgFormStore);
+    console.log("svgFormStore2", this.svgFormStore);
+    console.log("rootState", rootState);
+    console.log("state", state);
     const { svgFee, svgTitle, svgCreator, svgDescription, svgCode } = state;
-    const network = context.$config.network;
+    const network = rootState.ui.network;
+    // const network = context.$config.network;
     const doIt = true;
-    console.log("web3", web3);
-    var contractSVG = web3.eth.contract(abiSVG).at(svgContractAddress);
+    console.log("network", network);
+    context.commit("setSvgStatus", { status: "confirming" });
+    var contractSVG = web3.eth.contract(abiSVG).at(svgContractAddressRinkeby);
     console.log("active contract: ", contractSVG);
     // const tempData = { name: state.name, symbol: state.symbol }
-    // deployThatShit(event, state, this);
+    const weiValue = 50000000000000000; // rinkeby
+    // const weiValue = 100000000000000000 // main
+    const canMint = await context.dispatch("canMint", {
+      svgFee,
+      svgTitle,
+      svgCreator,
+      svgDescription,
+      svgCode,
+    });
+    console.log("canMint", canMint);
+    if (!canMint) {
+      console.error("canMint is false");
+      return null;
+    }
+    const createTransationId = contractSVG.createNFT(
+      svgTitle,
+      svgCreator,
+      svgDescription,
+      svgCode,
+      { value: weiValue },
+      (err, result) => {
+        if (err) {
+          console.log("contractSVG err", err);
+          return null;
+        } else {
+          console.log("contractSVG result", result);
+          // const mintTransactionId = result;
+          context.commit("setSvgStatus", { status: "working" });
+          context.commit("setSvgTransactionId", result);
+          return result;
+        }
+      }
+    );
+    console.log("createTransationId id: ", createTransationId);
   },
+  canMint(context, parameters) {
+    console.log("parameters", parameters);
+    const { svgTitle, svgCreator, svgDescription, svgCode } = parameters;
+    let hasRequired = false;
+    if (svgTitle && svgCreator && svgDescription && svgCode) {
+      hasRequired = true;
+    }
+    return hasRequired;
+  },
+  // countBytes(source) {
+  //   const bytes = Buffer.byteLength(source);
+  //   const gasFee = 30;
+  //   const transactionFee = (bytes / 1000000) * gasFee;
+  //   const roundedFee = parseFloat(transactionFee).toFixed(5);
+  //   return bytes;
+  // },
 };

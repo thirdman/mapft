@@ -24,33 +24,8 @@
           />
         </button>
       </div>
-      <div class="account-header" v-if="walletAddress">
-        <div class="row titleRow">
-          <div class="userAvatar shadow">
-            <IconUser
-              :strokeClass="contrastMode === 'dark' ? 'light' : 'dark'"
-              size="large"
-            />
-          </div>
-          <h4>User Settings</h4>
-        </div>
-        <div class="subtitle row contentRow between">
-          <div class="column">{{ walletName }}</div>
-          <Button
-            @click="handleDisconnect"
-            size="small"
-            mode="secondary"
-            v-if="walletAddress"
-          >
-            Disconnect
-          </Button>
-          
-          <!-- <div class="column">
-          </div> -->
-        </div>
-      </div>
-
-      <div class="account-content modalSection" v-if="walletAddress">
+      
+      <!-- <div class="account-content modalSection" v-if="walletAddress">
         <label>Active Contract</label>
         <p class="help" style="margin: 0" v-if="!activeContractId">None Selected</p>
         <div class="activeContractWrap shadow" v-if="activeContractId">
@@ -79,36 +54,7 @@
             </Button>
           </div>
         </div>
-        <div class="row contentRow">
-          <Button
-            @click="toggleAddInterface(true)"
-            size="small"
-            mode="secondary"
-            v-if="!showAddInterface"
-          >
-            Add custom contract...
-          </Button>
-        </div>
-        <div class="addInterface row" v-if="showAddInterface">
-          <div class="column col-100">
-            <input
-              name="Custom Contract ID"
-              id="customTokenId"
-              class="w3-input"
-              type="string"
-              max="99"
-              required
-              placeholder="Eg. 0xd0c402bcbcb5e701576..."
-              v-model="customContractId"
-            />
-          </div>
-          <div class="column col-25">
-            <Button @click="addContract">Add</Button>
-            <Button @click="toggleAddInterface(false)" mode="secondary"
-              >Cancel</Button
-            >
-          </div>
-        </div>
+        
       
         <ToggleSection :colorMode="contrastMode" :active="true">
           <span slot="header">Previously Used Contracts</span>
@@ -148,47 +94,56 @@
         </div>
           </div>
         </ToggleSection>
-        <!-- <label>Previously Used Contracts</label>
-        <div v-for="(item, index) in usedContracts" :key="index">
-          <div class="row between contractRow">
-            <span class="column col-66">{{ item }}</span>
-            <div class="column col-33 actions" v-if="item !== activeContractId">
-              <button class="btn inactive" @click="setActiveContractId(item)">
-                Select
-              </button>
-              <div class="removeItem">
-                <button
-                  @click="removeUsedContractId(index)"
-                  class="btn inactive"
-                >
-                  <span>Remove</span>
-                </button>
-              </div>
-            </div>
-            <div class="column col-33" v-if="item === activeContractId">
-              <div class="activeTag">ACTIVE</div>
-            </div>
+        <div class="row contentRow">
+          <Button
+            @click="toggleAddInterface(true)"
+            size="small"
+            mode="secondary"
+            v-if="!showAddInterface"
+          >
+            Add custom contract...
+          </Button>
+        </div>
+        <div class="addInterface row" v-if="showAddInterface">
+          <div class="column col-100">
+            <input
+              name="Custom Contract ID"
+              id="customTokenId"
+              class="w3-input"
+              type="string"
+              max="99"
+              required
+              placeholder="Eg. 0xd0c402bcbcb5e701576..."
+              v-model="customContractId"
+            />
           </div>
-        </div> -->
-      </div>
+          <div class="column col-25">
+            <Button @click="addContract">Add</Button>
+            <Button @click="toggleAddInterface(false)" mode="secondary"
+              >Cancel</Button
+            >
+          </div>
+        </div>
+        
+      </div> -->
 
       <div class="settings-content modalSection" v-if="walletAddress">
         <label>Settings</label>
-        <div class="row contentRow">
+        <div class="row contentRow ">
           <div class="column col-66">Image Optimization:<br />
             <div class="xsmall">High resolution images will be reduced for presentation purposes. <br />This does not effect original files.</div>
           </div>
-          <div class="column col-33">
+          <div class="column col-33 buttonGroup uiMode" >
             <button
-              class="btn small"
-              :class="hasImageOptimization ? 'active' : 'inactive'"
+              class="  small toggleItem"
+              :class="hasImageOptimization ? 'active' : 'notActive'"
               @click="setHasImageOptimization(true)"
             >
               Yes
             </button>
             <button
-              class="btn small"
-              :class="hasImageOptimization ? 'inactive' : 'active'"
+              class="  small toggleItem"
+              :class="hasImageOptimization ? 'notActive' : 'active'"
               @click="setHasImageOptimization(false)"
             >
               No
@@ -196,19 +151,19 @@
             
           </div>
         </div>
-        <div class="row contentRow">
+        <div class="row contentRow  borderTop">
           <div class="column col-66">Status Information:</div>
-          <div class="column col-33">
+          <div class="column col-33 buttonGroup uiMode">
             <button
-              class="btn small"
-              :class="statusModalMode === 'fixed' ? 'active' : 'inactive'"
+              class="toggleItem small"
+              :class="statusModalMode === 'fixed' ? 'active' : 'notActive'"
               @click="setStatusModalMode('fixed')"
             >
               Modal
             </button>
             <button
-              class="btn small"
-              :class="statusModalMode === 'inline' ? 'active' : 'inactive'"
+              class="toggleItem small"
+              :class="statusModalMode === 'inline' ? 'active' : 'notActive'"
               @click="setStatusModalMode('inline')"
             >
               Inline
@@ -218,7 +173,7 @@
       </div>
       <div class="settings-ui modalSection">
         <label>UI</label>
-        <div class="row contentRow">
+        <div class="row contentRow  ">
           <div class="column col-66">Interface Mode</div>
           <div class="column col-33">
             <div class="buttonGroup uiMode">
@@ -246,34 +201,39 @@
             </div>
           </div>
         </div>
-        <div class="row contentRow">
+        <div class="row contentRow borderTop">
           <div class="column col-66">Color Theme</div>
           <div class="column col-33">
             <div class="buttonGroup themeGroup">
-              <div class="swatch lemon" @click="setUiTheme('lemon')">
-                <span class="swatchLabel">Lemon</span>
-              </div>
-              <div class="swatch violet" @click="setUiTheme('violet')">
+              <Swatch name="Lemon" id="lemon" />
+              <Swatch name="Violet" id="violet" />
+              <!-- <div class="swatch violet" @click="setUiTheme('violet')">
                 <span class="swatchLabel">Violet</span>
-              </div>
-              <div class="swatch peach" @click="setUiTheme('peach')">
+              </div> -->
+              <Swatch name="Peach" id="peach" />
+              <!-- <div class="swatch peach" @click="setUiTheme('peach')">
                 <span class="swatchLabel">Peach</span>
-              </div>
-              <div class="swatch sand" @click="setUiTheme('sand')">
+              </div> -->
+              <Swatch name="Sand" id="sand" />
+              <!-- <div class="swatch sand" @click="setUiTheme('sand')">
                 <span class="swatchLabel">Sand</span>
-              </div>
-              <div class="swatch greyscale" @click="setUiTheme('gryscale')">
+              </div> -->
+              <Swatch name="Grayscale" id="greyscale" />
+              <!-- <div class="swatch greyscale" @click="setUiTheme('gryscale')">
                 <span class="swatchLabel">Gray</span>
-              </div>
-              <div class="swatch turquoise" @click="setUiTheme('turquoise')">
+              </div> -->
+              <Swatch name="Turquoise" id="turquoise" />
+              <!-- <div class="swatch turquoise" @click="setUiTheme('turquoise')">
                 <span class="swatchLabel">Turquoise</span>
-              </div>
-              <div class="swatch teal" @click="setUiTheme('teal')">
+              </div> -->
+              <Swatch name="Teal" id="teal" />
+              <!-- <div class="swatch teal" @click="setUiTheme('teal')">
                 <span class="swatchLabel">Teal</span>
-              </div>
-              <div class="swatch charcoal" @click="setUiTheme('charcoal')">
+              </div> -->
+              <Swatch name="Charcoal" id="charcoal" />
+              <!-- <div class="swatch charcoal" @click="setUiTheme('charcoal')">
                 <span class="swatchLabel">Charcoal</span>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -296,6 +256,18 @@
             >
               on
             </button>
+          </div>
+        </div>
+        <div class="row contentRow" v-if="isDevAddress">
+          <div class="column">fancy:</div>
+          <div class="column">
+            <button
+              class="btn small"
+              @click="handleCustomTheme()"
+            >
+              Generate Theme
+            </button>
+            <Swatch name="Custom" id="custom" /> (click to apply)
           </div>
         </div>
         <div class="row contentRow" v-if="isDevAddress">
@@ -344,6 +316,7 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import {generateTheme, hexToHSL, getRandomInt} from "../utils/misc"
 
 export default {
   name: "AccountModal",
@@ -414,7 +387,6 @@ export default {
       return state ? "active" : "inactive";
     },
     setHasVerticalGrid(value){
-      console.log('value', value)
       this.hasVerticalGrid = value
       this.$store.commit("ui/setHasVerticalGridLines", value);
     },
@@ -458,7 +430,22 @@ export default {
       // this.$router.push({
       //   path: `/gallery/${contractId}`,
       // })
+    },
+    handleCustomTheme(color = "#09aa4c") {
+      const generatedHue = getRandomInt(0, 360);
+      const customTheme = generateTheme({color: null, hue: generatedHue });
+      document.querySelector(':root').style.setProperty( '--custom-hue', customTheme.hue);
+      document.querySelector(':root').style.setProperty( '--custom-color', customTheme.color);
+      document.querySelector(':root').style.setProperty( '--custom-ui-color', customTheme.uiColor);
+      document.querySelector(':root').style.setProperty( '--custom-fill-color', customTheme.fillColor);
+      document.querySelector(':root').style.setProperty( '--custom-dark-color', customTheme.darkColor);
+      document.querySelector(':root').style.setProperty( '--custom-light-color', customTheme.lightColor);
+      document.querySelector(':root').style.setProperty( '--custom-text-color', customTheme.textColor);
+      document.querySelector(':root').style.setProperty( '--custom-background-color', customTheme.backgroundColor);
+      document.querySelector(':root').style.setProperty( '--custom-line-color', customTheme.lineColor);
+      document.querySelector(':root').style.setProperty( '--color-mode', 'light');
     }
+
   },
 };
 </script>
@@ -523,17 +510,10 @@ export default {
   padding: 0.5rem;
   border: 1px solid var(--ui-color, #111);
   background: var(--line-color, #eee);
+  margin-bottom: 1rem;;
 }
 
-.addInterface {
-  padding: 0.5rem;
-  margin-bottom: .5rem;
-  align-items: center;
-  background: var(--fill-color, #eee);
-}
-.addInterface .btn {
-  margin-left: 0.5rem;
-}
+
 
 .activeTag {
   color: var(--success-color, #ccc);
@@ -556,6 +536,18 @@ export default {
   padding: 0.25rem 0;
   font-size: .875rem;
 }
+.contentRow.borderTop{
+  padding-top: .5rem;
+  border-top: 1px dotted var(--line-color)
+}
+.contentRow.borderBottom{
+  padding-bottom: .5rem;
+  border-bottom: 1px dotted var(--line-color)
+  
+}
+.contentRow .contentLabel{
+  font-variation-settings: 'wght' 600;
+}
 .modalSection {
   padding: 1rem;
 }
@@ -576,6 +568,6 @@ export default {
   font-size: 0.675rem;
 }
 .actions > button {
-  margin: 0.25rem;
+  margin: 0 0.25rem;
 }
 </style>

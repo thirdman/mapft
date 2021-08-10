@@ -1,7 +1,13 @@
-/* THE STYLE LIBRARY */
-/*This will eventually eb refactored out.*/
+/* Note: lots of this css is now redundant, 
+and will need to be refactored at some point. 
+
+Over time I intend to migrate to main.scss
+*/
+
+/* legacy styles from initial page */
 @import url("./w3.css");
-/* STATIC PAGES */
+
+/* STATIC PAGES, MODES, ICONS, TRANSITIONS */
 @import url("./static.css");
 @import url("./uiModes.css");
 @import url("./icons.css");
@@ -64,17 +70,27 @@
 
   /* --charcoal-color: hsl(330, 7%, 20%); */
   /* --charcoal-color: hsl(330, 5%, 15%); */
-  --charcoal-color: hsl(330, 5%, 14%);
   /* --charcoal-dark-color: hsl(330, 25%, 7%); */
-  --charcoal-dark-color: hsl(330, 15%, 8%);
   /* --charcoal-light-color: hsl(330, 10%, 8%); */
-  --charcoal-light-color: hsl(330, 2%, 30%);
 
+  --charcoal-color: hsl(330, 5%, 14%);
+  --charcoal-dark-color: hsl(330, 15%, 8%);
+  --charcoal-light-color: hsl(330, 2%, 30%);
   --charcoal-fill-color: hsl(330, 0%, 24%);
   --charcoal-ui-color: hsl(330, 4%, 7%);
   --charcoal-text-color: #c0c0c0;
   --charcoal-background-color: hsl(320, 6%, 90%);
   --charcoal-mode: dark;
+
+  --custom-color: #eee;
+  --custom-fill-color: #ddd;
+  --custom-line-color: rgba(0, 0, 0, 0.2);
+  --custom-light-color: #f9f9f9;
+  --custom-dark-color: #fafafa;
+  --custom-ui-color: #111111;
+  --custom-text-color: #333333;
+  --custom-background-color: #eee;
+  --custom-mode: light;
 }
 /* STRUCTURE */
 html {
@@ -128,6 +144,10 @@ a.asButton {
   padding: 2px 1rem;
   border: 1px solid var(--line-color);
   text-decoration: none;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .danger {
@@ -248,7 +268,6 @@ strong {
   --light-color: var(--charcoal-light-color, #f3f3f3);
   --text-color: var(--charcoal-text-color, #fff);
   --ui-color: var(--charcoal-ui-color, #f7e6da);
-  /* --line-color: rgb(233 233 233 / 28%); */
   --line-color: rgb(233 233 233 / 18%);
   --contrast-mode: var(--charcoal-mode, dark);
 }
@@ -259,6 +278,25 @@ strong {
     var(--charcoal-color) 80%
   );
   color: var(--charcoal-text-color, #fff);
+}
+
+#body.custom {
+  --background-color: var(--custom-color, #ccc);
+  --background-color: var(--custom-background-color, #000);
+  --fill-color: var(--custom-fill-color, #f7e6da);
+  --light-color: var(--custom-light-color, #f3f3f3);
+  --text-color: var(--custom-text-color, #fff);
+  --ui-color: var(--custom-ui-color, #f7e6da);
+  --line-color: var(--custom-line-color, red);
+  --contrast-mode: var(--custom-mode, dark);
+}
+#body.custom .pageContainer {
+  background-image: linear-gradient(
+    -70deg,
+    var(--custom-background-color) 20%,
+    var(--custom-background-color) 80%
+  );
+  color: var(--custom-text-color, #fff);
 }
 
 .pageContainer {
@@ -358,15 +396,21 @@ footer {
   position: relative;
   min-height: 2rem;
 }
+.buttonGroup.full {
+  flex-direction: row;
+}
+.buttonGroup.full button {
+  flex-basis: 50%;
+}
 
 .buttonGroup .swatch {
-  padding-left: 2rem;
+  /* padding-left: 2rem; */
   /* box-shadow: 0 0 0 2px #111; */
   color: var(--background-color, #eee);
-  font-size: 0.675rem;
+  /* font-size: 0.675rem;
   position: relative;
   line-height: 1.5rem;
-  padding-right: 0;
+  padding-right: 0; */
 }
 .buttonGroup .swatch .swatchLabel {
   position: absolute;
@@ -743,6 +787,11 @@ a.iconButton {
   display: inline-block;
   vertical-align: middle;
 }
+.iconButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .iconButton + .iconButton {
   margin-left: 0.125rem;
 }
@@ -787,11 +836,6 @@ section {
 }
 #body.minimal section {
   /* min-height: calc(100vh - 80px); */
-}
-section .primary,
-section .secondary,
-section .tertiary {
-  padding-top: 5rem !important;
 }
 
 section.marker:before {
@@ -981,14 +1025,6 @@ ul.heroList {
 }
 .ctaWrap .btn.secondary:hover {
   opacity: 0.7;
-}
-#connectButton {
-  background: var(--background-color, #fff);
-  color: var(--ui-color, #111);
-  border-radius: 2rem;
-  border: 2px solid var(--ui-color);
-  text-transform: uppercase;
-  font-size: 0.75rem;
 }
 
 .aside {
@@ -1194,9 +1230,8 @@ ul.heroList {
   padding: 0 0.25rem;
 }
 .headerRow .networkName {
-  position: absolute;
   display: inline-flex;
-  right: 5rem;
+  margin-right: 0.5rem;
   top: 0.95rem;
   text-transform: uppercase;
   background: var(--fill-color, #eee);
@@ -1285,15 +1320,15 @@ ul.heroList {
 
 .headerRow .profile {
   flex-basis: calc(16rem - 2px);
-  /* flex-basis: calc(6rem - 2px); */
   flex-shrink: 0;
   flex-grow: 1;
   padding: 0;
   padding-top: 0.25rem;
+  padding-right: 1rem;
   border-left: 1px dotted var(--highlight-color, #eee);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   position: relative;
 }
 
@@ -1329,17 +1364,6 @@ ul.heroList {
 .accountItem .itemIcon {
   flex-basis: 2rem;
   flex-shrink: 0;
-}
-
-.itemContent .walletLoggedOut {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-.itemContent .walletLoggedOut span,
-.itemContent .walletLoggedOut button {
-  flex-basis: 50%;
 }
 
 #accountElement {
@@ -1508,7 +1532,7 @@ ul.heroList {
 */
 @media (max-width: 568px) {
   .headerRow .profile {
-    display: none;
+    display: block;
   }
 }
 @media (max-width: 768px) {
@@ -1679,6 +1703,7 @@ ul.heroList {
   font-size: 0.875rem;
   text-align: center;
   padding: 2px 0.5rem;
+  transition: background 0.2s ease-out;
 }
 .toggleItem.selected {
   background: rgba(0, 0, 0, 0.3);
@@ -1907,39 +1932,6 @@ ul.heroList {
   border: 2px solid var(--danger-color, red);
 }
 
-/* CONTRACT SETION */
-.contractSection {
-}
-.contractSection #fieldsetContractView {
-  margin-bottom: 0.5rem;
-  background: var(--ui-color);
-  color: var(--background-color);
-  padding: 0.5rem;
-}
-.contractSection #fieldsetContractView .col-66 {
-  text-align: left;
-  flex-grow: false;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 0.75rem;
-}
-
-#userContractAddress {
-  width: 100%;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.contractSection #fieldsetContractView .col-33 {
-  text-align: right;
-  padding: 2px;
-}
-.contractSection #fieldsetContractView .btn.light {
-  border-radius: 0;
-  color: var(--ui-color);
-  font-size: 0.875rem;
-  background: var(--background-color) !important;
-}
-
 /* GENERAL FIELDSETS */
 .form .fieldset {
   max-width: 680px;
@@ -2116,6 +2108,15 @@ textarea,
   background: var(--light-color, #fff);
   box-shadow: 0px 0px 0px 2px transparent;
   outline: none;
+}
+
+input[type="number"].invert,
+input[type="string"].invert,
+textarea.invert,
+.file-custom {
+  color: var(--ui-color);
+  background: var(--background-color);
+  box-shadow: 0 0 0px 2px var(--border-color, #111);
 }
 
 input[type="number"]:focus,
@@ -2312,7 +2313,7 @@ MODAL
 }
 
 .imageColumn {
-  padding: 0.5rem;
+  padding: 0 0rem 0.5rem 0rem;
   min-width: 200px;
 }
 

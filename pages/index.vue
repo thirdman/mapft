@@ -14,6 +14,7 @@
       </div>
       <div class="primary">
         <div class style="max-width: 700px;">
+           
           <h1>
             InfiNFT
             <span class="betaFlag">beta</span>
@@ -39,7 +40,12 @@
           <div class="ctaWrap">
             <nuxt-link to="/mint" class="btn hero">Get Started »</nuxt-link>
             <a href="#about" class="btn hollow asButton">How it works</a>
-            
+          </div>
+          <div class="existingUserPrompt">
+            <h6>Existing Users</h6>
+            <div class="small">
+              <a href="https://drive.google.com/file/d/1HaWwYfLNN5p1sXG6sjFF_4R0iJzVoI13/view?usp=sharing" target="_blank">Click here for infomation</a> about migrating to our new image upload toolset.
+            </div>
           </div>
           <br />
           <nuxt-link to="/flow" class="btn hero asButton" v-if="hasChainSelect">Flow Test »</nuxt-link>
@@ -164,12 +170,8 @@ export default {
     }
   },
   created(){
-    this.baseUrl = this.$config.rootUrl
-    // console.log('this', this)
-    // console.log('this.router', this.$router)
-    // console.log('this.router.base', this.$router.base)
-    console.log('process', process.env.tempUrl)
-    console.log('this.baseUrl', this.baseUrl)
+    // this.baseUrl = this.$config.rootUrl
+    
   },
   head: {
     title: 'InfiNFT',
@@ -200,4 +202,9 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.existingUserPrompt{
+  margin-top: 3rem;
+  max-width: 15rem;;
+}
+</style>

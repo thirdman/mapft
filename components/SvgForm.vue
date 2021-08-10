@@ -2,10 +2,78 @@
   <div
     id="svgForm"
     class="form column shadow"
-    :class="svgMintStatus === 'error' ? 'error' : ''"
+    :class="svgStatus === 'error' ? 'error' : ''"
   >
-    <!-- <DeployStatusInformation v-if="deployStatus !== 'ready'" /> -->
-    <div class="fieldset metaContent" v-if="svgMintStatus !== 'completed'">
+    
+    <StatusInformationSvg
+      displayMode="inline"
+      :title="svgStatus"
+      :status="svgStatus"
+      :message="
+        svgStatusMessage"
+      :mintTransactionId="svgTransactionId"
+      v-if="
+        svgStatus === 'confirming' ||
+        svgStatus === 'working' ||
+        svgStatus === 'stillWorking' ||
+        svgStatus === 'stillWorkingMore' ||
+        svgStatus === 'checkTransaction' ||
+        svgStatus === 'noContract' ||
+        svgStatus === 'error'
+      "
+    />
+    
+    <div class="fieldset codeContent" v-if="svgStatus !== 'completed'">
+      <div class="sectionNumber">1.</div>
+      <div class="sectionTitle">
+        <h6>Source Code</h6>
+      </div>
+      <ValidationProvider rules="required">
+        <div
+          class="formItem required"
+          :class="classes"
+          slot-scope="{ classes, errors }"
+        >
+          <label>SVG Code</label>
+          <div class="validatedInputWrap">
+            <textarea
+              max="999"
+              name="Svg Code"
+              id="svgCreator"
+              class="w3-input codeInput"
+              type="string"
+              required
+              placeholder=""
+              v-model="svgCode"
+              rows="14"
+              style="font-size: .675rem"
+              @change="countBytes"
+            ></textarea>
+          </div>
+
+          <div>
+            
+            
+          
+              <span class="validationMessage">{{ errors[0] }}</span>
+          
+          </div>
+          <FormItemHelp
+            required="false"
+            message="This is the SVG Code"
+            data="{test: 'nice'}"
+          />
+        </div>
+      </ValidationProvider>
+      <div v-if="this.countBytes()">
+        Length: {{this.countBytes()}} bytes / {{previewBytes}}
+      </div>
+    </div>
+    <div class="fieldset metaContent" v-if="svgStatus !== 'completed'">
+      <div class="sectionNumber">2.</div>
+      <div class="sectionTitle">
+        <h6>Required Data</h6>
+      </div>
       <ValidationProvider rules="required|min:3">
         <div
           class="formItem required"
@@ -43,7 +111,7 @@
         >
           <label>NFT Descrption</label>
           <div>
-            <input
+             <textarea
               name="NFT Name"
               id="svgDescription"
               class="w3-input"
@@ -51,18 +119,20 @@
               required
               placeholder="Eg. This is my cool SVG"
               v-model="svgDescription"
-            />
+            ></textarea>
             <div>
               <span class="validationMessage">{{ errors[0] }}</span>
             </div>
           </div>
           <FormItemHelp
             required="false"
-            message="Describe your svg."
+            message="Describe your svg NFT."
             data="{test: 'nice'}"
           />
         </div>
       </ValidationProvider>
+
+
       <ValidationProvider rules="required">
         <div
           class="formItem required"
@@ -91,75 +161,40 @@
           />
         </div>
       </ValidationProvider>
-      <ValidationProvider rules="required">
-        <div
-          class="formItem required"
-          :class="classes"
-          slot-scope="{ classes, errors }"
-        >
-          <label>SVG Code</label>
-          <div class="validatedInputWrap">
-            <textarea
-              max="999"
-              name="Svg Code"
-              id="svgCreator"
-              class="w3-input"
-              type="string"
-              required
-              placeholder=""
-              v-model="svgCode"
-              rows="8"
-              style="font-size: .675rem"
-            ></textarea>
-          </div>
-
-          <div>
-            
-            
-          
-              <span class="validationMessage">{{ errors[0] }}</span>
-          
-          </div>
-          <FormItemHelp
-            required="false"
-            message="This is the SVG Code"
-            data="{test: 'nice'}"
-          />
-        </div>
-      </ValidationProvider>
-      <div v-if="this.countBytes()">
-        Length: {{this.countBytes()}} bytes / {{previewBytes}}
-      </div>
-      
-      
-      <div class="devContent" v-if="devMode">
-        <div class="divider" />
-
-        <div class="row">
-          <button @click="setDeployStatus('confirming')">set confirming</button>
-          
-        </div>
-      </div>
-
     </div>
-      <div
+
+    <div class="devContent fieldset" v-if="devMode">
+      <div class="row">
+        <button @click="setSvgStatus({status: 'confirming'})">set confirming</button>
+        <button @click="setSvgStatus({status: 'working'})">set working</button>
+        <button @click="setSvgStatus({status: 'completed'})">set completed</button>
+        
+      </div>
+    </div>
+    <div
         class="fieldset actionContent formContent"
         id="fieldsetAction"
         style="padding-top: 0.5rem"
       >
+        <Button
+          :disabled="!this.svgCode"
+          mode="primary"
+          size="medium"
+          @click="() => setShowPreview(true)"
+          >
+            Update Preview
+        </Button>
         <h1 class="w3-xlarge" style="max-width: 1000px; margin: auto">
           <button
             id="h"
             class="w3-button w3-block w3-padding-large w3-black w3-margin-bottom"
-            :disabled="!canMintSvg"
-            @click="handleMintSvg"
+            :disabled="!canMintSvg || previewBytes > 15000"
+            @click="handleMintSvg(this)"
           >
             MINT SVG TOKEN
           </button>
         </h1>
-        <Button mode="secondary" size="medium" @click="() => setShowPreview(true)">
-          Preview
-        </Button>
+        
         <Button mode="secondary" size="medium" @click="resetSvgForm">
           Reset Form
         </Button>
@@ -172,6 +207,11 @@
 .menu {
   display: flex;
   flex-direction: row;
+}
+.codeInput{
+  background: #222;
+  color: #eee;
+  font-family: monospace;
 }
 </style>
 
@@ -214,8 +254,10 @@ export default {
       showPreview: "svgFormStore/showPreview",
       previewBytes: "svgFormStore/previewBytes",
       canMintSvg: "svgFormStore/canMintSvg",
-      svgMintStatus: "svgFormStore/svgMintStatus",
+      svgStatus: "svgFormStore/svgStatus",
+      svgStatusMessage: "svgFormStore/svgStatusMessage",
       svgFormStatusMessage: "svgFormStore/svgFormStatusMessage",
+      svgTransactionId: "svgFormStore/svgTransactionId",
     }),
     
     
@@ -229,7 +271,7 @@ export default {
 
   methods: {
     ...mapMutations({
-      setSvgMintStatus: "svgFormStore/setSvgMintStatus",
+      setSvgStatus: "svgFormStore/setSvgStatus",
       resetSvgForm: "svgFormStore/resetSvgForm",
       setShowPreview: "svgFormStore/setShowPreview",  
       setBytes: "svgFormStore/setBytes"
@@ -238,11 +280,13 @@ export default {
       handleMintSvg: "svgFormStore/handleMintSvg",
       // setContractData: "svgFormStore/setContractData",
     }),
+    
     updatePreview() {
       alert('up')
       // this.$store.commit("deployFormStore/addMetaTemplate", obj);
     },
-     countBytes(){
+    
+    countBytes(){
       const source = this.svgCode;
       // const bytes = new TextEncoder().encode(source).length; 
       // const bytes = this.svgCode.length

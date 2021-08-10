@@ -188,7 +188,9 @@ export default {
 
     async init(url) {
       console.log('init', url)
-      var parser = new vox.Parser();
+      // var parser = new vox.Parser();
+      const parser = null
+      if(!parser){return}
     console.log('parser', parser)
     const result  = await axios.get(url)
     // console.log('vox result ', result.data)

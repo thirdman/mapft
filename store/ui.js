@@ -1,4 +1,5 @@
 // import * as Web3 from 'web3'
+
 import { getField, updateField } from "vuex-map-fields";
 import {
   readThatShit,
@@ -32,6 +33,7 @@ export const state = () => ({
   walletStatus: "",
   walletProvider: null,
   walletNetwork: null,
+  profileObject: null,
   ensName: "",
   activeContractId: "",
   activeContractName: "",
@@ -42,11 +44,13 @@ export const state = () => ({
   searchParams: {},
   usedContracts: [],
   usedContractsObj: null,
+  tempUsedContractsObj: null,
+  activityId: "1234",
   devMode: false,
   hasVerticalGridLines: false,
   statusModalMode: "fixed",
   uiMode: "minimal",
-  uiTheme: "teal",
+  uiTheme: "charcoal",
   contrastMode: "light",
   allowRotation: true,
   hideUi: true, // used in 'none' uiMode
@@ -66,6 +70,8 @@ export const state = () => ({
   viewData: "",
   viewData2: "", // to refactor out.
   viewStatus: "",
+  // DRAFTS
+  draftsArray: [],
 });
 
 export const getters = {
@@ -82,6 +88,7 @@ export const getters = {
   walletNetwork: (state) => state.walletNetwork,
   walletStatus: (state) => state.walletStatus,
   ensName: (state) => state.ensName,
+  profileObject: (state) => state.profileObject,
   showSearch: (state) => state.showSearch,
   viewData: (state) => state.viewData,
   viewStatus: (state) => state.viewStatus,
@@ -95,6 +102,9 @@ export const getters = {
   activeContractSymbol: (state) => state.activeContractSymbol,
   usedContracts: (state) => state.usedContracts,
   usedContractsObj: (state) => state.usedContractsObj,
+  tempUsedContractsObj: (state) => state.tempUsedContractsObj,
+  draftsArray: (state) => state.draftsArray,
+  activityId: (state) => state.activityId,
   tempViewItem: (state) => state.tempViewItem,
   searchData: (state) => {
     return {
@@ -128,12 +138,15 @@ export const mutations = {
       state.hideUi = true;
     }
   },
-  setUiTheme(state, value, rootState) {
+  setUiTheme(state, value) {
+    console.log("setUitheme setting to: ", value);
     state.uiTheme = value;
     if (process.client) {
       const doContrast = () => {
         const mode = getContrast();
+        console.log("setting contrast to", mode);
         this.commit("ui/setUiContrast", mode);
+        // state.contrastMode = mode;
       };
       setTimeout(() => doContrast(), 30);
     }
@@ -154,7 +167,6 @@ export const mutations = {
     state.walletChain = value;
   },
   setWallet(state, account) {
-    console.log("set account state", account);
     console.log(account ? "setting account true" : "settings account false");
     state.hasWallet = account ? true : false;
     state.walletAddress = account ? account : null;
@@ -165,9 +177,35 @@ export const mutations = {
     console.log("setting ens name, ", value);
     state.ensName = value;
   },
+  setProfileObject(state, profileObject) {
+    if (!profileObject) {
+      return;
+    }
+    const { name, description, website } = profileObject;
+    const profileImageHash =
+      profileObject &&
+      profileObject.image &&
+      profileObject.image[0] &&
+      profileObject.image[0].contentUrl["/"];
+    const profileCoverHash =
+      profileObject &&
+      profileObject.coverPhoto &&
+      profileObject.coverPhoto[0] &&
+      profileObject.coverPhoto[0].contentUrl["/"];
+
+    const tempObj = {
+      name,
+      description,
+      website,
+      profileImageHash,
+      profileCoverHash,
+    };
+
+    state.profileObject = tempObj;
+  },
 
   setWalletStatus(state, value) {
-    console.log("setting wallet status", value);
+    // console.log("setting wallet status", value);
     state.walletStatus = value;
   },
   setProvider(state, value) {
@@ -232,8 +270,14 @@ export const mutations = {
     });
     console.log("ui state is now", state);
   },
+  setDrafts(state, array) {
+    state.draftsArray = array;
+  },
   setUsedContractsObj(state, array) {
     state.usedContractsObj = array;
+  },
+  setTempUsedContractsObj(state, array) {
+    state.tempUsedContractsObj = array;
   },
   clearActiveContractId(state, value) {
     state.activeContractId = null;
@@ -260,6 +304,10 @@ export const mutations = {
     //   $modal.hide('status-modal')
     // }
   },
+  setActivityId(state, id) {
+    // if(state.activityId){}
+    state.activityId = id;
+  },
   setSearchContractId(state, value) {
     state.searchContractId = value;
   },
@@ -278,7 +326,6 @@ export const mutations = {
       state.viewData = {};
     }
     if (data) {
-      console.log("setting viewdata: ", data);
       state.viewData = data;
     }
   },
@@ -289,13 +336,14 @@ export const mutations = {
     state.viewStatus = newState;
   },
   setTempViewItem(state, data) {
-    console.log("settempvieitem", data);
+    // console.log("settempvieitem", data);
     if (!data) {
       state.tempViewItem = {};
     } else {
       state.tempViewItem = data;
     }
   },
+
   setAllowRotation(state, newState) {
     console.log("setAllowRotation", newState);
     state.allowRotation = newState;
@@ -370,10 +418,10 @@ export const actions = {
 
     // const imageLink = await readImageLink(params, this)
     // console.log('imageLink', imageLink)
-    console.log("about tot readThatShit with params: ", params);
+    // console.log("about tot readThatShit with params: ", params);
     this.commit("ui/setViewStatus", "loading");
     await readThatShit(params, this).then((result) => {
-      console.log("readthatshit viewResult result", result);
+      // console.log("readthatshit viewResult result", result);
       let resultData = result;
       let linkDataAlpha = {};
       if (isAlpha) {
@@ -382,10 +430,10 @@ export const actions = {
           fileIpfsUrl: `https://gateway.pinata.cloud/ipfs/${result.fileIpfsHash}`,
           thumbnailUrl: result.thumbnailUrl,
         };
-        console.log("ISALPHA", linkDataAlpha);
+        // console.log("ISALPHA", linkDataAlpha);
       }
       resultData = { ...resultData, ...linkDataAlpha };
-      console.log("resultData is", resultData);
+      // console.log("resultData is", resultData);
       // if (!result.ownerAddress) {
       if (!resultData.fileArweaveHash) {
         console.log("no data?");
@@ -398,15 +446,48 @@ export const actions = {
     });
     // readAdditionalMeta(params)
   },
+  updateFollowing({ state }, payload) {
+    const { id, name, symbol, owner } = payload;
+    const { walletAddress } = state;
+
+    console.log("updateFollowing.payload", payload);
+    console.log("updateFollowing", id);
+    console.log("updateFollowing", state.usedContractsObj);
+    const tempUsedContractsObj =
+      (state.usedContractsObj && state.usedContractsObj.slice()) || [];
+    const filteredContracts = tempUsedContractsObj.filter(
+      (item) => item.id === payload.id
+    );
+    const itemExists = filteredContracts.length;
+    const isOwner = owner && owner === walletAddress;
+    // console.log("itemExists", itemExists);
+    // console.log("isOwner", isOwner);
+    this.commit("ui/setActivityId", id);
+    if (id && name && symbol && owner) {
+      this.dispatch("ui/updateUsedContractsObj", {
+        data: payload,
+        remove: false,
+      });
+    }
+    if (itemExists && !isOwner) {
+      this.dispatch("ui/updateUsedContractsObj", {
+        data: payload,
+        remove: true,
+      });
+    }
+    this.commit("ui/setActivityId", "");
+  },
   updateUsedContractsObj(dispatch, props) {
+    // console.log("updateUsedContractsObj props:", props);
     const { state } = dispatch;
     const { data, remove } = props;
-    console.log("updateUsedContractsObj data:", data);
+    // console.log("updateUsedContractsObj data:", data);
     const tempUsedContractsObj =
       (state.usedContractsObj && state.usedContractsObj.slice()) || [];
     const filteredContracts = tempUsedContractsObj.filter(
       (item) => item.id === data.id
     );
+
     if (filteredContracts.length) {
       if (remove) {
         console.log("REMOVE");
@@ -416,9 +497,100 @@ export const actions = {
         this.commit("ui/setUsedContractsObj", newArray);
       }
     } else {
+      console.log("ADD");
       tempUsedContractsObj.push(data);
       this.commit("ui/setUsedContractsObj", tempUsedContractsObj);
     }
     console.log("tempUsedContractsObj is now: ", tempUsedContractsObj);
+  },
+  async getAllContractsMeta(dispatch, payload) {
+    console.log("getting all contracts meta");
+    const { state } = dispatch;
+    console.log("dispatch", dispatch);
+    console.log("state", state);
+
+    const { usedContracts, usedContractsObj } = state;
+    console.log("usedCONtracts", usedContracts);
+    let tempUsedContractsObj = usedContractsObj.slice() || [];
+    if (!usedContracts.length) {
+      return;
+    }
+    const flattenedArray = usedContracts.map(async (hash) => {
+      // console.log("hash", hash);
+      const filteredExisting = tempUsedContractsObj.filter(
+        (item) => item.id === hash
+      );
+      console.log("filtered Existing", filteredExisting);
+      const hasData = filteredExisting.length && filteredExisting[0].symbol;
+      if (hasData) {
+        console.log("Do nothing, has Data");
+        return filteredExisting[0];
+      } else {
+        const params = {
+          contractId: hash,
+          tokenId: 1,
+        };
+        const metaData = await readThatMeta(params, this)
+          .then((result) => {
+            return result;
+          })
+          .catch((error) => console.error(error));
+        const completeResult = {
+          id: hash,
+          ...metaData,
+        };
+        console.log("completeResult: ", completeResult);
+        return completeResult;
+      }
+    });
+    console.log("flattenedArray", flattenedArray);
+    const filledContractsArray = await Promise.all(flattenedArray);
+    console.log("filledContractsArray", filledContractsArray);
+    this.commit("ui/setUsedContractsObj", filledContractsArray);
+  },
+
+  updateDrafts(dispatch, payload) {
+    console.log("updateDrafts:", payload);
+    const { state } = dispatch;
+    const { data, action } = payload;
+    console.log("updateDrafts data:", data);
+
+    const tempDraftsArray =
+      (state.draftsArray && state.draftsArray.slice()) || [];
+    const filteredDrafts = tempDraftsArray.filter(
+      (item) => item.draftId === data.draftId
+    );
+
+    if (!filteredDrafts?.length) {
+      console.log("this would add");
+      tempDraftsArray.push(data);
+      this.commit("ui/setDrafts", tempDraftsArray);
+    } else {
+      console.log("this would start remove");
+      if (action === "remove") {
+        console.log("REMOVE");
+        const newArray = tempDraftsArray.filter(
+          (item) => item.draftId !== data.draftId
+        );
+        console.log("newArray", newArray);
+        this.commit("ui/setDrafts", newArray);
+      }
+    }
+    console.log("tempDraftsArray is now: ", tempDraftsArray);
+  },
+
+  async getProfileData(dispatch, walletAddress) {
+    if (!window) {
+      return;
+    }
+    if (!walletAddress) {
+      console.log("no walletAddress");
+      return;
+    }
+    const profileObject = await BoxAPI.getProfile(walletAddress);
+    if (profileObject) {
+      this.profileObject = profileObject;
+      dispatch.commit("setProfileObject", profileObject);
+    }
   },
 };

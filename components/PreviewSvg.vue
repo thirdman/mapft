@@ -31,10 +31,26 @@
               {{ previewData && previewData.svgDescription }}
             </div>
           </div>
-          <div class="previewElement">
-            <label>Character Length</label>
-            <div >
-              {{previewBytes}} / <strong>Ξ</strong>{{calculatedFee}} (@30 gas)
+          <div class="row">
+            <div class="previewElement column">
+              <label>Bytes</label>
+              <div :class="previewBytes && previewBytes > 15000 ? 'danger' : ''">
+                {{previewBytes}}
+              </div>
+              <div v-if="previewBytes && previewBytes > 15000"
+                class="small"
+                :class="previewBytes && previewBytes > 15000 ? 'danger' : ''"
+                >
+                TOO BIG! The contract will not work with code > 15000 bytes.
+              </div>
+            </div>
+            <div class="previewElement column" >
+              <label>Mint Cost Estimate</label>
+              <div v-if="calculatedFee">
+                <div><strong>Ξ</strong>{{calculatedFee}} (@30 gas)</div>
+                <div size="xsmall">(+ <strong>Ξ</strong>{{svgFee}} base fee)</div>
+
+              </div>
             </div>
           </div>
 
@@ -63,6 +79,9 @@
       height: 100%;
     }
   }
+  .danger{
+    color: var(--danger-color, red);
+  }
 </style>
 
 <script>
@@ -76,8 +95,10 @@ export default {
     ...mapGetters({
       //UI
       devMode: "ui/devMode",
+      //SVG
       previewBytes: "svgFormStore/previewBytes",
       calculatedFee: "svgFormStore/calculatedFee",
+      svgFee: "svgFormStore/svgFee",
     }),
     characterCount() {
       console.log(this.code)

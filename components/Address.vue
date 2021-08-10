@@ -26,11 +26,14 @@ export default {
   props: ['address', 'fill', "shrink"],
   methods: { 
     shrinkAddress(address) {
-      if (!address) {
-        return;
+      if (!address || typeof address !== 'string') {
+        return null
       }
-      const first = address.slice(0, 6) || "";
-      const last = address.slice(-4) || "";
+      if(address.length < 8){
+        return address
+      }
+      const first = address && address.slice(0, 6) || "";
+      const last = address && address.slice(-4) || "";
       const returnValue = `${first}...${last}`;
       return returnValue.toString() || "";
     },

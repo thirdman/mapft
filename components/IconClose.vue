@@ -2,7 +2,7 @@
   <svg
     xmlns="http://www.w3.org/2000/svg"
     class="icon icon-tabler icon-tabler-square-x"
-    :class="strokeClass"
+    :class="`${strokeClass} ${size}`"
     width="24"
     height="24"
     viewBox="0 0 24 24"
@@ -31,9 +31,12 @@
 .icon.brand {
   stroke: var(--fill-color, #ccc);
 }
+.icon.danger {
+  stroke: var(--danger-color, #ccc);
+}
 </style>
 <script>
 export default {
-  props: ['strokeClass'],
+  props: ['strokeClass', 'size'],
 }
 </script>

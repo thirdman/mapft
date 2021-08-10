@@ -7,14 +7,25 @@
       v-if="activeContractId"
     >
       <div class="preview">
+        <div class="hashPreview" v-if="tokenPreviewData.tokenPreviewMode === 'hash'">
+          <RenderImage
+            v-if="tokenPreviewData.fileArweaveHash"
+            :src="tokenPreviewData.fileArweaveHash"
+            :optimisedSrc="`${imageOptimizationUrl}https://arweave.net/${tokenPreviewData.fileArweaveHash}/?width=200}`"
+            :thumbnailSrc="`${imageOptimizationUrl}https://arweave.net/${tokenPreviewData.fileArweaveHash}/?width=200`"
+            :hasImageOptimization="true"
+            resolution="thumbnail"
+          />
+        </div>
         <div
           id="output"
           class="previewImage"
-          :class="previewData.fileName ? 'hasImage' : 'noImage'"
+          :class="tokenPreviewData.fileName ? 'hasImage' : 'noImage'"
+          :style="`${tokenPreviewData.tokenPreviewMode === 'hash' ? 'opacity: 0; position: absolute; z-index: -1;' : ''}`"
         >
           <img
-            :src="`https://arweave.net/${previewData.thumbnailArweaveHashDefault}`"
-            v-if="!previewData.fileName"
+            :src="`https://arweave.net/${tokenPreviewData.thumbnailArweaveHashDefault}`"
+            v-if="!tokenPreviewData.fileName"
           />
         </div>
         <div class="assetPills">
@@ -29,19 +40,19 @@
           <div class="row">
             <div class="previewElement title col-50">
               <label>Title</label>
-              <div id="preview_title">{{ previewData && previewData.title }}</div>
+              <div id="preview_title">{{ tokenPreviewData && tokenPreviewData.title }}</div>
             </div>
             <div class="previewElement artistName">
               <label>By</label>
               <div id="preview_artistName">
-                {{ previewData && previewData.authorName }}
+                {{ tokenPreviewData && tokenPreviewData.authorName }}
               </div>
             </div>
           </div>
           <div class="previewElement artistNote">
             <label>Description</label>
             <div id="preview_artistNote">
-              {{ previewData && previewData.description }}
+              {{ tokenPreviewData && tokenPreviewData.description }}
             </div>
           </div>
           <div class="row">
@@ -49,22 +60,22 @@
               <label>Royalty</label>
               <div>
                 <span id="preview_royaltyFee">
-                  {{ previewData && previewData.royaltyFee }} </span
+                  {{ tokenPreviewData && tokenPreviewData.royaltyFee }} </span
                 >%
               </div>
             </div>
             <div class="previewElement col-50 editionsCount">
               <label>Editions</label>
               <div id="preview_editionsCount">
-                {{ previewData && previewData.editions }}
+                {{ tokenPreviewData && tokenPreviewData.editions }}
               </div>
             </div>
           </div>
-          <div class="previewElement col-100 series" v-if="previewData.series">
+          <div class="previewElement col-100 series" v-if="tokenPreviewData.series">
             <label>Series</label>
             <div>
               <span id="preview_series">
-                {{ previewData && previewData.series }}
+                {{ tokenPreviewData && tokenPreviewData.series }}
               </span>
             </div>
           </div>
@@ -92,13 +103,13 @@
         <div slot="content">
           <div class="formItem">
             <label>File IPFS Hash</label>
-            <p class="xsmall clamp" ><a :href="`https://ipfs.io/ipfs/${fileIpfsHash}`" target="_blank" v-if="fileIpfsHash" style="display: inline-block"><IconExternalLink size="small" /></a>
+            <p class="xsmall clamp" ><a :href="`https://ipfs.io/ipfs/${fileIpfsHash}`" target="_blank" v-if="fileIpfsHash" style="display: inline-block"><IconExternalLink size="small" :strokeClass="contrastMode" /></a>
             {{fileIpfsHash}}</p>
           </div>
           <div class="formItem">
             <label>File Arweave Hash</label>
             <p class="xsmall clamp" >
-            <a :href="`https://arweave.net/${fileArweaveHash}`" target="_blank" v-if="fileArweaveHash" style="display: inline-block"><IconExternalLink size="small" /></a>
+            <a :href="`https://arweave.net/${fileArweaveHash}`" target="_blank" v-if="fileArweaveHash" style="display: inline-block"><IconExternalLink size="small" :strokeClass="contrastMode"/></a>
             {{fileArweaveHash}}</p>
           </div>
         </div>
@@ -128,6 +139,7 @@
   width: 100%;
   padding-left: .5rem;
   margin-top: 1rem;
+  position: absolute;
 }
 </style>
 <script>
@@ -141,20 +153,23 @@ export default {
 
   computed: {
     ...mapGetters({
+      contrastMode: "ui/contrastMode",
       activeContractId: "ui/activeContractId",
-      previewData: "mintFormStore/previewData",
+      imageOptimizationUrl: "ui/imageOptimizationUrl",
+      tokenPreviewMode: "mintFormStore/tokenPreviewMode",
+      tokenPreviewData: "mintFormStore/tokenPreviewData",
       showThumbnailField: "mintFormStore/showThumbnailField",
       fileIpfsHash: "mintFormStore/fileIpfsHash",
       thumbnailIpfsHash: "mintFormStore/thumbnailIpfsHash",
       fileArweaveHash: "mintFormStore/fileArweaveHash",
       thumbnailArweaveHash: "mintFormStore/thumbnailArweaveHash",
     }),
-    // previewData() {
-    // return this.$store.state.mintFormStore.previewData
+    // tokenPreviewData() {
+    // return this.$store.state.mintFormStore.tokenPreviewData
     // },
   },
 };
 // ...mapGetters({
-// previewData: 'mintFormStore/previewData',
+// tokenPreviewData: 'mintFormStore/tokenPreviewData',
 // }),
 </script>

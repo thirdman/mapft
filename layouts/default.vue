@@ -3,10 +3,11 @@
     id="body"
     class="hasSearch"
     :class="[
-      uiMode,
-      uiTheme,
-      this.$store.state.ui.walletNetwork || 'no-network',
-      hasVerticalGridLines ? 'hasLines' : ''
+      uiMode, // sets how much ui is present
+      uiTheme, // sets the ui color theme
+      this.$mq, // comes from the media query plugin.
+      this.$store.state.ui.walletNetwork || 'no-network', // main or rinkby (and future: Flow)
+      hasVerticalGridLines ? 'hasLines' : '' // for typography
     ]"
   >
     <!-- <Header /> -->
@@ -42,8 +43,16 @@ export default {
   created() {
     const uiModeQueryItem = this.$route.query.ui
     const uiThemeQueryItem = this.$route.query.theme
+    const devModeQueryItem = this.$route.query.devMode
     if (uiModeQueryItem) {
       this.$store.commit('ui/setUiMode', uiModeQueryItem)
+    }
+    if (devModeQueryItem === 'no') {
+      console.log('devModeQueryItem is no')
+      this.$store.commit('ui/setDevMode', false)
+    }
+    if (devModeQueryItem && devModeQueryItem !== 'no') {
+      this.$store.commit('ui/setDevMode', true)
     }
     if (uiThemeQueryItem) {
       this.setUiTheme(uiThemeQueryItem)

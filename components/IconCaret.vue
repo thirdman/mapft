@@ -1,6 +1,6 @@
 <template>
   <svg
-    :class="strokeClass"
+    :class="`icon-caret  ${strokeClass} fill${fillClass} ${size}`"
     xmlns="http://www.w3.org/2000/svg"
     class="icon icon-tabler icon-tabler-caret-down"
     width="24"
@@ -30,10 +30,16 @@
 .icon.brand {
   stroke: var(--fill-color, #ccc);
 }
+.icon-caret.filldark{
+  fill: var(--ui-color, #111);
+}
+.icon-caret.filllight{
+  fill: var(--background-color, #111);
+}
 </style>
 <script>
 //https://tablericons.com/
 export default {
-  props: ['strokeClass'],
+  props: ['strokeClass', 'fillClass', 'size'],
 }
 </script>

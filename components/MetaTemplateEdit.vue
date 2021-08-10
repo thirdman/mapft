@@ -51,7 +51,7 @@ extend('required', {
 export default {
   props: ['template', 'removeAction'],
   components: {
-    ValidationProvider,
+    // ValidationProvider,
   },
 }
 </script>

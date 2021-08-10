@@ -7,6 +7,7 @@
       </div>
       <div class="visualTitle">
         <h6>{{ title }}</h6>
+        <div class="small">{{description}}</div>
       </div>
     </div>
     <!-- <figcaption>{{ title }}</figcaption> -->
@@ -73,7 +74,8 @@
   flex-shrink: 1;
   flex-basis: 100%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   color: rgba(255, 255, 255, 0.9);
 }
 
@@ -86,7 +88,7 @@
 <script>
 // import jsmediatags from 'jsmediatags'
 export default {
-  props: ['src', 'title', 'thumbnailSrc'],
+  props: ['src', 'title', 'description', 'thumbnailSrc'],
   mounted() {
     // console.log('this', this)
     // console.log('this.src', this.src)

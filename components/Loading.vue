@@ -1,21 +1,21 @@
 <template>
-  <div class="Loading">
-    <div class="status-icon">
+  <div class="Loading loadingComponent">
+    <div class="status-icon inLoading">
       <IconLogo :fillClass="fillClass || 'dark'" :size="size" />
     </div>
-    <div class="status-message">
+    <div class="status-message .inLoading" >
       {{ message }}
     </div>
   </div>
 </template>
 
 <style>
-.Loading {
+.Loading.loadingComponent {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-.Loading .status-icon {
+.Loading.loadingComponent .status-icon.inLoading {
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -25,10 +25,11 @@
   height: 13px;
   min-width: 20px;
 }
-.Loading .status-icon svg {
+.Loading.loadingComponent .status-icon.inLoading svg {
   width: 100%;
   height: 100%;
 }
+
 </style>
 
 <script>

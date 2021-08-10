@@ -542,21 +542,13 @@ var abiART = [
     type: "function",
   },
 ];
-
-const mintThatShit = (event, state, rootContext) => {
-  const doIt = true;
-  const context = rootContext.$store;
-  const network = context.$config.requiredNetwork || "main";
-  const infuraUrl = context.$config.infuraUrl;
-  // const infuraUrl =
-  //   network === "main"
-  //     ? context.$config.infuraUrlMain
-  //     : context.$config.infuraUrlRinkeby;
-
-  const useThumbnailDefault =
-    state.fileType === "glb" ||
-    state.fileType === "gltf" ||
-    state.fileType === "mp3";
+const testThatShit = (payload) => {
+  const { data, state, useData = true } = payload;
+  console.log("testThatShit:", { data, state, useData });
+  // const useThumbnailDefault =
+  //   state.fileType === "glb" ||
+  //   state.fileType === "gltf" ||
+  //   state.fileType === "mp3";
 
   console.log("state", state);
   // MAP STATE INTO EXISTING MIT FORM VARIABLES
@@ -571,21 +563,119 @@ const mintThatShit = (event, state, rootContext) => {
   const fileIPFSHash = state.fileIpfsHash;
   const fileArweaveHash = state.fileArweaveHash;
   const thumbnailIPFSHash =
-    state.thumbnailIpfsHash ||
-    (useThumbnailDefault && state.thumbnailIpfsHashDefault);
+    state.thumbnailIpfsHash || state.thumbnailIpfsHashDefault;
+  const thumbnailArweaveHash =
+    state.thumbnailArweaveHash || state.thumbnailArweaveHashDefault;
+
+  const userContractAddress = state.activeContractId;
+  console.log("isNan(royaltyfee)", isNaN(royaltyFee));
+  console.log("MINT: royaltyFee", royaltyFee);
+  const isValidRoyalty = !Number.isNaN(royaltyFee);
+  const thumbnailHashToUse = thumbnailArweaveHash;
+
+  console.log("MINT userContractAddress", userContractAddress);
+  console.log("MINT isValidRoyalty", isValidRoyalty);
+  console.log("MINT fileIPFSHash: ", fileIPFSHash);
+  // console.log("MINT useThumbnailDefault", useThumbnailDefault);
+  console.log("MINT thumbnailIPFSHash: ", thumbnailIPFSHash);
+  console.log("MINT thumbnailArweaveHash: ", thumbnailArweaveHash);
+  console.log("MINT thumbnailHashToUse: ", thumbnailHashToUse);
+  let isMissingVariables =
+    !artTitle ||
+    !artistName ||
+    !imageName ||
+    !artistNote ||
+    !exhibition ||
+    !isValidRoyalty ||
+    !totalCap ||
+    !fileType ||
+    !userContractAddress;
+  if (isMissingVariables) {
+    console.error("missing variable... ", {
+      artTitle,
+      artistName,
+      imageName,
+      artistNote,
+      exhibition,
+      royaltyFee,
+      totalCap,
+      fileType,
+      userContractAddress,
+    });
+  } else {
+    console.log("no missing variables");
+  }
+  const mintData = {
+    fileIPFSHash,
+    fileArweaveHash,
+    thumbnailHashToUse,
+    artistName,
+    imageName,
+    artistNote,
+    exhibition,
+    royaltyFee,
+    totalCap,
+    fileType,
+    // ADDITIONAL DATA
+    userContractAddress: userContractAddress,
+    isMissingVariables: isMissingVariables,
+    thumbnailArweaveHash: thumbnailArweaveHash,
+    thumbnailIPFSHash: thumbnailIPFSHash,
+  };
+  return mintData;
+};
+
+const mintThatShit = (state, rootContext, walletAddress) => {
+  const doIt = false;
+  const testIt = true;
+  const context = rootContext.$store;
+  const network = context.$config.requiredNetwork || "main";
+  const web3Write = window.web3Write;
+  const infuraUrl = context.$config.infuraUrl;
+  console.log("mintthatshit web3Write", web3Write);
+  console.log("mintthatshit activeContractId", state.activeContractId);
+  // const walletAddress = state.walletAddress;
+  const useThumbnailDefault =
+    state.fileType === "glb" ||
+    state.fileType === "gltf" ||
+    state.fileType === "mp3";
+
+  console.log("state", state);
+  if (!web3Write) {
+    console.error("no webWrite exists. Reload or contact support");
+    return;
+  }
+  if (!walletAddress) {
+    console.error("no wallet Address exists. Reload or contact support");
+    return;
+  }
+  // MAP STATE INTO EXISTING MIT FORM VARIABLES
+  const artTitle = state.title;
+  const artistName = state.authorName;
+  const imageName = state.title || state.fileName;
+  const artistNote = state.description;
+  const exhibition = state.series || " ";
+  const royaltyFee = state.royaltyFee;
+  const totalCap = state.editions;
+  const fileType = state.fileType;
+  const fileIPFSHash = state.fileIpfsHash;
+  const fileArweaveHash = state.fileArweaveHash;
+  const thumbnailIPFSHash =
+    state.thumbnailIpfsHash || state.thumbnailIpfsHashDefault;
   const thumbnailArweaveHash =
     state.thumbnailArweaveHash || state.thumbnailArweaveHashDefault;
   const userContractAddress = state.activeContractId;
   console.log("isNan(royaltyfee)", isNaN(royaltyFee));
   console.log("MINT: royaltyFee", royaltyFee);
   const isValidRoyalty = !Number.isNaN(royaltyFee);
+  const thumbnailHashToUse = thumbnailArweaveHash;
 
   console.log("MINT isValidRoyalty", isValidRoyalty);
   console.log("MINT fileIPFSHash: ", fileIPFSHash);
+  console.log("MINT useThumbnailDefault", useThumbnailDefault);
   console.log("MINT thumbnailIPFSHash: ", thumbnailIPFSHash);
   console.log("MINT thumbnailArweaveHash: ", thumbnailArweaveHash);
   // const thumbnailHashToUse = thumbnailIPFSHash || fileIPFSHash || "";
-  const thumbnailHashToUse = thumbnailArweaveHash;
 
   console.log("MINT thumbnailHashToUse: ", thumbnailHashToUse);
 
@@ -619,7 +709,7 @@ const mintThatShit = (event, state, rootContext) => {
     }
     return null;
   }
-  console.log("MiNT this data should be: ", {
+  console.log("MiNT data will be: ", {
     fileIPFSHash,
     fileArweaveHash,
     thumbnailHashToUse,
@@ -631,16 +721,178 @@ const mintThatShit = (event, state, rootContext) => {
     totalCap,
     fileType,
   });
-  // artistName = document.getElementById('a');
-  // imageName = document.getElementById('b');
-  // artistNote = document.getElementById('c');
-  // exhibition = document.getElementById('d');
-  // royaltyFee = document.getElementById('e');
-  // totalCap = document.getElementById('f');
-  // fileType = document.getElementById('g');
-  // mintButton = document.getElementById('h');
   console.log("context: ", context);
   context.commit("mintFormStore/setMintStatus", "confirming");
+  if (!doIt && testIt) {
+    const mintCONTRACT = new web3Write.eth.Contract(
+      abiART,
+      userContractAddress
+    );
+    console.log("mintCONTRACT", mintCONTRACT);
+    const options = { value: 5000000000000000, from: walletAddress };
+    mintCONTRACT.methods
+      .createArt(
+        fileIPFSHash,
+        fileArweaveHash,
+        thumbnailHashToUse,
+        artistName,
+        imageName,
+        artistNote,
+        exhibition,
+        royaltyFee,
+        totalCap,
+        fileType
+      )
+      .send(options)
+      .on("transactionHash", function (transactionId) {
+        console.log("transactionId", transactionId);
+        const mintTransactionLabel = document.getElementById(
+          "mintTransactionLabel"
+        );
+        if (mintTransactionLabel) {
+          mintTransactionLabel.innerHTML = `Transaction: ${transactionId}`;
+        }
+        // setMintStatus('working')
+        context.commit("mintFormStore/setMintTransactionId", transactionId);
+        context.commit("mintFormStore/setMintStatus", "working");
+      })
+      .then((completedTransaction) => {
+        console.log("done, completedTransaction = ", completedTransaction);
+        if (completedTransaction.status === true) {
+          // setMintStatus('completed')
+          context.commit("mintFormStore/setMintStatus", "completed");
+          const events = completedTransaction.events;
+          console.log("events", events);
+          // const NewArtAddtData = events.NewArtAddtData.returnValues;
+          const NewArtMetadata = events.NewArtMetadata.returnValues;
+          // const newAddress = completedTransaction.logs[0].address;
+          // const newTokenTopics = completedTransaction.logs[0].topics;
+          // const newTokenIdHex = newTokenTopics && newTokenTopics[3];
+          // console.log("newTokenIdHex", newTokenIdHex);
+          // const newTokenId = decodeHexSequence(newTokenIdHex);
+          const newTokenId = NewArtMetadata.tokenID;
+          console.log("newTokenId", newTokenId);
+
+          console.log("network = ", network);
+          const mintedData = {
+            contractId: userContractAddress,
+            tokenId: newTokenId,
+            network: network,
+          };
+          console.log("mintedData = ", mintedData);
+
+          context.commit("mintFormStore/setMintedData", mintedData);
+        } else {
+          context.commit(
+            "mintFormStore/setMintStatus",
+            "error",
+            "Something went wrong. Transaction was returned but completedTransaction.status was not true"
+          );
+          console.error(
+            "something went wrong. Transaction was returned but completedTransaction.status was not true"
+          );
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        // commit("setTransactionStatus", "error")
+        // commit("setTransactionError", error.message)
+        // commit("setPendingToken", null)
+        // commit("setTransactionId", null)
+        // return error
+      });
+
+    if (!mintCONTRACT) {
+      console.error("no mintCONTRACT");
+      return null;
+    }
+
+    // if (!thumbnailHashToUse) {
+    //   console.error("no thumbnailHashtouse");
+    //   return null;
+    // }
+    // context.commit("mintFormStore/setMintStatus", "confirming");
+    // contractART.createArt(
+    //   fileIPFSHash,
+    //   fileArweaveHash,
+    //   thumbnailHashToUse,
+    //   artistName,
+    //   imageName,
+    //   artistNote,
+    //   exhibition,
+    //   royaltyFee,
+    //   totalCap,
+    //   fileType,
+    //   { value: 5000000000000000 },
+    //   (err, result) => {
+    //     console.log("contractART.createArt result", result);
+    //     const mintTransactionId = result;
+    //     const mintTransactionLabel = document.getElementById(
+    //       "mintTransactionLabel"
+    //     );
+    //     if (mintTransactionLabel) {
+    //       mintTransactionLabel.innerHTML = `Transaction: ${mintTransactionId}`;
+    //     }
+    //     // setMintStatus('working')
+    //     context.commit("mintFormStore/setMintTransactionId", mintTransactionId);
+    //     context.commit("mintFormStore/setMintStatus", "working");
+    //     if (err) {
+    //       // setMintStatus('error', err)
+    //       context.commit("mintFormStore/setMintStatus", "error", err);
+    //       console.error(err);
+    //     }
+    //     if (!err) {
+    //       console.log("got to recursive: ", recursiveMintQuery);
+    //       recursiveMintQuery(60, mintTransactionId, context)
+    //         .then((completedTransaction) => {
+    //           console.log(
+    //             "done, completedTransaction = ",
+    //             completedTransaction
+    //           );
+    //           if (completedTransaction.status === true) {
+    //             // setMintStatus('completed')
+    //             context.commit("mintFormStore/setMintStatus", "completed");
+    //             const newAddress = completedTransaction.logs[0].address;
+    //             const newTokenTopics = completedTransaction.logs[0].topics;
+    //             const newTokenIdHex = newTokenTopics && newTokenTopics[3];
+    //             console.log("newTokenIdHex", newTokenIdHex);
+    //             const newTokenId = decodeHexSequence(newTokenIdHex);
+    //             console.log("newTokenId", newTokenId);
+    //             const mintAddressLabel = document.getElementById(
+    //               "mintAddressLabel"
+    //             );
+
+    //             console.log("mintAddressLabel", mintAddressLabel);
+    //             console.log("newAddress = ", newAddress);
+    //             console.log("network = ", network);
+    //             const mintedData = {
+    //               contractId: newAddress,
+    //               tokenId: newTokenId,
+    //               network: network,
+    //             };
+
+    //             context.commit("mintFormStore/setMintedData", mintedData);
+    //             // mintAddressLabel.innerHTML = "newAddress";
+    //           } else {
+    //             context.commit(
+    //               "mintFormStore/setMintStatus",
+    //               "error",
+    //               "Something went wrong. Transaction was returned but completedTransaction.status was not true"
+    //             );
+    //             // setMintStatus(
+    //             //   'error',
+    //             //   'Something went wrong. Transaction was returned but completedTransaction.status was not true'
+    //             // )
+    //             console.error(
+    //               "something went wrong. Transaction was returned but completedTransaction.status was not true"
+    //             );
+    //           }
+    //         })
+    //         .catch((error) => console.error(error));
+    //     }
+    //   }
+    // );
+  }
   if (doIt) {
     var contractART = web3.eth.contract(abiART).at(userContractAddress);
     console.log("active contract: ", contractART);
@@ -694,8 +946,6 @@ const mintThatShit = (event, state, rootContext) => {
               if (completedTransaction.status === true) {
                 // setMintStatus('completed')
                 context.commit("mintFormStore/setMintStatus", "completed");
-
-                // toggleClass('completedMintContent', 'hidden')
                 const newAddress = completedTransaction.logs[0].address;
                 const newTokenTopics = completedTransaction.logs[0].topics;
                 const newTokenIdHex = newTokenTopics && newTokenTopics[3];
@@ -866,4 +1116,4 @@ function decodeHexSequence(hash) {
   return result;
 }
 
-export { mintThatShit, getTransactionStatus };
+export { mintThatShit, testThatShit, getTransactionStatus };

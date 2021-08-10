@@ -1,23 +1,24 @@
 <template>
   <div
     class="renderItem"
-    :class="`${contentType(fileType)} ${mode}`"
+    :class="`${getContentType(fileType)} ${mode}`"
     v-if="item && item.fileIpfsUrl"
   >
       <img
         @load="onLoad"
         @error="imageLoadError"
         :src="hasImageOptimization ? `${imageOptimizationUrl}${item.fileIpfsUrl}/?${optimization ? optimization : 'width=300'}` : item.fileIpfsUrl"
-        v-if="contentType(fileType) === 'image'"
+        v-if="!hideWorkingImage && getContentType(fileType) === 'image'"
         id="result"
-        :class="`tokenImage ${isLoading ? 'isLoading' : ''} ${notFound ? 'notFoundImage' : ''} ${hasImageOptimization ? 'optimized' : 'fullresolution'}`"
+        :class="`tokenImage ${isLoading ? 'isLoading' : ''} ${notFound ? 'notFoundImage' : ''} ${hasImageOptimization ? 'optimized' : 'fullresolution'} `"
         width="800"
         height="800"
       />
+      
     
     <client-only>
       <ModelViewer
-        v-if="contentType(fileType) === 'threed'"
+        v-if="getContentType(fileType) === 'threed'"
         :src="item.fileIpfsUrl"
         :mode="mode"
         :data="data"
@@ -25,26 +26,34 @@
     </client-only>
     <client-only>
       <VoxelViewer
-        v-if="contentType(fileType) === 'voxel'"
+        v-if="getContentType(fileType) === 'voxel'"
         :src="item.fileIpfsUrl"
         :mode="mode"
         :data="data"
         model="~/assets/models/chicken.vox"
       />
     </client-only>
-
-    <Video v-if="contentType(fileType) === 'video'" :src="item.fileIpfsUrl" />
-    <RenderPdf v-if="contentType(fileType) === 'pdf'" :src="item.fileIpfsUrl" />
+    <RenderImage
+      v-if="getContentType(fileType) === 'image'"
+      :src="item.fileIpfsUrl"
+      :optimisedSrc="`${imageOptimizationUrl}${item.fileIpfsUrl}/?${optimization ? optimization : 'width=300'}`"
+      :thumbnailSrc="`${imageOptimizationUrl}${item.fileIpfsUrl}/?width=200`"
+      :hasImageOptimization="hasImageOptimization"
+      :resolution="resolution"
+    />
+    <Video v-if="getContentType(fileType) === 'video'" :src="item.fileIpfsUrl" :controls="true" :autoPlay="true" />
+    <RenderPdf v-if="getContentType(fileType) === 'pdf'" :src="item.fileIpfsUrl" />
     <RenderAudio
-      v-if="contentType(fileType) === 'audio'"
+      v-if="getContentType(fileType) === 'audio'"
       :src="item.fileIpfsUrl"
       :title="item.title"
+      :description="item.description"
       :imageSrc="item.thumbnailUrl"
       :thumbnailSrc="item.thumbnailUrl"
       :thumbnailHash="item.thumbnailHash"
     />
     <RenderText
-      v-if="contentType(fileType) === 'text'"
+      v-if="getContentType(fileType) === 'text'"
       :src="item.fileIpfsUrl"
     />
   </div>
@@ -52,9 +61,11 @@
 
 <style lang="scss">
 .renderItem {
+  flex-direction: column;
   &.default{
 
   }
+  
 }
 
 .renderItem.preview, .renderItem.preview.threed {
@@ -84,32 +95,44 @@
   display: flex;
   justify-content: center;
 }
-.renderItem.image #result {
-  // width: unset;
-  // height: 100%;
+// .renderItem.image #result {
+//   // width: unset;
+//   // height: 100%;
+//   object-fit: contain;
+//   max-height: 80vh;
+//   max-width: 100%;
+//   &.optimized{
+    
+//   }
+//   &.full{
+//     max-height: unset;
+//   }  
+//   &.fullresolution{
+//     max-height: unset;
+//   }
+// }
+.renderItem img.tokenImage{
   object-fit: contain;
   max-height: 80vh;
   max-width: 100%;
   &.optimized{
     
   }
+  &.full{
+    max-height: unset;
+  }  
   &.fullresolution{
     max-height: unset;
   }
+  
 }
-.renderItem .tokenImage{
-  background: rgba(0,0,0,.1);
-  /* background: var(--shadow-color, rgba(0,0,0,.05)); */
-  // &.isLoading, &.notFound{
-  // &:before{
-  //   content: "Loading...";
-  //   position: absolute;
-  //   left: 0;
-  //   top: 0;
-  //   right: 0;
-  //   bottom: 0;
-  // }
-  // }
+.imageLoadingWrap{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
   
 }
 .renderItem .notFoundImage{
@@ -127,51 +150,36 @@
   z-index: -1;
 }
 
-
+.devImageContent{
+  position: absolute;
+  bottom: 2rem;
+  border: 1px dashed orange;
+}
 </style>
 
 <script>
+import { contentSwitch } from '../utils/misc'
 export default {
-  props: ['item', 'fileType', 'mode', "data", "hasImageOptimization", "imageOptimizationUrl", "optimization"],
+  props: ['item', 'fileType', 'mode', "resolution", "data", "hasImageOptimization", "imageOptimizationUrl", "optimization"],
   data() {
     return {
+      hideWorkingImage: true,
       isActive: false,
       notFound: false,
       isLoading: true,
     }
   },
-  computed: {},
+ 
+  computed: {
+
+  },
   methods: {
-    contentType: (fileType) => {
-      switch (fileType) {
-        case 'glb':
-        case 'obj':
-        case 'usdz':
-        case 'gltf':
-          return 'threed'
-        break
-        case 'vox':
-          return 'voxel'
-          break
-        case 'mp4':
-        case 'mov':
-          return 'video'
-          break
-        case 'mp3':
-          return 'audio'
-          break
-        case 'pdf':
-          return 'pdf'
-          break
-        case 'rtf':
-        case 'txt':
-          return 'text'
-          break
-        default:
-          return 'image'
-      }
+    getContentType(fileType){
+      const type = contentSwitch(fileType);
+      return type
     },
     onLoad(event){
+      // this.loadingStatus = 'loaded';
       // console.log('loaded:', event)
       const imgEl = event.target;
       // console.log('loaded: imgEl', imgEl)
@@ -186,7 +194,9 @@ export default {
       console.log('imageLoadError', event);
       this.notFound = true;
       this.isLoading = false;
-    }
+    },
+    
+    
   },
 }
 </script>

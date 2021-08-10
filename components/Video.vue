@@ -1,5 +1,5 @@
 <template>
-  <video class="videoItem" :src="src" autoplay loop controls></video>
+  <video class="videoItem" :src="src" :autoplay="autoPlay ? true : false"  loop :controls="controls ? true : false" :poster="poster"></video>
 </template>
 
 <style>
@@ -7,14 +7,14 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  height: 100%;
+  /* height: 100%; */
   width: 100%;
 }
 </style>
 
 <script>
 export default {
-  props: ['src', 'autoPlay', 'loop', 'controls'],
+  props: ['src', 'autoPlay', 'loop', 'controls', "poster"],
   data() {
     return {
       // isActive: false,

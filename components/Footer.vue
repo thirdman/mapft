@@ -20,6 +20,9 @@
         </a>
       </div>
       <div class="column options">
+        <div class="optionsRow versionInfo xsmall" v-if="uiMode === 'minimal'">
+          <span>v</span><span>{{VERCEL_GIT_COMMIT_SHA}}</span>
+        </div>
         <div class="optionsRow" v-if="uiMode === 'full'">
           <label>UI Theme</label>
           <div class="buttonGroup themeGroup">
@@ -82,7 +85,8 @@
 </template>
 
 <style>
-.header {
+.versionInfo {
+  opacity: .5;
 }
 </style>
 <script>
@@ -90,9 +94,7 @@ import { mapGetters, mapMutations } from 'vuex'
 // import { setTheme } from '../utils/theme.js'
 
 const myMixin = {
-  created: () => {
-    // handleLoadStorage()
-  },
+  
   methods: {
     hello: () => {
       console.log('hello from mixin!')
@@ -103,8 +105,15 @@ export default {
   mixins: [myMixin],
   data() {
     return {
-      greeting: 'Hello World',
+      VERCEL_GIT_COMMIT_SHA: '',
     }
+  },
+  mounted() {
+    if(this.$config){
+      const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
+      this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
+    }
+    
   },
   computed: {
     ...mapGetters({

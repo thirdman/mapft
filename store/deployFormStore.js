@@ -138,21 +138,10 @@ export const mutations = {
 export const actions = {
   // async handleSearch(dispatch, commit) {},
   handleDeploy: function (context, data) {
-    // async
     const { state } = context;
-    //     console.log('context', context)
-
-    // const state = this.$store.state.deployFormStore
-    //  console.log('this will deploy with state: ', state)
     const tempData = { name: state.name, symbol: state.symbol };
-
-    deployThatShit(event, state, this);
-    // mintThatShit(event, state, this)
-    // this.commit('deployFormStore/setDeployStatus', 'confirming')
-
-    // var contract = web3.eth
-    //   .contract(deployAbi)
-    //   .at('0x677444A94D7ba549aCAB94dA8767E1145E001AaA')
+    const { walletAddress } = data;
+    deployThatShit(state, this, walletAddress);
   },
   setContractData(context, contractData) {
     const { contractAddress } = contractData;
@@ -182,10 +171,5 @@ export const actions = {
 //   // remove(state, { todo }) {
 //   //   state.list.splice(state.list.indexOf(todo), 1)
 //   // },
-//   // setWallet(state, account) {
-//   //   console.log('set account state', account)
-//   //   console.log(account ? 'setting account true' : 'settings account false')
-//   //   state.hasWallet = account ? true : false
-//   //   state.walletAddress = account ? account : null
-//   // },
+
 // }

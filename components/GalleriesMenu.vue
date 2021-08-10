@@ -1,6 +1,6 @@
 <template>
   <div class="galleriesMenu" :class="mode" :environment="environment">
-    <div class="listItem featured">
+    <!-- <div class="listItem featured">
       <nuxt-link
         to="/alpha"
         class="featuredLink"
@@ -11,7 +11,7 @@
         "
         ><div class="galleryImgWrap"><img src="~/static/images/alpha.jpg" width="200px" /></div> Alpha Series</nuxt-link
       >
-    </div>
+    </div> -->
     <div class="listItem" v-if="environment === 'main'">
       <nuxt-link
         to="/gallery/0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
@@ -36,7 +36,31 @@
         ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>Example Posters</nuxt-link
       >
     </div>
+    <div class="listItem" v-if="environment === 'main'">
+      <nuxt-link
+        to="/gallery/0xb52c98c13be439d667f723c825fb41e0dc47aaba"
+        class="featuredLink"
+        ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>NFT Poems</nuxt-link
+      >
+    </div>
+    <div class="listItem" v-if="environment === 'main'">
+      <nuxt-link
+        to="/gallery/0xae056092fa7068dfcd60bb9016d0e2d2448a635e"
+        class="featuredLink"
+        ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>Trislits' Fine Art Collection</nuxt-link
+      >
+    </div>
+    <div class="listItem" v-if="environment === 'main'">
+      <nuxt-link
+        to="/gallery/0xcbe642d1b28caeff5f8377560db29e43ba7ac200"
+        class="featuredLink"
+        ><div class="galleryImgWrap"><IconGallery :size="mode ==='hero' ? 'large' : 'medium'" :strokeClass="contrastMode" /></div>ManWithNoName</nuxt-link
+      >
+    </div>
 
+
+
+    <!-- RINKEBY -->
     <div class="listItem" v-if="environment === 'rinkeby'">
       <nuxt-link
         to="/gallery/0xa0AfEDcC9446fD1F41706EaA4931512bDb2efAe7"
@@ -105,10 +129,11 @@
   &.hero{
     border: 0px solid white;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(200px, 50%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 50px), 1fr));
     // grid-template-rows: repeat(auto-fit, minmax(4rem, 10rem));
     grid-column-gap: 0;
     grid-row-gap: 1rem;
+    width: 100%;
     .listItem {
       display: flex;
       min-height: 5rem;

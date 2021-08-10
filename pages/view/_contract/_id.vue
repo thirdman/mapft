@@ -1,74 +1,23 @@
 <template>
   <div class="pageContainer">
     <Header />
-    <div id="searchRow" class="row searchRow" v-if="showSearch && 1===2">
-      <div class="form entry">
-        <div class="w3-row row">
-          <div class="formItem column col-50">
-            <label for="searchContractId">Art Contract</label>
-            <input
-              name="Contract Id"
-              oldId="ww"
-              id="searchContractId"
-              class="hero"
-              type="string"
-              max="99"
-              required
-              placeholder="0xd0c402bcbcb5e70157635c41b2810b42fe592bb0"
-              v-model="searchContractId"
-            />
-          </div>
-
-          <div class="formItem column col-50">
-            <label for="searchTokenId">Token ID</label>
-            <input
-              name="Token Id"
-              oldId="w"
-              id="searchTokenId"
-              type="number"
-              min="1"
-              class="hero small"
-              placeholder="1"
-              v-model="searchTokenId"
-            />
-          </div>
-
-          <div class="formItem column col-66">
-            <label>&nbsp;</label>
-            <button id="xx" type="submit" class="w3-black btn-large" @click="doTest">
-              <!-- onClick='toggleVisibility("searchRow", "hidden")' -->
-              READ
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- <section id="readStart" class="read borderBottom" v-if="!viewData">
-      <div class="tertiary"></div>
-      <div class="primary">
-        <div class="loadingWrap" v-if="viewStatus === 'loading'">
-          <Loading message="Loading Content" />
-        </div>
-      </div>
-      <div class="secondary"></div>
-    </section>-->
-
-    <!-- <button @click="setViewStatus('loading')">set loading</button> -->
     <section id="read" class="read showMeta borderBottom">
-      <div class="tertiary">
+      <div class="tertiary" >
         <div class="galleryLinkWrap" v-if="uiMode !== 'none'">
           <nuxt-link :to="/gallery/ + contractId" class="galleryLink asButton">
-            <IconBack strokeClass="contrastMode" />
-            <span>Back to gallery</span>
+            <IconBack :strokeClass="contrastMode" />
+            <span>Gallery</span>
           </nuxt-link>
-          <a 
+          <!-- <a 
             target="_blank" 
             :href="`https://twitter.com/intent/tweet?url=${getUrl()}&text=${viewData && viewData.title + ' on InfiNFT: ' + viewData.description}&related=nft4ever,nft42`" 
             class="shareLink asButton" 
           >
             <IconExternalLink :strokeClass="contrastMode" size="small" />
-          </a>
+          </a> -->
+          <Button mode="hollow" @click="handleShare(true)" style="flex-basis: 20%;">
+            <IconExternalLink :strokeClass="contrastMode" />
+          </Button>
         </div>
         <div v-if="uiMode !== 'none'" class="primaryMeta">
           <div class="metaItem">
@@ -76,13 +25,13 @@
               id="metadata2"
               class="theTitle"
               v-if="uiMode === 'full'"
-            >{{ (viewData && viewData.title) || tempViewItem.title || '' }}</h2>
+            >{{ (viewData && viewData.title) || tempViewItem && tempViewItem.title || '' }}</h2>
             <h6 id="metadata2" class="theTitle" v-if="uiMode !== 'full'">
               <label style="display: block;">Title</label>
-              {{ (viewData && viewData.title) || tempViewItem.title || '' }}
+              {{ (viewData && viewData.title) || tempViewItem && tempViewItem.title || '' }}
             </h6>
             <div v-if="viewStatus === 'loading' && !viewData" class="loadingPlaceholder">
-              <Loading text="lo" size="small" :fillClass="contrastMode" />
+              <Loading text="loading" size="small" :fillClass="contrastMode" />
             </div>
           </div>
 
@@ -124,7 +73,7 @@
             <label>Set</label>
             <div id="metadata4" class="aside">
               <p>
-                <nuxt-link :to="`/gallery/${contractId}/${viewData.exhibition}`" class="asButton">
+                <nuxt-link :to="`/gallery/${contractId}/${viewData.exhibition}`" class="asButton pill">
                 {{viewData.exhibition}}
                 </nuxt-link>
               </p>
@@ -134,13 +83,13 @@
         
         <div v-if="viewData && uiMode !== 'none'" class="pagingNav">
           <a @click="navigate(parseInt(tokenId) - 1)" class="galleryLink asButton prev">
-            <IconChevron strokeClass="contrastMode" />
+            <IconChevron :strokeClass="contrastMode" />
             <span>Prev</span>
           </a>
           <a @click="navigate(parseInt(tokenId) + 1)" class="galleryLink asButton next transparent">
             <!-- :to="`/view/${contractId}/${parseInt(tokenId) + 1}`" -->
             <span>Next</span>
-            <IconChevron strokeClass="contrastMode" />
+            <IconChevron :strokeClass="contrastMode" />
           </a>
         </div>
         <ViewControls :fileType="viewData && viewData.fileType" />
@@ -151,10 +100,12 @@
           <h4>Error</h4>
           <p>No token found.</p>
         </div>
+        <CodeView :code="validationData" title="Validation Data" v-if="this.validationData" :onClose="setValidation" />
 
         <div id="readContent" class="output">
           <!-- {{tempViewItem.imageUrlThumbnail}} | {{viewStatus}} |  {{viewData && viewData.fileIpfsHash  ? " has view data" : " no view data"}} -->
           <div class="row readContentRow">
+            
             <div
               class="column col-100 imageColumn"
               v-if="(!viewData || viewData && !viewData.fileIpfsHash) && viewStatus !== 'error'"
@@ -164,20 +115,19 @@
                   src="~/assets/images/defaultImageTransparent.png"
                   style="width: 100%; height: auto;"
                   class="previewImage"
-                  v-if="!tempViewItem.imageUrlThumbnail"
+                  v-if="!tempViewItem.image_thumbnail_url"
                 />
                 <img
-                  :src="tempViewItem && tempViewItem.imageUrlThumbnail"
+                  :src="tempViewItem && tempViewItem.image_thumbnail_url"
                   style="width: 100%; height: auto;"
                   class="previewImage"
-                  v-if="tempViewItem && tempViewItem.imageUrlThumbnail"
+                  v-if="tempViewItem && tempViewItem.image_thumbnail_url"
                 />
                 <div class="previewLoading">
                   <div class="previewLoadingPill">
                     <Loading
-                      message="Loading Data..."
-                      size="large"
-                      :fillClass="contrastMode === 'light' ? 'light' : 'dark'"
+                      message="Loading Source..."
+                      :fillClass="contrastMode"
                     />
                   </div>
                 </div>
@@ -194,7 +144,7 @@
                 </p>
                 <div class="row">
                   <nuxt-link :to="/gallery/ + contractId" class="galleryLink asButton">
-                    <IconBack strokeClass="contrastMode" />
+                    <IconBack :strokeClass="contrastMode" />
                     <span>Back to gallery</span>
                   </nuxt-link>
                   <nuxt-link
@@ -203,12 +153,12 @@
                     }`"
                     class="galleryLink asButton prev"
                   >
-                    <IconChevron strokeClass="contrastMode" />
+                    <IconChevron :strokeClass="contrastMode" />
 
                     <span>Previous Token</span>
                   </nuxt-link>
                   <nuxt-link :to="`/view/${contractId}/${1}`" class="galleryLink asButton prev">
-                    <IconChevron strokeClass="contrastMode" />
+                    <IconChevron :strokeClass="contrastMode" />
 
                     <span>First Token</span>
                   </nuxt-link>
@@ -225,6 +175,7 @@
                 :src="viewData.fileIpfsUrl"
                 :hasImageOptimization="hasImageOptimization"
                 :imageOptimizationUrl="imageOptimizationUrl"
+                :resolution="this.resolution"
                 optimization="width=800"
               />
               <RenderItem
@@ -234,12 +185,18 @@
                 :src="viewData.fileIpfsUrl"
                 :hasImageOptimization="false"
               />
-              <div class="optimisationToggle" v-if="hasImageOptimization && getContentType(viewData.fileType) === 'image'">
+              
+              <div class="optimisationToggle row" v-if="getContentType(viewData.fileType) === 'image'">
+                <div class="buttonGroup full">
+                  <Button mode="hollow" :filled="resolution === 'thumbnail'" @click="setResolution('thumbnail')" size="small" >Thumbnail</Button>
+                  <Button mode="hollow" :filled="resolution === 'preview'" @click="setResolution('preview')" size="small">Preview</Button>
+                  <Button mode="hollow" :filled="resolution === 'full'" @click="setResolution('full')" size="small">Full</Button>
+                </div>
+                <!-- <div class="optimisationToggleOld column" v-if="hasImageOptimization && getContentType(viewData.fileType) === 'image'">
                 <Button v-if="!fullResolution" mode="hollow" size="small" @click="viewFullResolution(true)"><IconExpand size="small" :strokeClass="contrastMode" />&nbsp;<span>Full Resolution</span></Button>
                 <Button v-if="fullResolution" mode="hollow" size="small" @click="viewFullResolution(false)"><IconContract size="small" :strokeClass="contrastMode" />&nbsp;<span>View Preview Resolution</span></Button>
-                <!-- <div v-if="viewData && viewData.fileType">contentType is: {{getContentType(viewData.fileType)}}</div> -->
+              </div> -->
               </div>
-              
               
             </div>
           </div>
@@ -356,22 +313,40 @@
               </div>
             </div>
           </ToggleSection>
+          <div class="row contentRow">
+              <Button mode="hollow" :full="true" size="small" @click="apiData" v-if="!isValidating">Validate</Button>
+              <Loading message="Retrieving Data..." :fillClass="contrastMode" v-if="isValidating" />
+          </div>
         </div>
       </div>
     </section>
     <Footer />
+    <client-only>
+      <share-modal
+        content="blah"
+        mode="token"
+        :contractId="contractId"
+        :tokenId="tokenId"
+        url="https://sdf"
+        :uiMode="uiMode"
+        :uiTheme="uiTheme"
+        :title="viewData.title"
+        :description="viewData.description"
+      />
+    </client-only>
   </div>
 </template>
 
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
-import { humanFileSize } from '../../../utils/misc'
+import { humanFileSize, contentSwitch } from '../../../utils/misc'
 import ogImage from '~/assets/images/default3d.png';
 import Button from '../../../components/Button.vue';
 
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
 import ogImagePreview from '~/assets/images/preview.jpg'
+import { required } from 'vee-validate/dist/rules';
 
 // import { readThatShit } from '../../../utils/web3Read'
 export default {
@@ -383,6 +358,9 @@ export default {
       etherscanUrlBase: "https://etherscan.io/",
       showExpandedDescription: false,
       fullResolution: false,
+      resolution: 'preview',
+      isValidating: false,
+      validationData: null,
     }
   },
   head() {
@@ -404,15 +382,15 @@ export default {
     }
   },
   beforeMount() {
-    console.log("before create", this.tempViewItem)
+    // console.log("before create", this.tempViewItem)
     // SET THE DATA FOR META
     if(this.tempViewItem){
-      console.log('before mount setting data');
+      // console.log('before mount setting data');
       this.test = "mounted"
       this.description = this.tempViewItem.description;
       // this.previewImage = this.tempViewItem.imagePreviewUrl
       this.title = this.tempViewItem.title && `InfiNFT: ${this.tempViewItem.title}`
-      console.log('before mount ', this)
+      // console.log('before mount ', this)
     }
   },
   mounted() {
@@ -421,21 +399,13 @@ export default {
     //   this.$store.state.ui.viewData
     // )
     
-    console.log(
-      'this',
-      this
-    )
+    
     //&& !this.$store.state.ui.viewData
     if (process.client) {
-      console.log('mounted client and no viewData')
+      // console.log('mounted client and no viewData')
       const asyncTokenId = this.$route.params.id
       const asyncContractId = this.$route.params.contract
       this.$store.commit('ui/setViewStatus', 'loading')
-      console.log(
-        'mounted client asyncTokenId && asyncContractId',
-        asyncTokenId,
-        asyncContractId
-      )
       if (!asyncTokenId || !asyncContractId) {
         return null
       }
@@ -461,7 +431,7 @@ export default {
       }
     }
     if (process.server) {
-      console.log('VIEW server mount. Context:', context)
+      // console.log('VIEW server mount. Context:', context)
       // const { req, res, beforeNuxtRender } = context
       // console.log('created server')
       // console.log('this.$scopedSlots', this.$scopedSlots)
@@ -476,6 +446,7 @@ export default {
   async asyncData(context) {
     const { params, $axios } = context
     const requiredNetwork = context.$config.requiredNetwork;
+    // console.log('requiredNetworkk', requiredNetwork);
     const openseaUrl =
       requiredNetwork === "main"
         ? "https://api.opensea.io"
@@ -492,29 +463,16 @@ export default {
     // console.log('BASE_URL', BASE_URL)
     const tempData = {
       title: `InfiNFT | ${data.name}` || "InfiiNFT: View Token",
-      description: `InfiNFT | data.description` || "",
+      description: `InfiNFT | ${data.description}` || "",
       previewImage: `${BASE_URL}${ogImage}`,
       previewUrl: data.image_preview_url,
+      resolution: 'full'
     }
     // console.log('async tempData', tempData)
+    
     return tempData;
-    // console.log('async Web3', Web3)
-    // if (!Web3) {
-    //   console.log('no Web3')
-    //   return null
-    // }
-    // const { data } = await axios.get(`https://my-api/posts/${params.id}`)
-    // return { title: data.title }
-
-    // const asyncData = await readThatShit(options, this)
-    // console.log('data', asyncData)
-    // .then((result) => {
-    //   console.log('asyncDat result', result)
-    //   // this.commit('ui/setViewData', result)
-    //   // this.commit('ui/setViewStatus', 'loaded')
-    // })
-    // .catch((error) => console.error(error))
   },
+  
 
   computed: {
     ...mapGetters({
@@ -563,45 +521,14 @@ export default {
       setShowSearch: 'ui/setShowSearch',
       setSearchParams: 'ui/setSearchParams',
       setViewStatus: 'ui/setViewStatus',
+      
     }),
     ...mapActions({
       contentType: 'ui/contentType',
     }),
     getContentType(fileType){
-      // const type = await this.$store.dispatch('ui/contentType', fileType);
-      const type = this.contentSwitch(fileType);
-      console.log('type: ', type)
+      const type = contentSwitch(fileType);
       return type
-    },
-    contentSwitch(fileType){
-      console.log("fileType", fileType);
-      switch (fileType) {
-        case "glb":
-        case "obj":
-        case "usdz":
-        case "gltf":
-          return "threed";
-          break;
-        case "vox":
-          return "voxel";
-          break;
-        case "mp4":
-        case "mov":
-          return "video";
-          break;
-        case "mp3":
-          return "audio";
-          break;
-        case "pdf":
-          return "pdf";
-          break;
-        case "rtf":
-        case "txt":
-          return "text";
-          break;
-        default:
-          return "image";
-      }
     },
     getTokenId() {
       console.log('this', this)
@@ -613,6 +540,10 @@ export default {
     viewFullResolution(value){
       console.log('set Full Resolution', value)
       this.fullResolution = value
+    },
+    setResolution(value){
+      console.log('setResolution', value)
+      this.resolution = value
     },
     doTest() {
       this.$store.dispatch('ui/handleSearch')
@@ -631,15 +562,16 @@ export default {
       const myUrl = BASE_URL + this.$route.fullPath;
       const tempUiMode = this.uiMode || "minimal";
       const tempUiTheme = this.uiTheme || "charcoal";
-      const fullUrl = myUrl + '?mode=' + tempUiMode + '&theme=' + tempUiTheme;
+      const fullUrl = myUrl + '?ui=' + tempUiMode + '&theme=' + tempUiTheme;
       return encodeURIComponent(fullUrl);
     },
     getDescription(content){
-      console.log('getdescription')
-      console.log('viewData.description', this.viewData.description);
       const tempDescription = this.tempViewItem && this.tempViewItem.description
       const description = this.viewData && this.viewData.description
       return description || tempDescription;
+    },
+    setValidation(){
+      this.validationData = null
     },
     setExpandDescription(newState){
       this.showExpandedDescription = newState
@@ -653,8 +585,63 @@ export default {
       const returnContent = content.length > length ? content.slice(0, length) + clamp : content;
       // console.log('truncate: returncontent:', returnContent)
       return returnContent;
-    }
+    },
+    handleShare(newState) {
+      console.log('handle share')
+      if(newState){
+        this.$modal.show('share-modal');
+      } else {
+        this.$modal.hide('share-modal');
 
+      }
+    },
+    async apiData() {
+    const context = this;
+    console.log('getting api data', this.$route.params)
+    this.isValidating = true;
+    const { params = {}, $axios } = context;
+    const tempParams = {
+      contract: this.$route.params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
+      id: this.$route.params.id || '1'
+    }
+    // const options = {
+    //   contractId: params.contract || '0xB95Af9b2Afd751760e5031C93F18ebD7aB406815',
+    //   tokenId: parseInt(params.id) || 1,
+    // }
+    // let axiosConfig = {
+    //   headers: {
+    //       "Access-Control-Allow-Origin": "*",
+    //   }
+    // };
+    const requiredNetwork = context.$config.requiredNetwork;
+    console.log('requiredNetwork', requiredNetwork)
+    const apiRootUrl =
+      requiredNetwork === "main"
+        ? "https://infinft.azurewebsites.net"
+        : "https://infinftrinkeby.azurewebsites.net";
+    const apiUrl = `${apiRootUrl}/api/HttpTrigger?artContract=${tempParams.contract}&id=${tempParams.id}`; //"${tempParams.id}
+    console.log('url: ', apiUrl)
+    const data = await $axios.get(apiUrl).then(result => {
+      console.log('validation result:', result);
+      this.validationData = result;
+      })
+      .catch(error => {
+        console.log('error: ', error)
+        this.isValidating = false;
+      });
+    console.log('api data result: ', data)
+    this.isValidating = false;
+    // console.log('BASE_URL', BASE_URL)
+    // const tempData = {
+    //   title: `InfiNFT | ${data.name}` || "InfiiNFT: View Token",
+    //   description: `InfiNFT | data.description` || "",
+    //   previewImage: `${BASE_URL}${ogImage}`,
+    //   previewUrl: data.image_preview_url,
+    // }
+    // console.log('async tempData', tempData)
+    // return tempData;
+    
+  },
      
   },
   
@@ -676,7 +663,7 @@ export default {
   border: none;
 }
 .galleryLink {
-  width: 100%;
+  flex-basis: 50%;
   border: none;
   font-size: 0.875rem;
   display: flex;
@@ -684,6 +671,7 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   cursor: pointer;
+  margin-right: .25rem;;
 }
 .galleryLink .icon {
   flex-grow: 0;

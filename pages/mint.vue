@@ -31,22 +31,6 @@
               <div class="connectBody">
                 <h3>Not Connected</h3>
                 <p >Connect your Ethereum Wallet to use InfiNFT minting</p>
-                <Button
-                  fill
-                  size="large"
-                  mode="primary"
-                  @click="
-                    connectWallet({
-                      setWallet,
-                      setWalletStatus,
-                      setWalletChain,
-                      setNetworkName,
-                      setEnsName,
-                    })
-                  "
-                >
-                  Connect
-                </Button>
               </div>
             </div>
           </transition>
@@ -91,40 +75,8 @@
             </div>
           </transition>
 
-        
-          <div v-if="walletAddress" class="row">
-            <div class="contractSection column" style="flex-basis: 100%">
-              <div
-                class="fieldset formContent"
-                id="fieldsetContractView"
-                v-if="activeContractId && deployStatus !== 'completed'"
-              >
-                <!-- v-if="!showEditContract" -->
-                <label>Active Contract </label>
-                <div class="row">
-                  <div class="column col-66">
-                    <div id="userContractAddress">{{ activeContractId }}</div>
-                  </div>
-                  <div class="column col-33">
-                    <Button
-                      mode="hollow"
-                      size="small"
-                      @click="goToGallery(activeContractId)"
-                    >
-                      View Gallery
-                    </Button>
-                    <button
-                      class="btn"
-                      id="editUserContractButton"
-                      @click="handleAccountModal(true)"
-                    >
-                      <IconEdit strokeClass="light" size="small" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ActiveContractInfo v-if="walletAddress && deployStatus !== 'completed'" />
+
           <div v-if="walletAddress && deployStatus !== 'completed'" class="row">
               
             <MintForm />
@@ -162,21 +114,6 @@
           <div v-if="!walletAddress" class="noAccess">
             <h4>No Wallet found.</h4>
             <p>Connect an ethereum wallet to mint tokens</p>
-            <Button
-              size="large"
-              mode="primary"
-              @click="
-                connectWallet({
-                  setWallet,
-                  setWalletStatus,
-                  setWalletChain,
-                  setNetworkName,
-                  setEnsName,
-                })
-              "
-            >
-              Connect
-            </Button>
           </div>
           <div v-if="walletAddress" class="row">
             <DeployForm  />
@@ -235,6 +172,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    > .row {
+      width: 100%;
+    }
   }
   .connectSelect{
     margin-left: -1rem;;
@@ -244,14 +185,18 @@
       display: flex;
       align-items: center;
       flex-direction: column;
+      border-left: 1px solid var(--ui-color);
       border-bottom: 1px solid var(--ui-color);
       cursor: pointer;
       p, h4{
         margin: 0;
       }
-      &:nth-child(2){
-        border-left: 1px solid var(--ui-color);
+      &:first-child{
+        border-left: 0px solid var(--ui-color);
       }
+      // &:nth-child(2){
+      //   border-left: 1px solid var(--ui-color);
+      // }
       &.selected{
         border-bottom: 1px solid transparent;
       }
@@ -274,7 +219,7 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
-import { connectWallet, handleAccountLink } from "../utils/wallet";
+import { handleAccountLink } from "../utils/wallet";
 const BASE_URL = process.env.tempUrl || "https://infinft.app"
 import ogImagePreview from '~/assets/images/preview.jpg'
 
@@ -302,13 +247,15 @@ export default {
      }
    },
    mounted() {
-     // console.log(this.usedContracts)
      if(this.usedContracts && this.usedContracts.length){
        this.setSelectedPanel('existing')
      } else {
        this.setSelectedPanel('new')
      }
+    const selectedPanel = this.$route.query.selected;
+    this.selectedConnectPanel= selectedPanel || "existing" 
    },
+   
   computed: {
     ...mapGetters({
       devMode: "ui/devMode",
@@ -322,7 +269,6 @@ export default {
     }),
   },
   methods: {
-    connectWallet,
     ...mapMutations({
       setShowAccount: "ui/setShowAccount",
       setShowSearch: "ui/setShowSearch",
