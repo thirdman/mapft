@@ -1,10 +1,10 @@
 <template>
   <header
-    class="w3-top header"
+    class="header"
     :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
   >
-  <client-only>
-    <div class="headerRow w3-row">
+    <div class="headerRow">
+    
       <div class="brand w3-col s2">
         <span class="logoWrap" @click="goToHome()">
           <span class="logoBg"></span>
@@ -19,47 +19,27 @@
           <div class="toggleTooltip">Toggle menu options</div>
         </div>
         <span class="chainname" v-if="hasChainSelect">{{ walletChain }}</span>
-        <span class="brandname" @click="goToHome()">INFINFT</span>
-        <span class="subtitle" @click="goToHome()">by NFT42</span>
-        <div class="wedgeWrap">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 100 100"
-            class="wedgeSvg"
-            preserveAspectRatio="none"
-          >
-            <polygon fill="#000" points="0,100 0,0 100,0" />
-          </svg>
-        </div>
+        <span class="brandname" @click="goToHome()">{{siteName}}</span>
       </div>
+      <client-only>
 
       <div class="navRow">
         
         <div class="navItem">
-          <nuxt-link to="/" class="w3-button navLink">About</nuxt-link>
+          <nuxt-link to="/about" class="plain navLink">About</nuxt-link>
         </div>
 
-        <div class="navItem">
-          <nuxt-link to="/mint" class="w3-button navLink">Mint</nuxt-link>
-        </div>
-        <div class="navItem">
-          <nuxt-link to="/gallery" class="w3-button navLink">Gallery</nuxt-link>
-        </div>
-        <div class="navItem">
-          <nuxt-link to="/view" class="w3-button navLink">View</nuxt-link>
+        <div class="navItem" v-if="devMode">
+          <nuxt-link to="/mint" class=" navLink">Mint</nuxt-link>
         </div>
         <div class="navItem" v-if="devMode">
-          <nuxt-link to="/svg" class="w3-button navLink">SVG</nuxt-link>
+          <nuxt-link to="/gallery" class=" navLink">Gallery</nuxt-link>
         </div>
-        <div class="wedgeWrap">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 100 100"
-            class="wedgeSvg"
-            preserveAspectRatio="none"
-          >
-            <polygon fill="#000" points="0,0 100,100 100,0" />
-          </svg>
+        <div class="navItem" v-if="devMode">
+          <nuxt-link to="/view" class=" navLink">View</nuxt-link>
+        </div>
+        <div class="navItem" >
+          <nuxt-link to="/svg" class=" navLink">SVG</nuxt-link>
         </div>
       </div>
 
@@ -67,16 +47,7 @@
         <nuxt-link to="/view" >
           <IconSearch :strokeClass="contrastMode" />
         </nuxt-link>
-        <div class="wedgeWrap">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 100 100"
-            class="wedgeSvg"
-            preserveAspectRatio="none"
-          >
-            <polygon fill="#ccc" points="0,100 0,0 100,0 100,100" />
-          </svg>
-        </div>
+        
       </div>
 
       <div class="profile">
@@ -119,19 +90,10 @@
 
         </client-only>
 
-        <div class="wedgeWrap">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 100 100"
-            class="wedgeSvg"
-            preserveAspectRatio="none"
-          >
-            <polygon fill="#000" points="0,100 0,0 100,0" />
-          </svg>
-        </div>
+        
       </div>
+    </client-only>
     </div>
-  </client-only>
   <client-only>
   <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><Button @click="setDevMode(false)" mode="secondary" size="small">Switch Off</Button><br />
     <div v-if="showDevInfo">
@@ -150,9 +112,9 @@
   <client-only>
     <div>
     <account-modal />
-    <div style="opacity: 0; visibility: 0; z-index: -1">
+    <!-- <div style="opacity: 0; visibility: 0; z-index: -1">
       {{ shallShowStatusModal ? "yes" : "" }}
-    </div>
+    </div> -->
     <status-modal />
     <cropper-modal />
     <chain-modal />
@@ -291,6 +253,7 @@ export default {
       showIt: false,
       connectStatus: "",
       connectError: "",
+      siteName: "SVGTokens"
     };
   },
   computed: {

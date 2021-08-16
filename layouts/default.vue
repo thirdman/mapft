@@ -1,5 +1,5 @@
 <template>
-  <div
+  <v-app
     id="body"
     class="hasSearch"
     :class="[
@@ -13,7 +13,7 @@
     <!-- <Header /> -->
     <Nuxt />
     <!-- <Footer /> -->
-  </div>
+  </v-app>
 </template>
 
 <style lang="scss">

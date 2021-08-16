@@ -53,7 +53,7 @@ export default {
    ** See https://nuxtjs.org/api/configuration-head
    */
   head: {
-    title: "InfiNFT",
+    title: "SVGTokens",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -61,8 +61,7 @@ export default {
       {
         hid: "description",
         name: "description",
-        content:
-          "A NFT platform with a focus on extendability, flexibility, and on-chain data.",
+        content: "NFT creation with on-chain images.",
       },
       // { hid: "og:type", name: "og:type", content: "website" },
       // { hid: "og:title", name: "og:title", content: "InfiNFT" },
@@ -87,8 +86,7 @@ export default {
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
       {
         rel: "stylesheet",
-        href:
-          "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
       },
     ],
     script: [
@@ -102,18 +100,6 @@ export default {
       },
 
       { src: "https://unpkg.com/3box/dist/3box.api.min.js", mode: "client" },
-      // {
-      //   src: "https://cdn.rawgit.com/daishihmr/vox.js/1.0.1/build/vox.min.js",
-      // },
-      // {
-      //   src: "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js",
-      //   type: "module",
-      // },
-      // {
-      //   nomodule: true,
-      //   src:
-      //     "https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js",
-      // },
     ],
   },
   /*
@@ -130,6 +116,7 @@ export default {
     { src: "~plugins/web3ModalPlugin.js", mode: "client" },
     { src: "~plugins/web3Load.js", mode: "client" },
     { src: "~/plugins/vue-tooltip.js", mode: "client" },
+    // { src: "~/plugins/vuetify.js", mode: "client" },
 
     // { src: "~plugins/arweaveInit.js" }, // mode: 'client'
   ],
@@ -145,10 +132,33 @@ export default {
     // Doc: https://github.com/nuxt-community/eslint-module
     "@nuxtjs/eslint-module",
     "@nuxtjs/google-analytics",
+    "@nuxtjs/vuetify",
   ],
-  googleAnalytics: {
-    id: "UA-183944269-2",
+
+  vuetify: {
+    theme: {
+      dark: true,
+      themes: {
+        dark: {
+          primary: "#ff00ff",
+          secondary: "#424242",
+          accent: "#FF1744",
+          error: "#b71c1c",
+          transparent: "transparent",
+        },
+        light: {
+          primary: "#101010",
+          secondary: "#424242",
+          accent: "#FF1744",
+          error: "#b71c1c",
+          transparent: "transparent",
+        },
+      },
+    },
   },
+  // googleAnalytics: {
+  //   id: "UA-183944269-2",
+  // },
   /*
    ** Nuxt.js modules
    */
@@ -192,6 +202,9 @@ export default {
   build: {
     // Add exception
     transpile: ["vee-validate/dist/rules"],
+    babel: {
+      plugins: [["@babel/plugin-proposal-private-methods", { loose: true }]],
+    },
     /*
      ** You can extend webpack config here
      */

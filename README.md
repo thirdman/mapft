@@ -1,8 +1,8 @@
-# infinft-flow
+# SVG TOkens
 
 - Vue/Nuxt served via vercel
-- push to staging branch and view at https://staging.infinft.app
-- push to production branch and view at https://infinft.app
+- push to staging branch and view at xxx
+- push to production branch and view at xxx
 
 .env variables are set locally in the .env file, but served on deploys via vercel env variables.
 

@@ -125,28 +125,6 @@ ARTISTS
   -moz-column-rule: 1px dotted rgba(0, 0, 0, 0.2);
   column-rule: 1px dotted rgba(0, 0, 0, 0.2);
 }
-.gridWrap .artistItem {
-  border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
-  padding: 1rem;
-  break-inside: avoid;
-  position: relative;
-  z-index: 2;
-}
-.gridWrap .artistItem .previewImage {
-  border: 1px solid #111;
-  width: calc(100% - 1rem);
-}
-
-.gridWrap .artistItem img {
-  width: 100%;
-  height: auto;
-}
-.gridWrap .artistItem h5 {
-  text-transform: capitalize;
-}
-.gridWrap .artistItem p {
-  font-size: 0.875rem;
-}
 
 /* 
 [short], [small] {

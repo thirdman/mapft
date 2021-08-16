@@ -1,6 +1,6 @@
 #body.minimal .pageContainer,
 #body.none .pageContainer {
-  padding-top: var(--header-height-minimal, 2.5rem);
+  /* padding-top: var(--header-height-minimal, 2.5rem); */
 }
 
 /*
@@ -17,7 +17,7 @@ header.full.w3-top {
   MINIMAL OVERRIDES
 */
 #body.minimal {
-  --header-height: var(--header-height-minimal, 2rem);
+  /* --header-height: var(--header-height-minimal, 2rem); */
 }
 header.minimal.w3-top {
   position: absolute;
@@ -25,13 +25,13 @@ header.minimal.w3-top {
 }
 header.minimal .headerRow {
   background: transparent;
-  height: var(--header-height-minimal, 2.5rem);
+  /* height: var(--header-height-minimal, 2.5rem); */
   color: var(--text-color, #eee);
 }
 header.minimal .navItem {
-  font-weight: 500;
-  font-variation-settings: "wght" 500;
-  line-height: calc(var(--header-height-minimal, 2.5rem) - 1px);
+  font-weight: 800;
+  font-variation-settings: "wght" 800;
+  /* line-height: calc(var(--header-height-minimal, 2.5rem) - 1px); */
   font-size: 0.875rem;
   padding: 0;
 }
@@ -39,9 +39,6 @@ header.minimal .navItem {
 header.minimal .navItem:first-child .navLink {
   border-left: none;
   border-right: none;
-}
-header.minimal .headerRow .wedgeWrap {
-  top: calc(var(--header-height-minimal, 2.5rem) - 3px);
 }
 
 header.minimal .headerRow .brand {
@@ -67,10 +64,6 @@ header.minimal .headerRow .logoPosition {
 }
 header.minimal .headerRow .logoBg {
   display: none;
-}
-header.minimal .headerRow .wedgeWrap .wedgeSvg polygon {
-  /* fill: var(--fill-color, #111); */
-  fill: transparent;
 }
 header.minimal .headerRow .navRow {
   align-items: center;
@@ -144,13 +137,6 @@ header.minimal .headerRow .profile #connectButton {
   color: var(--text-color, #111);
 }
 
-footer.footer.minimal .wedgeWrap .wedgeSvg {
-  display: none;
-}
-footer.footer.minimal .wedgeWrap .wedgeSvg polygon {
-  fill: transparent;
-}
-
 footer.minimal .iconButton {
   background: transparent;
   border: none;
@@ -206,9 +192,6 @@ header.none .navItem:first-child .navLink {
   border-left: none;
   border-right: none;
 }
-header.none .headerRow .wedgeWrap {
-  top: calc(var(--header-height-minimal, 2.5rem) - 3px);
-}
 
 header.none .headerRow .brand {
   color: var(--text-color, #eee);
@@ -234,10 +217,7 @@ header.none .headerRow .logoPosition {
 header.none .headerRow .logoBg {
   display: none;
 }
-header.none .headerRow .wedgeWrap .wedgeSvg polygon {
-  /* fill: var(--fill-color, #111); */
-  fill: transparent;
-}
+
 header.none .headerRow .navRow {
   align-items: center;
   justify-content: flex-start;
@@ -305,13 +285,6 @@ header.none .headerRow .profile .walletLoggedOut {
 
 .footer.none .options label {
   color: var(--text-color, #111);
-}
-
-footer.footer.none .wedgeWrap .wedgeSvg {
-  display: none;
-}
-footer.footer.none .wedgeWrap .wedgeSvg polygon {
-  fill: transparent;
 }
 
 footer.none .iconButton {

@@ -1,15 +1,7 @@
 <template>
   <footer class="footer w3-center" :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`">
-    <div class="wedgeWrap">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 100 100"
-        class="wedgeSvg"
-        preserveAspectRatio="none"
-      >
-        <polygon fill="#000" points="0,100 0,0 20,100 55,0 85,50 100,0 100,100" />
-      </svg>
-    </div>
+    
+    
     <div class="row">
       <div class="column social">
         <a href="https://twitter.com/nft4ever" target="_blank">

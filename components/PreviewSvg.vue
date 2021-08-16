@@ -1,17 +1,17 @@
 <template>
 
-<div class="column previewColumn svgPreviewColumn">
-<div
+<div class=" previewColumn svgPreviewColumn">
+  <div
       id="previewWrap"
       class="previewWrap shadow"
     >
-  <div class="preview svgPreview border">
+    <div class="preview svgPreview previewBackground">
     <div
       id="svgPreveiw"
       class="svgPreviewWrap"
       v-html="code"
     />
-     <div class="previewContent">
+     <div class="previewContent" v-if="previewMode==='view'">
           <div class="row">
             <div class="previewElement title col-50">
               <label>Title</label>
@@ -90,7 +90,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 
 
 export default {
-  props: ['code', 'previewData'],
+  props: ['code', 'previewData', 'previewMode'],
   computed: {
     ...mapGetters({
       //UI

@@ -130,7 +130,6 @@ div #body {
   height: 100%;
 }
 body .pageContainer {
-  padding-top: 80px;
   height: 100%;
 }
 *:focus {
@@ -330,20 +329,6 @@ footer {
   padding: 0.5rem;
   position: relative;
   margin-top: 1rem;
-}
-.footer .wedgeWrap {
-  position: absolute;
-  left: 0;
-  top: calc(0px - 20px);
-  right: 0;
-  height: 20px;
-  z-index: 1;
-}
-.footer .wedgeWrap svg {
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
 }
 
 .footer .social {
@@ -679,14 +664,7 @@ GRID LINES
 /*
   BUTTONS
 */
-.w3-button {
-  padding: 0.25rem 0.5rem;
-  transition: box-shadow 0.2s ease-out;
-}
-.w3-button:not(:disabled):hover {
-  color: var(--fill-color, #fff);
-  box-shadow: 0 0 0 2px #000;
-}
+
 .btn {
   border: none;
   border-radius: 0.25rem;
@@ -830,6 +808,14 @@ section {
   margin-right: auto;
   padding: 0;
 }
+section > .row {
+  align-self: stretch;
+  justify-self: stretch;
+}
+section > .row > .col {
+  align-self: stretch;
+  /* justify-self: stretch; */
+}
 #body.full {
   border-left: 1px dotted var(--line-color);
   border-right: 1px dotted var(--line-color);
@@ -857,7 +843,6 @@ section.marker:after {
   background: #333;
 }
 section > div {
-  flex-basis: 100%;
   flex-shrink: 1;
 }
 section > .primary {
@@ -876,36 +861,6 @@ section > .tertiary {
   padding: 0.5rem 1rem;
   /* position: sticky; */
   top: 80px;
-}
-.tertiary h2,
-.artistItem h2 {
-  font-size: 1.7rem;
-  margin: 0.5rem 0 0 -1rem;
-  background: var(--ui-color, #111);
-  display: inline-block;
-  color: var(--background-color, #fff);
-  position: relative;
-  padding: 0 0.5rem 0 1rem;
-  margin-bottom: 1rem;
-}
-.tertiary h2:before,
-.artistItem h2:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background: #222;
-  opacity: 0.2;
-  transform: skew(0deg, 13deg) translateX(-1rem);
-  z-index: -1;
-  transition: opacity ease-out 0.3s;
-}
-section:hover .tertiary h2:before,
-.artistItem:hover h2:before {
-  opacity: 0.5;
-  /* transform: skew(0deg, 13deg) translateX(-1.5rem); */
 }
 
 section > .secondary {
@@ -1110,15 +1065,14 @@ ul.heroList {
   /* background: rgba(0,0,0,.02); */
   background: var(--ui-color);
   color: var(--background-color);
-  /* border-bottom: 2px solid var(--background-color); */
-  /* border-top: 2px solid var(--background-color); */
+  border-bottom: 1px solid var(--line-color);
   display: flex;
   flex-direction: row;
   align-items: stretch;
   justify-content: space-between;
   /* border-bottom: 2px solid #222;
   border-top: 2px solid #222; */
-  height: 80px;
+  height: 4rem;
   z-index: 10;
   position: relative;
 }
@@ -1137,8 +1091,8 @@ ul.heroList {
   font-variation-settings: "wght" 400;
   font-size: 1.1rem;
   /* border-right: 1px solid var(--background-color); */
-  height: 100%;
-  line-height: calc(80px - 1rem);
+  /* height: 100%;
+  line-height: calc(80px - 1rem); */
   flex-basis: 50%;
   align-items: center;
   justify-content: center;
@@ -1152,6 +1106,7 @@ ul.heroList {
 .navLink {
   width: 100%;
   height: 100%;
+  padding: 0 0.5rem;
   box-shadow: 0px 0px 0 0px var(--background-color),
     0px 0px 0 0px var(--ui-color);
   transform: translateY(-2px);
@@ -1159,6 +1114,7 @@ ul.heroList {
   /* border-left: 1px dotted var(--background-color); */
   border-left: 1px dotted var(--highlight-color, #eee);
   box-shadow: none;
+  text-decoration: none;
 }
 .navLink:hover {
   background-color: var(--background-color) !important;
@@ -1460,30 +1416,6 @@ ul.heroList {
   position: relative;
   display: block;
 }
-.headerRow .wedgeWrap {
-  position: absolute;
-  left: 0;
-  top: calc(80px - 3px);
-  right: 0;
-  height: 20px;
-  z-index: -1;
-}
-.wedgeWrap .wedgeSvg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-.wedgeWrap .wedgeSvg polygon {
-  fill: var(--ui-color, #111);
-}
-.headerRow .profile .wedgeWrap,
-.headerRow .navRow .wedgeWrap,
-.headerRow .search .wedgeWrap {
-  height: 10px;
-}
-.headerRow .search .wedgeWrap .wedgeSvg polygon {
-  fill: var(--ui-color);
-}
 
 #body.hasWallet .footer .accountWrap {
 }
@@ -1502,13 +1434,6 @@ ul.heroList {
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 0.75rem;
-}
-.headerRow .profile #footerAccountWrap .wedgeWrap {
-  height: 20px;
-  opacity: 0.2;
-  transition: opacity ease-out 0.3s;
-  /* border-left: 1px solid red; */
-  border-left: none;
 }
 
 /* #footerAccountElement .userWalletInfo {
@@ -1607,40 +1532,27 @@ ul.heroList {
   top: calc(0px - 2px);
   /* top: calc(80px - 2px); */
 }
+.previewColumn .previewBackground {
+  background: #eee;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.previewColumn .svgPreviewWrap {
+  background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% /
+    20px 20px;
+}
 .row .previewColumn .previewWrap {
   min-height: 20rem;
-  border: 2px solid var(--ui-color);
-  padding: 1.5rem 0.5rem 2rem;
-  /* padding-bottom: 2rem; */
-  margin-left: 2px;
-  border-left: 2px solid var(--ui-color, #111);
-  background: var(--background-color, #fff);
   color: var(--ui-color, #111);
   margin-top: 0rem;
-}
-.row .previewColumn .previewWrap:before {
-  position: absolute;
-  /* left: 2px;
-  top: -1.25rem; */
-  left: 0;
-  top: 0;
-  content: "Preview";
-  background: var(--ui-color, #111);
-  color: #eee;
-  font-size: 0.875rem;
-  padding: 0 0.5rem;
-  font-weight: bold;
-  font-variation-settings: "wght" 600;
-}
-
-.preview.infinft {
-  /*default styling*/
 }
 
 .preview .previewImage {
   min-width: 10rem;
   min-height: 10rem;
-  background: rgba(0, 0, 0, 0.05);
+
   position: relative;
   display: flex;
   align-items: center;

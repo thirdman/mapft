@@ -24,8 +24,7 @@ const statusMap = {
   },
   checkTransaction: {
     title: "Please Wait",
-    text:
-      "Transaction still pending...  In times of network congestion transactions can take a long time - check the status on etherscan. If something seems wrong, ask us about it on the Infinft Discord.",
+    text: "Transaction still pending...  In times of network congestion transactions can take a long time - check the status on etherscan. If something seems wrong, ask us about it on the Infinft Discord.",
   },
   done: {
     title: "Done",
@@ -41,8 +40,7 @@ const statusMap = {
   },
   noContract: {
     title: "Error",
-    text:
-      "Contract Address is missing. Please load your contract id, or reset it in the account settings modal. This is a temporary error, and occurs when you have reloaded the mint page.",
+    text: "Contract Address is missing. Please load your contract id, or reset it in the account settings modal. This is a temporary error, and occurs when you have reloaded the mint page.",
   },
 };
 const abiSVG = [
@@ -544,6 +542,8 @@ export const state = () => ({
   svgStatus: "",
   svgStatusMessage: null,
   canMintSvg: true,
+  controlMode: "options",
+  previewMode: "edit",
   showPreview: false,
   svgFee: 0.1,
   svgTitle: "",
@@ -561,6 +561,8 @@ export const getters = {
   svgData: (state) => state.svgData,
   svgStatus: (state) => state.svgStatus,
   svgStatusMessage: (state) => state.svgStatusMessage,
+  controlMode: (state) => state.controlMode,
+  previewMode: (state) => state.previewMode,
   showPreview: (state) => state.showPreview,
   svgCode: (state) => state.svgCode,
   svgFee: (state) => state.svgFee,
@@ -602,6 +604,12 @@ export const mutations = {
   setShowPreview(state, newState) {
     console.log("settings show preview", newState);
     state.showPreview = newState;
+  },
+  setPreviewMode(state, newState) {
+    state.previewMode = newState;
+  },
+  setControlMode(state, newState) {
+    state.controlMode = newState;
   },
   setBytes(state, value) {
     state.previewBytes = value;

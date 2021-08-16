@@ -1,7 +1,7 @@
 <template>
   <div
     id="svgForm"
-    class="form column shadow"
+    class="form column"
     :class="svgStatus === 'error' ? 'error' : ''"
   >
     
@@ -208,11 +208,7 @@
   display: flex;
   flex-direction: row;
 }
-.codeInput{
-  background: #222;
-  color: #eee;
-  font-family: monospace;
-}
+
 </style>
 
 <script>

@@ -1,11 +1,30 @@
 <template>
   <div class="pageContainer">
     <Header />
-      <section id="mint" class="mint markerNot borderBottom">
-        <div class="tertiary">
+      <section id="mint" class="">
+        
+      
+        <div class="row" >
+          <div class="col col-6">
+            <PreviewToggle :code="svgCode" :previewData="previewData"/>
+            <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode"  />
+          </div>
+          <div class="col col-6">
+            <ControlsToggle :code="svgCode" :previewData="previewData"  />
+            <ControlsOptions v-if="controlMode === 'options' " />
+            <ControlsCode v-if="controlMode === 'code' " />
+            <SvgForm v-if="controlMode === 'meta' "/>
+          </div>
+        </div>
+        
+      
+      
+    </section>
+    <!-- <section>
+      <div class="row">
+        <div class="col col-6">
           <h2>SVG Minting</h2>
           <div class="aside">
-            <p>Purely onchain SVG</p>
             <h4>Notes:</h4>
             <ul style="margin: 0; padding: 0;">
               <li class="small">Beta functionality: use at your own risk</li>
@@ -15,17 +34,8 @@
             </ul>
           </div>
         </div>
-      <div class="primary">
-        <div class="row" v-if="walletAddress">
-          <SvgForm />
-          <PreviewSvg :code="svgCode" v-if="showPreview" :previewData="previewData" />
-          
-        </div>
-        
       </div>
-      <!-- <div class="secondary">
-      </div> -->
-    </section>
+    </section> -->
     <Footer />
   </div>
 </template>
@@ -47,7 +57,9 @@ export default {
       devMode: "ui/devMode",
       walletAddress: "ui/walletAddress",
       // SVG
+      controlMode: "svgFormStore/controlMode",
       previewBytes: "svgFormStore/previewBytes",
+      previewMode: "svgFormStore/previewMode",
       showPreview: "svgFormStore/showPreview",
       previewData: "svgFormStore/previewData",
       svgCode: "svgFormStore/svgCode",
