@@ -547,26 +547,26 @@ export const state = () => ({
         label: "test",
         id: "abc",
         mode: "generative",
+        count: 3,
+        type: "blob",
         options: {
-          count: 3,
           hue: 1,
           wobbleMin: 0.75,
           wobbleMax: 1,
-          type: "blob",
         },
       },
       {
         label: "dots",
         id: "dots",
         mode: "generative",
+        count: 20,
+        type: "circle",
         options: {
-          count: 20,
           hue: null,
           w: 100,
           h: 100,
           wobbleMin: 50,
           wobbleMax: 140,
-          type: "circle",
         },
       },
     ],
@@ -642,6 +642,11 @@ export const mutations = {
   },
   setControlMode(state, newState) {
     state.controlMode = newState;
+  },
+  setSvgElements(state, newArray) {
+    const currentData = state.svgData && state.svgData;
+    currentData.elements = newArray;
+    state.svgData = currentData;
   },
   setBytes(state, value) {
     state.previewBytes = value;
