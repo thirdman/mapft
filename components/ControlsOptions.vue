@@ -7,7 +7,7 @@
               <v-icon small v-if="element.options.type==='triangle'">mdi-vector-triangle</v-icon>
               <v-icon small v-if="element.options.type==='rectangle'">mdi-vector-rectangle</v-icon>
               <v-icon small v-if="element.options.type==='line'">mdi-vector-line</v-icon>
-              {{element.label}}: {{element.options.type}}  ({{element.mode}} )
+              {{element.label}}: {{element.options.type}}  ({{element.mode}} {{element.options.count}})
            </div>
              <v-btn block @click="() => {this.showNew = !this.showNew}"><v-icon>mdi-plus-box</v-icon>add element</v-btn> 
           </div>
@@ -160,11 +160,19 @@ export default {
       // These are the validation arrays
     };
   },
+  created(){
+    const {svgData} = this;
+    console.log('svgData', svgData)
+    if(!svgData){return}
+    const {elements} = svgData
+    this.elements = elements
+  },
   computed: {
     ...mapGetters({
       //UI
       devMode: "ui/devMode",
       // SVG
+      svgData: "svgFormStore/svgData",
       previewBytes: "svgFormStore/previewBytes",
     }),
     

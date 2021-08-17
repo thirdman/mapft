@@ -7,7 +7,9 @@
         <div class="row" >
           <div class="col col-6">
             <PreviewToggle :code="svgCode" :previewData="previewData"/>
-            <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode"  />
+            <client-only>
+              <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode"  />
+            </client-only>
           </div>
           <div class="col col-6">
             <ControlsToggle :code="svgCode" :previewData="previewData"  />

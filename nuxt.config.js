@@ -144,14 +144,14 @@ export default {
           secondary: "#424242",
           accent: "#FF1744",
           error: "#b71c1c",
-          transparent: "transparent",
+          transparent: "rgba(0,0,0,.00)",
         },
         light: {
           primary: "#101010",
           secondary: "#424242",
           accent: "#FF1744",
           error: "#b71c1c",
-          transparent: "transparent",
+          transparent: "rgba(0,0,0,.00)",
         },
       },
     },
@@ -201,7 +201,7 @@ export default {
    */
   build: {
     // Add exception
-    transpile: ["vee-validate/dist/rules"],
+    transpile: ["vee-validate/dist/rules", "@georgedoescode/spline"],
     babel: {
       plugins: [["@babel/plugin-proposal-private-methods", { loose: true }]],
     },

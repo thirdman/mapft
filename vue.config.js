@@ -1,6 +1,6 @@
 module.exports = {
   outputDir: "docs",
-  transpileDependencies: ["vuetify"],
+  transpileDependencies: ["vuetify", "@georgedoescode/spline"],
   // "lintOnSave": false
   // css: {
   //   loaderOptions: {

@@ -2,7 +2,7 @@
 
 <div class="toggleRow row contentRow pa-0 ma-0">
   
-          <div class="col col-3">Mode:</div>
+          <div class="col col-3">Mode: {{previewMode}}</div>
           <div class="col col-9">
             <v-btn
               x-small

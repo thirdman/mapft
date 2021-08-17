@@ -538,7 +538,39 @@ const defaultCode = `<?xml version="1.0" encoding="UTF-8"?>
 </svg>`;
 
 export const state = () => ({
-  svgData: {},
+  svgData: {
+    width: 1600,
+    height: 1600,
+    elementCount: 5,
+    elements: [
+      {
+        label: "test",
+        id: "abc",
+        mode: "generative",
+        options: {
+          count: 3,
+          hue: 1,
+          wobbleMin: 0.75,
+          wobbleMax: 1,
+          type: "blob",
+        },
+      },
+      {
+        label: "dots",
+        id: "dots",
+        mode: "generative",
+        options: {
+          count: 20,
+          hue: null,
+          w: 100,
+          h: 100,
+          wobbleMin: 50,
+          wobbleMax: 140,
+          type: "circle",
+        },
+      },
+    ],
+  },
   svgStatus: "",
   svgStatusMessage: null,
   canMintSvg: true,
