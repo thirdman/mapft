@@ -1,6 +1,6 @@
 @use 'mediaqueries';
 @use 'tooltips';
-
+@use 'vgrid';
 // UTILITY FIXES
 html,
 body {
@@ -13,4 +13,7 @@ body {
 
 #__layout {
   height: 100%;
+}
+.col-3,
+.col-9 {
 }
