@@ -4,7 +4,7 @@
       <section id="appSection" class="">
         
       
-        <div class="row ma-0 pa-0" >
+        <div class="sectionRow row ma-0 pa-0" >
           <div class="col col-6 svgColumn pa-0">
             <PreviewToggle :code="svgCode" :previewData="previewData"/>
             <client-only>
@@ -74,16 +74,38 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+  .col{
+    // padding: 1rem;
+    // flex-basis: 100%;
+    
+    &.col6, &.col-6{
+      flex-basis: 50%;
+    }
+    &.col-9{
+      flex-basis: calc(9/12);
+    }
+    &.alternate{
+      background: rgba(255,255,255,.05);
+      padding: 1rem;
+      align-self: stretch;
+
+    }
+  }
 .appSection{}
+.sectionRow{
+  width: 100%;
+}
 .svgColumn{
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
   border-right: 1px solid var(--line-color);
+  flex-basis: 50%;
 }
 .controlsColumn{
+  flex-basis: 50%;
   height: 100%;
   display: flex;
   flex-direction: column;

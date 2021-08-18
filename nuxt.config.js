@@ -57,30 +57,19 @@ export default {
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
+      { hid: "og:site_name", name: "og:site_name", content: "SVG Tokens" },
       {
         hid: "description",
         name: "description",
         content: "NFT creation with on-chain images.",
       },
-      // { hid: "og:type", name: "og:type", content: "website" },
-      // { hid: "og:title", name: "og:title", content: "InfiNFT" },
+
       // {
-      //   hid: "description",
-      //   name: "description",
-      //   content: process.env.npm_package_description || "",
+      //   hid: "ogimage2",
+      //   name: "og:image",
+      //   // content: "/images/preview.jpg",
+      //   content: "https://staging.infinft.app/_nuxt/assets/images/preview.jpg",
       // },
-      // {
-      //   hid: "og:description",
-      //   name: "og:description",
-      //   content: process.env.npm_package_description,
-      // },
-      {
-        hid: "ogimage2",
-        name: "og:image",
-        // content: "/images/preview.jpg",
-        content: "https://staging.infinft.app/_nuxt/assets/images/preview.jpg",
-      },
     ],
     link: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },

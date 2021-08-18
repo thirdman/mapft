@@ -129,21 +129,5 @@ export default {
   // width: 100%;
   
   }
-  .col{
-    // padding: 1rem;
-    // flex-basis: 100%;
-    
-    &.col6, &.col-6{
-      flex-basis: 50%;
-    }
-    &.col-9{
-      flex-basis: calc(9/12);
-    }
-    &.alternate{
-      background: rgba(255,255,255,.05);
-      padding: 1rem;
-      align-self: stretch;
 
-    }
-  }
 </style>

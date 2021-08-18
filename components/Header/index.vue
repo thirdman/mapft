@@ -29,7 +29,7 @@
           <nuxt-link to="/about" class="plain navLink text--color">ABOUT</nuxt-link>
         </div>
 
-        <div class="navItem" v-if="devMode">
+        <!-- <div class="navItem" v-if="devMode">
           <nuxt-link to="/mint" class=" navLink">Mint</nuxt-link>
         </div>
         <div class="navItem" v-if="devMode">
@@ -37,7 +37,7 @@
         </div>
         <div class="navItem" v-if="devMode">
           <nuxt-link to="/view" class=" navLink">View</nuxt-link>
-        </div>
+        </div> -->
         <div class="navItem" >
           <nuxt-link to="/svg" class=" navLink">SVG</nuxt-link>
         </div>
