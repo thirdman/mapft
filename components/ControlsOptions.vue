@@ -82,17 +82,6 @@
               
             </v-card>
           </div>
-          
-        
-      <div>
-        <ul>
-          <li>colors: fill, stroke</li>
-          
-        </ul>
-      </div>
-      
-    
-      
   </div>
 </template>
 
