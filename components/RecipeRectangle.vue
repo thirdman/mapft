@@ -1,6 +1,6 @@
 <template>
   <div class="element panel">
-    <label>Triangle</label>
+    <label>Rectangle</label>
     <div class="row">
       <div class="col">
         <label>X</label><br />
@@ -64,9 +64,6 @@ export default {
         rotation: 0
       },
       rotationOptions: [0, 90, 180, 270],
-      // toggle_count: 1,
-      // elements: [],
-      // These are the validation arrays
     };
   },
   created(){
@@ -84,9 +81,6 @@ export default {
       get() {
         return this.value
       },
-      // set(container) {
-      //   this.$emit('input', elOptions)
-      // }
     },
     ...mapGetters({
       // SVG

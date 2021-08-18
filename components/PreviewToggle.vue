@@ -27,14 +27,7 @@
 </template>
 
 <style lang="scss">
-.toggleRow{
-  display: flex;
-  flex-basis: 400px;
-  flex-grow: 0;
-  // height: 2rem;
-  border-bottom: 1px solid var(--line-color);
-  // border-top: 1px solid var(--line-color);
-}
+
   
   .danger{
     color: var(--danger-color, red);

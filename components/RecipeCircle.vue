@@ -1,6 +1,6 @@
 <template>
   <div class="element panel">
-    <label>Triangle</label>
+    <label>Circle</label>
     <div class="row">
       <div class="col">
         <label>X</label><br />
@@ -18,6 +18,22 @@
         <label>H</label><br />
           <v-text-field filled outlined dense v-model="localOptions.h" />
       </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>Variation</label><br />
+          <!-- <v-text-field filled outlined dense v-model="localOptions.rotation" /> -->
+          
+      </div>
+      <div class="col">
+        <label>Min Size</label><br />
+          <v-text-field filled outlined dense v-model="localOptions.minSize" />
+      </div>
+      <div class="col">
+        <label>Max Size</label><br />
+          <v-text-field filled outlined dense v-model="localOptions.maxSize" />
+      </div>
+      
     </div>
     <div class="row">
       <div class="col">
@@ -61,12 +77,11 @@ export default {
         y: 102,
         w: 103,
         h: 104,
+        minSize: 100,
+        maxSize: 300,
         rotation: 0
       },
       rotationOptions: [0, 90, 180, 270],
-      // toggle_count: 1,
-      // elements: [],
-      // These are the validation arrays
     };
   },
   created(){
@@ -84,9 +99,6 @@ export default {
       get() {
         return this.value
       },
-      // set(container) {
-      //   this.$emit('input', elOptions)
-      // }
     },
     ...mapGetters({
       // SVG

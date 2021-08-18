@@ -1,17 +1,17 @@
 <template>
-  <div class="pageContainer">
+  <div class="pageContainer appPage">
     <Header />
-      <section id="mint" class="">
+      <section id="appSection" class="">
         
       
-        <div class="row" >
-          <div class="col col-6">
+        <div class="row ma-0 pa-0" >
+          <div class="col col-6 svgColumn pa-0">
             <PreviewToggle :code="svgCode" :previewData="previewData"/>
             <client-only>
               <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode"  />
             </client-only>
           </div>
-          <div class="col col-6">
+          <div class="col col-6 controlsColumn pa-0">
             <ControlsToggle :code="svgCode" :previewData="previewData"  />
             <ControlsOptions v-if="controlMode === 'options' " />
             <ControlsCode v-if="controlMode === 'code' " />
@@ -74,4 +74,20 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.appSection{}
+.svgColumn{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  border-right: 1px solid var(--line-color);
+}
+.controlsColumn{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+}
+</style>

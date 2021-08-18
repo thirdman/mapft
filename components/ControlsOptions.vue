@@ -1,15 +1,24 @@
 <template>
-  <div class="optionsControl  pr-2">
+  <div class="optionsControl  pa-2">
           <div class="" v-if="!showNew">
-           <div v-for="(element, index) in svgData.elements" :key="`element${index}`" class="elementRow">
-             <v-icon small v-if="element.type==='polygon'">mdi-vector-polygon</v-icon>
-              <v-icon small v-if="element.type==='circle'">mdi-vector-circle</v-icon>
-              <v-icon small v-if="element.type==='triangle'">mdi-vector-triangle</v-icon>
-              <v-icon small v-if="element.type==='rectangle'">mdi-vector-rectangle</v-icon>
-              <v-icon small v-if="element.type==='line'">mdi-vector-line</v-icon>
-              <v-icon small v-if="element.type==='blob'">mdi-vector-ellipse</v-icon>
+           <div v-for="(element, index) in svgData.elements" :key="`element${index}`" class="elementRow row">
+             <div class="col-1 col">
+             <v-icon medium v-if="element.type==='background'">mdi-square</v-icon>
+             <v-icon medium v-if="element.type==='polygon'">mdi-vector-polygon</v-icon>
+              <v-icon medium v-if="element.type==='circle'">mdi-vector-circle</v-icon>
+              <v-icon medium v-if="element.type==='triangle'">mdi-vector-triangle</v-icon>
+              <v-icon medium v-if="element.type==='rectangle'">mdi-vector-rectangle</v-icon>
+              <v-icon medium v-if="element.type==='line'">mdi-vector-line</v-icon>
+              <v-icon medium v-if="element.type==='blob'">mdi-vector-ellipse</v-icon>
+             </div>
+             <div class="col col-9">
               {{element.label}}: {{element.type}}  ({{element.mode}} {{element.count}})
-              <div><v-btn @click="() => handleRemoveElement(element.id)">x</v-btn></div>
+             </div>
+              <div class="col col-1">
+                <v-btn rounded
+                small
+                @click="() => handleRemoveElement(element.id)">x</v-btn></div>
+              
            </div>
              <v-btn block @click="() => {this.showNew = !this.showNew}"><v-icon>mdi-plus-box</v-icon>add element</v-btn> 
           </div>
@@ -28,8 +37,10 @@
                 <v-btn-toggle 
                   v-model="toggle_type"
                   dense
+                  @change="handleType"
                 >
-                  <v-btn small v-for="(item, index) in typeArray" :key="index">
+                  <v-btn small v-for="(item, index) in typeArray" :key="index" class="typeSelectButton">
+                    <v-icon small v-if="item==='background'">mdi-square</v-icon>
                     <v-icon small v-if="item==='polygon'">mdi-vector-polygon</v-icon>
                     <v-icon small v-if="item==='circle'">mdi-vector-circle</v-icon>
                     <v-icon small v-if="item==='triangle'">mdi-vector-triangle</v-icon>
@@ -58,26 +69,11 @@
                   <v-text-field  filled outlined dense v-model="newElementCount" />
                 </div>
               </div>
+
               <v-divider />
-              <!-- <div class="row">
-                <div class="col">
-                  <label>X</label><br />
-                    <v-text-field filled outlined dense v-model="newElementX" />
-                </div>
-                <div class="col">
-                  <label>Y</label><br />
-                    <v-text-field filled outlined dense v-model="newElementY" />
-                </div>
-                <div class="col">
-                  <label>W</label><br />
-                    <v-text-field filled outlined dense v-model="newElementW" />
-                </div>
-                <div class="col">
-                  <label>H</label><br />
-                    <v-text-field filled outlined dense v-model="newElementH" />
-                </div>
-              </div> -->
-              <recipe-triangle :value.sync="newElementOptions" />
+              <recipe-rectangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'rectangle'" />
+              <recipe-triangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'triangle'" />
+              <recipe-circle :value.sync="newElementCircleOptions" v-if="typeArray[toggle_type] === 'circle'" />
             </v-card-text>
             <v-card-actions>
               <v-btn color="primary" small @click="() => handleAddElement()">Add</v-btn> 
@@ -90,10 +86,8 @@
         
       <div>
         <ul>
-          <li>Iterations</li>
-          <li>postions</li>
           <li>colors: fill, stroke</li>
-          <li>generative</li>
+          
         </ul>
       </div>
       
@@ -104,7 +98,14 @@
 
 <style lang="scss">
 .optionsControl{
-  width: 100%;
+  // width: 100%;
+  // background: #333;
+  height: 100%;
+  overflow: scroll;
+  position: relative;
+  flex-basis: 100%;
+  flex-shrink: 1;
+  flex-grow: 0;
 }
 .elementRow{
   margin: .5rem 0;
@@ -112,14 +113,25 @@
   padding: .5rem;
   border-radius: .5rem;;
 }
+.v-btn.typeSelectButton{
+  height: 40px !important;
+}
+.typeSelectButton .v-btn__content{
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 </style>
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { v4 as uuidv4 } from 'uuid';
 import RecipeTriangle from './RecipeTriangle.vue';
+import RecipeRectangle from './RecipeRectangle.vue';
 export default {
-  components: { RecipeTriangle },
+  components: { RecipeTriangle, RecipeRectangle },
   data() {
     return {
       showNew: false,
@@ -136,11 +148,24 @@ export default {
       toggle_count: 1,
       elements: [],
       newElementOptions: {
+        hue: null,
         x: 0,
         y: 0,
         w: 50,
         h: 110,
-        rotation: 0
+        rotation: 0,
+        rotationOptions: [0, 90, 180, 270],
+      },
+      newElementCircleOptions: {
+        hue: null,
+        x: 0,
+        y: 0,
+        w: 400,
+        h: 400,
+        minSize: 100,
+        maxSize: 900,
+        rotation: 0,
+        rotationOptions: [0, 90, 180, 270],
       }
       // These are the validation arrays
     };
@@ -182,6 +207,12 @@ export default {
       handleMintSvg: "svgFormStore/handleMintSvg",
       // setContractData: "svgFormStore/setContractData",
     }),
+    handleType(){
+      
+      const {typeArray, toggle_type} = this;
+      const typeValue = typeArray[toggle_type];
+      this.newElementLabel = `new ${typeValue}`
+    },
     handleRemoveElement(id){
       if (!id) {return}
       const {svgData } = this;
@@ -191,10 +222,12 @@ export default {
       this.setSvgElements(newArray);
     },
     handleAddElement(){
-      const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, newElementCount = 1, newElementOptions} = this;
+      const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, newElementCount = 1, newElementOptions, newElementCircleOptions} = this;
+      console.log('handleAddElement', newElementOptions)
       const {elements} = svgData;
       const selectedType = typeArray[toggle_type];
       const selectedMode = modeArray[toggle_mode];
+      const selectedOptions = selectedType === 'circle' ? newElementCircleOptions : newElementOptions;
       const newId = uuidv4();
       
       const tempObject = {
@@ -203,7 +236,7 @@ export default {
         mode: selectedMode,
         count: newElementCount,
         type: selectedType,
-        options: newElementOptions
+        options: selectedOptions
       }
       const newArray = elements.slice()
       newArray.push(tempObject)

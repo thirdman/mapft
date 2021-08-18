@@ -4,7 +4,10 @@
   <div class="svgPreviewWrap" v-if="previewMode === 'edit'">
     <div id="svg" ref="svg" class="svgPreviewWrap" />
   </div>
-  <v-btn v-if="previewMode === 'edit'" @click="() => handleConstruct(this.svgData.width, this.svgData.height, this.$refs.svg)" >reload</v-btn>
+  <v-btn 
+    
+    v-if="previewMode === 'edit'" 
+    @click="() => handleConstruct(this.svgData.width, this.svgData.height, this.$refs.svg)" >reload</v-btn>
   <div
       id="previewWrap"
       class="previewWrap"
@@ -72,6 +75,8 @@
   flex-basis: 400px;
   flex-grow: 0;
   flex-direction: column;
+  align-items: center;
+  padding-top: .5rem;
 }
   .svgPreviewWrap{
     // background: #fff;
@@ -176,12 +181,13 @@ export default {
       .addTo(target) // mount instance to our target
       .viewbox(0, 0, svgData.width, svgData.height); // set the <svg /> viewBox attribute
       theSvg.clear();
+      const backgroundElements = svgData.elements.filter(el => el.type === 'background')
       const blobElements = svgData.elements.filter(el => el.type === 'blob')
       const circleElements = svgData.elements.filter(el => el.type === 'circle')
       const triangleElements = svgData.elements.filter(el => el.type === 'triangle')
-        console.log('triangle elements', triangleElements)
-        console.log('circleElements', circleElements)
-      this.drawBackground(theSvg, svgData);
+      const rectangleElements = svgData.elements.filter(el => el.type === 'rectangle')
+        
+      // this.drawBackground(theSvg, svgData);
         // if(svgData.elements){
         //   // console.log('svgData.elements', svgData.elements);
         //   const el = svgData.elements[0];
@@ -197,18 +203,26 @@ export default {
         //     this.drawBody(theSvg, svgData)
         //   })
         // }
-        const el2 = circleElements && circleElements[0]
-        if(el2){
-          [...Array(el2.count)].map((_, i) => {
-            this.drawCircles(theSvg, svgData, el2.options)
-          })  
+        // const el2 = circleElements && circleElements[0]
+        // if(el2){
+        //   [...Array(el2.count)].map((_, i) => {
+        //     this.drawCircles(theSvg, svgData, el2.options)
+        //   })  
+        // }
+        
+        
+        if(backgroundElements && backgroundElements.length > -1){
+          backgroundElements.map(recipe => {
+            [...Array(Number(recipe.count))].map((_, i) => {
+              this.drawBackground(theSvg, svgData, recipe.options, recipe.mode)
+            })  
+          })
         }
-        
-        
         if(circleElements && circleElements.length > -1){
           circleElements.map(recipe => {
+            console.log('circleELements recipe', recipe);
             [...Array(Number(recipe.count))].map((_, i) => {
-              this.drawCircles(theSvg, svgData, recipe.options)
+              this.drawCircle(theSvg, svgData, recipe.options, recipe.mode)
             })  
           })
         }
@@ -224,25 +238,36 @@ export default {
             console.log('recipe', recipe);
             [...Array(Number(recipe.count))].map((_, i) => {
               console.log('i', i)
-              this.drawTriangle(theSvg, svgData, recipe.options)
+              this.drawTriangle(theSvg, svgData, recipe.options, recipe.mode)
+            })  
+          })
+        }
+        if(rectangleElements){
+          rectangleElements.map(recipe => {
+            [...Array(Number(recipe.count))].map((_, i) => {
+              console.log('i', i)
+              this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
             })  
           })
         }
       console.log('theSvg', theSvg);
       console.log('children()', theSvg.children())
     },
-    drawBackground(svg, svgData){
-      const hue1 = this.random(0, 256, false); // hue range
+    drawBackground(svg, svgData, options = {}, mode){
+      const {hue, saturation, lightness, isGradient = true} = options;
+      const hue1 = mode === 'generative' ? this.random(0, 256, false) : hue; // hue range
       const hue2 = this.random(0, 256, false); // hue range
-      const color1 = `hsl(${hue1}, 70%, 50%)`
-      const color2 = `hsl(${hue2}, 70%, 50%)`
+      const color1 = mode === 'generative' ? `hsl(${hue1}, 70%, 50%)` : `hsl(${hue1}, ${saturation}%, ${lightness}%)`;
+      const color2 = mode === 'generative' ? `hsl(${hue2}, 70%, 50%)` : `hsl(${hue2}, ${saturation}%, ${lightness}%)`;
+      
       var gradient = svg.gradient('linear', function(add) {
         // add.stop(0, '#cc2b5e')
         // add.stop(1, '#753a88')
         add.stop(0, color1)
         add.stop(1, color2)
       })
-      svg.rect(svgData.width, svgData.height).move(0, 0).fill(gradient)
+      
+      svg.rect(svgData.width, svgData.height).move(0, 0).fill(isGradient ? gradient : color1)
     },
     drawBody(svg, svgData, options = {}){
        const hue = options && options.hue || this.random(0, 256, false); // hue range
@@ -290,23 +315,42 @@ export default {
         .fill(color);
       return pathData;
     },
-    drawCircles(svg, svgData, options = {}){
-       const hue = options && options.hue || this.random(0, 256, false); // hue range
-       const color = `hsl(${hue}, 50%, 50%)`
-       const colorStroke = `hsl(${hue}, 90%, 70%)`
-      // choose a random number of points
+    // drawCircles(svg, svgData, options = {}){
+    //    const hue = options && options.hue || this.random(0, 256, false); // hue range
+    //    const color = `hsl(${hue}, 50%, 50%)`
+    //    const colorStroke = `hsl(${hue}, 90%, 70%)`
+    //   // choose a random number of points
       
-      // keep track of our points
-      const points = [];
-      // const size = options.w || 100;
-      const size = this.random(options.wobbleMin, options.wobbleMax, false);
+    //   // keep track of our points
+    //   const points = [];
+    //   // const size = options.w || 100;
+    //   const size = this.random(options.wobbleMin, options.wobbleMax, false);
       
+    //   const constraintW = svgData.width
+    //   const constraintH = svgData.height
+    //   // const startX = svgData.width / 2 - size / 2;
+    //   // const startY = svgData.height / 2 - size / 2;
+    //   const startX = this.random(0 - size / 2, constraintW - size / 2, true);
+    //   const startY = this.random(0 - size / 2, constraintH - size / 2, true);
+    //   svg.ellipse(size, size)
+    //     .move(startX, startY)
+    //     .stroke({
+    //       width: 10,
+    //       color: colorStroke
+    //     })
+        
+    //     .fill(color);
+
+    // },
+    drawCircle(svg, svgData, options = {}, mode){
+      const hue = options && options.hue || this.random(0, 256, false); // hue range
+      const color = `hsl(${hue}, 50%, 50%)`
+      const colorStroke = `hsl(${hue}, 90%, 70%)`
+      const size = mode === 'generative' ? this.random(Number(options.minSize), Number(options.maxSize), false) : Number(options.w);
       const constraintW = svgData.width
       const constraintH = svgData.height
-      // const startX = svgData.width / 2 - size / 2;
-      // const startY = svgData.height / 2 - size / 2;
-      const startX = this.random(0 - size / 2, constraintW - size / 2, true);
-      const startY = this.random(0 - size / 2, constraintH - size / 2, true);
+      const startX =  mode === 'generative' ? this.random(0, constraintW - size / 2, true) : Number(options.x);
+      const startY = mode === 'generative' ? this.random(0, constraintH - size / 2, true) : Number(options.y);
       svg.ellipse(size, size)
         .move(startX, startY)
         .stroke({
@@ -317,31 +361,62 @@ export default {
         .fill(color);
 
     },
-    drawTriangle(svg, svgData, options = {}){
+    drawTriangle(svg, svgData, options = {}, mode){
        const hue = options && options.hue || this.random(0, 256, false); // hue range
        const color = `hsl(${hue}, 50%, 50%)`
        const colorStroke = `hsl(${hue}, 90%, 70%)`
-       console.log('drawTriangle options', options)
+       const randomRotation = options.rotationOptions && Math.floor(Math.random() * options.rotationOptions.length);
+       const rotation = mode === 'generative' ? options.rotationOptions[randomRotation] : (options.rotation || 0);
       const {x, y, w, h} = options;
-      // const size = options.w || 100;
-      // const size = this.random(options.wobbleMin, options.wobbleMax, false);
-      const points = [];
-      points.push({x, y})
-      points.push({w, h})
-      points.push({x, w})
-      console.log('triangle points', points)
-      const pathData = spline(points, 0, true);
-      let trianglePath = `M0,0 L`;
-      trianglePath = trianglePath + ` ${x},${y}`
+      const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
+      const constraintW = svgData.width
+      const constraintH = svgData.height
+      const startX =  mode === 'generative' ? this.random(0, constraintW - size, true) : Number(x);
+      const startY = mode === 'generative' ? this.random(0, constraintH - size, true) : Number(y);
+      // const points = [];
+      // points.push({startX, y})
+      // points.push({w, startY})
+      // points.push({startX, w})
+      // console.log('triangle points', points)
+      // const pathData = spline(points, 0, true);
+      let trianglePath = `M${startX},${startY} L`;
+      // trianglePath = trianglePath + ` ${startX},${startY}`
       trianglePath = trianglePath + ` ${w},${h}`
-      trianglePath = trianglePath + ` ${x},${h}`
+      trianglePath = trianglePath + ` ${startX},${h}`
       trianglePath = trianglePath + ` Z`
-      // M20,230 Q40,205 50,230 T90,230
-      console.log('triangle trianglePath', trianglePath)
       svg
         .path(trianglePath)
           .fill(color)
-          .rotate(options.rotation || 0)
+          .rotate(rotation)
+        // .stroke({
+        //   width: 10,
+        //   color: colorStroke
+        // })
+    },
+    drawRectangle(svg, svgData, options = {}, mode){
+       const hue = options && options.hue || this.random(0, 256, false); // hue range
+       const color = `hsl(${hue}, 50%, 50%)`
+       const colorStroke = `hsl(${hue}, 90%, 70%)`
+       const randomRotation = options.rotationOptions && Math.floor(Math.random() * options.rotationOptions.length);
+       const rotation = mode === 'generative' ? options.rotationOptions[randomRotation] : (options.rotation || 0);
+      const {x, y, w, h} = options;
+      // const points = [];
+      // points.push({x, y})
+      // points.push({w, y})
+      // points.push({w, h})
+      // points.push({x, h})
+      // console.log('rectangle points', points)
+      let rectanglePath = `M${Number(x)},${Number(y)} L`;
+      // rectanglePath = rectanglePath + ` ${Number(x)},${Number(y)}`
+      rectanglePath = rectanglePath + ` ${Number(x) + Number(w)},${Number(y)}`
+      rectanglePath = rectanglePath + ` ${Number(x) + Number(w)},${Number(y) + Number(h)}`
+      rectanglePath = rectanglePath + ` ${Number(x)},${Number(y) + Number(h)}`
+      rectanglePath = rectanglePath + ` Z`
+      console.log('rectanglePath', rectanglePath);
+      svg
+        .path(rectanglePath)
+          .fill(color)
+          .rotate(rotation)
         // .stroke({
         //   width: 10,
         //   color: colorStroke

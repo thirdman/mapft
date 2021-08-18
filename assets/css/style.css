@@ -132,6 +132,11 @@ div #body {
 body .pageContainer {
   height: 100%;
 }
+body .pageContainer.appPage {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
 *:focus {
   outline: 1px solid transparent;
   box-shadow: none;
@@ -324,11 +329,14 @@ footer {
 }
 /* FOOTER*/
 
-.footer {
+.footer,
+.footer.minimal {
   background: var(--ui-color);
-  padding: 0.5rem;
   position: relative;
-  margin-top: 1rem;
+  border-top: 1px solid var(--line-color);
+  height: 2rem;
+  overflow: hidden;
+  color: #888;
 }
 
 .footer .social {
@@ -338,7 +346,7 @@ footer {
   padding-left: 0.5rem;
 }
 .footer .social a {
-  margin-right: 0.5rem;
+  /* margin-right: 0.5rem; */
 }
 .footer .options {
   justify-content: center;
@@ -816,6 +824,12 @@ section > .row > .col {
   align-self: stretch;
   /* justify-self: stretch; */
 }
+section#appSection {
+  min-height: calc(100vh - 2rem - 4rem);
+  height: calc(100vh - 2rem - 4rem);
+  /* height - footer - header*/
+}
+
 #body.full {
   border-left: 1px dotted var(--line-color);
   border-right: 1px dotted var(--line-color);

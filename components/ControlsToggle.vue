@@ -8,17 +8,13 @@
               
               x-small
               :color="controlMode === 'options' ? 'primary':''"
-              :outlined="controlMode !== 'options'"
               @click="setControlMode('options')"
             >
               OPTIONS
             </v-btn>
             <v-btn
-              
               x-small
               :color="controlMode === 'meta' ? 'primary':''"
-              :outlined="controlMode !== 'meta'"
-              
               :class="controlMode === 'meta' ? 'selected':''"
               @click="setControlMode('meta')"
             >
@@ -28,8 +24,6 @@
               
               x-small
               :color="controlMode === 'code' ? 'primary':''"
-              :outlined="controlMode !== 'code'"
-              
               @click="setControlMode('code')"
             >
               CODE
@@ -43,7 +37,12 @@
 
 <style lang="scss">
 .toggleRow{
+  display: flex;
+  border-bottom: 1px solid var(--line-color);
   padding: 0;
+  flex-basis: 2rem;
+  flex-shrink: 0;
+  flex-grow: 0;
   .contentRow{
     .col{
       padding: 0;

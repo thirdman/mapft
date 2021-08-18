@@ -1,9 +1,7 @@
 <template>
-  <footer class="footer w3-center" :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`">
+  <footer class="footer row ma-0" :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`">
     
-    
-    <div class="row">
-      <div class="column social">
+      <div class="column social col col-1 pa-0">
         <a href="https://twitter.com/nft4ever" target="_blank">
           <IconTwitter :strokeClass="contrastMode" />
         </a>
@@ -11,7 +9,7 @@
           <IconDiscord :fillClass="contrastMode" />
         </a>
       </div>
-      <div class="column options">
+      <div class="column options col pa-0">
         <div class="optionsRow versionInfo xsmall" v-if="uiMode === 'minimal'">
           <span>v</span><span>{{VERCEL_GIT_COMMIT_SHA}}</span>
         </div>
@@ -65,14 +63,14 @@
           </div>
         </div>
       </div>
-      <div class="column credits">
+      <div class="column credits col col-2 pa-0">
         <div class="corpLink">
-          <span class="defaultCorpMessage">Made with ❤️</span>
-          <span class="minimalCorpMessage">by</span>
-          <a href="https://www.nft42.com/" target="_blank" rel="noopener" class="corpLink">nft42</a>
+          <span class="notdefaultCorpMessage">&copy;2021 Made with ❤️</span>
+          <!-- <span class="minimalCorpMessage">by</span>
+          <a href="https://www.nft42.com/" target="_blank" rel="noopener" class="corpLink">nft42</a> -->
         </div>
       </div>
-    </div>
+    
   </footer>
 </template>
 

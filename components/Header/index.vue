@@ -26,7 +26,7 @@
       <div class="navRow">
         
         <div class="navItem">
-          <nuxt-link to="/about" class="plain navLink">About</nuxt-link>
+          <nuxt-link to="/about" class="plain navLink text--color">ABOUT</nuxt-link>
         </div>
 
         <div class="navItem" v-if="devMode">
