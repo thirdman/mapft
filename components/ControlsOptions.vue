@@ -107,6 +107,26 @@
   flex-shrink: 1;
   flex-grow: 0;
 }
+.newElement.panel{
+  
+  height: 100%;
+  .v-card.v-sheet{
+    height: 100%;
+    border: 1px solid var(--line-color);
+    display: flex;
+    flex-direction: column;
+    .v-card__title{
+      padding-top: .25rem;
+      padding-bottom: .25rem;
+      border-bottom: 1px solid var(--line-color);
+    }
+    .v-card__text{
+      overflow: scroll;
+      border-bottom: 1px solid var(--line-color);
+      
+    }
+  }
+}
 .elementRow{
   margin: .5rem 0;
   background: var(--line-color);
