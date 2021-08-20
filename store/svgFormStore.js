@@ -542,6 +542,15 @@ export const state = () => ({
     width: 1600,
     height: 1600,
     elementCount: 5,
+    recipeTypes: [
+      "background",
+      "circle",
+      "blob",
+      "rectangle",
+      "triangle",
+      "polygon",
+      "line",
+    ],
     elements: [
       {
         label: "Background",
@@ -550,9 +559,12 @@ export const state = () => ({
         count: 1,
         type: "background",
         options: {
-          hue: 1,
-          saturation: 50,
-          lightness: 50,
+          color: null,
+          h: 210,
+          hex: "#7E93A8",
+          l: 0.6,
+          s: 0.6,
+          angle: 45,
         },
       },
       {
@@ -607,6 +619,7 @@ export const getters = {
   svgData: (state) => state.svgData,
   svgStatus: (state) => state.svgStatus,
   svgStatusMessage: (state) => state.svgStatusMessage,
+  recipeTypes: (state) => state.recipeTypes,
   controlMode: (state) => state.controlMode,
   previewMode: (state) => state.previewMode,
   showPreview: (state) => state.showPreview,

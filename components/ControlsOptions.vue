@@ -11,14 +11,38 @@
               <v-icon medium v-if="element.type==='line'">mdi-vector-line</v-icon>
               <v-icon medium v-if="element.type==='blob'">mdi-vector-ellipse</v-icon>
              </div>
-             <div class="col col-9">
-              {{element.label}}: {{element.type}}  ({{element.mode}} {{element.count}})
-             </div>
-              <div class="col col-1">
-                <v-btn rounded
-                small
-                @click="() => handleRemoveElement(element.id)">x</v-btn></div>
+             <div class="col col-6">
+               <label>{{element.type}}</label>
+               <div>{{element.label}}</div>
+               <div>({{element.mode}} {{element.count}})</div>
               
+             </div>
+              <div class="col col-5">
+                <div class="buttonRow">
+                <v-btn
+                  rounded
+                  small
+                  depressed
+                  @click="() => handleRemoveElement(element.id)">x
+                </v-btn>
+                <v-btn
+                  rounded
+                  small
+                  depressed
+                  @click="moveElement(index, 'up')"
+                  >
+                    <v-icon  small>mdi-arrow-up-bold</v-icon>
+                </v-btn>
+                <v-btn
+                  rounded
+                  small
+                  depressed
+                  @click="moveElement(index, 'down')"
+                  >
+                    <v-icon small>mdi-arrow-down-bold</v-icon>
+                </v-btn>
+                </div>
+              </div>
            </div>
              <v-btn block @click="() => {this.showNew = !this.showNew}"><v-icon>mdi-plus-box</v-icon>add element</v-btn> 
           </div>
@@ -71,6 +95,7 @@
               </div>
 
               <v-divider />
+              <recipe-background :value.sync="backgroundElementOptions" v-if="typeArray[toggle_type] === 'background'" />
               <recipe-rectangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'rectangle'" />
               <recipe-triangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'triangle'" />
               <recipe-circle :value.sync="newElementCircleOptions" v-if="typeArray[toggle_type] === 'circle'" />
@@ -117,10 +142,10 @@
   }
 }
 .elementRow{
-  margin: .5rem 0;
+  margin: .25rem 0;
   background: var(--line-color);
-  padding: .5rem;
-  border-radius: .5rem;;
+  padding: .25rem;
+  border-radius: .5rem;
 }
 .v-btn.typeSelectButton{
   height: 40px !important;
@@ -131,6 +156,23 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.buttonRow{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  > .v-btn{
+    // border: 1px solid var(--line-color);
+    border-radius: 2px;
+    &:first-child{
+      border-radius: .75rem 0 0 .75rem;
+    }
+    &:last-child{
+      border-radius: 0 .75rem  .75rem 0 ;
+    }
+  }
 }
 </style>
 
@@ -151,7 +193,7 @@ export default {
       newElementW: 40,
       newElementH: 30,
       modeArray: ['generative', 'static'],
-      typeArray: ['rectangle', 'circle', 'polygon', 'line', 'triangle', 'blob'],
+      typeArray: ['rectangle', 'circle', 'polygon', 'line', 'triangle', 'blob', 'background'],
       toggle_type: 1,
       toggle_mode: 0,
       toggle_count: 1,
@@ -175,8 +217,16 @@ export default {
         maxSize: 900,
         rotation: 0,
         rotationOptions: [0, 90, 180, 270],
+      },
+      backgroundElementOptions: {   
+        type: 'gradient',
+        "color": {},
+        hex: "#609CD8",
+        h: 200,
+        l: 0.61,
+        s: 0.60,
+        angle: 45,
       }
-      // These are the validation arrays
     };
   },
   created(){
@@ -231,12 +281,15 @@ export default {
       this.setSvgElements(newArray);
     },
     handleAddElement(){
-      const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, newElementCount = 1, newElementOptions, newElementCircleOptions} = this;
-      console.log('handleAddElement', newElementOptions)
+      const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, newElementCount = 1, newElementOptions, newElementCircleOptions, backgroundElementOptions} = this;
       const {elements} = svgData;
       const selectedType = typeArray[toggle_type];
       const selectedMode = modeArray[toggle_mode];
-      const selectedOptions = selectedType === 'circle' ? newElementCircleOptions : newElementOptions;
+      let selectedOptions = selectedType === 'circle' ? newElementCircleOptions : newElementOptions;
+      if(selectedType === 'background') {
+        selectedOptions = backgroundElementOptions;
+      }
+        console.log('handleAddElement selectedOptions', selectedOptions)
       const newId = uuidv4();
       
       const tempObject = {
@@ -258,6 +311,30 @@ export default {
       const {svgData} = this;
       this.newElementOptions.w = svgData.width;
       this.newElementOptions.h = svgData.height;
+    },
+    moveElement(fromIndex, direction){
+
+      console.log('fromINdex', fromIndex, direction)
+      const {svgData} = this;
+      const {elements} = svgData;
+      const tempElements = [...elements];
+      console.log('svgData tempElements', tempElements);
+      if(!tempElements) {return}
+      let sorted = [];
+      if(direction === 'up'){
+        sorted = this.arrayMove(tempElements, fromIndex, fromIndex - 1)
+      }
+      if(direction === 'down'){
+        sorted = this.arrayMove(tempElements, fromIndex, fromIndex + 1)
+      }
+      console.log('sorted', sorted)
+      this.setSvgElements(sorted);
+    },
+    arrayMove(arr, fromIndex, toIndex) {
+      var element = arr[fromIndex];
+      arr.splice(fromIndex, 1);
+      arr.splice(toIndex, 0, element);
+      return arr
     }
     
     

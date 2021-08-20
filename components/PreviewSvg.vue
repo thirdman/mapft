@@ -120,7 +120,6 @@ export default {
   },
   mounted() {
     this.$nextTick(function() {
-    
     const {svg} = this.$refs
     const target = svg;
     if(!target){return}
@@ -150,6 +149,7 @@ export default {
       //UI
       devMode: "ui/devMode",
       //SVG
+      recipeTypes: "svgFormStore/recipeTypes",
       svgData: "svgFormStore/svgData",
       previewBytes: "svgFormStore/previewBytes",
       calculatedFee: "svgFormStore/calculatedFee",
@@ -181,93 +181,106 @@ export default {
       .addTo(target) // mount instance to our target
       .viewbox(0, 0, svgData.width, svgData.height); // set the <svg /> viewBox attribute
       theSvg.clear();
-      const backgroundElements = svgData.elements.filter(el => el.type === 'background')
-      const blobElements = svgData.elements.filter(el => el.type === 'blob')
-      const circleElements = svgData.elements.filter(el => el.type === 'circle')
-      const triangleElements = svgData.elements.filter(el => el.type === 'triangle')
-      const rectangleElements = svgData.elements.filter(el => el.type === 'rectangle')
-        
-      // this.drawBackground(theSvg, svgData);
-        // if(svgData.elements){
-        //   // console.log('svgData.elements', svgData.elements);
-        //   const el = svgData.elements[0];
-        //   const count = el.options && el.options.count;
-        //   const {options} = el;
-        //     if(!count){return}
-        //   [...Array(count)].map((_, i) => {
-        //     this.drawBody(theSvg, svgData, options)
-        //   })
-        // } else{
-
-        //   [...Array(svgData.elementCount)].map((_, i) => {
-        //     this.drawBody(theSvg, svgData)
-        //   })
-        // }
-        // const el2 = circleElements && circleElements[0]
-        // if(el2){
-        //   [...Array(el2.count)].map((_, i) => {
-        //     this.drawCircles(theSvg, svgData, el2.options)
-        //   })  
-        // }
-        
-        
-        if(backgroundElements && backgroundElements.length > -1){
-          backgroundElements.map(recipe => {
+      // const backgroundElements = svgData.elements.filter(el => el.type === 'background')
+      // const blobElements = svgData.elements.filter(el => el.type === 'blob')
+      // const circleElements = svgData.elements.filter(el => el.type === 'circle')
+      // const triangleElements = svgData.elements.filter(el => el.type === 'triangle')
+      // const rectangleElements = svgData.elements.filter(el => el.type === 'rectangle')
+       
+      //  if(backgroundElements && backgroundElements.length > -1){
+      //     backgroundElements.map(recipe => {
+      //       [...Array(Number(recipe.count))].map((_, i) => {
+      //         this.drawBackground(theSvg, svgData, recipe.options, recipe.mode)
+      //       })  
+      //     })
+      //   }
+      //   if(circleElements && circleElements.length > -1){
+      //     circleElements.map(recipe => {
+      //       console.log('circleELements recipe', recipe);
+      //       [...Array(Number(recipe.count))].map((_, i) => {
+      //         this.drawCircle(theSvg, svgData, recipe.options, recipe.mode)
+      //       })  
+      //     })
+      //   }
+      //   if(blobElements){
+      //     blobElements.map(recipe => {
+      //       [...Array(Number(recipe.count))].map((_, i) => {
+      //         this.drawBody(theSvg, svgData, recipe.options)
+      //       })  
+      //     })
+      //   }
+      //   if(triangleElements){
+      //     triangleElements.map(recipe => {
+      //       console.log('recipe', recipe);
+      //       [...Array(Number(recipe.count))].map((_, i) => {
+      //         console.log('i', i)
+      //         this.drawTriangle(theSvg, svgData, recipe.options, recipe.mode)
+      //       })  
+      //     })
+      //   }
+      //   if(rectangleElements){
+      //     rectangleElements.map(recipe => {
+      //       [...Array(Number(recipe.count))].map((_, i) => {
+      //         console.log('i', i)
+      //         this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
+      //       })  
+      //     })
+      //   }
+        svgData.elements && svgData.elements.map(recipe => {
+          const recipeType = recipe.type;
+          console.log('recipeType', recipe, recipeType);
+          if(recipeType === 'background'){
             [...Array(Number(recipe.count))].map((_, i) => {
               this.drawBackground(theSvg, svgData, recipe.options, recipe.mode)
             })  
-          })
-        }
-        if(circleElements && circleElements.length > -1){
-          circleElements.map(recipe => {
-            console.log('circleELements recipe', recipe);
+          }
+          if(recipeType === 'rectangle'){
+            [...Array(Number(recipe.count))].map((_, i) => {
+              this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
+            })  
+          }
+          if(recipeType === 'circle'){
             [...Array(Number(recipe.count))].map((_, i) => {
               this.drawCircle(theSvg, svgData, recipe.options, recipe.mode)
             })  
-          })
-        }
-        if(blobElements){
-          blobElements.map(recipe => {
+          }
+          if(recipeType === 'blob'){
             [...Array(Number(recipe.count))].map((_, i) => {
-              this.drawBody(theSvg, svgData, recipe.options)
+              this.drawBody(theSvg, svgData, recipe.options, recipe.mode)
             })  
-          })
-        }
-        if(triangleElements){
-          triangleElements.map(recipe => {
-            console.log('recipe', recipe);
+          }
+          if(recipeType === 'triangle'){
             [...Array(Number(recipe.count))].map((_, i) => {
-              console.log('i', i)
               this.drawTriangle(theSvg, svgData, recipe.options, recipe.mode)
             })  
-          })
-        }
-        if(rectangleElements){
-          rectangleElements.map(recipe => {
-            [...Array(Number(recipe.count))].map((_, i) => {
-              console.log('i', i)
-              this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
-            })  
-          })
-        }
+          }
+          // [...Array(Number(recipe.count))].map((_, i) => {
+          //     console.log('i', i)
+          //     this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
+          //   })  
+        })
       console.log('theSvg', theSvg);
       console.log('children()', theSvg.children())
     },
     drawBackground(svg, svgData, options = {}, mode){
-      const {hue, saturation, lightness, isGradient = true} = options;
-      const hue1 = mode === 'generative' ? this.random(0, 256, false) : hue; // hue range
+      console.log('drawBackground', options);
+      const {h, s, l, a, color, isGradient = true, type = 'gradient', angle} = options;
+      const hue1 = mode === 'generative' ? this.random(0, 256, false) : h; // hue range
       const hue2 = this.random(0, 256, false); // hue range
-      const color1 = mode === 'generative' ? `hsl(${hue1}, 70%, 50%)` : `hsl(${hue1}, ${saturation}%, ${lightness}%)`;
-      const color2 = mode === 'generative' ? `hsl(${hue2}, 70%, 50%)` : `hsl(${hue2}, ${saturation}%, ${lightness}%)`;
-      
+      const color1 = mode === 'generative' ? `hsl(${hue1}, ${s * 100}%, ${l * 100}%)` : `hsl(${hue1}, ${s * 100}%, ${l * 100}%)`;
+      const color2 = mode === 'generative' ? `hsl(${hue2}, ${s * 100}%, ${l * 100}%)` : `hsl(${hue2}, ${s * 100}%, ${l * 100}%)`;
+      console.log('drawBackground hue1', hue1, h);
+      console.log('drawBackground color1', color1);
       var gradient = svg.gradient('linear', function(add) {
         // add.stop(0, '#cc2b5e')
         // add.stop(1, '#753a88')
         add.stop(0, color1)
         add.stop(1, color2)
+      }).transform({
+        rotate: angle,
       })
       
-      svg.rect(svgData.width, svgData.height).move(0, 0).fill(isGradient ? gradient : color1)
+      svg.rect(svgData.width, svgData.height).move(0, 0).fill(type === 'gradient' ? gradient : color1)
     },
     drawBody(svg, svgData, options = {}){
        const hue = options && options.hue || this.random(0, 256, false); // hue range
