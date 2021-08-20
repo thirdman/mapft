@@ -362,8 +362,10 @@ export default {
       const size = mode === 'generative' ? this.random(Number(options.minSize), Number(options.maxSize), false) : Number(options.w);
       const constraintW = svgData.width
       const constraintH = svgData.height
-      const startX =  mode === 'generative' ? this.random(0, constraintW - size / 2, true) : Number(options.x);
-      const startY = mode === 'generative' ? this.random(0, constraintH - size / 2, true) : Number(options.y);
+      const offsetX = 0 - size / 2;
+      const offsetY =0 - size / 2;
+      const startX =  mode === 'generative' ? this.random(offsetX, constraintW - size / 2, true) : Number(options.x);
+      const startY = mode === 'generative' ? this.random(offsetY, constraintH - size / 2, true) : Number(options.y);
       svg.ellipse(size, size)
         .move(startX, startY)
         .stroke({
@@ -379,7 +381,8 @@ export default {
        const color = `hsl(${hue}, 50%, 50%)`
        const colorStroke = `hsl(${hue}, 90%, 70%)`
        const randomRotation = options.rotationOptions && Math.floor(Math.random() * options.rotationOptions.length);
-       const rotation = mode === 'generative' ? options.rotationOptions[randomRotation] : (options.rotation || 0);
+       // const rotation = mode === 'generative' ? options.rotationOptions[randomRotation] : (options.rotation || 0);
+       const rotation = options.rotation ? options.rotation : options.rotationOptions[randomRotation];
       const {x, y, w, h} = options;
       const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
       const constraintW = svgData.width

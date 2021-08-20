@@ -1,7 +1,14 @@
 <template>
   <div class="optionsControl  pa-2">
           <div class="" v-if="!showNew">
-           <div v-for="(element, index) in svgData.elements" :key="`element${index}`" class="elementRow row">
+          
+            <v-slide-y-transition
+        class="py-0"
+        group
+        tag="v-list"
+      >
+        <template v-for="(element, index) in svgData.elements"  >
+           <div class="elementRow row" :key="`element${index}`" >
              <div class="col-1 col">
              <v-icon medium v-if="element.type==='background'">mdi-square</v-icon>
              <v-icon medium v-if="element.type==='polygon'">mdi-vector-polygon</v-icon>
@@ -15,8 +22,8 @@
                <label>{{element.type}}</label>
                <div>{{element.label}}</div>
                <div>({{element.mode}} {{element.count}})</div>
-              
              </div>
+            
               <div class="col col-5">
                 <div class="buttonRow">
                 <v-btn
@@ -44,8 +51,11 @@
                 </div>
               </div>
            </div>
+        </template>
+            </v-slide-y-transition>
              <v-btn block @click="() => {this.showNew = !this.showNew}"><v-icon>mdi-plus-box</v-icon>add element</v-btn> 
           </div>
+          <v-slide-x-reverse-transition>
           <div class="newElement panel" v-if="showNew">
             <v-card >
             <v-card-title><label>New Element</label></v-card-title>
@@ -107,6 +117,7 @@
               
             </v-card>
           </div>
+          </v-slide-x-reverse-transition>
   </div>
 </template>
 
