@@ -81,7 +81,7 @@
 </style>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 
 export default {
   props: ['value'],
@@ -108,7 +108,9 @@ export default {
       rotationOptions: [0, 90, 180, 270],
     };
   },
-  created(){
+  async created(){
+    const tempColor = await this.getColor();
+    this.color = tempColor;
   },
   watch: {
     value: {
@@ -141,6 +143,9 @@ export default {
 
   methods: {
     ...mapMutations({
+    }),
+    ...mapActions({
+      getColor: "svgFormStore/getColor",
     }),
     updateValue: function (value) {
       this.$emit('input', value);

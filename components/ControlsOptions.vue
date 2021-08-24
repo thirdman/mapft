@@ -1,5 +1,6 @@
 <template>
   <div class="optionsControl  pa-2">
+    <v-btn @click="getColor">get color</v-btn>
           <div class="" v-if="!showNew">
           
             <v-slide-y-transition
@@ -297,6 +298,7 @@ export default {
     }),
     ...mapActions({
       handleMintSvg: "svgFormStore/handleMintSvg",
+      getColor: "svgFormStore/getColor",
       // setContractData: "svgFormStore/setContractData",
     }),
     handleType(){

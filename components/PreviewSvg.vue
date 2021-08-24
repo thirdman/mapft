@@ -173,7 +173,9 @@ export default {
 
 
   methods: {
-    
+    ...mapActions({
+      getColor: "svgFormStore/getColor",
+    }),
     handleConstruct(width, height, target){
       const {svgData} = this;
       console.log('handleConstruct elements', svgData)
@@ -288,7 +290,7 @@ export default {
       console.log('theSvg', theSvg);
       console.log('children()', theSvg.children())
     },
-    drawBackground(svg, svgData, options = {}, mode){
+    async drawBackground(svg, svgData, options = {}, mode){
       console.log('drawBackground', options);
       const {width, height} = this.svgData;
       const centerX = width / 2 || 800;
@@ -297,7 +299,9 @@ export default {
       const {h, s, l, a, color, isGradient = true, type = 'gradient', angle} = options;
       const hue1 = mode === 'generative' ? this.random(0, 256, false) : h; // hue range
       const hue2 = this.random(0, 256, false); // hue range
-      const color1 = mode === 'generative' ? `hsl(${hue1}, ${s * 100}%, ${l * 100}%)` : `hsl(${hue1}, ${s * 100}%, ${l * 100}%)`;
+      const themeColor = await this.getColor();
+      // const color1 = mode === 'generative' ? `hsl(${hue1}, ${s * 100}%, ${l * 100}%)` : `hsl(${hue1}, ${s * 100}%, ${l * 100}%)`;
+      const color1 = mode === 'generative' ? themeColor : `hsl(${hue1}, ${s * 100}%, ${l * 100}%)`;
       const color2 = mode === 'generative' ? `hsl(${hue2}, ${s * 100}%, ${l * 100}%)` : `hsl(${hue2}, ${s * 100}%, ${l * 100}%)`;
       console.log('drawBackground hue1', hue1, h);
       console.log('drawBackground color1', color1);
@@ -386,10 +390,13 @@ export default {
     //     .fill(color);
 
     // },
-    drawCircle(svg, svgData, options = {}, mode){
+    async drawCircle(svg, svgData, options = {}, mode){
       const hue = options && options.hue || this.random(0, 256, false); // hue range
       const color = `hsl(${hue}, 50%, 50%)`
-      const colorStroke = `hsl(${hue}, 90%, 70%)`
+      const themeColor = await this.getColor();
+      const strokeColor = await this.getColor();
+      console.log('themeColor', themeColor)
+      const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
       const size = mode === 'generative' ? this.random(Number(options.minSize), Number(options.maxSize), false) : Number(options.w);
       const constraintW = svgData.width
       const constraintH = svgData.height
@@ -404,7 +411,7 @@ export default {
           color: colorStroke
         })
         
-        .fill(color);
+        .fill(themeColor);
 
     },
     drawTriangle(svg, svgData, options = {}, mode){

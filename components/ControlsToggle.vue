@@ -12,6 +12,13 @@
             >
               OPTIONS
             </v-btn>
+            <v-btn   
+              x-small
+              :color="controlMode === 'theme' ? 'primary':''"
+              @click="setControlMode('theme')"
+            >
+              THEME
+            </v-btn>
             <v-btn
               x-small
               :color="controlMode === 'meta' ? 'primary':''"

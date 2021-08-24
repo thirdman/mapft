@@ -613,6 +613,10 @@ export const state = () => ({
       },
     ],
   },
+  activeTheme: {
+    id: "default",
+    colors: ["#cc0099", "#cc4499", "#cc8899", "#ccbb99", "#ccee99"],
+  },
   svgStatus: "",
   svgStatusMessage: null,
   canMintSvg: true,
@@ -631,6 +635,7 @@ export const state = () => ({
 });
 
 export const getters = {
+  activeTheme: (state) => state.activeTheme,
   canMintSvg: (state) => state.canMintSvg,
   svgData: (state) => state.svgData,
   svgStatus: (state) => state.svgStatus,
@@ -676,6 +681,9 @@ export const mutations = {
     svgDescription = "example title";
     svgCode = "<svg></svg>";
   },
+  setActiveTheme(state, value) {
+    state.activeTheme = value;
+  },
   setShowPreview(state, newState) {
     console.log("settings show preview", newState);
     state.showPreview = newState;
@@ -719,6 +727,18 @@ export const mutations = {
 };
 
 export const actions = {
+  getColor: async function (context, data) {
+    const { state, rootState, dispatch } = context;
+    const { activeTheme } = state;
+    const max = activeTheme.colors && activeTheme.colors.length - 1;
+    const randomIndex = await this.dispatch("svgFormStore/random", {
+      min: 0,
+      max: max,
+    });
+    const selectedColor = activeTheme && activeTheme.colors[randomIndex];
+    console.log("selectedColor", selectedColor, randomIndex);
+    return selectedColor;
+  },
   handleMintSvg: async function (context, data) {
     // console.log("mint this: ", this);
     // const context = this;
@@ -775,7 +795,7 @@ export const actions = {
     );
     console.log("createTransationId id: ", createTransationId);
   },
-  canMint(context, parameters) {
+  canMint(_, parameters) {
     console.log("parameters", parameters);
     const { svgTitle, svgCreator, svgDescription, svgCode } = parameters;
     let hasRequired = false;
@@ -783,6 +803,13 @@ export const actions = {
       hasRequired = true;
     }
     return hasRequired;
+  },
+  random(_, { min, max, float = false }) {
+    const val = Math.random() * (max - min) + min;
+    if (float) {
+      return val;
+    }
+    return Math.floor(val);
   },
   // countBytes(source) {
   //   const bytes = Buffer.byteLength(source);

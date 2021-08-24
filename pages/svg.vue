@@ -15,6 +15,7 @@
           <div class="col col-6 controlsColumn pa-0">
             <ControlsToggle :code="svgCode" :previewData="previewData"  />
             <ControlsOptions v-if="controlMode === 'options' " />
+            <ControlsTheme v-if="controlMode === 'theme' " />
             <ControlsCode v-if="controlMode === 'code' " />
             <SvgForm v-if="controlMode === 'meta' "/>
           </div>
