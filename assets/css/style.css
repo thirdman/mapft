@@ -91,6 +91,10 @@ Over time I intend to migrate to main.scss
   --custom-text-color: #333333;
   --custom-background-color: #eee;
   --custom-mode: light;
+
+  /* DIALOG */
+  --ok-button-color: pink;
+  --dialog-border-top: 0.5rem solid lime;
 }
 /* STRUCTURE */
 html {

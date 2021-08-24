@@ -61,6 +61,8 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
+
+
 export default {
   data() {
     return {
@@ -97,7 +99,10 @@ export default {
     }),
     
     updatePreview() {
-      alert('up')
+
+      console.log('test');
+      
+
       // this.$store.commit("deployFormStore/addMetaTemplate", obj);
     },
     

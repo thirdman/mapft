@@ -1,7 +1,7 @@
 <template>
   <div class="Loading loadingComponent">
     <div class="status-icon inLoading">
-      <IconLogo :fillClass="fillClass || 'dark'" :size="size" />
+      <v-icon>mdi-loading</v-icon>
     </div>
     <div class="status-message .inLoading" >
       {{ message }}

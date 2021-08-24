@@ -1,6 +1,8 @@
 <template>
 
 <div class=" previewColumn svgPreviewColumn">
+  <!-- <div>{{loading ? "loading" : "bnot loading"}}<Loading /></div> -->
+  
   <div class="svgPreviewWrap" v-if="previewMode === 'edit'">
     <div id="svg" ref="svg" class="svgPreviewWrap" />
   </div>
@@ -107,16 +109,19 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { SVG } from '@svgdotjs/svg.js';
 import { spline } from '@georgedoescode/spline';
 
+
 export default {
+  
   props: ['code', 'previewData', 'previewMode'],
   data(){
     return {
       svgElement: null,
+      loading: false,
       // theSvg: this.SVG()
     }
   },
   created() {
-   
+   this.loading = true;
   },
   mounted() {
     this.$nextTick(function() {
@@ -126,6 +131,7 @@ export default {
     this.handleConstruct(this.svgData.width, this.svgData.height, target);
       // this.drawPath();
     });
+    this.loading = false;
     
   },
   
@@ -226,34 +232,54 @@ export default {
       //       })  
       //     })
       //   }
+      const methodArray = {
+        line: 'drawLine',
+        background: 'drawBackground',
+        circle: 'drawCircle',
+        rectangle: 'drawRectangle',
+        triangle: 'drawTriangle',
+        blob: 'drawBody',
+      }
+      
         svgData.elements && svgData.elements.map(recipe => {
           const recipeType = recipe.type;
-          console.log('recipeType', recipe, recipeType);
-          if(recipeType === 'background'){
+          const selectedMethod =  methodArray[recipeType];
+          if(selectedMethod){
             [...Array(Number(recipe.count))].map((_, i) => {
-              this.drawBackground(theSvg, svgData, recipe.options, recipe.mode)
-            })  
+              this[selectedMethod](theSvg, svgData, recipe.options, recipe.mode)
+            })
           }
-          if(recipeType === 'rectangle'){
-            [...Array(Number(recipe.count))].map((_, i) => {
-              this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
-            })  
-          }
-          if(recipeType === 'circle'){
-            [...Array(Number(recipe.count))].map((_, i) => {
-              this.drawCircle(theSvg, svgData, recipe.options, recipe.mode)
-            })  
-          }
-          if(recipeType === 'blob'){
-            [...Array(Number(recipe.count))].map((_, i) => {
-              this.drawBody(theSvg, svgData, recipe.options, recipe.mode)
-            })  
-          }
-          if(recipeType === 'triangle'){
-            [...Array(Number(recipe.count))].map((_, i) => {
-              this.drawTriangle(theSvg, svgData, recipe.options, recipe.mode)
-            })  
-          }
+        
+          // if(recipeType === 'background'){
+          //   [...Array(Number(recipe.count))].map((_, i) => {
+          //     this.drawBackground(theSvg, svgData, recipe.options, recipe.mode)
+          //   })  
+          // }
+          // if(recipeType === 'rectangle'){
+          //   [...Array(Number(recipe.count))].map((_, i) => {
+          //     this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
+          //   })  
+          // }
+          // if(recipeType === 'circle'){
+          //   [...Array(Number(recipe.count))].map((_, i) => {
+          //     this.drawCircle(theSvg, svgData, recipe.options, recipe.mode)
+          //   })  
+          // }
+          // if(recipeType === 'blob'){
+          //   [...Array(Number(recipe.count))].map((_, i) => {
+          //     this.drawBody(theSvg, svgData, recipe.options, recipe.mode)
+          //   })  
+          // }
+          // if(recipeType === 'triangle'){
+          //   [...Array(Number(recipe.count))].map((_, i) => {
+          //     this.drawTriangle(theSvg, svgData, recipe.options, recipe.mode)
+          //   })  
+          // }
+          // if(recipeType === 'line'){
+          //   [...Array(Number(recipe.count))].map((_, i) => {
+          //     this.drawLine(theSvg, svgData, recipe.options, recipe.mode)
+          //   })  
+          // }
           // [...Array(Number(recipe.count))].map((_, i) => {
           //     console.log('i', i)
           //     this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
@@ -264,6 +290,10 @@ export default {
     },
     drawBackground(svg, svgData, options = {}, mode){
       console.log('drawBackground', options);
+      const {width, height} = this.svgData;
+      const centerX = width / 2 || 800;
+      const centerY = height / 2 || 800;
+
       const {h, s, l, a, color, isGradient = true, type = 'gradient', angle} = options;
       const hue1 = mode === 'generative' ? this.random(0, 256, false) : h; // hue range
       const hue2 = this.random(0, 256, false); // hue range
@@ -271,7 +301,8 @@ export default {
       const color2 = mode === 'generative' ? `hsl(${hue2}, ${s * 100}%, ${l * 100}%)` : `hsl(${hue2}, ${s * 100}%, ${l * 100}%)`;
       console.log('drawBackground hue1', hue1, h);
       console.log('drawBackground color1', color1);
-      var gradient = svg.gradient('linear', function(add) {
+      
+      var gradient = svg.move(centerX, centerY).gradient('linear', function(add) {
         // add.stop(0, '#cc2b5e')
         // add.stop(1, '#753a88')
         add.stop(0, color1)
@@ -437,6 +468,61 @@ export default {
         //   width: 10,
         //   color: colorStroke
         // })
+    },
+    drawLine(svg, svgData, options = {}, mode){
+       const hue = options && options.hue || this.random(0, 256, false); // hue range
+       const color = options.strokecolor || `hsl(${hue}, 50%, 50%)`
+       const colorStroke = options.strokeColor || `hsl(${hue}, 90%, 70%)`
+       const randomRotation = options.rotationOptions && Math.floor(Math.random() * options.rotationOptions.length);
+       // const rotation = mode === 'generative' ? options.rotationOptions[randomRotation] : (options.rotation || 0);
+       // const rotation = options.rotation ? options.rotation : options.rotationOptions[randomRotation] || 0;
+       const rotation = 0;
+      const {x, y, w, h} = options;
+      const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
+      const constraintW = Number(svgData.width)
+      const constraintH = Number(svgData.height)
+      const startX =  mode === 'generative' ? this.random(0, constraintW - size, true) : Number(x);
+      const startY = mode === 'generative' ? this.random(0, constraintH - size, true) : Number(y);
+      // const endX =  mode === 'generative' ? this.random(0, constraintW - size, true) : startX + 100;
+      // const endY = mode === 'generative' ? this.random(0, constraintH - size, true) : startY + 100;
+      const endX = startX + constraintW;
+      const endY = startY ;
+      const type = options.type || 'single';
+      if(type === 'repeating'){
+        const iterationCount = Number(options.count) || 10;
+        let tempStartX = Number(startX);
+        let tempStartY = Number(startY);
+        let tempEndX = Number(endX);
+        let tempEndY = Number(endY);
+        
+        [...Array(iterationCount)].map((_, i) => {
+          
+          const thisOffsetX = i * options.offsetX
+          const thisOffsetY = i * options.offsetY
+          const pointX = startX + thisOffsetX
+          const pointY = startY + thisOffsetY
+          // tempStartX = startX; //  + i * thisOffsetX
+          // tempStartY = startY + i * thisOffsetY
+          console.log('iteration', {pointX, pointY, thisOffsetX, thisOffsetY, tempStartX, tempStartY});
+          console.log('tempStartX', tempStartX);
+          tempEndX = pointX + endX;
+          tempEndY = pointY; //  + i *  thisOffsetY + size
+          // tempRotationOffset = options.rotationOffset + i * options.rotationOffset 
+          // console.log('tempStartX', tempStartX);
+          let tempRotationOffset = Number(options.rotationOffset);
+          
+          svg
+            .line(pointX, pointY, tempEndX, tempEndY)
+            .stroke({ width: options.strokeSize || 10, color: colorStroke })
+            .rotate(tempRotationOffset || 0)
+          })
+          
+        } else {
+        svg
+          .line(startX, startY, endX, endY)
+          .stroke({ width: options.strokeSize || 10, color: colorStroke })
+          .rotate(rotation)
+        }
     },
     random(min, max, float = false) {
       const val = Math.random() * (max - min) + min;

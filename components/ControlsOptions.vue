@@ -98,7 +98,7 @@
                     </v-btn>
                   </v-btn-toggle>
                 </div>
-                <div class="col" v-if="toggle_mode === 0">
+                <div class="col" v-if="toggle_mode === 0 || toggle_mode === 2">
                   <label>Count</label><br />
                   <v-text-field  filled outlined dense v-model="newElementCount" />
                 </div>
@@ -109,6 +109,7 @@
               <recipe-rectangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'rectangle'" />
               <recipe-triangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'triangle'" />
               <recipe-circle :value.sync="newElementCircleOptions" v-if="typeArray[toggle_type] === 'circle'" />
+              <recipe-line :value.sync="newElementLineOptions" v-if="typeArray[toggle_type] === 'line'" />
             </v-card-text>
             <v-card-actions>
               <v-btn color="primary" small @click="() => handleAddElement()">Add</v-btn> 
@@ -192,6 +193,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { v4 as uuidv4 } from 'uuid';
 import RecipeTriangle from './RecipeTriangle.vue';
 import RecipeRectangle from './RecipeRectangle.vue';
+import { dialog } from '@devlop-ab/dialog';
 export default {
   components: { RecipeTriangle, RecipeRectangle },
   data() {
@@ -203,7 +205,7 @@ export default {
       newElementY: 100,
       newElementW: 40,
       newElementH: 30,
-      modeArray: ['generative', 'static'],
+      modeArray: ['generative', 'static', 'repeating'],
       typeArray: ['rectangle', 'circle', 'polygon', 'line', 'triangle', 'blob', 'background'],
       toggle_type: 1,
       toggle_mode: 0,
@@ -228,6 +230,26 @@ export default {
         maxSize: 900,
         rotation: 0,
         rotationOptions: [0, 90, 180, 270],
+      },
+      newElementLineOptions: {
+        x: 0,
+        y: 0,
+        w: 103,
+        hex: '#ff00ff',
+        h: 1,
+        s: 50,
+        l: 50,
+        rotation: 0,
+        rotationOffset: 0,
+        type: 'gradient',
+        offsetX: 0,
+        offsetY: 20,
+        strokeSize: 10,
+        strokeColor: "#ff00ff",
+        rotationOptions: [0, 90, 180, 270],
+        transformX: 0,
+        transformY: 0,
+        iterations: 10,
       },
       backgroundElementOptions: {   
         type: 'gradient',
@@ -292,13 +314,16 @@ export default {
       this.setSvgElements(newArray);
     },
     handleAddElement(){
-      const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, newElementCount = 1, newElementOptions, newElementCircleOptions, backgroundElementOptions} = this;
+      const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, newElementCount = 1, newElementOptions, newElementCircleOptions, backgroundElementOptions, newElementLineOptions} = this;
       const {elements} = svgData;
       const selectedType = typeArray[toggle_type];
       const selectedMode = modeArray[toggle_mode];
       let selectedOptions = selectedType === 'circle' ? newElementCircleOptions : newElementOptions;
       if(selectedType === 'background') {
         selectedOptions = backgroundElementOptions;
+      }
+      if(selectedType === 'line') {
+        selectedOptions = newElementLineOptions
       }
         console.log('handleAddElement selectedOptions', selectedOptions)
       const newId = uuidv4();
@@ -323,7 +348,7 @@ export default {
       this.newElementOptions.w = svgData.width;
       this.newElementOptions.h = svgData.height;
     },
-    moveElement(fromIndex, direction){
+    async moveElement(fromIndex, direction){
 
       console.log('fromINdex', fromIndex, direction)
       const {svgData} = this;
@@ -339,6 +364,10 @@ export default {
         sorted = this.arrayMove(tempElements, fromIndex, fromIndex + 1)
       }
       console.log('sorted', sorted)
+      await dialog.alert('Sorted.', {
+        title: 'Array updated!',
+        okText: 'ok!',
+    });
       this.setSvgElements(sorted);
     },
     arrayMove(arr, fromIndex, toIndex) {

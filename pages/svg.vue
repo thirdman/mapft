@@ -7,6 +7,7 @@
         <div class="sectionRow row ma-0 pa-0" >
           <div class="col col-6 svgColumn pa-0">
             <PreviewToggle :code="svgCode" :previewData="previewData"/>
+    
             <client-only>
               <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode"  />
             </client-only>
@@ -53,6 +54,16 @@ export default {
       { hid: 'description', name: 'description', content: 'Mint That SVG.' },
     ],
   },
+  data() {
+    return{
+      loading: true
+    }
+  },
+  asyncData() {
+      return {
+        loading: false
+      }
+    },
   computed: {
     ...mapGetters({
       //UI

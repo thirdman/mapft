@@ -190,7 +190,11 @@ export default {
    */
   build: {
     // Add exception
-    transpile: ["vee-validate/dist/rules", "@georgedoescode/spline"],
+    transpile: [
+      "vee-validate/dist/rules",
+      "@georgedoescode/spline",
+      "@devlop-ab/dialog",
+    ],
     babel: {
       plugins: [["@babel/plugin-proposal-private-methods", { loose: true }]],
     },

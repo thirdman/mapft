@@ -1,6 +1,21 @@
 @use 'mediaqueries';
 @use 'tooltips';
 @use 'vgrid';
+@import "@devlop-ab/dialog/dist/css/sky.css";
+// VARIABLES
+
+:root {
+  /* DIALOG */
+  // --ok-button-color: pink;
+  // --dialog-border-top: 0.5rem solid lime;
+}
+
+[data-dialog] {
+  --hue: 123;
+  --dialog-color: hsl(var(--hue), 50%, 50%);
+  --ok-button-background-color: var(--dialog-color);
+  --dialog-border-top: 0.5rem solid var(--dialog-color);
+}
 // UTILITY FIXES
 html,
 body {
