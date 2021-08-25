@@ -155,6 +155,7 @@ export default {
       //UI
       devMode: "ui/devMode",
       //SVG
+      activeTheme: "svgFormStore/activeTheme",
       recipeTypes: "svgFormStore/recipeTypes",
       svgData: "svgFormStore/svgData",
       previewBytes: "svgFormStore/previewBytes",
@@ -176,9 +177,10 @@ export default {
     ...mapActions({
       getColor: "svgFormStore/getColor",
     }),
-    handleConstruct(width, height, target){
-      const {svgData} = this;
-      console.log('handleConstruct elements', svgData)
+    
+    async handleConstruct(width, height, target){
+      const {svgData, activeTheme} = this;
+      console.log('handleConstruct elements', svgData, activeTheme)
       const childNode = target.firstChild;
       
       if(childNode){
@@ -189,109 +191,36 @@ export default {
       .addTo(target) // mount instance to our target
       .viewbox(0, 0, svgData.width, svgData.height); // set the <svg /> viewBox attribute
       theSvg.clear();
-      // const backgroundElements = svgData.elements.filter(el => el.type === 'background')
-      // const blobElements = svgData.elements.filter(el => el.type === 'blob')
-      // const circleElements = svgData.elements.filter(el => el.type === 'circle')
-      // const triangleElements = svgData.elements.filter(el => el.type === 'triangle')
-      // const rectangleElements = svgData.elements.filter(el => el.type === 'rectangle')
-       
-      //  if(backgroundElements && backgroundElements.length > -1){
-      //     backgroundElements.map(recipe => {
-      //       [...Array(Number(recipe.count))].map((_, i) => {
-      //         this.drawBackground(theSvg, svgData, recipe.options, recipe.mode)
-      //       })  
-      //     })
-      //   }
-      //   if(circleElements && circleElements.length > -1){
-      //     circleElements.map(recipe => {
-      //       console.log('circleELements recipe', recipe);
-      //       [...Array(Number(recipe.count))].map((_, i) => {
-      //         this.drawCircle(theSvg, svgData, recipe.options, recipe.mode)
-      //       })  
-      //     })
-      //   }
-      //   if(blobElements){
-      //     blobElements.map(recipe => {
-      //       [...Array(Number(recipe.count))].map((_, i) => {
-      //         this.drawBody(theSvg, svgData, recipe.options)
-      //       })  
-      //     })
-      //   }
-      //   if(triangleElements){
-      //     triangleElements.map(recipe => {
-      //       console.log('recipe', recipe);
-      //       [...Array(Number(recipe.count))].map((_, i) => {
-      //         console.log('i', i)
-      //         this.drawTriangle(theSvg, svgData, recipe.options, recipe.mode)
-      //       })  
-      //     })
-      //   }
-      //   if(rectangleElements){
-      //     rectangleElements.map(recipe => {
-      //       [...Array(Number(recipe.count))].map((_, i) => {
-      //         console.log('i', i)
-      //         this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
-      //       })  
-      //     })
-      //   }
       const methodArray = {
-        line: 'drawLine',
         background: 'drawBackground',
+        line: 'drawLine',
         circle: 'drawCircle',
         rectangle: 'drawRectangle',
         triangle: 'drawTriangle',
         blob: 'drawBody',
       }
+
+      if(!svgData.elements){return}
+      svgData.elements.map(recipe => {
+        const recipeType = recipe.type;
+        const selectedMethod =  methodArray[recipeType];
+        if(!selectedMethod){return }
+        const iterationsArray = [...Array(Number(recipe.count))];
+          iterationsArray.map((_, i) => {
+          this[selectedMethod](theSvg, svgData, recipe.options, recipe.mode)
+        })        
+      })
       
-        svgData.elements && svgData.elements.map(recipe => {
-          const recipeType = recipe.type;
-          const selectedMethod =  methodArray[recipeType];
-          if(selectedMethod){
-            [...Array(Number(recipe.count))].map((_, i) => {
-              this[selectedMethod](theSvg, svgData, recipe.options, recipe.mode)
-            })
-          }
-        
-          // if(recipeType === 'background'){
-          //   [...Array(Number(recipe.count))].map((_, i) => {
-          //     this.drawBackground(theSvg, svgData, recipe.options, recipe.mode)
-          //   })  
-          // }
-          // if(recipeType === 'rectangle'){
-          //   [...Array(Number(recipe.count))].map((_, i) => {
-          //     this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
-          //   })  
-          // }
-          // if(recipeType === 'circle'){
-          //   [...Array(Number(recipe.count))].map((_, i) => {
-          //     this.drawCircle(theSvg, svgData, recipe.options, recipe.mode)
-          //   })  
-          // }
-          // if(recipeType === 'blob'){
-          //   [...Array(Number(recipe.count))].map((_, i) => {
-          //     this.drawBody(theSvg, svgData, recipe.options, recipe.mode)
-          //   })  
-          // }
-          // if(recipeType === 'triangle'){
-          //   [...Array(Number(recipe.count))].map((_, i) => {
-          //     this.drawTriangle(theSvg, svgData, recipe.options, recipe.mode)
-          //   })  
-          // }
-          // if(recipeType === 'line'){
-          //   [...Array(Number(recipe.count))].map((_, i) => {
-          //     this.drawLine(theSvg, svgData, recipe.options, recipe.mode)
-          //   })  
-          // }
-          // [...Array(Number(recipe.count))].map((_, i) => {
-          //     console.log('i', i)
-          //     this.drawRectangle(theSvg, svgData, recipe.options, recipe.mode)
-          //   })  
-        })
       console.log('theSvg', theSvg);
       console.log('children()', theSvg.children())
     },
-    async drawBackground(svg, svgData, options = {}, mode){
+//       var results = await Promise.all(arr.map(async (item)=> {
+//     await callAsynchronousOperation(item);
+//     return item + 1;
+// }));
+    drawBackground(svg, svgData, options = {}, mode){
       console.log('drawBackground', options);
+      const {activeTheme} = this;
       const {width, height} = this.svgData;
       const centerX = width / 2 || 800;
       const centerY = height / 2 || 800;
@@ -299,23 +228,26 @@ export default {
       const {h, s, l, a, color, isGradient = true, type = 'gradient', angle} = options;
       const hue1 = mode === 'generative' ? this.random(0, 256, false) : h; // hue range
       const hue2 = this.random(0, 256, false); // hue range
-      const themeColor = await this.getColor();
+      // const themeColor = await this.getColor(0);
+      // const themeColor2 = await this.getColor(4);
+      const themeColor = activeTheme.colors[0]
+      const themeColor2 = activeTheme.colors[4]
       // const color1 = mode === 'generative' ? `hsl(${hue1}, ${s * 100}%, ${l * 100}%)` : `hsl(${hue1}, ${s * 100}%, ${l * 100}%)`;
+      //const color2 = mode === 'generative' ? `hsl(${hue2}, ${s * 100}%, ${l * 100}%)` : `hsl(${hue2}, ${s * 100}%, ${l * 100}%)`;
       const color1 = mode === 'generative' ? themeColor : `hsl(${hue1}, ${s * 100}%, ${l * 100}%)`;
-      const color2 = mode === 'generative' ? `hsl(${hue2}, ${s * 100}%, ${l * 100}%)` : `hsl(${hue2}, ${s * 100}%, ${l * 100}%)`;
-      console.log('drawBackground hue1', hue1, h);
-      console.log('drawBackground color1', color1);
+      const color2 = mode === 'generative' ? themeColor2 : `hsl(${hue2}, ${s * 100}%, ${l * 100}%)`;
+      // console.log('drawBackground hue1', hue1, h);
+      // console.log('drawBackground color1', color1);
       
       var gradient = svg.move(centerX, centerY).gradient('linear', function(add) {
-        // add.stop(0, '#cc2b5e')
-        // add.stop(1, '#753a88')
         add.stop(0, color1)
         add.stop(1, color2)
       }).transform({
         rotate: angle,
       })
       
-      svg.rect(svgData.width, svgData.height).move(0, 0).fill(type === 'gradient' ? gradient : color1)
+      svg.rect(svgData.width, svgData.height).move(0, 0)
+      .fill(type === 'gradient' ? gradient : color1)
     },
     drawBody(svg, svgData, options = {}){
        const hue = options && options.hue || this.random(0, 256, false); // hue range
@@ -363,39 +295,12 @@ export default {
         .fill(color);
       return pathData;
     },
-    // drawCircles(svg, svgData, options = {}){
-    //    const hue = options && options.hue || this.random(0, 256, false); // hue range
-    //    const color = `hsl(${hue}, 50%, 50%)`
-    //    const colorStroke = `hsl(${hue}, 90%, 70%)`
-    //   // choose a random number of points
-      
-    //   // keep track of our points
-    //   const points = [];
-    //   // const size = options.w || 100;
-    //   const size = this.random(options.wobbleMin, options.wobbleMax, false);
-      
-    //   const constraintW = svgData.width
-    //   const constraintH = svgData.height
-    //   // const startX = svgData.width / 2 - size / 2;
-    //   // const startY = svgData.height / 2 - size / 2;
-    //   const startX = this.random(0 - size / 2, constraintW - size / 2, true);
-    //   const startY = this.random(0 - size / 2, constraintH - size / 2, true);
-    //   svg.ellipse(size, size)
-    //     .move(startX, startY)
-    //     .stroke({
-    //       width: 10,
-    //       color: colorStroke
-    //     })
-        
-    //     .fill(color);
-
-    // },
+   
     async drawCircle(svg, svgData, options = {}, mode){
       const hue = options && options.hue || this.random(0, 256, false); // hue range
       const color = `hsl(${hue}, 50%, 50%)`
       const themeColor = await this.getColor();
       const strokeColor = await this.getColor();
-      console.log('themeColor', themeColor)
       const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
       const size = mode === 'generative' ? this.random(Number(options.minSize), Number(options.maxSize), false) : Number(options.w);
       const constraintW = svgData.width
@@ -414,13 +319,17 @@ export default {
         .fill(themeColor);
 
     },
-    drawTriangle(svg, svgData, options = {}, mode){
+    async drawTriangle(svg, svgData, options = {}, mode){
        const hue = options && options.hue || this.random(0, 256, false); // hue range
-       const color = `hsl(${hue}, 50%, 50%)`
+       // const color = `hsl(${hue}, 50%, 50%)`
+       // const colorStroke = `hsl(${hue}, 90%, 70%)`
+       const color = await this.getColor(4)
        const colorStroke = `hsl(${hue}, 90%, 70%)`
        const randomRotation = options.rotationOptions && Math.floor(Math.random() * options.rotationOptions.length);
        // const rotation = mode === 'generative' ? options.rotationOptions[randomRotation] : (options.rotation || 0);
-       const rotation = options.rotation ? options.rotation : options.rotationOptions[randomRotation];
+       // const rotation = !isNaN(options.rotation) ? options.rotation : options.rotationOptions[randomRotation];
+       const rotation = options.rotationOptions[randomRotation];
+       console.log('rotation', rotation)
       const {x, y, w, h} = options;
       const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
       const constraintW = svgData.width
@@ -442,12 +351,8 @@ export default {
         .path(trianglePath)
           .fill(color)
           .rotate(rotation)
-        // .stroke({
-        //   width: 10,
-        //   color: colorStroke
-        // })
     },
-    drawRectangle(svg, svgData, options = {}, mode){
+   async drawRectangle(svg, svgData, options = {}, mode){
        const hue = options && options.hue || this.random(0, 256, false); // hue range
        const color = `hsl(${hue}, 50%, 50%)`
        const colorStroke = `hsl(${hue}, 90%, 70%)`
@@ -470,13 +375,13 @@ export default {
       svg
         .path(rectanglePath)
           .fill(color)
-          .rotate(rotation)
+          // .rotate(rotation)
         // .stroke({
         //   width: 10,
         //   color: colorStroke
         // })
     },
-    drawLine(svg, svgData, options = {}, mode){
+    async drawLine(svg, svgData, options = {}, mode){
        const hue = options && options.hue || this.random(0, 256, false); // hue range
        const color = options.strokecolor || `hsl(${hue}, 50%, 50%)`
        const colorStroke = options.strokeColor || `hsl(${hue}, 90%, 70%)`

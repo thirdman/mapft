@@ -567,22 +567,22 @@ export const state = () => ({
           angle: 45,
         },
       },
-      {
-        label: "ExampleTriangle",
-        id: "example-trianlge-id",
-        mode: "static",
-        count: "1",
-        type: "triangle",
-        options: {
-          hue: null,
-          x: 0,
-          y: 0,
-          w: 1600,
-          h: 1600,
-          rotation: 0,
-          rotationOptions: [0, 90, 180, 270],
-        },
-      },
+      // {
+      //   label: "ExampleTriangle",
+      //   id: "example-trianlge-id",
+      //   mode: "static",
+      //   count: "1",
+      //   type: "triangle",
+      //   options: {
+      //     hue: null,
+      //     x: 0,
+      //     y: 0,
+      //     w: 1600,
+      //     h: 1600,
+      //     rotation: 0,
+      //     rotationOptions: [0, 90, 180, 270],
+      //   },
+      // },
       // {
       //   label: "test",
       //   id: "abc",
@@ -727,16 +727,20 @@ export const mutations = {
 };
 
 export const actions = {
-  getColor: async function (context, data) {
-    const { state, rootState, dispatch } = context;
+  getColor: async function (context, index) {
+    // const { index } = data;
+    // console.log("data, index: ", data, index);
+    const { state } = context;
     const { activeTheme } = state;
+    const isIndex = !isNaN(index);
     const max = activeTheme.colors && activeTheme.colors.length - 1;
     const randomIndex = await this.dispatch("svgFormStore/random", {
       min: 0,
       max: max,
     });
+    // const selectedColor =
+    //   activeTheme && activeTheme.colors[isIndex ? index : randomIndex];
     const selectedColor = activeTheme && activeTheme.colors[randomIndex];
-    console.log("selectedColor", selectedColor, randomIndex);
     return selectedColor;
   },
   handleMintSvg: async function (context, data) {

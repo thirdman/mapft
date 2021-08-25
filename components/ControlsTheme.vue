@@ -92,6 +92,16 @@ export default {
             "#ccbb99",
             "#ccee99"
           ]
+        },
+        {
+          id: "test",
+          colors: [
+            "#eee555",
+            "#cc4499",
+            "#cc8899",
+            "#00bb99",
+            "#00ee99"
+          ]
         }
       ]
     };

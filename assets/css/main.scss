@@ -11,10 +11,12 @@
 }
 
 [data-dialog] {
-  --hue: 123;
-  --dialog-color: hsl(var(--hue), 50%, 50%);
-  --ok-button-background-color: var(--dialog-color);
-  --dialog-border-top: 0.5rem solid var(--dialog-color);
+  /* the whole theme can be changed by only changing the hue. */
+  --theme-color-hue: 20;
+
+  /* it's also possible to change the saturation and lightness. */
+  --theme-color-saturation: 80%;
+  --theme-color-lightness: 58%;
 }
 // UTILITY FIXES
 html,

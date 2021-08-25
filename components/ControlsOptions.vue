@@ -1,9 +1,7 @@
 <template>
   <div class="optionsControl  pa-2">
-    <v-btn @click="getColor">get color</v-btn>
-          <div class="" v-if="!showNew">
-          
-            <v-slide-y-transition
+    <div class="" v-if="!showNew">
+      <v-slide-y-transition
         class="py-0"
         group
         tag="v-list"
@@ -366,10 +364,10 @@ export default {
         sorted = this.arrayMove(tempElements, fromIndex, fromIndex + 1)
       }
       console.log('sorted', sorted)
-      await dialog.alert('Sorted.', {
-        title: 'Array updated!',
-        okText: 'ok!',
-    });
+    //   await dialog.alert('Sorted.', {
+    //     title: 'Array updated!',
+    //     okText: 'ok!',
+    // });
       this.setSvgElements(sorted);
     },
     arrayMove(arr, fromIndex, toIndex) {

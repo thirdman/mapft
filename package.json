@@ -14,7 +14,7 @@
     "dev:emulator": "flow emulator start --init --verbose --service-priv-key bf9db4706c2fdb9011ee7e170ccac492f05427b96ab41d8bf2d8c58443704b76 --service-sig-algo ECDSA_P256 --service-hash-algo SHA3_256"
   },
   "dependencies": {
-    "@devlop-ab/dialog": "^1.0.6",
+    "@devlop-ab/dialog": "^1.2.0",
     "@georgedoescode/spline": "^1.0.1",
     "@nuxt/content": "^1.14.0",
     "@nuxtjs/axios": "^5.13.6",
