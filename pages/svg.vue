@@ -7,15 +7,17 @@
         <div class="sectionRow row ma-0 pa-0" >
           <div class="col col-6 svgColumn pa-0">
             <PreviewToggle :code="svgCode" :previewData="previewData"/>
-    
-            <client-only>
-              <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode"  />
-            </client-only>
+            <div class=" previewColumn svgPreviewColumn">
+              <client-only>
+                  <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode" v-if="previewMode === 'edit'"  />
+              </client-only>
+            </div>
           </div>
           <div class="col col-6 controlsColumn pa-0">
             <ControlsToggle :code="svgCode" :previewData="previewData"  />
-            <ControlsOptions v-if="controlMode === 'options' " />
+            <ControlsRules v-if="controlMode === 'rules' " />
             <ControlsTheme v-if="controlMode === 'theme' " />
+            <ControlsSettings v-if="controlMode === 'settings' " />
             <ControlsCode v-if="controlMode === 'code' " />
             <SvgForm v-if="controlMode === 'meta' "/>
           </div>
@@ -107,6 +109,14 @@ export default {
 .appSection{}
 .sectionRow{
   width: 100%;
+}
+.svgPreviewColumn{
+  display: flex;
+  flex-basis: 400px;
+  flex-grow: 0;
+  flex-direction: column;
+  align-items: center;
+  padding-top: .5rem;
 }
 .svgColumn{
   height: 100%;

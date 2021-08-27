@@ -7,10 +7,10 @@
             <v-btn
               
               x-small
-              :color="controlMode === 'options' ? 'primary':''"
-              @click="setControlMode('options')"
+              :color="controlMode === 'rules' ? 'primary':''"
+              @click="setControlMode('rules')"
             >
-              OPTIONS
+              RULES
             </v-btn>
             <v-btn   
               x-small
@@ -18,6 +18,13 @@
               @click="setControlMode('theme')"
             >
               THEME
+            </v-btn>
+            <v-btn   
+              x-small
+              :color="controlMode === 'settings' ? 'primary':''"
+              @click="setControlMode('settings')"
+            >
+              SETTINGS
             </v-btn>
             <v-btn
               x-small

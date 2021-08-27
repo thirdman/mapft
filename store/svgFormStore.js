@@ -541,7 +541,9 @@ export const state = () => ({
   svgData: {
     width: 1600,
     height: 1600,
-    elementCount: 5,
+    settings: {
+      rotationOptions: [0, 90, 180, 270],
+    },
     recipeTypes: [
       "background",
       "circle",
@@ -558,6 +560,7 @@ export const state = () => ({
         mode: "generative",
         count: 1,
         type: "background",
+
         options: {
           color: null,
           h: 210,
@@ -567,22 +570,22 @@ export const state = () => ({
           angle: 45,
         },
       },
-      // {
-      //   label: "ExampleTriangle",
-      //   id: "example-trianlge-id",
-      //   mode: "static",
-      //   count: "1",
-      //   type: "triangle",
-      //   options: {
-      //     hue: null,
-      //     x: 0,
-      //     y: 0,
-      //     w: 1600,
-      //     h: 1600,
-      //     rotation: 0,
-      //     rotationOptions: [0, 90, 180, 270],
-      //   },
-      // },
+      {
+        label: "ExampleTriangle",
+        id: "example-trianlge-id",
+        mode: "static",
+        count: "1",
+        type: "triangle",
+        options: {
+          hue: null,
+          x: 0,
+          y: 0,
+          w: 1600,
+          h: 1600,
+          rotation: 0,
+          rotationOptions: [0, 90, 180, 270],
+        },
+      },
       // {
       //   label: "test",
       //   id: "abc",
@@ -620,7 +623,7 @@ export const state = () => ({
   svgStatus: "",
   svgStatusMessage: null,
   canMintSvg: true,
-  controlMode: "options",
+  controlMode: "rules",
   previewMode: "edit",
   showPreview: false,
   svgFee: 0.1,

@@ -42,7 +42,6 @@ export default {
   },
   created() {
     const uiModeQueryItem = this.$route.query.ui
-    const uiThemeQueryItem = this.$route.query.theme
     const devModeQueryItem = this.$route.query.devMode
     if (uiModeQueryItem) {
       this.$store.commit('ui/setUiMode', uiModeQueryItem)
@@ -54,11 +53,7 @@ export default {
     if (devModeQueryItem && devModeQueryItem !== 'no') {
       this.$store.commit('ui/setDevMode', true)
     }
-    if (uiThemeQueryItem) {
-      this.setUiTheme(uiThemeQueryItem)
-    } else if (this.uiTheme) {
-      this.setUiTheme(this.uiTheme)
-    }
+    
   },
   computed: {
     ...mapGetters({

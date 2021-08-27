@@ -52,67 +52,124 @@
            </div>
         </template>
             </v-slide-y-transition>
-             <v-btn block @click="() => {this.showNew = !this.showNew}"><v-icon>mdi-plus-box</v-icon>add element</v-btn> 
+             <v-btn block @click="() => {this.showNew = !this.showNew}" ><v-icon>mdi-plus-box</v-icon>add element</v-btn> 
           </div>
+
+
           <v-slide-x-reverse-transition>
           <div class="newElement panel" v-if="showNew">
             <v-card >
             <v-card-title><label>New Element</label></v-card-title>
-            <v-card-text>
-              <div class="col pa-0">
-                <label>Label</label><br />
-                  <v-text-field filled clearable dense v-model="newElementLabel" hint="text identifier for clarity">
-                </v-text-field>
+            <v-card-text class="panelrow row pa-0 ma-0">
+            <div class="panelitem previewpanel col  ma-0"> 
+              <div class="previewcontainer">
+                <PreviewSvg previewMode="edit" :elements="newRuleElement" svgRef="previewSvg" />
               </div>
-              <div class="row">
-                <div class="col">
-                <label>Type</label><br />
-                <v-btn-toggle 
-                  v-model="toggle_type"
-                  dense
-                  @change="handleType"
-                >
-                  <v-btn small v-for="(item, index) in typeArray" :key="index" class="typeSelectButton">
-                    <v-icon small v-if="item==='background'">mdi-square</v-icon>
-                    <v-icon small v-if="item==='polygon'">mdi-vector-polygon</v-icon>
-                    <v-icon small v-if="item==='circle'">mdi-vector-circle</v-icon>
-                    <v-icon small v-if="item==='triangle'">mdi-vector-triangle</v-icon>
-                    <v-icon small v-if="item==='rectangle'">mdi-vector-rectangle</v-icon>
-                    <v-icon small v-if="item==='line'">mdi-vector-line</v-icon>
-                    <v-icon small v-if="item==='blob'">mdi-vector-ellipse</v-icon>
-                    {{item}}
-                  </v-btn>
-                </v-btn-toggle>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <label>Mode</label><br />
-                  <v-btn-toggle 
-                    v-model="toggle_mode"
-                    dense
+            </div>
+              
+              <div class="panelitem col  ma-0 ">
+                <div class="tabrow row ma-0">
+                  <v-btn   
+                    x-small
+                    depressed
+                    :color="tabView === 'meta' ? 'primary':'secondary'"
+                    @click="setRuleView('meta')"
+                    class="newRuleTabButton"
                   >
-                    <v-btn small v-for="(item, index) in modeArray" :key="index">
+                    META
+                  </v-btn>
+                  <v-btn   
+                    x-small
+                    depressed
+                    elevation="0"
+                    :color="tabView === 'position' ? 'primary':'secondary'"
+                    @click="setRuleView('position')"
+                    class="newRuleTabButton"
+                  >
+                    position
+                  </v-btn>
+                  <v-btn   
+                    x-small
+                    depressed
+                    :color="tabView === 'transform' ? 'primary':'secondary'"
+                    @click="setRuleView('transform')"
+                    class="newRuleTabButton"
+                  >
+                    TRANSFORM
+                  </v-btn>
+                  <v-btn   
+                    x-small
+                    depressed
+                    :color="tabView === 'animation' ? 'primary':'secondary'"
+                    @click="setRuleView('animation')"
+                    class="newRuleTabButton"
+                  >
+                    ANIMATION
+                  </v-btn>
+                </div>
+                
+                <div class="row">
+                  <div class="col">
+                  <label>Type</label><br />
+                  <v-btn-toggle 
+                    v-model="toggle_type"
+                    dense
+                    @change="handleType"
+                    class="typeSelectWrap"
+                  >
+                    <v-btn small v-for="(item, index) in typeArray" :key="index" class="typeSelectButton">
+                      <v-icon small v-if="item==='background'">mdi-square</v-icon>
+                      <v-icon small v-if="item==='polygon'">mdi-vector-polygon</v-icon>
+                      <v-icon small v-if="item==='circle'">mdi-vector-circle</v-icon>
+                      <v-icon small v-if="item==='triangle'">mdi-vector-triangle</v-icon>
+                      <v-icon small v-if="item==='rectangle'">mdi-vector-rectangle</v-icon>
+                      <v-icon small v-if="item==='line'">mdi-vector-line</v-icon>
+                      <v-icon small v-if="item==='blob'">mdi-vector-ellipse</v-icon>
+                      <v-icon small v-if="item==='art'">mdi-cloud</v-icon>
                       {{item}}
                     </v-btn>
                   </v-btn-toggle>
+                  </div>
                 </div>
-                <div class="col" v-if="toggle_mode === 0 || toggle_mode === 2">
-                  <label>Count</label><br />
-                  <v-text-field  filled outlined dense v-model="newElementCount" />
+                <div class="row">
+                  <div class="col ">
+                    <label>Label</label><br />
+                      <v-text-field small filled clearable outlined dense v-model="newElementLabel" hint="text identifier for clarity">
+                    </v-text-field>
+                  </div>
                 </div>
-              </div>
+                <div class="row">
+                  <div class="col">
+                    <label>Mode</label><br />
+                    <v-btn-toggle 
+                      v-model="toggle_mode"
+                      dense
+                    >
+                      <v-btn small v-for="(item, index) in modeArray" :key="index">
+                        {{item}}
+                      </v-btn>
+                    </v-btn-toggle>
+                  </div>
+                  <div class="col" v-if="toggle_mode === 0 || toggle_mode === 2">
+                    <label>Count</label><br />
+                    <v-text-field  filled outlined dense v-model="newElementCount" />
+                  </div>
+                </div>
 
-              <v-divider />
-              <recipe-background :value.sync="backgroundElementOptions" v-if="typeArray[toggle_type] === 'background'" />
-              <recipe-rectangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'rectangle'" />
-              <recipe-triangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'triangle'" />
-              <recipe-circle :value.sync="newElementCircleOptions" v-if="typeArray[toggle_type] === 'circle'" />
-              <recipe-line :value.sync="newElementLineOptions" v-if="typeArray[toggle_type] === 'line'" />
+                <v-divider />
+                <recipe-background :value.sync="backgroundElementOptions" v-if="typeArray[toggle_type] === 'background'" />
+                <recipe-rectangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'rectangle'" />
+                <recipe-triangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'triangle'" />
+                <recipe-circle :value.sync="newElementCircleOptions" v-if="typeArray[toggle_type] === 'circle'" />
+                <recipe-line :value.sync="newElementLineOptions" v-if="typeArray[toggle_type] === 'line'" />
+                <recipe-line :value.sync="newElementArtOptions" v-if="typeArray[toggle_type] === 'art'" />
+              </div>
+              
             </v-card-text>
             <v-card-actions>
-              <v-btn color="primary" small @click="() => handleAddElement()">Add</v-btn> 
+              <v-btn color="primary" small @click="() => handleAddElement()" :disabled="isNaN(toggle_type)">Add</v-btn> 
               <v-btn outlined small @click="() => {this.showNew = false}">Cancel</v-btn> 
+              <span class="body-2 pl-4" v-if="isNaN(toggle_type)">Select a rule type</span>
             </v-card-actions>
               
             </v-card>
@@ -126,15 +183,49 @@
   // width: 100%;
   // background: #333;
   height: 100%;
-  overflow: scroll;
-  position: relative;
+  // overflow: scroll;
+  // position: relative;
   flex-basis: 100%;
   flex-shrink: 1;
   flex-grow: 0;
 }
 .newElement.panel{
+  box-shadow: 0 0 1rem black;
+  position: absolute;
+  z-index: 99999;
+  left: 1rem;
+  right: 1rem;
+  bottom: 2rem;
+  top: 1rem;
   
-  height: 100%;
+  // height: 100%;
+  &:before{
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    content: "";
+  }
+  .panelrow{
+    bordeR: 1px solid red;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .panelitem{
+    flex-basis: 50%;
+    flex-shrink: 0;
+    &.previewpanel{
+      border-right: 1px solid var(--line-color);
+      .previewcontainer{
+        width: 100%;
+        justify-content: center;
+        display: flex;
+      }
+    }
+  }
   .v-card.v-sheet{
     height: 100%;
     border: 1px solid var(--line-color);
@@ -185,6 +276,27 @@
     }
   }
 }
+.typeSelectWrap{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));
+  grid-auto-rows: 1fr; 
+  gap: 0px 0px; 
+}
+.tabrow{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .newRuleTabButton{
+    border-radius: 0px;
+    background-color: #333;
+    &:first-child{
+      border-radius: 4px 0 0 4px;
+    }
+    &:last-child{
+      border-radius: 0 4px  4px 0 ;
+    }
+  }
+}
 </style>
 
 <script>
@@ -197,16 +309,17 @@ export default {
   components: { RecipeTriangle, RecipeRectangle },
   data() {
     return {
+      tabView: 'meta',
       showNew: false,
-      newElementLabel: "sdf",
+      newElementLabel: "New Rule",
       newElementCount: 1,
       newElementX: 100,
       newElementY: 100,
       newElementW: 40,
       newElementH: 30,
       modeArray: ['generative', 'static', 'repeating'],
-      typeArray: ['rectangle', 'circle', 'polygon', 'line', 'triangle', 'blob', 'background'],
-      toggle_type: 1,
+      typeArray: ['rectangle', 'circle', 'polygon', 'line', 'triangle', 'blob', 'background', 'art'],
+      toggle_type: null,
       toggle_mode: 0,
       toggle_count: 1,
       elements: [],
@@ -258,7 +371,16 @@ export default {
         l: 0.61,
         s: 0.60,
         angle: 45,
-      }
+      },
+      newElementArtOptions: {   
+        type: 'static',
+        "color": {},
+        hex: "#609CD8",
+        h: 200,
+        l: 0.61,
+        s: 0.60,
+        angle: 45,
+      },
     };
   },
   created(){
@@ -277,6 +399,79 @@ export default {
       svgData: "svgFormStore/svgData",
       previewBytes: "svgFormStore/previewBytes",
     }),
+    newRuleOptions(){
+      const {typeArray, toggle_type, newElementOptions, backgroundElementOptions, newElementLineOptions, newElementCircleOptions, newElementArtOptions } = this
+      const type = typeArray[toggle_type]
+      // console.log('newRuleoptions type', type, typeArray, toggle_type)
+      if(!type){return}
+      let selectedOptions = newElementOptions; // default
+      if(type === 'circle') {
+        selectedOptions = newElementCircleOptions;
+      }
+      if(type === 'background') {
+        selectedOptions = backgroundElementOptions;
+      }
+      if(type === 'line') {
+        selectedOptions = newElementLineOptions
+      }
+      if(type === 'art') {
+        selectedOptions = newElementArtOptions
+      }
+      return selectedOptions
+    },
+    newRuleElement(){
+      const { newElementCircleOptions, typeArray, toggle_type, modeArray, toggle_mode, newElementLabel} = this
+      const type = typeArray[toggle_type]
+      const mode = modeArray[toggle_mode]
+      console.log('newRule', {type, mode})
+      const selectedOptions = this.newRuleOptions;
+      // console.log('newrule selectedOptions', selectedOptions)
+      const tempValue = {
+        label: "test",
+        id: newElementLabel || 'new rule',
+        mode: mode,
+        count: "1",
+        type,
+        options: selectedOptions
+      }
+      console.log('newRule', tempValue)
+      return !isNaN(toggle_type) ? [tempValue] : []
+      // [
+        
+      // // {
+      // //   label: "Background",
+      // //   id: "example-background-id",
+      // //   mode: "generative",
+      // //   count: 1,
+      // //   type: "background",
+
+      // //   options: {
+      // //     color: null,
+      // //     h: 210,
+      // //     hex: "#7E93A8",
+      // //     l: 0.6,
+      // //     s: 0.6,
+      // //     angle: 45,
+      // //   },
+      // // },
+      //   {
+      //     label: "ExampleTriangle",
+      //     id: "new-example-trianlge-id",
+      //     mode: "static",
+      //     count: "1",
+      //     type: "triangle",
+      //     options: {
+      //       hue: null,
+      //       x: 0,
+      //       y: 0,
+      //       w: 1600,
+      //       h: 1600,
+      //       rotation: 0,
+      //       rotationOptions: [0, 90, 180, 270],
+      //     },
+      //   },
+      // ]
+    }
     
     
     // The `mapFields` function takes an array of
@@ -300,10 +495,13 @@ export default {
       // setContractData: "svgFormStore/setContractData",
     }),
     handleType(){
-      
       const {typeArray, toggle_type} = this;
       const typeValue = typeArray[toggle_type];
       this.newElementLabel = `new ${typeValue}`
+    },
+    setRuleView(tab){
+      console.log('tab', tab)
+      this.tabView = tab
     },
     handleRemoveElement(id){
       if (!id) {return}
@@ -314,7 +512,7 @@ export default {
       this.setSvgElements(newArray);
     },
     handleAddElement(){
-      const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, newElementCount = 1, newElementOptions, newElementCircleOptions, backgroundElementOptions, newElementLineOptions} = this;
+      const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, newElementOptions, newElementCircleOptions, backgroundElementOptions, newElementLineOptions} = this;
       const {elements} = svgData;
       const selectedType = typeArray[toggle_type];
       const selectedMode = modeArray[toggle_mode];
@@ -332,7 +530,7 @@ export default {
         label: newElementLabel,
         id: newId,
         mode: selectedMode,
-        count: newElementCount,
+        count: 1,
         type: selectedType,
         options: selectedOptions
       }
