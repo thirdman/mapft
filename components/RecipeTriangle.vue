@@ -19,29 +19,7 @@
           <v-text-field filled outlined dense v-model="localOptions.h" />
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <label>Rotation</label><br />
-          <!-- <v-text-field filled outlined dense v-model="localOptions.rotation" /> -->
-          <v-btn-toggle 
-            dense
-          >
-            <v-btn small v-for="(item, index) in rotationOptions" :key="index" @click="() => handleRotate(item)">
-              {{item}}
-            </v-btn>
-          </v-btn-toggle>
-      </div>
-      <div class="col">
-        
-      </div>
-      <div class="col">
-        
-      </div>
-      <div class="col">
-        
-      </div>
-    </div>
-    <v-divider />
+    
   </div>
 </template>
 
@@ -61,12 +39,7 @@ export default {
         y: 102,
         w: 103,
         h: 104,
-        rotation: 0
       },
-      rotationOptions: [0, 90, 180, 270],
-      // toggle_count: 1,
-      // elements: [],
-      // These are the validation arrays
     };
   },
   created(){
@@ -100,13 +73,6 @@ export default {
     }),
     updateValue: function (value) {
       this.$emit('input', value);
-    },
-    handleRotate(rotation){
-      console.log('rotation', rotation);
-      // const  {rotationOptions } = this;
-      this.localOptions.rotation = rotation
-      // this.localOptions.blah = 123
-      // this.localOptions.rotationOptions = rotationOptions
     },
   },
 };

@@ -57,6 +57,41 @@
         
       </div>
     </div>
+    <div class="row">
+      <div class="col">
+        <label>Use Stroke</label>
+          <v-btn-toggle 
+            dense
+          >
+            <v-btn small @click="() => setHasStroke(false)" :color="!this.localOptions.hasStroke ? 'primary' : 'secondary'">
+              No
+            </v-btn>
+            <v-btn small @click="() => setHasStroke(true)" :color="this.localOptions.hasStroke ? 'primary' : 'secondary'">
+              Yes
+            </v-btn>
+          </v-btn-toggle>
+      </div>
+      <div class="col">
+        <label>Use Fill</label>
+          <v-btn-toggle 
+            dense
+          >
+            <v-btn small @click="() => setHasFill(false)" :color="!this.localOptions.hasFill ? 'primary' : 'secondary'">
+              No
+            </v-btn>
+            <v-btn small @click="() => setHasFill(true)" :color="this.localOptions.hasFill ? 'primary' : 'secondary'">
+              Yes
+            </v-btn>
+          </v-btn-toggle>
+      </div>
+      
+      <div class="col">
+        
+      </div>
+      <div class="col">
+        
+      </div>
+    </div>
     <v-divider />
   </div>
 </template>
@@ -79,7 +114,9 @@ export default {
         h: 104,
         minSize: 100,
         maxSize: 300,
-        rotation: 0
+        rotation: 0,
+        hasStroke: false,
+        hasFill: true,
       },
       rotationOptions: [0, 90, 180, 270],
     };
@@ -112,6 +149,12 @@ export default {
     }),
     updateValue: function (value) {
       this.$emit('input', value);
+    },
+    setHasStroke(value){
+      this.localOptions.hasStroke = value
+    },
+    setHasFill(value){
+      this.localOptions.hasFill = value
     },
     handleRotate(rotation){
       console.log('rotation', rotation);

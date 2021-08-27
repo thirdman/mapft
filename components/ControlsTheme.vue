@@ -102,6 +102,16 @@ export default {
             "#00bb99",
             "#00ee99"
           ]
+        },
+        {
+          id: "white-bg",
+          colors: [
+            "#ffffff",
+            "#edf8ff",
+            "#673AB7",
+            "#80DEEA",
+            "#263238"
+          ]
         }
       ]
     };

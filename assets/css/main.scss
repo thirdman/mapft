@@ -34,3 +34,39 @@ body {
 .col-3,
 .col-9 {
 }
+
+// OVERRIDES
+.v-text-field--filled.v-input--dense.v-text-field--single-line
+  > .v-input__control
+  > .v-input__slot,
+.v-text-field--filled.v-input--dense.v-text-field--outlined
+  > .v-input__control
+  > .v-input__slot,
+.v-text-field--filled.v-input--dense.v-text-field--outlined.v-text-field--filled
+  > .v-input__control
+  > .v-input__slot,
+.v-text-field--full-width.v-input--dense.v-text-field--single-line
+  > .v-input__control
+  > .v-input__slot,
+.v-text-field--full-width.v-input--dense.v-text-field--outlined
+  > .v-input__control
+  > .v-input__slot,
+.v-text-field--full-width.v-input--dense.v-text-field--outlined.v-text-field--filled
+  > .v-input__control
+  > .v-input__slot,
+.v-text-field--outlined.v-input--dense.v-text-field--single-line
+  > .v-input__control
+  > .v-input__slot,
+.v-text-field--outlined.v-input--dense.v-text-field--outlined
+  > .v-input__control
+  > .v-input__slot,
+.v-text-field--outlined.v-input--dense.v-text-field--outlined.v-text-field--filled
+  > .v-input__control
+  > .v-input__slot {
+  min-height: 28px !important;
+}
+
+.v-text-field input {
+  line-height: 16px !important;
+  padding: 4px 0 4px !important;
+}

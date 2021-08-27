@@ -309,6 +309,7 @@ export default {
    
     async drawCircle(svg, svgData, options = {}, mode){
       const {activeTheme} = this;
+      const {hasStroke = false, hasFill = true} = options
       const hue = options && options.hue || this.random(0, 256, false); // hue range
       const color = `hsl(${hue}, 50%, 50%)`
       const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
@@ -325,26 +326,28 @@ export default {
       svg.ellipse(size, size)
         .move(startX, startY)
         .stroke({
-          width: strokeSize,
+          width: hasStroke ? strokeSize : 0,
           color: colorStroke
         })
         
-        .fill(themeColor);
+        .fill(hasFill ? themeColor : 'transparent');
 
     },
     async drawTriangle(svg, svgData, options = {}, mode){
        const hue = options && options.hue || this.random(0, 256, false); // hue range
        const {settings} = svgData;
+       const {type} = options;
+       console.log()
        const {activeTheme} = this;
        // const color = `hsl(${hue}, 50%, 50%)`
        // const colorStroke = `hsl(${hue}, 90%, 70%)`
-       const color = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
        const colorStroke = `hsl(${hue}, 90%, 70%)`
        const randomRotation = settings.rotationOptions && Math.floor(Math.random() * settings.rotationOptions.length);
        // const rotation = mode === 'generative' ? settings.rotationOptions[randomRotation] : (options.rotation || 0);
        // const rotation = !isNaN(options.rotation) ? options.rotation : settings.rotationOptions[randomRotation];
-       const rotation = settings.rotationOptions[randomRotation];
-       console.log('rotation', rotation)
+       const rotation = options.rotation || settings.rotationOptions[randomRotation];
+       console.log('tri options', options)
+       
       const {x, y, w, h} = options;
       const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
       const constraintW = svgData.width
@@ -358,14 +361,60 @@ export default {
       // console.log('triangle points', points)
       // const pathData = spline(points, 0, true);
       let trianglePath = `M${startX},${startY} L`;
-      // trianglePath = trianglePath + ` ${startX},${startY}`
       trianglePath = trianglePath + ` ${w},${h}`
       trianglePath = trianglePath + ` ${startX},${h}`
       trianglePath = trianglePath + ` Z`
-      svg
-        .path(trianglePath)
-          .fill(color)
-          .rotate(rotation)
+      
+      if(mode === 'repeating'){
+        
+        const iterationCount = Number(options.count) || 10;
+        let tempStartX = Number(startX);
+        let tempStartY = Number(startY);
+        let tempStartRotation = rotation;
+        
+        [...Array(iterationCount)].map((_, i) => {
+          const color = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]  
+          const thisOffsetX = i * options.offsetX
+          const thisOffsetY = i * options.offsetY
+          const pointX = tempStartX + thisOffsetX
+          const pointY = tempStartY + thisOffsetY
+          
+          const endPointX = pointX + Number(w)
+          const endPointY = pointY + Number(h)
+          // tempStartX = startX; //  + i * thisOffsetX
+          // tempStartY = startY + i * thisOffsetY
+          
+          let tempRotationOffset = tempStartRotation +  Number(options.rotationOffset);
+          console.log('iteration', {pointX, pointY, endPointX, endPointY, thisOffsetX, thisOffsetY, tempRotationOffset});
+          let tempTrianglePath = `M${pointX},${pointY} L`;
+          tempTrianglePath = tempTrianglePath + ` ${endPointX},${endPointY}`
+          tempTrianglePath = tempTrianglePath + ` ${pointX},${endPointY}`
+          tempTrianglePath = tempTrianglePath + ` Z`
+          console.log('tempTrianglePath', tempTrianglePath);
+          tempStartX = pointX
+          tempStartY = pointY
+          tempStartRotation = tempRotationOffset
+
+          svg
+            .path(tempTrianglePath)
+              .fill(color)
+              .rotate(tempRotationOffset)
+          })
+          
+        } else {
+          const color = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
+       
+          let trianglePath = `M${startX},${startY} L`;
+          trianglePath = trianglePath + ` ${w},${h}`
+          trianglePath = trianglePath + ` ${startX},${h}`
+          trianglePath = trianglePath + ` Z`
+          svg
+            .path(trianglePath)
+              .fill(color)
+              .rotate(rotation)
+        }
+
+      
     },
    async drawRectangle(svg, svgData, options = {}, mode){
      const {settings} = svgData;
