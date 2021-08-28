@@ -539,8 +539,8 @@ const defaultCode = `<?xml version="1.0" encoding="UTF-8"?>
 
 export const state = () => ({
   svgData: {
-    width: 1600,
-    height: 1600,
+    canvasWidth: 1600,
+    canvasHeight: 1600,
     settings: {
       rotationOptions: [0, 90, 180, 270],
     },
@@ -696,6 +696,10 @@ export const mutations = {
   },
   setControlMode(state, newState) {
     state.controlMode = newState;
+  },
+
+  setSvgData(state, newData) {
+    state.svgData = newData;
   },
   setSvgElements(state, newArray) {
     const currentData = state.svgData && state.svgData;

@@ -15,10 +15,18 @@
             <v-btn
               x-small
               depressed
+              :color="previewMode === 'gallery' ? 'primary':'secondary'"
+              @click="setPreviewMode('gallery')"
+            >
+              GALLERY
+            </v-btn>
+            <v-btn
+              x-small
+              depressed
               :color="previewMode === 'view' ? 'primary':'secondary'"
               @click="setPreviewMode('view')"
             >
-              VIEW
+              META
             </v-btn>
           </div>
       

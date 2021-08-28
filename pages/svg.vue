@@ -12,6 +12,27 @@
                   <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode" v-if="previewMode === 'edit'"  />
               </client-only>
             </div>
+            <div class=" galleryColumn" v-if="previewMode === 'gallery'">
+              <div class="newElement panel " >
+                <v-card >
+                  <v-card-title>
+                    <label>Gallery Preview</label>
+                    <v-btn x-small depressed @click="() => {this.setPreviewMode('edit')}">
+                      <v-icon small>
+                        mdi-close
+                      </v-icon>
+                      </v-btn>
+                  </v-card-title>
+                  <v-card-text class="grid">
+                    <div v-for="index in 14" :key="index" class="gridItem">
+                    <client-only>
+                        <PreviewSvg :code="svgCode" :previewData="previewData"  />
+                    </client-only>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </div>
+            </div>
           </div>
           <div class="col col-6 controlsColumn pa-0">
             <ControlsToggle :code="svgCode" :previewData="previewData"  />
@@ -83,7 +104,10 @@ export default {
     }),
   },
   methods: {
-    
+    ...mapMutations({
+      setPreviewMode: "svgFormStore/setPreviewMode",
+    }),
+
   }
 }
 </script>
@@ -133,5 +157,22 @@ export default {
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
+}
+.grid{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  .gridItem{
+    flex-basis: 40%;
+    padding: .5rem;
+    margin: .5rem;
+    background: #fff;
+    box-shadow: 0 2px 1rem rgba(0,0,0,1);
+    .svgPreviewWrap{
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 </style>

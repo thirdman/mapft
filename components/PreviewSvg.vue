@@ -1,10 +1,10 @@
 <template>
 <div>
-  <div class="svgPreviewWrap">
-    <div :id="svgRef || 'svg'" :ref="svgRef || 'svg'" class="svgPreviewGrid" />
+  <div class="svgPreviewWrap" >
+    <div :id="svgRef || 'svg'" :ref="svgRef || 'svg'" class="svgPreviewGrid" :style="canvasStyle" />
   <v-btn 
     v-if="previewMode === 'edit'" 
-    @click="() => handleConstruct(this.svgData.width, this.svgData.height, this.$refs.svg)" >reload</v-btn>
+    @click="() => handleConstruct(this.svgData.canvasWidth, this.svgData.canvasHeight, this.$refs.svg)" >reload</v-btn>
   </div>
   <!-- <div
       id="previewWrap"
@@ -80,12 +80,14 @@
     // background: #fff;
     width: 400px;
     height: 400px;
+    
+    // max-width: 400px;
     .svgPreview{
 
     }
     svg {
       width: 100%;
-      height: 100%;
+      height: 100%;  
       display: block;
     }
   }
@@ -93,6 +95,7 @@
     // background: pink;
     // width: 50vmin;
     // height: 50vmin;
+    
     display: block;
   }
   .danger{
@@ -130,7 +133,7 @@ export default {
       const target = propsExist ? ref : svg;
       console.log('propElements', propElements, propsExist, target);
       if(!target){return}
-      this.handleConstruct(this.svgData.width, this.svgData.height, target);
+      this.handleConstruct(this.svgData.canvasWidth, this.svgData.canvasHeight, target);
     });
     this.loading = false;
     
@@ -165,7 +168,20 @@ export default {
       calculatedFee: "svgFormStore/calculatedFee",
       svgFee: "svgFormStore/svgFee",
     }),
-  
+    canvasStyle(){
+      const {canvasWidth, canvasHeight} = this.svgData;
+      const uiValue = 400;
+      const aspect = canvasWidth  / canvasHeight;
+      // const wRatio = uiValue * aspect;
+      const hRatio = uiValue / canvasHeight;
+      const calculatedW = uiValue * aspect;
+      const calculatedH = canvasHeight * hRatio;
+      console.log('calculatedValue',  {canvasHeight, aspect, hRatio , calculatedW, calculatedH});
+      return {
+        width: `${calculatedW}px`,
+        height: `${calculatedH}px`
+      }
+    },
     characterCount() {
       var chars = this.code.length;
       // limit = 140;
@@ -181,24 +197,23 @@ export default {
     
     async handleConstruct(width, height, nottarget){
       const {svgData, activeTheme, elements} = this;
-      console.log('this', this.$refs)
       const {svg, previewSvg} = this.$refs
       const propElements = this.elements;
       const propsExist = !!propElements;
       const target = propsExist ? previewSvg : svg;
-      console.log('propElements', propElements, propsExist, target);
+      // console.log('propElements', propElements, propsExist, target);
       const theElements = elements || svgData.elements;
+      console.log('handleConstruct svgData', svgData)
       console.log('handleConstruct elements', theElements)
       const childNode = target.firstChild;
       
       if(childNode){
        target.removeChild(childNode);
       }
-      console.log('target', target)
+      
       const theSvg =  SVG()
       .addTo(target) // mount instance to our target
-      .viewbox(0, 0, svgData.width, svgData.height); // set the <svg /> viewBox attribute
-      console.log('theEvg', theSvg)
+      .viewbox(0, 0, svgData.canvasWidth, svgData.canvasHeight); // set the <svg /> viewBox attribute
       theSvg.clear();
       const methodArray = {
         background: 'drawBackground',
@@ -211,7 +226,7 @@ export default {
       console.log('elements', target, theElements)
       if(!theElements){return}
       theElements.map(recipe => {
-        console.log('RECIPE', recipe)
+        // console.log('RECIPE', recipe)
         const recipeType = recipe.type;
         const selectedMethod =  methodArray[recipeType];
         if(!selectedMethod){return }
@@ -257,7 +272,7 @@ export default {
       })
       //.attr('x', 50).
       
-      svg.rect(svgData.width, svgData.height).move(0, 0)
+      svg.rect(svgData.canvasWidth, svgData.canvasHeight).move(0, 0)
       .fill(type === 'gradient' ? gradient : color1)
     },
     drawBody(svg, svgData, options = {}){
@@ -271,11 +286,11 @@ export default {
 
       // keep track of our points
       const points = [];
-      const size = this.random(svgData.width / 20, svgData.width / 4);
-      const constraintW = svgData.width
-      const constraintH = svgData.height
-      // const startX = svgData.width / 2 - size / 2;
-      // const startY = svgData.height / 2 - size / 2;
+      const size = this.random(svgData.canvasWidth / 20, svgData.canvasWidth / 4);
+      const constraintW = svgData.canvasWidth
+      const constraintH = svgData.canvasHeight
+      // const startX = svgData.canvasWidth / 2 - size / 2;
+      // const startY = svgData.canvasHeight / 2 - size / 2;
       const startX = 800 || this.random(0 - size / 2, constraintW - size / 2, true);
       const startY = 800 || this.random(0 - size / 2, constraintH - size / 2, true);
       const wobbleMin = 1 || options.wobbleMin || 0.5;
@@ -317,8 +332,8 @@ export default {
       const strokeSize = options.strokeSize || this.random(5, 30, false);
       const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
       const size = mode === 'generative' ? this.random(Number(options.minSize), Number(options.maxSize), false) : Number(options.w);
-      const constraintW = svgData.width
-      const constraintH = svgData.height
+      const constraintW = svgData.canvasWidth
+      const constraintH = svgData.canvasHeight
       const offsetX = 0 - size / 2;
       const offsetY =0 - size / 2;
       const startX =  mode === 'generative' ? this.random(offsetX, constraintW - size / 2, true) : Number(options.x);
@@ -346,12 +361,12 @@ export default {
        // const rotation = mode === 'generative' ? settings.rotationOptions[randomRotation] : (options.rotation || 0);
        // const rotation = !isNaN(options.rotation) ? options.rotation : settings.rotationOptions[randomRotation];
        const rotation = options.rotation || settings.rotationOptions[randomRotation];
-       console.log('tri options', options)
+       // console.log('tri options', options)
        
       const {x, y, w, h} = options;
       const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
-      const constraintW = svgData.width
-      const constraintH = svgData.height
+      const constraintW = svgData.canvasWidth
+      const constraintH = svgData.canvasHeight
       const startX =  mode === 'generative' ? this.random(0, constraintW - size, true) : Number(x);
       const startY = mode === 'generative' ? this.random(0, constraintH - size, true) : Number(y);
       // const points = [];
@@ -381,16 +396,12 @@ export default {
           
           const endPointX = pointX + Number(w)
           const endPointY = pointY + Number(h)
-          // tempStartX = startX; //  + i * thisOffsetX
-          // tempStartY = startY + i * thisOffsetY
-          
           let tempRotationOffset = tempStartRotation +  Number(options.rotationOffset);
-          console.log('iteration', {pointX, pointY, endPointX, endPointY, thisOffsetX, thisOffsetY, tempRotationOffset});
+          // console.log('iteration', {pointX, pointY, endPointX, endPointY, thisOffsetX, thisOffsetY, tempRotationOffset});
           let tempTrianglePath = `M${pointX},${pointY} L`;
           tempTrianglePath = tempTrianglePath + ` ${endPointX},${endPointY}`
           tempTrianglePath = tempTrianglePath + ` ${pointX},${endPointY}`
           tempTrianglePath = tempTrianglePath + ` Z`
-          console.log('tempTrianglePath', tempTrianglePath);
           tempStartX = pointX
           tempStartY = pointY
           tempStartRotation = tempRotationOffset
@@ -462,8 +473,8 @@ export default {
        const rotation = 0;
       const {x, y, w, h} = options;
       const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
-      const constraintW = Number(svgData.width)
-      const constraintH = Number(svgData.height)
+      const constraintW = Number(svgData.canvasWidth)
+      const constraintH = Number(svgData.canvasHeight)
       const startX =  mode === 'generative' ? this.random(0, constraintW - size, true) : Number(x);
       const startY = mode === 'generative' ? this.random(0, constraintH - size, true) : Number(y);
       // const endX =  mode === 'generative' ? this.random(0, constraintW - size, true) : startX + 100;

@@ -558,8 +558,8 @@ export default {
     },
     setNewElementOptions(){
       const {svgData} = this;
-      this.newElementOptions.w = svgData.width;
-      this.newElementOptions.h = svgData.height;
+      this.newElementOptions.w = svgData.canvasWidth;
+      this.newElementOptions.h = svgData.canvasHeight;
     },
     async moveElement(fromIndex, direction){
 

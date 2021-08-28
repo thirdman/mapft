@@ -1,17 +1,16 @@
 <template>
   <div class="col">
-    <label>Theme</label>
+    <label>Active Theme</label>
     {{activeTheme && activeTheme.id}}
     <div class="swatchset row" v-for="(theme, index) in themes" :key="index" :class="activeTheme && activeTheme.id === theme.id ? 'selected' : ''">
+      <div class="swatches">
       <template v-for="(color, i) in theme.colors"  >
         <div class="swatch " :style="`background: ${color}`" :key="i"></div>
       </template>
-      <!-- <div class="swatch " ></div>
-      <div class="swatch " ></div>
-      <div class="swatch " ></div>
-      <div class="swatch " ></div> -->
-      
-      <div><v-btn small @click="handleSelectTheme(index)">select</v-btn></div>
+      </div>
+      <div class="actions">
+        <v-btn x-small @click="handleSelectTheme(index)">select</v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -24,11 +23,20 @@
   border-radius: 4px;
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
+  justify-content: space-between;
   &.selected{
     border: 1px solid violet;
   }
-  
+  .swatches{
+    flex-basis: 90%;
+    flex-shrink: 1;
+  }
+  .actions{
+    flex-basis: 10%;
+    text-align: right;
+  }
   .swatch{
     width: 32px;
     height: 32px;
