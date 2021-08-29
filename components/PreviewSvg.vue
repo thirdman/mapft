@@ -112,7 +112,7 @@ import { spline } from '@georgedoescode/spline';
 
 export default {
   
-  props: ['code', 'previewData', 'previewMode', 'elements', 'svgRef'],
+  props: ['code', 'previewData', 'previewMode', 'elements', 'svgRef', 'calculateCode', 'setBytes'],
   data(){
     return {
       svgElement: null,
@@ -122,6 +122,7 @@ export default {
   },
   created() {
    this.loading = true;
+   
   },
   mounted() {
     console.log('mounted refs:', this.$refs)
@@ -136,7 +137,10 @@ export default {
       this.handleConstruct(this.svgData.canvasWidth, this.svgData.canvasHeight, target);
     });
     this.loading = false;
-    
+   if(this.calculateCode){
+     console.log('should calculate code')
+     this.countBytes()
+   } 
   },
   
   watch: {
@@ -152,6 +156,7 @@ export default {
         console.log('propElements target', propElements, propsExist, target);
         if(!target){return};
         this.handleConstruct(_, _, target);
+        this.countBytes()
       },
       // immediate: true,
     },
@@ -261,19 +266,56 @@ export default {
       //const color2 = mode === 'generative' ? `hsl(${hue2}, ${s * 100}%, ${l * 100}%)` : `hsl(${hue2}, ${s * 100}%, ${l * 100}%)`;
       const color1 = '#ffffff' || mode === 'generative' ? themeColor : `hsl(${hue1}, ${s * 100}%, ${l * 100}%)`;
       const color2 = mode === 'generative' ? themeColor2 : `hsl(${hue2}, ${s * 100}%, ${l * 100}%)`;
-      // console.log('drawBackground hue1', hue1, h);
-      // console.log('drawBackground color1', color1);
-      const rotationAngle = 135 || settings.rotationOptions && 45 + Number(settings.rotationOptions[2]) || angle;
+      // const rotationAngle = 135 || settings.rotationOptions && 45 + Number(settings.rotationOptions[2]) || angle;
+      const randomRotation = settings.rotationOptions && Math.floor(Math.random() * settings.rotationOptions.length) || 0
+      const rotationAngle = 135 + settings.rotationOptions[randomRotation] || angle;
+      const rotation = options.rotation || settings.rotationOptions[randomRotation];
+      const directions = [
+        // tl to br
+        {
+          x1: "0",
+          y1: "0",
+          x2: "100%",
+          y2: "100%"
+        },
+        // top right to bottom left
+        {
+          x1: "100%",
+          y1: "0",
+          x2: "0%",
+          y2: "100%"
+        },
+        // bottom left to top right
+        {
+          x1: "0%",
+          y1: "100%",
+          x2: "100%",
+          y2: "0%"
+        },
+        // bottom right to top left
+        {
+          x1: "100%",
+          y1: "100%",
+          x2: "0%",
+          y2: "0%"
+        },
+      ]
+      const selectedDirection = directions[randomRotation] || directions[0]
       var gradient = svg.move(centerX, centerY).gradient('linear', function(add) {
         add.stop(0, color1)
         add.stop(1, color2)
+      }).attr({
+        ...selectedDirection
       }).transform({
-        rotate: rotationAngle,
+        // rotate: rotationAngle,
       })
       //.attr('x', 50).
       
       svg.rect(svgData.canvasWidth, svgData.canvasHeight).move(0, 0)
       .fill(type === 'gradient' ? gradient : color1)
+      .attr({
+        class: 'bg'
+      })
     },
     drawBody(svg, svgData, options = {}){
        const hue = options && options.hue || this.random(0, 256, false); // hue range
@@ -338,14 +380,27 @@ export default {
       const offsetY =0 - size / 2;
       const startX =  mode === 'generative' ? this.random(offsetX, constraintW - size / 2, true) : Number(options.x);
       const startY = mode === 'generative' ? this.random(offsetY, constraintH - size / 2, true) : Number(options.y);
+      const randomCoordX = this.random(0 - svgData.canvasWidth / 4, svgData.canvasWidth / 4, true)
+      const randomCoordY = this.random(0 - svgData.canvasHeight / 4, svgData.canvasHeight / 4, true)
+      const thisClass = `dot${this.random(0, 2560000, false)}`;
       svg.ellipse(size, size)
         .move(startX, startY)
         .stroke({
           width: hasStroke ? strokeSize : 0,
           color: colorStroke
         })
-        
-        .fill(hasFill ? themeColor : 'transparent');
+        .fill(hasFill ? themeColor : 'transparent')
+        .attr({class: thisClass})
+              .style(`@keyframes test${thisClass} { from {transform:  translateX(${0}px) translateY(${0}px) ;} to { transform:  translateX(${randomCoordX}px) translateY(${randomCoordY}px)  ;}}`)
+              .style(`.${thisClass}`, {fill: themeColor, animation: `2s ease 0s infinite alternate test${thisClass}`})
+        // .animate({
+        //   duration: 2000,
+        //   delay: 2000,
+        //   when: 'now',
+        //   // swing: true,
+        //   // times: 5,
+        //   wait: 5000
+        // }).ease().move(randomCoordX, randomCoordY).loop(true, true);;
 
     },
     async drawTriangle(svg, svgData, options = {}, mode){
@@ -423,6 +478,17 @@ export default {
             .path(trianglePath)
               .fill(color)
               .rotate(rotation)
+              // .class('dot')
+              // .style('.dot', {fill: 'blue', animation: 'moveAcross 1s both ease-in-out'})
+              // .style(`@keyframes moveAcross to {transform: translateX(400px);}`)
+              // .animate({
+              //     duration: 2000,
+              //     delay: 1000,
+              //     when: 'now',
+              //     // swing: true,
+              //     // times: 5,
+              //     wait: 2000
+              //   }).ease().rotate(rotation).loop(true, true);
         }
 
       
@@ -449,9 +515,11 @@ export default {
       rectanglePath = rectanglePath + ` ${Number(x)},${Number(y) + Number(h)}`
       rectanglePath = rectanglePath + ` Z`
       console.log('rectanglePath', rectanglePath);
-      svg
-        .path(rectanglePath)
+        svg.path(rectanglePath)
           .fill(color)
+          // .attr({
+          //   style: 'fill: red'
+          // })
           // .rotate(rotation)
         // .stroke({
         //   width: 10,
@@ -527,6 +595,28 @@ export default {
         return val;
       }
       return Math.floor(val);
+    },
+    countBytes(){
+      const {svg, previewSvg} = this.$refs
+      const propElements = this.elements;
+      const propsExist = !!propElements;
+      const target = propsExist ? previewSvg : svg;
+      const source = target.innerHTML;
+      console.log('source', source.innerHTML)
+      // const bytes = new TextEncoder().encode(source).length; 
+      // const bytes = this.svgCode.length
+      const bytes = Buffer.byteLength(source);
+      // const gasFee = 30;
+      // const transactionFee = bytes / 1000000 * gasFee;
+      // // const roundedFee = Math.round((transactionFee + Number.EPSILON) * 100) / 100;
+      // const roundedFee =parseFloat(transactionFee).toFixed(5);
+      // this.$store.commit("svgFormStore/setBytes", bytes);
+      // this.$store.commit("svgFormStore/setCalculatedFee", roundedFee);
+      console.log('bytes', bytes, source)
+      if(this.setBytes){
+        this.setBytes(bytes);
+      }
+      return bytes
     }
   }
 

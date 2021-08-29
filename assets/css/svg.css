@@ -1,0 +1,19 @@
+.rotate {
+  animation: rotate 10s infinite linear;
+  transform-origin: center center;
+  filter: blur(400px);
+}
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes moveAcross {
+  to {
+    transform: translateX(100px);
+  }
+}

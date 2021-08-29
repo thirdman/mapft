@@ -12,6 +12,7 @@ Over time I intend to migrate to main.scss
 @import url("./uiModes.css");
 @import url("./icons.css");
 @import url("./transitions.css");
+@import url("./svg.css");
 
 :root {
   --header-height: 80px;

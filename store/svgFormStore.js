@@ -708,6 +708,27 @@ export const mutations = {
   },
   setBytes(state, value) {
     state.previewBytes = value;
+    const gasFee = 50;
+    console.log("gas used:", value / 1000000);
+    const transactionFee = (value / 1000000) * gasFee;
+
+    // const roundedFee =parseFloat(transactionFee).toFixed(5);
+    // 1KB = 640000 gas
+    // therefore 1byte = 64000 gas
+    // so bytevalue * 6400 = gas fee
+    const inKb = value / 10000;
+    const inGwei = inKb * 64000 * 10;
+    const inEther = inGwei / 1000000000;
+    // console.log("gas used in gwei:", inGwei);
+    // console.log(
+    //   "gas used bytevalue * 6400 in gwei:",
+    //   inEther,
+    //   " - ",
+    //   inGwei / 1000000000
+    // );
+    // const roundedFee =
+    //   Math.round((transactionFee + Number.EPSILON) * 100) / 100;
+    state.calculatedFee = inEther * gasFee;
   },
   setCalculatedFee(state, value) {
     console.log("SETTING setCalculatedFee", value);

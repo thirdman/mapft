@@ -9,7 +9,8 @@
             <PreviewToggle :code="svgCode" :previewData="previewData"/>
             <div class=" previewColumn svgPreviewColumn">
               <client-only>
-                  <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode" v-if="previewMode === 'edit'"  />
+                  <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode" v-if="previewMode === 'edit'" :calculateCode="true" :setBytes="setPreviewBytes" />
+                  <div>Bytes: {{previewBytes}} / {{calculatedFee}} Eth</div>
               </client-only>
             </div>
             <div class=" galleryColumn" v-if="previewMode === 'gallery'">
@@ -95,6 +96,7 @@ export default {
       walletAddress: "ui/walletAddress",
       // SVG
       controlMode: "svgFormStore/controlMode",
+      calculatedFee: "svgFormStore/calculatedFee",
       previewBytes: "svgFormStore/previewBytes",
       previewMode: "svgFormStore/previewMode",
       showPreview: "svgFormStore/showPreview",
@@ -106,8 +108,9 @@ export default {
   methods: {
     ...mapMutations({
       setPreviewMode: "svgFormStore/setPreviewMode",
+      setPreviewBytes: "svgFormStore/setBytes",
     }),
-
+    
   }
 }
 </script>
