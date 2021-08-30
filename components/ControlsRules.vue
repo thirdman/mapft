@@ -184,9 +184,7 @@
                 </div>
                 <div class="row" v-if="tabView=== 'animation'">
                   <div class="col">
-                    <div>
-                      animation
-                    </div>
+                    <rule-animation :value.sync="newElementAnimations" />
                   </div>
                 </div>
               </div>
@@ -350,6 +348,14 @@ export default {
       toggle_mode: 0,
       toggle_count: 1,
       elements: [],
+      newElementAnimations: {
+        useAnimation: null,
+        animationMode: 'generative',
+        animationOffsetX: 100,
+        animationOffsetY: 100,
+        animationScale: 1,
+        animationRotation: 0,
+      },
       newElementTransforms:{
         rotation: null,
         minSize: 100,
@@ -453,6 +459,7 @@ export default {
       toggle_type, 
       newElementOptions, 
       newElementOffsets, 
+      newElementAnimations,
       backgroundElementOptions, 
       newElementLineOptions, 
       newElementCircleOptions, 
@@ -475,7 +482,7 @@ export default {
         selectedOptions = newElementArtOptions
       }
       const selectedTranforms = this.newElementTransforms;
-      const mergedSelectedOptions = {...selectedOptions, ...selectedTranforms, ...newElementOffsets, count: newElementCount };
+      const mergedSelectedOptions = {...selectedOptions, ...selectedTranforms, ...newElementAnimations, ...newElementOffsets, count: newElementCount };
       
       return mergedSelectedOptions
     },

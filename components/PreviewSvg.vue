@@ -366,7 +366,12 @@ export default {
    
     async drawCircle(svg, svgData, options = {}, mode){
       const {activeTheme} = this;
-      const {hasStroke = false, hasFill = true} = options
+      const {
+        hasStroke = false, 
+        hasFill = true, 
+        useAnimation = false,
+        
+        } = options
       const hue = options && options.hue || this.random(0, 256, false); // hue range
       const color = `hsl(${hue}, 50%, 50%)`
       const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
@@ -380,44 +385,64 @@ export default {
       const offsetY =0 - size / 2;
       const startX =  mode === 'generative' ? this.random(offsetX, constraintW - size / 2, true) : Number(options.x);
       const startY = mode === 'generative' ? this.random(offsetY, constraintH - size / 2, true) : Number(options.y);
-      const randomCoordX = this.random(0 - svgData.canvasWidth / 4, svgData.canvasWidth / 4, true)
-      const randomCoordY = this.random(0 - svgData.canvasHeight / 4, svgData.canvasHeight / 4, true)
+
+var gradient = svg.move(0,0 ).gradient('linear', function(add) {
+        add.stop(0, themeColor)
+        add.stop(1, strokeColor)
+      })
+      
       const thisClass = `dot${this.random(0, 2560000, false)}`;
-      svg.ellipse(size, size)
+      const thisCircle =  svg.ellipse(size, size)
         .move(startX, startY)
         .stroke({
           width: hasStroke ? strokeSize : 0,
           color: colorStroke
         })
-        .fill(hasFill ? themeColor : 'transparent')
-        .attr({class: thisClass})
-              .style(`@keyframes test${thisClass} { from {transform:  translateX(${0}px) translateY(${0}px) ;} to { transform:  translateX(${randomCoordX}px) translateY(${randomCoordY}px)  ;}}`)
-              .style(`.${thisClass}`, {fill: themeColor, animation: `2s ease 0s infinite alternate test${thisClass}`})
-        // .animate({
-        //   duration: 2000,
-        //   delay: 2000,
-        //   when: 'now',
-        //   // swing: true,
-        //   // times: 5,
-        //   wait: 5000
-        // }).ease().move(randomCoordX, randomCoordY).loop(true, true);;
+        .fill(hasFill ? gradient : 'transparent')
 
+        //// ANIAMTION /////
+        if(useAnimation){
+          // const randomCoordX = this.random(0 - svgData.canvasWidth / 4, svgData.canvasWidth / 4, true)
+          // const randomCoordY = this.random(0 - svgData.canvasHeight / 4, svgData.canvasHeight / 4, true)
+          // const randomScale = this.random(-0.5, 0.5, true)
+          // console.log('randomScale', randomScale)
+          // const generativeAnimationToString = `transform:  translateX(${randomCoordX || 0}px) translateY(${randomCoordY  || 0}px) scale(${1 + randomScale  || 1}) rotate(0deg);`
+          // const animationToString = `transform:  translateX(${animationOffsetX || 0}px) translateY(${animationOffsetY  || 0}px) scale(${animationScale  || 1}) rotate(${animationRotation}deg);`
+          this.renderAnimation(thisCircle, svgData, options, thisClass);
+          // thisCircle.attr({class: thisClass})
+          //     .style(`@keyframes test${thisClass} { from {transform:  translateX(${0}px) translateY(${0}px) scale(1) rotate(0deg) ;} to { ${animationMode === 'generative' ? generativeAnimationToString : animationToString} }}`)
+          //     .style(`.${thisClass}`, {fill: themeColor, animation: `2s ease-in-out 0s infinite alternate test${thisClass}`})
+        }
+        
+    },
+    renderAnimation(reference, svgData, options, className){
+      const {animationMode = 'generative',
+        animationOffsetX,
+        animationOffsetY,
+        animationScale,
+        animationRotation} = options
+      console.log('renderAnimation', reference, svgData, options, className);
+          const randomCoordX = this.random(0 - svgData.canvasWidth / 4, svgData.canvasWidth / 4, true)
+          const randomCoordY = this.random(0 - svgData.canvasHeight / 4, svgData.canvasHeight / 4, true)
+          const randomScale = this.random(-0.5, 0.5, true)
+          const generativeAnimationToString = `transform:  translateX(${randomCoordX || 0}px) translateY(${randomCoordY  || 0}px) scale(${1 + randomScale  || 1}) rotate(0deg);`
+          const animationToString = `transform:  translateX(${animationOffsetX || 0}px) translateY(${animationOffsetY  || 0}px) scale(${animationScale  || 1}) rotate(${animationRotation}deg);`
+          
+          reference.attr({class: className})
+              .style(`@keyframes test${className} { from {transform:  translateX(${0}px) translateY(${0}px) scale(1) rotate(0deg) ;} to { ${animationMode === 'generative' ? generativeAnimationToString : animationToString} }}`)
+              .style(`.${className}`, {animation: `2s ease-in-out 0s infinite alternate test${className}`})
     },
     async drawTriangle(svg, svgData, options = {}, mode){
-       const hue = options && options.hue || this.random(0, 256, false); // hue range
-       const {settings} = svgData;
-       const {type} = options;
-       console.log()
-       const {activeTheme} = this;
-       // const color = `hsl(${hue}, 50%, 50%)`
-       // const colorStroke = `hsl(${hue}, 90%, 70%)`
-       const colorStroke = `hsl(${hue}, 90%, 70%)`
-       const randomRotation = settings.rotationOptions && Math.floor(Math.random() * settings.rotationOptions.length);
-       // const rotation = mode === 'generative' ? settings.rotationOptions[randomRotation] : (options.rotation || 0);
-       // const rotation = !isNaN(options.rotation) ? options.rotation : settings.rotationOptions[randomRotation];
-       const rotation = options.rotation || settings.rotationOptions[randomRotation];
-       // console.log('tri options', options)
-       
+      const hue = options && options.hue || this.random(0, 256, false); // hue range
+      const {settings} = svgData;
+      const { hasStroke = false, hasFill = true} = options;
+      const {activeTheme} = this;
+      const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
+      const strokeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
+      const strokeSize = options.strokeSize || this.random(5, 30, false);
+      const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
+      const randomRotation = settings.rotationOptions && Math.floor(Math.random() * settings.rotationOptions.length);
+      const rotation = options.rotation || settings.rotationOptions[randomRotation];
       const {x, y, w, h} = options;
       const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
       const constraintW = svgData.canvasWidth
@@ -463,8 +488,12 @@ export default {
 
           svg
             .path(tempTrianglePath)
-              .fill(color)
-              .rotate(tempRotationOffset)
+            .fill(color)
+            .stroke({
+              width: hasStroke ? strokeSize : 0,
+              color: colorStroke
+            })
+            .rotate(tempRotationOffset)
           })
           
         } else {
@@ -476,7 +505,11 @@ export default {
           trianglePath = trianglePath + ` Z`
           svg
             .path(trianglePath)
-              .fill(color)
+              .fill(hasFill ? themeColor : 'transparent')
+              .stroke({
+                width: hasStroke ? strokeSize : 0,
+                color: colorStroke
+              })
               .rotate(rotation)
               // .class('dot')
               // .style('.dot', {fill: 'blue', animation: 'moveAcross 1s both ease-in-out'})
@@ -495,36 +528,36 @@ export default {
     },
    async drawRectangle(svg, svgData, options = {}, mode){
      const {settings} = svgData;
+     const {activeTheme} = this
+     const {useAnimation, hasStroke = false, hasFill = true} = options;
        const hue = options && options.hue || this.random(0, 256, false); // hue range
        const color = `hsl(${hue}, 50%, 50%)`
-       const colorStroke = `hsl(${hue}, 90%, 70%)`
-       
+       const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
+       const strokeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
+      const strokeSize = options.strokeSize || this.random(5, 30, false);
+      const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
        const randomRotation = settings.rotationOptions && Math.floor(Math.random() * settings.rotationOptions.length);
        const rotation = mode === 'generative' ? settings.rotationOptions[randomRotation] : (options.rotation || 0);
       const {x, y, w, h} = options;
-      // const points = [];
-      // points.push({x, y})
-      // points.push({w, y})
-      // points.push({w, h})
-      // points.push({x, h})
-      // console.log('rectangle points', points)
       let rectanglePath = `M${Number(x)},${Number(y)} L`;
-      // rectanglePath = rectanglePath + ` ${Number(x)},${Number(y)}`
       rectanglePath = rectanglePath + ` ${Number(x) + Number(w)},${Number(y)}`
       rectanglePath = rectanglePath + ` ${Number(x) + Number(w)},${Number(y) + Number(h)}`
       rectanglePath = rectanglePath + ` ${Number(x)},${Number(y) + Number(h)}`
       rectanglePath = rectanglePath + ` Z`
-      console.log('rectanglePath', rectanglePath);
-        svg.path(rectanglePath)
-          .fill(color)
+        const thisClass = `dot${this.random(0, 2560000, false)}`;
+        const thisRect = svg.path(rectanglePath)
+          .fill(hasFill ? themeColor : 'transparent')
+          .stroke({
+            width: hasStroke ? strokeSize : 0,
+            color: colorStroke
+          })
           // .attr({
           //   style: 'fill: red'
           // })
           // .rotate(rotation)
-        // .stroke({
-        //   width: 10,
-        //   color: colorStroke
-        // })
+        if(useAnimation){
+          this.renderAnimation(thisRect, svgData, options, thisClass);
+        }
     },
     async drawLine(svg, svgData, options = {}, mode){
       const {settings} = svgData;

@@ -10,8 +10,16 @@
             <div class=" previewColumn svgPreviewColumn">
               <client-only>
                   <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode" v-if="previewMode === 'edit'" :calculateCode="true" :setBytes="setPreviewBytes" />
-                  <div>Bytes: {{previewBytes}} / {{calculatedFee}} Eth</div>
               </client-only>
+              <div class="row ma-0" v-if="previewMode === 'edit' && previewBytes">
+                <div class="col">
+                  <v-divider />
+                <v-card elevation="0" outlined flat >
+                  <div>Bytes: {{previewBytes}}</div>
+                  <div>Estimate Fee: {{calculatedFee}} Eth</div>
+                </v-card>
+                </div>
+              </div>
             </div>
             <div class=" galleryColumn" v-if="previewMode === 'gallery'">
               <div class="newElement panel " >
