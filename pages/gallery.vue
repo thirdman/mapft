@@ -7,14 +7,22 @@
         <div class="sectionRow row ma-0 pa-0" >
           <div class="col col-3 svgColumn">
             <div class="list" v-if="siteData && siteData.images && siteData.images.length">
-            <div v-for="(item, index) in siteData.images" :key="index" class="listItem" >
-              <div>
-                {{item.image && item.image.label || item.id || "no id"}}
+            <div v-for="(item, index) in siteData.images" :key="index" class="listItem row" >
+              <div class="col">
+                <div class="text-body2">
+                  {{item.image && item.image.label || item.id || "no id"}}
+                </div>
+                <div class="text-body2">
+                  <label>theme</label><br />{{item.image && item.image.theme && item.image.theme.id}}
+                </div>
               </div>
+              <div class="col">
               <v-btn 
-              small
-              @click="loadGallery(item.id)">load</v-btn>
-              <v-btn small @click="removeGallerySet(item.id)">delete</v-btn>
+                small
+                @click="loadGallery(item.id)">load
+              </v-btn>
+                <v-btn small @click="removeGallerySet(item.id)">delete</v-btn>
+              </div>
             </div>
           </div>
             <!-- <div class=" galleryColumn" v-if="previewMode === 'gallery'">
@@ -70,7 +78,7 @@
               <div class="galleryGrid grid panel " >
                 <div v-for="index in 14" :key="index" class="galleryItem gridItem">
                   <client-only>
-                      <PreviewSvg  :previewData="imageData.image" :show-grid="false"  />
+                      <PreviewSvg previewMode="view" :previewData="imageData.image" :show-grid="false" />
                   </client-only>
                 </div>
               </div>
@@ -102,14 +110,21 @@ export default {
       imageData: null,
     }
   },
-  asyncData() {
+  asyncData(stuff) {
+    const {params} = stuff;
+    
       return {
-        loading: false
+        loading: false,
+        params
       }
     },
   mounted(){
     console.log('mounted');
-    
+    const params = this.$route.params;
+    console.log('params', params)
+    if(params && params.contract){
+      this.loadGallery(params.contract)
+    }
   },
   computed: {
     ...mapGetters({
@@ -122,14 +137,22 @@ export default {
     }),
     ...mapActions({
       removeGallerySet: "ui/removeGallerySet",
+      getConfig: "ui/getConfig",
     }),
-    loadGallery(id){
-      const {siteData: {images}} = this
+    async loadGallery(id){
+      if(!this.siteData){
+        await this.getConfig();
+      }
+      const {siteData: {images}} = this;
       this.imageData = null;
       if(!id){return}
       const thisImage = images.filter( img => img.id === id);
-      console.log('thisImage.image', thisImage[0].image)
+      console.log('thisImage.image', thisImage[0])
       this.imageData = thisImage && thisImage[0]
+      this.$router.push({
+        path: `/gallery/${id}`,
+      })
+    
     }
     
   }
@@ -141,6 +164,7 @@ export default {
     .listItem{
       margin: .25rem 0;
       border-radius: 4px;
+      border: 1px solid var(--line-color);
     } 
   }
   .galleryColumn{
@@ -153,6 +177,7 @@ export default {
     .galleryItem{
       position: relative;
       display: block;
+      
     }
   }
 </style>

@@ -386,14 +386,16 @@ export const actions = {
     const { commit, rootState, state } = context;
     const { $axios } = this;
     const {
-      svgFormStore: { svgData },
+      svgFormStore: { svgData, activeTheme },
     } = rootState;
     const { siteData } = state;
     const currentImages = siteData.images || [];
     const tempImages = [...currentImages];
     const newDraftId = uuidv4();
+    const newImage = { ...svgData, theme: activeTheme };
+    console.log("updateconfig activeTheme", activeTheme);
     const newTempImage = {
-      image: svgData,
+      image: newImage,
       id: newDraftId,
       label: "new label",
       author: "new author",

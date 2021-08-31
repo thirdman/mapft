@@ -204,17 +204,16 @@ export default {
     
     async handleConstruct(width, height, nottarget){
       const {svgData, elements, previewData} = this;
-      console.log('previewData', previewData)
       const {svg, previewSvg} = this.$refs
       const propElements = this.elements;
       const propsExist = !!propElements;
       const target = propsExist ? previewSvg : svg;
       const data = previewData || svgData;
       // console.log('propElements', propElements, propsExist, target);
-      const {activeTheme} = data;
+      const {theme} = data;
+
+      console.log('svg theme', theme)
       const theElements = elements || data.elements;
-      // console.log('handleConstruct data', data)
-      // console.log('handleConstruct elements', theElements)
       const childNode = target.firstChild;
       
       if(childNode){
@@ -233,7 +232,7 @@ export default {
         triangle: 'drawTriangle',
         blob: 'drawBody',
       }
-      console.log('elements', target, theElements)
+      // console.log('elements', target, theElements)
       if(!theElements){return}
       theElements.map(recipe => {
         // console.log('RECIPE', recipe)
@@ -245,13 +244,11 @@ export default {
           this[selectedMethod](theSvg, data, recipe.options, recipe.mode)
         })        
       })
-      
-      console.log('theSvg', theSvg);
     },
 
     drawBackground(svg, data, options = {}, mode){
-      const {settings} = data
-      const {activeTheme} = this;
+      const {settings, theme} = data
+      const activeTheme = theme || this.activeTheme;
       const {width, height} = data;
       const centerX = width / 2 || 800;
       const centerY = height / 2 || 800;
@@ -320,6 +317,8 @@ export default {
       })
     },
     drawBody(svg, data, options = {}){
+      const {theme} = data;
+      const activeTheme = theme || this.activeTheme;
        const hue = options && options.hue || this.random(0, 256, false); // hue range
        const color = `hsl(${hue}, 50%, 50%)`
        const colorStroke = `hsl(${hue}, 90%, 70%)`
@@ -367,7 +366,8 @@ export default {
     },
    
     async drawCircle(svg, data, options = {}, mode){
-      const {activeTheme} = this;
+      const {theme} = data;
+      const activeTheme = theme || this.activeTheme;
       const {
         hasStroke = false, 
         hasFill = true, 
@@ -435,10 +435,11 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
               .style(`.${className}`, {animation: `2s ease-in-out 0s infinite alternate test${className}`})
     },
     async drawTriangle(svg, data, options = {}, mode){
+      const {theme} = data;
+      const activeTheme = theme || this.activeTheme;
       const hue = options && options.hue || this.random(0, 256, false); // hue range
       const {settings} = data;
       const { hasStroke = false, hasFill = true} = options;
-      const {activeTheme} = this;
       const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
       const strokeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
       const strokeSize = options.strokeSize || this.random(5, 30, false);
@@ -530,8 +531,10 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
     },
    async drawRectangle(svg, data, options = {}, mode){
      const {settings} = data;
-     const {activeTheme} = this
-     const {useAnimation, hasStroke = false, hasFill = true} = options;
+     const {theme} = data;
+      const activeTheme = theme || this.activeTheme;
+     const {useAnimation = false, hasStroke = false, hasFill = true} = options;
+
        const hue = options && options.hue || this.random(0, 256, false); // hue range
        const color = `hsl(${hue}, 50%, 50%)`
        const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
@@ -563,17 +566,21 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
     },
     async drawLine(svg, data, options = {}, mode){
       const {settings} = data;
-      const {activeTheme}= this
+      const {theme} = data;
+      const {useAnimation = false} = options
+      const activeTheme = theme || this.activeTheme;
        const hue = options && options.hue || this.random(0, 256, false); // hue range
        const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
        const color = themeColor || options.strokecolor || `hsl(${hue}, 50%, 50%)`
        const colorStroke = themeColor || options.strokeColor || `hsl(${hue}, 90%, 70%)`
        
-       const randomRotation = settings.rotationOptions && settings.rotationOptions[Math.floor(Math.random() * settings.rotationOptions.length)];
+       // const randomRotation = settings.rotationOptions && settings.rotationOptions[Math.floor(Math.random() * settings.rotationOptions.length)];
        // const rotation = mode === 'generative' ? settings.rotationOptions[randomRotation] : (options.rotation || 0);
        // const rotation = options.rotation ? options.rotation : settings.rotationOptions[randomRotation] || 0;
-       console.log('randomRotation', randomRotation)
-       const rotation = 0;
+       
+       const randomRotation = settings.rotationOptions && Math.floor(Math.random() * settings.rotationOptions.length);
+      const rotation = Number(0) || options.rotation || settings.rotationOptions[randomRotation];
+      
       const {x, y, w, h} = options;
       const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
       const constraintW = Number(data.canvasWidth)
@@ -606,23 +613,29 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
           tempEndY = pointY; //  + i *  thisOffsetY + size
           // tempRotationOffset = options.rotationOffset + i * options.rotationOffset 
           // console.log('tempStartX', tempStartX);
-          let tempRotationOffset = Number(options.rotationOffset);
+          let tempRotationOffset = options.rotation || Number(options.rotationOffset);
+          // const randomRotation = settings.rotationOptions && Math.floor(Math.random() * settings.rotationOptions.length);
+          const rotation = options.rotation || settings.rotationOptions[randomRotation];
           
           svg
             .line(pointX, pointY, tempEndX, tempEndY)
             .stroke({ width: options.strokeSize || 10, color: colorStroke })
+            .attr({'stroke-linecap':'round'})
             .rotate(tempRotationOffset || 0)
-            
-
           })
           
         } else {
-        svg
+        const thisClass = `line${this.random(0, 2560000, false)}`;
+        const thisLine = svg
           .line(startX, startY, endX, endY)
           .stroke({ width: options.strokeSize || 10, color: colorStroke })
+          .attr({'stroke-linecap':'round'})
           // .rotate(rotation)
-          .rotate(randomRotation)
+          .rotate(rotation)
+        if(useAnimation){
+          this.renderAnimation(thisLine, data, options, thisClass);
         }
+      }
     },
     random(min, max, float = false) {
       const val = Math.random() * (max - min) + min;

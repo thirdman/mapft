@@ -349,7 +349,7 @@ export default {
       toggle_count: 1,
       elements: [],
       newElementAnimations: {
-        useAnimation: null,
+        useAnimation: false,
         animationMode: 'generative',
         animationOffsetX: 100,
         animationOffsetY: 100,
@@ -411,6 +411,7 @@ export default {
         transformX: 0,
         transformY: 0,
         iterations: 10,
+        lineCap: 'round',
         hasStroke: true,
         hasFill: false,
       },

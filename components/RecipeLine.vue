@@ -85,6 +85,38 @@
     </div>
     <div class="row">
       <div class="col">
+        <label>Line Cap</label><br />
+          
+          {{localOptions.lineCap}}
+          <v-btn-toggle 
+            dense
+          >
+            <v-btn small @click="() => handleSelectLineCap('butt')">
+              butt
+            </v-btn>
+            <v-btn small @click="() => handleSelectLineCap('round')">
+              round
+            </v-btn>
+            <v-btn small @click="() => handleSelectLineCap('square')">
+              square
+            </v-btn>
+          </v-btn-toggle>
+      </div>
+      <div class="col">
+        
+      </div>
+      <div class="col">
+        
+      </div>
+      <div class="col">
+        
+      </div>
+      <div class="col">
+        
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
         <label>Color</label>
         <v-text-field v-model="color" :mask="mask" hide-details class=" swatchController ma-0 pa-0" solo outlined >
 					<template v-slot:append>
@@ -156,6 +188,7 @@ export default {
         strokeSize: 10,
         strokeColor: "#ff00ff",
         iterations: 10,
+        lineCap: 'round',
       },
       rotationOptions: [0, 90, 180, 270],
     };
@@ -220,6 +253,9 @@ export default {
       // this.localOptions.blah = 123
       // this.localOptions.rotationOptions = rotationOptions
       console.log('this.localOPtiosn', this.localOptions)
+    },
+    handleSelectLineCap(value){
+      this.localOptions.lineCap = value;
     },
   },
 };
