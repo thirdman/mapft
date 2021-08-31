@@ -539,6 +539,7 @@ const defaultCode = `<?xml version="1.0" encoding="UTF-8"?>
 
 export const state = () => ({
   svgData: {
+    label: "first artwork",
     canvasWidth: 1600,
     canvasHeight: 1600,
     settings: {
@@ -586,18 +587,6 @@ export const state = () => ({
           rotationOptions: [0, 90, 180, 270],
         },
       },
-      // {
-      //   label: "test",
-      //   id: "abc",
-      //   mode: "generative",
-      //   count: 3,
-      //   type: "blob",
-      //   options: {
-      //     hue: 1,
-      //     wobbleMin: 0.75,
-      //     wobbleMax: 1,
-      //   },
-      // },
       {
         label: "ExampleDots",
         id: "example-dots-id",

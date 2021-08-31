@@ -4,7 +4,7 @@
     <div :id="svgRef || 'svg'" :ref="svgRef || 'svg'" class="svgPreviewGrid" :style="canvasStyle" />
   <v-btn 
     v-if="previewMode === 'edit'" 
-    @click="() => handleConstruct(this.svgData.canvasWidth, this.svgData.canvasHeight, this.$refs.svg)" >reload</v-btn>
+    @click="() => handleConstruct(_, _, this.$refs.svg)" >reload</v-btn>
   </div>
   <!-- <div
       id="previewWrap"
@@ -112,7 +112,7 @@ import { spline } from '@georgedoescode/spline';
 
 export default {
   
-  props: ['code', 'previewData', 'previewMode', 'elements', 'svgRef', 'calculateCode', 'setBytes'],
+  props: ['code', 'previewData', 'previewMode', 'elements', 'svgRef', 'calculateCode', 'setBytes', 'showGrid'],
   data(){
     return {
       svgElement: null,
@@ -122,7 +122,9 @@ export default {
   },
   created() {
    this.loading = true;
-   
+   if(this.previewData){
+     console.log('previewData', this.previewData)
+   }
   },
   mounted() {
     console.log('mounted refs:', this.$refs)
@@ -134,7 +136,7 @@ export default {
       const target = propsExist ? ref : svg;
       console.log('propElements', propElements, propsExist, target);
       if(!target){return}
-      this.handleConstruct(this.svgData.canvasWidth, this.svgData.canvasHeight, target);
+        this.handleConstruct(_, _, target);
     });
     this.loading = false;
    if(this.calculateCode){
@@ -181,7 +183,7 @@ export default {
       const hRatio = uiValue / canvasHeight;
       const calculatedW = uiValue * aspect;
       const calculatedH = canvasHeight * hRatio;
-      console.log('calculatedValue',  {canvasHeight, aspect, hRatio , calculatedW, calculatedH});
+      // console.log('calculatedValue',  {canvasHeight, aspect, hRatio , calculatedW, calculatedH});
       return {
         width: `${calculatedW}px`,
         height: `${calculatedH}px`
@@ -201,15 +203,18 @@ export default {
     }),
     
     async handleConstruct(width, height, nottarget){
-      const {svgData, activeTheme, elements} = this;
+      const {svgData, elements, previewData} = this;
+      console.log('previewData', previewData)
       const {svg, previewSvg} = this.$refs
       const propElements = this.elements;
       const propsExist = !!propElements;
       const target = propsExist ? previewSvg : svg;
+      const data = previewData || svgData;
       // console.log('propElements', propElements, propsExist, target);
-      const theElements = elements || svgData.elements;
-      console.log('handleConstruct svgData', svgData)
-      console.log('handleConstruct elements', theElements)
+      const {activeTheme} = data;
+      const theElements = elements || data.elements;
+      // console.log('handleConstruct data', data)
+      // console.log('handleConstruct elements', theElements)
       const childNode = target.firstChild;
       
       if(childNode){
@@ -218,7 +223,7 @@ export default {
       
       const theSvg =  SVG()
       .addTo(target) // mount instance to our target
-      .viewbox(0, 0, svgData.canvasWidth, svgData.canvasHeight); // set the <svg /> viewBox attribute
+      .viewbox(0, 0, data.canvasWidth, data.canvasHeight); // set the <svg /> viewBox attribute
       theSvg.clear();
       const methodArray = {
         background: 'drawBackground',
@@ -237,20 +242,17 @@ export default {
         if(!selectedMethod){return }
         const iterationsArray = [...Array(Number(recipe.count))];
           iterationsArray.map((_, i) => {
-          this[selectedMethod](theSvg, svgData, recipe.options, recipe.mode)
+          this[selectedMethod](theSvg, data, recipe.options, recipe.mode)
         })        
       })
       
       console.log('theSvg', theSvg);
     },
-//       var results = await Promise.all(arr.map(async (item)=> {
-//     await callAsynchronousOperation(item);
-//     return item + 1;
-// }));
-    drawBackground(svg, svgData, options = {}, mode){
-      const {settings} = svgData
+
+    drawBackground(svg, data, options = {}, mode){
+      const {settings} = data
       const {activeTheme} = this;
-      const {width, height} = this.svgData;
+      const {width, height} = data;
       const centerX = width / 2 || 800;
       const centerY = height / 2 || 800;
 
@@ -311,13 +313,13 @@ export default {
       })
       //.attr('x', 50).
       
-      svg.rect(svgData.canvasWidth, svgData.canvasHeight).move(0, 0)
+      svg.rect(data.canvasWidth, data.canvasHeight).move(0, 0)
       .fill(type === 'gradient' ? gradient : color1)
       .attr({
         class: 'bg'
       })
     },
-    drawBody(svg, svgData, options = {}){
+    drawBody(svg, data, options = {}){
        const hue = options && options.hue || this.random(0, 256, false); // hue range
        const color = `hsl(${hue}, 50%, 50%)`
        const colorStroke = `hsl(${hue}, 90%, 70%)`
@@ -328,11 +330,11 @@ export default {
 
       // keep track of our points
       const points = [];
-      const size = this.random(svgData.canvasWidth / 20, svgData.canvasWidth / 4);
-      const constraintW = svgData.canvasWidth
-      const constraintH = svgData.canvasHeight
-      // const startX = svgData.canvasWidth / 2 - size / 2;
-      // const startY = svgData.canvasHeight / 2 - size / 2;
+      const size = this.random(data.canvasWidth / 20, data.canvasWidth / 4);
+      const constraintW = data.canvasWidth
+      const constraintH = data.canvasHeight
+      // const startX = data.canvasWidth / 2 - size / 2;
+      // const startY = data.canvasHeight / 2 - size / 2;
       const startX = 800 || this.random(0 - size / 2, constraintW - size / 2, true);
       const startY = 800 || this.random(0 - size / 2, constraintH - size / 2, true);
       const wobbleMin = 1 || options.wobbleMin || 0.5;
@@ -364,7 +366,7 @@ export default {
       return pathData;
     },
    
-    async drawCircle(svg, svgData, options = {}, mode){
+    async drawCircle(svg, data, options = {}, mode){
       const {activeTheme} = this;
       const {
         hasStroke = false, 
@@ -379,8 +381,8 @@ export default {
       const strokeSize = options.strokeSize || this.random(5, 30, false);
       const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
       const size = mode === 'generative' ? this.random(Number(options.minSize), Number(options.maxSize), false) : Number(options.w);
-      const constraintW = svgData.canvasWidth
-      const constraintH = svgData.canvasHeight
+      const constraintW = data.canvasWidth
+      const constraintH = data.canvasHeight
       const offsetX = 0 - size / 2;
       const offsetY =0 - size / 2;
       const startX =  mode === 'generative' ? this.random(offsetX, constraintW - size / 2, true) : Number(options.x);
@@ -402,28 +404,28 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
 
         //// ANIAMTION /////
         if(useAnimation){
-          // const randomCoordX = this.random(0 - svgData.canvasWidth / 4, svgData.canvasWidth / 4, true)
-          // const randomCoordY = this.random(0 - svgData.canvasHeight / 4, svgData.canvasHeight / 4, true)
+          // const randomCoordX = this.random(0 - data.canvasWidth / 4, data.canvasWidth / 4, true)
+          // const randomCoordY = this.random(0 - data.canvasHeight / 4, data.canvasHeight / 4, true)
           // const randomScale = this.random(-0.5, 0.5, true)
           // console.log('randomScale', randomScale)
           // const generativeAnimationToString = `transform:  translateX(${randomCoordX || 0}px) translateY(${randomCoordY  || 0}px) scale(${1 + randomScale  || 1}) rotate(0deg);`
           // const animationToString = `transform:  translateX(${animationOffsetX || 0}px) translateY(${animationOffsetY  || 0}px) scale(${animationScale  || 1}) rotate(${animationRotation}deg);`
-          this.renderAnimation(thisCircle, svgData, options, thisClass);
+          this.renderAnimation(thisCircle, data, options, thisClass);
           // thisCircle.attr({class: thisClass})
           //     .style(`@keyframes test${thisClass} { from {transform:  translateX(${0}px) translateY(${0}px) scale(1) rotate(0deg) ;} to { ${animationMode === 'generative' ? generativeAnimationToString : animationToString} }}`)
           //     .style(`.${thisClass}`, {fill: themeColor, animation: `2s ease-in-out 0s infinite alternate test${thisClass}`})
         }
         
     },
-    renderAnimation(reference, svgData, options, className){
+    renderAnimation(reference, data, options, className){
       const {animationMode = 'generative',
         animationOffsetX,
         animationOffsetY,
         animationScale,
         animationRotation} = options
-      console.log('renderAnimation', reference, svgData, options, className);
-          const randomCoordX = this.random(0 - svgData.canvasWidth / 4, svgData.canvasWidth / 4, true)
-          const randomCoordY = this.random(0 - svgData.canvasHeight / 4, svgData.canvasHeight / 4, true)
+      console.log('renderAnimation', reference, data, options, className);
+          const randomCoordX = this.random(0 - data.canvasWidth / 4, data.canvasWidth / 4, true)
+          const randomCoordY = this.random(0 - data.canvasHeight / 4, data.canvasHeight / 4, true)
           const randomScale = this.random(-0.5, 0.5, true)
           const generativeAnimationToString = `transform:  translateX(${randomCoordX || 0}px) translateY(${randomCoordY  || 0}px) scale(${1 + randomScale  || 1}) rotate(0deg);`
           const animationToString = `transform:  translateX(${animationOffsetX || 0}px) translateY(${animationOffsetY  || 0}px) scale(${animationScale  || 1}) rotate(${animationRotation}deg);`
@@ -432,9 +434,9 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
               .style(`@keyframes test${className} { from {transform:  translateX(${0}px) translateY(${0}px) scale(1) rotate(0deg) ;} to { ${animationMode === 'generative' ? generativeAnimationToString : animationToString} }}`)
               .style(`.${className}`, {animation: `2s ease-in-out 0s infinite alternate test${className}`})
     },
-    async drawTriangle(svg, svgData, options = {}, mode){
+    async drawTriangle(svg, data, options = {}, mode){
       const hue = options && options.hue || this.random(0, 256, false); // hue range
-      const {settings} = svgData;
+      const {settings} = data;
       const { hasStroke = false, hasFill = true} = options;
       const {activeTheme} = this;
       const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
@@ -445,8 +447,8 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
       const rotation = options.rotation || settings.rotationOptions[randomRotation];
       const {x, y, w, h} = options;
       const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
-      const constraintW = svgData.canvasWidth
-      const constraintH = svgData.canvasHeight
+      const constraintW = data.canvasWidth
+      const constraintH = data.canvasHeight
       const startX =  mode === 'generative' ? this.random(0, constraintW - size, true) : Number(x);
       const startY = mode === 'generative' ? this.random(0, constraintH - size, true) : Number(y);
       // const points = [];
@@ -526,8 +528,8 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
 
       
     },
-   async drawRectangle(svg, svgData, options = {}, mode){
-     const {settings} = svgData;
+   async drawRectangle(svg, data, options = {}, mode){
+     const {settings} = data;
      const {activeTheme} = this
      const {useAnimation, hasStroke = false, hasFill = true} = options;
        const hue = options && options.hue || this.random(0, 256, false); // hue range
@@ -556,11 +558,11 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
           // })
           // .rotate(rotation)
         if(useAnimation){
-          this.renderAnimation(thisRect, svgData, options, thisClass);
+          this.renderAnimation(thisRect, data, options, thisClass);
         }
     },
-    async drawLine(svg, svgData, options = {}, mode){
-      const {settings} = svgData;
+    async drawLine(svg, data, options = {}, mode){
+      const {settings} = data;
       const {activeTheme}= this
        const hue = options && options.hue || this.random(0, 256, false); // hue range
        const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
@@ -574,8 +576,8 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
        const rotation = 0;
       const {x, y, w, h} = options;
       const size = mode === 'generative' ? this.random(Number(0), Number(Number(w)), true) : Number(options.w);
-      const constraintW = Number(svgData.canvasWidth)
-      const constraintH = Number(svgData.canvasHeight)
+      const constraintW = Number(data.canvasWidth)
+      const constraintH = Number(data.canvasHeight)
       const startX =  mode === 'generative' ? this.random(0, constraintW - size, true) : Number(x);
       const startY = mode === 'generative' ? this.random(0, constraintH - size, true) : Number(y);
       // const endX =  mode === 'generative' ? this.random(0, constraintW - size, true) : startX + 100;

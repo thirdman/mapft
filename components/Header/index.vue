@@ -24,7 +24,8 @@
       <client-only>
 
       <div class="navRow">
-        
+        <v-btn @click="getConfig">get config</v-btn>
+        <v-btn @click="updateConfig">updateConfig</v-btn>
         <div class="navItem">
           <nuxt-link to="/about" class="plain navLink text--color">ABOUT</nuxt-link>
         </div>
@@ -39,7 +40,10 @@
           <nuxt-link to="/view" class=" navLink">View</nuxt-link>
         </div> -->
         <div class="navItem" >
-          <nuxt-link to="/svg" class=" navLink">SVG</nuxt-link>
+          <nuxt-link to="/svg" class=" navLink">GENERATE</nuxt-link>
+        </div>
+        <div class="navItem" >
+          <nuxt-link to="/gallery" class=" navLink">GALLERY</nuxt-link>
         </div>
       </div>
 
@@ -208,9 +212,10 @@ import {  handleAccountLink, setConnectedNetwork, getProviderType, getConnectedN
 export default {
   
   mounted() {
-    mounted: () => {
-      this.$refs.modal.show();
-    };
+    if (!this.siteData) {
+        this.getConfig()
+        console.log('this getting ssite data')
+    }
     if(this.$config){
       // console.log('HEADER this.$config is available', this.$config)
       const rootUrl = this.$config.rootUrl;
@@ -240,6 +245,7 @@ export default {
 
   data() {
     return {
+      siteData: null,
       showDevInfo: false,
       rootUrl: "",
       factoryContract: "",
@@ -334,7 +340,9 @@ export default {
     ...mapActions({
       showStatusModal: "mintFormStore/showStatusModal",
       showCropperModal: "mintFormStore/showCropperModal",
-      getProfileData: "ui/getProfileData"
+      getProfileData: "ui/getProfileData",
+      getConfig: "ui/getConfig",
+      updateConfig: "ui/updateConfig"
     }),
     toggleDevInfo(){
       this.showDevInfo = !this.showDevInfo

@@ -1,14 +1,15 @@
 // import * as Web3 from 'web3'
 
 import { getField, updateField } from "vuex-map-fields";
+import { v4 as uuidv4 } from "uuid";
 import {
   readThatShit,
   readThatMeta,
-  readAdditionalMeta,
-  readImageLink,
+  // readAdditionalMeta,
+  // readImageLink,
 } from "../utils/web3Read";
-import { getContrast } from "../utils/theme";
-import { resolveEns } from "../utils/wallet";
+// import { getContrast } from "../utils/theme";
+// import { resolveEns } from "../utils/wallet";
 
 const themeArray = [
   "lemon",
@@ -25,6 +26,8 @@ const themeArray = [
 // const ens = require("ethereum-ens");
 // console.log("ens", ens);
 export const state = () => ({
+  configStatus: null,
+  siteData: null,
   network: "rinkeby",
   walletChain: "ethereum",
   hasChainSelect: false,
@@ -76,6 +79,8 @@ export const state = () => ({
 
 export const getters = {
   getField,
+  siteData: (state) => state.siteData,
+  configStatus: (state) => state.configStatus,
   devMode: (state) => state.devMode,
   statusModalMode: (state) => state.statusModalMode,
   hasWallet: (state) => state.hasWallet,
@@ -123,6 +128,12 @@ export const getters = {
 };
 export const mutations = {
   updateField,
+  setConfigStatus: (state, value) => {
+    state.configStatus = value;
+  },
+  setSiteData: (state, value) => {
+    state.siteData = value;
+  },
   add(state, text) {
     state.list.push({
       text,
@@ -347,38 +358,96 @@ export const mutations = {
     console.log("setAllowRotation", newState);
     state.allowRotation = newState;
   },
-  // doSearch(state, event) {
-  //   console.log('doSearch', state, this)
-  //   const params = {
-  //     contractId: state.searchContractId,
-  //     tokenId: parseInt(state.searchTokenId),
-  //   }
-  //   if (params.tokenId) {
-  //     console.log('this would call search', this.actions, this.$actions)
-  //     console.log('tactions', actions)
-  //     // handleSearch(params)
-  //   }
-  // },
-  // handleSearch(state, event) {
-  //   // console.log('event', event)
-  //   console.log(Number(state.searchTokenId))
-  //   const params = {
-  //     contractId: state.searchContractId,
-  //     tokenId: parseInt(state.searchTokenId),
-  //   }
-  //   // console.log('params', params)
-  //   if (params.tokenId) {
-  //     const imageLink = readImageLink(params)
-  //     const viewResult = readThatShit(params)
-  //     console.log('viewResult', viewResult)
-  //     console.log('imageLink', imageLink)
-  //     // readAdditionalMeta(params)
-  //   }
-  //   // state.showAccount = value
-  // },
 };
 
 export const actions = {
+  async getConfig(context, data) {
+    const { commit } = context;
+    const { $axios } = this;
+    const binKey =
+      "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
+    const binId = "612d98a5259bcb6118ef73a4";
+
+    await commit("setConfigStatus", "working");
+    const siteJson = await $axios
+      .$get(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+        headers: {
+          "X-Master-Key": binKey,
+        },
+      })
+      .catch((error) => console.error(error));
+    const siteData = siteJson.record;
+    console.log("siteData", siteJson.record);
+    await commit("setSiteData", siteData);
+    await commit("setConfigStatus", "completed");
+    return siteData;
+  },
+  async updateConfig(context, props) {
+    const { commit, rootState, state } = context;
+    const { $axios } = this;
+    const {
+      svgFormStore: { svgData },
+    } = rootState;
+    const { siteData } = state;
+    const currentImages = siteData.images || [];
+    const tempImages = [...currentImages];
+    const newDraftId = uuidv4();
+    const newTempImage = {
+      image: svgData,
+      id: newDraftId,
+      label: "new label",
+      author: "new author",
+    };
+    tempImages.push(newTempImage);
+    const newData = { updated: "now" };
+
+    newData.images = tempImages;
+    console.log("newData", newData);
+    const binKey =
+      "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
+    const binId = "612d98a5259bcb6118ef73a4";
+    const tempConfig = newData;
+    // const tempConfig = { nope: "nope" };
+
+    if (!tempConfig) {
+      return;
+    }
+    console.log("updateConfig CONFIG: ", tempConfig);
+    await commit("setConfigStatus", "working");
+    const sitedataaa = await $axios
+      .$put(`https://api.jsonbin.io/v3/b/${binId}`, tempConfig, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": binKey,
+          "X-Bin-Versioning": false,
+        },
+      })
+      .then((result) => {
+        console.log("success", result);
+        return result.record;
+      })
+      .catch((error) => {
+        console.error(error);
+        commit("setConfigStatus", "error");
+        return error;
+      });
+    console.log("sitedataaa", sitedataaa);
+    // await commit("setSiteData", sitedataaa.record);
+    await commit("setConfigStatus", "completed");
+    // return sitedataaa.record;
+  },
+
+  async removeGallerySet(context, id) {
+    const { dispatch, state, commit } = context;
+    const { siteData } = state;
+    let tempImagesArray = [...siteData.images];
+    tempImagesArray = tempImagesArray.filter((img) => img.id !== id);
+    const newSiteData = { ...siteData, images: tempImagesArray };
+    await commit("setConfigStatus", "loading");
+    await commit("setSiteData", newSiteData);
+    await commit("setConfigStatus", "completed");
+    dispatch("updateConfig", newSiteData);
+  },
   // resolveEns(dispatch, address) {
   //   console.log("resolve", address);
   //   console.log("ens", ens);

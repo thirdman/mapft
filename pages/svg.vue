@@ -9,7 +9,8 @@
             <PreviewToggle :code="svgCode" :previewData="previewData"/>
             <div class=" previewColumn svgPreviewColumn">
               <client-only>
-                  <PreviewSvg :code="svgCode" :previewData="previewData" :previewMode="previewMode" v-if="previewMode === 'edit'" :calculateCode="true" :setBytes="setPreviewBytes" />
+                  <PreviewSvg :code="svgCode"  :previewMode="previewMode" v-if="previewMode === 'edit'" :calculateCode="true" :setBytes="setPreviewBytes" />
+                  <!-- :previewData="previewData" -->
               </client-only>
               <div class="row ma-0" v-if="previewMode === 'edit' && previewBytes">
                 <div class="col">

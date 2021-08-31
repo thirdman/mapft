@@ -2,6 +2,7 @@
   <div class="col">
     <h3>Settings</h3>
     <settings-canvas :value.sync="tempSettings" />
+    <settings-meta :value.sync="tempMeta" />
     <div class="row">
       <div class="col">
         <v-btn 
@@ -33,6 +34,11 @@ export default {
         canvasHeight: 1600,
         rotationOptions: [0, 90, 180, 270],
       },
+      tempMeta: {
+        label: '',
+        description: '',
+        creator: '',
+      },
     };
   },
   
@@ -63,14 +69,15 @@ export default {
       console.log('here')
       const {
         svgData, 
-        tempSettings
+        tempSettings,
+        tempMeta
       } = this;
       const {canvasWidth, canvasHeight}= tempSettings
       // const {elements} = svgData;
       // const selectedType = typeArray[toggle_type];
       // const selectedMode = modeArray[toggle_mode];
       console.log('applySettings ', tempSettings,)
-      const newData = {...svgData, canvasWidth: Number(canvasWidth), canvasHeight: Number(canvasHeight)}
+      const newData = {...svgData, ...tempMeta, canvasWidth: Number(canvasWidth), canvasHeight: Number(canvasHeight)}
       this.setSvgData(newData);
     }
   },

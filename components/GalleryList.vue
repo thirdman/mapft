@@ -145,7 +145,7 @@
 }
 .galleryGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
   grid-column-gap: 2rem;
   grid-row-gap: 2rem;
 }
