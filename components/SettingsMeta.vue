@@ -6,14 +6,15 @@
         <v-text-field filled outlined dense v-model="localSettings.label" />
       </div>
       <div class="col">
-        <label>Description</label><br />
-          <v-text-field filled outlined dense v-model="localSettings.description" />
+        <label>Creator</label><br />
+        <v-text-field filled outlined dense v-model="localSettings.creator" />
+        
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <label>Creator</label><br />
-        <v-text-field filled outlined dense v-model="localSettings.creator" />
+        <label>Description</label><br />
+        <v-textarea filled outlined dense rows="4" v-model="localSettings.description" />
       </div>
     </div>
   </div>
@@ -31,13 +32,14 @@ export default {
   data() {
     return {
       localSettings: {
-        
+        label: 'xx',
+        description: 'xx',
+        creator: 'xx',
       },
       aspect: null
     };
   },
   created(){
-    // console.log('transforms created isNAn', !!isNaN(this.localOptions.rotation))
   },
   watch: {
     value: {
@@ -65,25 +67,7 @@ export default {
     }),
     updateValue: function (value) {
       this.$emit('input', value);
-    },
-    // handleAspect(aspect){
-    //   const {canvasWidth, canvasHeight} = this.localSettings
-    //   let newHeight = canvasHeight
-    //   if(aspect === '1:1'){
-    //     newHeight = canvasWidth;
-    //     this.aspect = '1:1';
-    //   }
-    //   if(aspect === '2:3'){
-    //     newHeight = canvasWidth / 2  * 3
-    //     this.aspect = '2:3';
-    //   }
-    //   if(aspect === '16:9'){
-    //     newHeight = canvasWidth / 16  * 9
-    //     this.aspect = '16:9';
-    //   }
-      
-    //   this.localSettings.canvasHeight = newHeight
-    // }
+    }
   },
 };
 </script>

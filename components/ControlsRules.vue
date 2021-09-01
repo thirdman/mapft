@@ -390,6 +390,7 @@ export default {
         rotation: 0,
         hasStroke: true,
         hasFill: true,
+        useGradient: true,
         rotationOptions: [0, 90, 180, 270],
       },
       newElementLineOptions: {
@@ -441,7 +442,7 @@ export default {
   },
   created(){
     const {svgData} = this;
-    console.log('svgData', svgData)
+    // console.log('svgData', svgData)
     if(!svgData){return}
     const {elements} = svgData
     this.elements = elements;
@@ -465,7 +466,8 @@ export default {
       newElementLineOptions, 
       newElementCircleOptions, 
       newElementArtOptions, 
-      newElementCount } = this
+      newElementCount
+      } = this
       const type = typeArray[toggle_type]
       // console.log('newRuleoptions type', type, typeArray, toggle_type)
       if(!type){return}
@@ -488,7 +490,7 @@ export default {
       return mergedSelectedOptions
     },
     newRuleElement(){
-      const {  typeArray, toggle_type, modeArray, toggle_mode, newElementLabel} = this
+      const {  typeArray, toggle_type, modeArray, toggle_mode, newElementLabel, newElementCount } = this
       const type = typeArray[toggle_type]
       const mode = modeArray[toggle_mode]
       console.log('newRule', {type, mode})
@@ -500,7 +502,7 @@ export default {
         label: "test",
         id: newElementLabel || 'new rule',
         mode: mode,
-        count: "1",
+        count: newElementCount ,
         type,
         options: selectedOptions,
       }
@@ -575,7 +577,7 @@ export default {
       const {svgData} = this;
       const {elements} = svgData;
       const tempElements = [...elements];
-      console.log('svgData tempElements', tempElements);
+      // console.log('svgData tempElements', tempElements);
       if(!tempElements) {return}
       let sorted = [];
       if(direction === 'up'){

@@ -694,6 +694,7 @@ export const mutations = {
   },
 
   setSvgData(state, newData) {
+    console.log("newsvgdata", newData);
     state.svgData = newData;
   },
   setSvgElements(state, newArray) {

@@ -13,7 +13,7 @@
     <div class="row">
       <label>Aspect</label><br />
         <v-btn-toggle 
-          v-model="toggle_mode"
+          
           dense
         >
           <v-btn
@@ -58,11 +58,12 @@ export default {
         canvasHeight: 1600,
         rotationOptions: [0, 90, 180, 270],
       },
-      aspect: null
+      aspect: null,
     };
   },
   created(){
     // console.log('transforms created isNAn', !!isNaN(this.localOptions.rotation))
+    
   },
   watch: {
     value: {

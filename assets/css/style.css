@@ -810,7 +810,7 @@ a.iconButton {
 section {
   min-height: calc(100vh - 80px);
   min-height: calc(100vh - var(--header-height, 80px));
-  position: relative;
+  /* // position: relative; */
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -1543,13 +1543,12 @@ ul.heroList {
   flex-grow: 0;
   /* overflow: hidden; */
 }
-.row .previewColumn {
+/* .row .previewColumn {
   flex-basis: 34%;
   flex-shrink: 1;
   flex-grow: 0;
   position: sticky;
   top: calc(0px - 2px);
-  /* top: calc(80px - 2px); */
 }
 .previewColumn .previewBackground {
   background: #eee;
@@ -1557,7 +1556,7 @@ ul.heroList {
   align-items: center;
   justify-content: center;
   display: flex;
-}
+} */
 .svgPreviewGrid {
   background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% /
     20px 20px;

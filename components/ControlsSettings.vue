@@ -2,7 +2,6 @@
   <div class="col">
     <h3>Settings</h3>
     <settings-canvas :value.sync="tempSettings" />
-    <settings-meta :value.sync="tempMeta" />
     <div class="row">
       <div class="col">
         <v-btn 
@@ -34,14 +33,22 @@ export default {
         canvasHeight: 1600,
         rotationOptions: [0, 90, 180, 270],
       },
-      tempMeta: {
-        label: '',
-        description: '',
-        creator: '',
-      },
+      // tempMeta: {
+      //   label: '',
+      //   description: '',
+      //   creator: '',
+      // },
     };
   },
-  
+  created(){
+    const sourceData = this.svgData;
+    const newTempObj = {
+      canvasWidth: sourceData.canvasWidth,
+      canvasHeight: sourceData.canvasHeight,
+      rotationOptions: sourceData.rotationOptions,
+    }
+    this.tempSettings = newTempObj
+  },
   computed: {
     ...mapGetters({
       // SVG
@@ -66,18 +73,18 @@ export default {
     },
     
     applySettings(){
-      console.log('here')
+      console.log('here', this)
       const {
         svgData, 
         tempSettings,
-        tempMeta
+        // tempMeta
       } = this;
       const {canvasWidth, canvasHeight}= tempSettings
       // const {elements} = svgData;
       // const selectedType = typeArray[toggle_type];
       // const selectedMode = modeArray[toggle_mode];
       console.log('applySettings ', tempSettings,)
-      const newData = {...svgData, ...tempMeta, canvasWidth: Number(canvasWidth), canvasHeight: Number(canvasHeight)}
+      const newData = {...svgData, canvasWidth: Number(canvasWidth), canvasHeight: Number(canvasHeight)}
       this.setSvgData(newData);
     }
   },

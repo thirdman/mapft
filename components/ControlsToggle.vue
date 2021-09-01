@@ -42,6 +42,14 @@
             >
               CODE
             </v-btn>
+            <v-btn
+              
+              x-small
+              :color="controlMode === 'mint' ? 'primary':''"
+              @click="setControlMode('mint')"
+            >
+              MINT
+            </v-btn>
           </div>
         
   

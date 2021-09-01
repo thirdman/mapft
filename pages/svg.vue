@@ -7,18 +7,49 @@
         <div class="sectionRow row ma-0 pa-0" >
           <div class="col col-6 svgColumn pa-0">
             <PreviewToggle :code="svgCode" :previewData="previewData"/>
-            <div class=" previewColumn svgPreviewColumn">
+            <div class=" previewColumn svgPreviewColumn col">
               <client-only>
-                  <PreviewSvg :code="svgCode"  :previewMode="previewMode" v-if="previewMode === 'edit'" :calculateCode="true" :setBytes="setPreviewBytes" />
+                  <PreviewSvg :code="svgCode" :showGrid="false" :previewMode="previewMode" v-if="previewMode === 'edit' || previewMode === 'full'" :calculateCode="true" :setBytes="setPreviewBytes" />
                   <!-- :previewData="previewData" -->
+                  <div v-if="previewMode === 'full'" class="fullPreviewControls">
+                    <v-btn 
+                      color="primary"
+                      plain
+                      @click="() => setPreviewMode('edit')"
+                      >
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                  </div>
               </client-only>
-              <div class="row ma-0" v-if="previewMode === 'edit' && previewBytes">
-                <div class="col">
-                  <v-divider />
-                <v-card elevation="0" outlined flat >
-                  <div>Bytes: {{previewBytes}}</div>
-                  <div>Estimate Fee: {{calculatedFee}} Eth</div>
-                </v-card>
+              <v-divider />
+              <div class="previewMetaBox col" v-if="previewMode === 'edit' && previewBytes">
+                <div class="row" >
+                  <div class="col">
+                    <label>Bytes</label>
+                    <div>{{previewBytes}}</div>
+                  </div>
+                  <div class="col">
+                    <label>Estimated Fee</label>  
+                    <div>{{calculatedFee}} Eth</div>
+                  </div>
+                </div>
+              </div>
+              <div class="previewMetaBox col" v-if="svgData">
+                <div class="row">
+                  <div class="col">
+                    <label>Title</label>
+                    <div>{{svgData.label}}</div>
+                  </div>
+                  <div class="col">
+                    <label>Creator</label>
+                    <div>{{svgData.creator}}</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label>Description</label>
+                    <div>{{svgData.description}}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -37,6 +68,7 @@
                     <div v-for="index in 14" :key="index" class="gridItem">
                     <client-only>
                         <PreviewSvg :code="svgCode" :previewData="previewData"  />
+                        
                     </client-only>
                     </div>
                   </v-card-text>
@@ -49,8 +81,9 @@
             <ControlsRules v-if="controlMode === 'rules' " />
             <ControlsTheme v-if="controlMode === 'theme' " />
             <ControlsSettings v-if="controlMode === 'settings' " />
+            <ControlsMeta v-if="controlMode === 'meta' " />
             <ControlsCode v-if="controlMode === 'code' " />
-            <SvgForm v-if="controlMode === 'meta' "/>
+            <SvgForm v-if="controlMode === 'mint' "/>
           </div>
         </div>
         
@@ -98,6 +131,9 @@ export default {
         loading: false
       }
     },
+  mounted(){
+console.log('this', this.svgData)
+  },
   computed: {
     ...mapGetters({
       //UI
@@ -110,6 +146,7 @@ export default {
       previewMode: "svgFormStore/previewMode",
       showPreview: "svgFormStore/showPreview",
       previewData: "svgFormStore/previewData",
+      svgData: "svgFormStore/svgData",
       svgCode: "svgFormStore/svgCode",
       svgFormStatusMessage: "svgFormStore/svgFormStatusMessage",
     }),
@@ -125,35 +162,33 @@ export default {
 </script>
 
 <style lang="scss">
-  .col{
-    // padding: 1rem;
-    // flex-basis: 100%;
-    
-    &.col6, &.col-6{
-      flex-basis: 50%;
-    }
-    &.col-9{
-      flex-basis: calc(9/12);
-    }
-    &.alternate{
-      background: rgba(255,255,255,.05);
-      padding: 1rem;
-      align-self: stretch;
-
-    }
+  .previewMetaBox{
+    width: 100%;
+    flex-basis: 100%;
+    bordeR: 1px solid var(--line-color);
+    padding: .5rem;
   }
-.appSection{}
+  .fullPreviewControls{
+    position: absolute;
+    z-index: 9999999;
+    left: 0;
+    bottom: 1rem;
+    height: 2rem;
+    width: auto;
+    background: #fff;
+  }
+
 .sectionRow{
   width: 100%;
 }
-.svgPreviewColumn{
-  display: flex;
-  flex-basis: 400px;
-  flex-grow: 0;
-  flex-direction: column;
-  align-items: center;
-  padding-top: .5rem;
-}
+// .svgPreviewColumn{
+//   display: flex;
+//   flex-basis: 400px;
+//   flex-grow: 0;
+//   flex-direction: column;
+//   align-items: center;
+//   padding-top: .5rem;
+// }
 .svgColumn{
   height: 100%;
   display: flex;

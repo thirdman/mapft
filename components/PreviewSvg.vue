@@ -1,89 +1,39 @@
 <template>
-<div>
+<div :class="`preview-position ${previewMode}`">
   <div class="svgPreviewWrap" >
-    <div :id="svgRef || 'svg'" :ref="svgRef || 'svg'" class="svgPreviewGrid" :style="canvasStyle" />
-  <v-btn 
-    v-if="previewMode === 'edit'" 
-    @click="() => handleConstruct(_, _, this.$refs.svg)" >reload</v-btn>
+    <div :id="svgRef || 'svg'" :ref="svgRef || 'svg'" :style="`${canvasStyle} ${showGrid ? 'svgsPreviewGrid' : ''}`" />
+    <v-btn 
+      v-if="previewMode === 'edit'" 
+      @click="() => handleConstruct(_, _, this.$refs.svg)" >reload</v-btn>
   </div>
-  <!-- <div
-      id="previewWrap"
-      class="previewWrap"
-      v-if="previewMode === 'view'"
-    >
-    <div class="preview svgPreview previewBackground">
-      <div
-        id="svgPreveiw"
-        class="svgPreviewWrap"
-        v-html="code"
-      />
-      <div class="previewContent" v-if="previewMode==='view'">
-            <div class="row">
-              <div class="previewElement title col-50">
-                <label>Title</label>
-                <div id="preview_title">{{ previewData && previewData.svgTitle }}</div>
-              </div>
-              <div class="previewElement">
-                <label>By</label>
-                <div id="preview_artistName">
-                  {{ previewData && previewData.svgCreator }}
-                </div>
-              </div>
-              
-            </div>
-            <div class="previewElement">
-              <label>Description</label>
-              <div id="preview_artistNote">
-                {{ previewData && previewData.svgDescription }}
-              </div>
-            </div>
-            <div class="row">
-              <div class="previewElement column">
-                <label>Bytes</label>
-                <div :class="previewBytes && previewBytes > 15000 ? 'danger' : ''">
-                  {{previewBytes}}
-                </div>
-                <div v-if="previewBytes && previewBytes > 15000"
-                  class="small"
-                  :class="previewBytes && previewBytes > 15000 ? 'danger' : ''"
-                  >
-                  TOO BIG! The contract will not work with code > 15000 bytes.
-                </div>
-              </div>
-              <div class="previewElement column" >
-                <label>Mint Cost Estimate</label>
-                <div v-if="calculatedFee">
-                  <div><strong>Ξ</strong>{{calculatedFee}} (@30 gas)</div>
-                  <div size="xsmall">(+ <strong>Ξ</strong>{{svgFee}} base fee)</div>
-
-                </div>
-              </div>
-            </div>
-
-      </div>
-    </div>
-  </div> -->
 </div>
 
 </template>
 
 <style lang="scss">
-.svgPreviewColumn{
-  display: flex;
-  flex-basis: 400px;
-  flex-grow: 0;
-  flex-direction: column;
-  align-items: center;
-  padding-top: .5rem;
-}
+  .preview-position{
+    &.full {
+      background: white;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 99999;
+      .svgPreviewWrap{
+        width: 100% !important;
+        height: 100% !important;
+        #svg{
+          height: 100%;
+          width: 100%;
+        }
+      }
+    }
+  }
   .svgPreviewWrap{
-    // background: #fff;
     width: 400px;
     height: 400px;
-    
-    // max-width: 400px;
     .svgPreview{
-
     }
     svg {
       width: 100%;
@@ -92,15 +42,10 @@
     }
   }
   #svg{
-    // background: pink;
-    // width: 50vmin;
-    // height: 50vmin;
-    
     display: block;
+    
   }
-  .danger{
-    color: var(--danger-color, red);
-  }
+  
 </style>
 
 <script>
@@ -223,7 +168,11 @@ export default {
       const theSvg =  SVG()
       .addTo(target) // mount instance to our target
       .viewbox(0, 0, data.canvasWidth, data.canvasHeight); // set the <svg /> viewBox attribute
+      
       theSvg.clear();
+      theSvg.attr({
+        'preserveAspectRatio': "xMidYMid slice"
+      });
       const methodArray = {
         background: 'drawBackground',
         line: 'drawLine',
@@ -235,17 +184,79 @@ export default {
       // console.log('elements', target, theElements)
       if(!theElements){return}
       theElements.map(recipe => {
-        // console.log('RECIPE', recipe)
         const recipeType = recipe.type;
         const selectedMethod =  methodArray[recipeType];
+        console.log('iterationsArray', iterationsArray)
         if(!selectedMethod){return }
+        console.log('recipe.count', recipe, recipe.count)
         const iterationsArray = [...Array(Number(recipe.count))];
+        console.log('iterationsArray', iterationsArray)
           iterationsArray.map((_, i) => {
           this[selectedMethod](theSvg, data, recipe.options, recipe.mode)
         })        
       })
     },
-
+    renderAnimation(reference, data, options, className){
+      const {animationMode = 'generative',
+        animationOffsetX,
+        animationOffsetY,
+        animationScale,
+        animationRotation} = options
+      // console.log('renderAnimation', reference, data, options, className);
+      const randomCoordX = this.random(0 - data.canvasWidth / 4, data.canvasWidth / 4, true)
+      const randomCoordY = this.random(0 - data.canvasHeight / 4, data.canvasHeight / 4, true)
+      const randomScale = this.random(-0.5, 0.5, true)
+      const generativeAnimationToString = `transform:  translateX(${randomCoordX || 0}px) translateY(${randomCoordY  || 0}px) scale(${1 + randomScale  || 1}) rotate(0deg);`
+      const animationToString = `transform:  translateX(${animationOffsetX || 0}px) translateY(${animationOffsetY  || 0}px) scale(${animationScale  || 1}) rotate(${animationRotation}deg);`
+      reference.attr({class: className})
+        .style(`@keyframes test${className} { from {transform:  translateX(${0}px) translateY(${0}px) scale(1) rotate(0deg) ;} to { ${animationMode === 'generative' ? generativeAnimationToString : animationToString} }}`)
+        .style(`.${className}`, {animation: `2s ease-in-out 0s infinite alternate test${className}`})
+    },
+    renderColor(reference, data, options, svg){
+      const {
+        hasStroke = false, 
+        hasFill = true, 
+        useGradient = true,
+        } = options
+      const {settings, theme} = data
+      const activeTheme = theme || this.activeTheme;
+      // const hue = options && options.hue || this.random(0, 256, false); // hue range
+      // const color = `hsl(${hue}, 50%, 50%)`
+      const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
+      const reducedColors = activeTheme.colors.slice().filter(col => col !== themeColor);
+      const strokeColor = reducedColors[this.random(0, reducedColors.length, false)]
+      const strokeSize = options.strokeSize || this.random(5, 30, false);
+      // const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
+      // const size = mode === 'generative' ? this.random(Number(options.minSize), Number(options.maxSize), false) : Number(options.w);
+      // const constraintW = data.canvasWidth
+      // const constraintH = data.canvasHeight
+      // const offsetX = 0 - size / 2;
+      // const offsetY =0 - size / 2;
+      // const startX =  mode === 'generative' ? this.random(offsetX, constraintW - size / 2, true) : Number(options.x);
+      // const startY = mode === 'generative' ? this.random(offsetY, constraintH - size / 2, true) : Number(options.y);
+      if(useGradient){
+        var gradient = svg.move(0,0).gradient('linear', function(add) {
+          add.stop(0, themeColor)
+          add.stop(1, strokeColor)
+        })
+        reference
+          // .fill('#2e2e2e')
+          .stroke({
+            width: hasStroke ? strokeSize : 0,
+            color: strokeColor
+          })
+          .fill(gradient)
+          console.log('reference', reference)
+        }
+        else{
+          reference
+            .fill(hasFill ? themeColor : 'transparent')
+            .stroke({
+              width: hasStroke ? strokeSize : 0,
+              color: strokeColor
+            })
+        }
+    },
     drawBackground(svg, data, options = {}, mode){
       const {settings, theme} = data
       const activeTheme = theme || this.activeTheme;
@@ -369,17 +380,18 @@ export default {
       const {theme} = data;
       const activeTheme = theme || this.activeTheme;
       const {
-        hasStroke = false, 
-        hasFill = true, 
+        // hasStroke = false, 
+        // hasFill = true, 
         useAnimation = false,
         
         } = options
-      const hue = options && options.hue || this.random(0, 256, false); // hue range
-      const color = `hsl(${hue}, 50%, 50%)`
-      const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
-      const strokeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
-      const strokeSize = options.strokeSize || this.random(5, 30, false);
-      const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
+      // const hue = options && options.hue || this.random(0, 256, false); // hue range
+      // const color = `hsl(${hue}, 50%, 50%)`
+      // const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
+      // // const reducedColors = activeTheme.colors.slice().filter(col => col !== themeColor);
+      // const strokeColor = reducedColors[this.random(0, reducedColors.length, false)]
+      // const strokeSize = options.strokeSize || this.random(5, 30, false);
+      // const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
       const size = mode === 'generative' ? this.random(Number(options.minSize), Number(options.maxSize), false) : Number(options.w);
       const constraintW = data.canvasWidth
       const constraintH = data.canvasHeight
@@ -388,20 +400,21 @@ export default {
       const startX =  mode === 'generative' ? this.random(offsetX, constraintW - size / 2, true) : Number(options.x);
       const startY = mode === 'generative' ? this.random(offsetY, constraintH - size / 2, true) : Number(options.y);
 
-var gradient = svg.move(0,0 ).gradient('linear', function(add) {
-        add.stop(0, themeColor)
-        add.stop(1, strokeColor)
-      })
+      // var gradient = svg.move(0,0 ).gradient('linear', function(add) {
+      //   add.stop(0, themeColor)
+      //   add.stop(1, strokeColor)
+      // })
       
       const thisClass = `dot${this.random(0, 2560000, false)}`;
       const thisCircle =  svg.ellipse(size, size)
         .move(startX, startY)
-        .stroke({
-          width: hasStroke ? strokeSize : 0,
-          color: colorStroke
-        })
-        .fill(hasFill ? gradient : 'transparent')
+        // .stroke({
+        //   width: hasStroke ? strokeSize : 0,
+        //   color: colorStroke
+        // })
+        // .fill(hasFill ? gradient : 'transparent')
 
+        this.renderColor(thisCircle, data, options, svg)
         //// ANIAMTION /////
         if(useAnimation){
           // const randomCoordX = this.random(0 - data.canvasWidth / 4, data.canvasWidth / 4, true)
@@ -417,23 +430,7 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
         }
         
     },
-    renderAnimation(reference, data, options, className){
-      const {animationMode = 'generative',
-        animationOffsetX,
-        animationOffsetY,
-        animationScale,
-        animationRotation} = options
-      console.log('renderAnimation', reference, data, options, className);
-          const randomCoordX = this.random(0 - data.canvasWidth / 4, data.canvasWidth / 4, true)
-          const randomCoordY = this.random(0 - data.canvasHeight / 4, data.canvasHeight / 4, true)
-          const randomScale = this.random(-0.5, 0.5, true)
-          const generativeAnimationToString = `transform:  translateX(${randomCoordX || 0}px) translateY(${randomCoordY  || 0}px) scale(${1 + randomScale  || 1}) rotate(0deg);`
-          const animationToString = `transform:  translateX(${animationOffsetX || 0}px) translateY(${animationOffsetY  || 0}px) scale(${animationScale  || 1}) rotate(${animationRotation}deg);`
-          
-          reference.attr({class: className})
-              .style(`@keyframes test${className} { from {transform:  translateX(${0}px) translateY(${0}px) scale(1) rotate(0deg) ;} to { ${animationMode === 'generative' ? generativeAnimationToString : animationToString} }}`)
-              .style(`.${className}`, {animation: `2s ease-in-out 0s infinite alternate test${className}`})
-    },
+    
     async drawTriangle(svg, data, options = {}, mode){
       const {theme} = data;
       const activeTheme = theme || this.activeTheme;
@@ -506,7 +503,7 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
           trianglePath = trianglePath + ` ${w},${h}`
           trianglePath = trianglePath + ` ${startX},${h}`
           trianglePath = trianglePath + ` Z`
-          svg
+          const theTriangle = svg
             .path(trianglePath)
               .fill(hasFill ? themeColor : 'transparent')
               .stroke({
@@ -525,6 +522,8 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
               //     // times: 5,
               //     wait: 2000
               //   }).ease().rotate(rotation).loop(true, true);
+              // this.renderAnimation(thisCircle, data, options, thisClass);
+              this.renderColor(theTriangle, data, options, svg)
         }
 
       
@@ -535,12 +534,12 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
       const activeTheme = theme || this.activeTheme;
      const {useAnimation = false, hasStroke = false, hasFill = true} = options;
 
-       const hue = options && options.hue || this.random(0, 256, false); // hue range
-       const color = `hsl(${hue}, 50%, 50%)`
-       const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
-       const strokeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
-      const strokeSize = options.strokeSize || this.random(5, 30, false);
-      const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
+      //  const hue = options && options.hue || this.random(0, 256, false); // hue range
+      //  const color = `hsl(${hue}, 50%, 50%)`
+      //  const themeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
+      //  const strokeColor = activeTheme.colors[this.random(0, activeTheme.colors.length, false)]
+      // const strokeSize = options.strokeSize || this.random(5, 30, false);
+      // const colorStroke = strokeColor || `hsl(${hue}, 90%, 70%)`
        const randomRotation = settings.rotationOptions && Math.floor(Math.random() * settings.rotationOptions.length);
        const rotation = mode === 'generative' ? settings.rotationOptions[randomRotation] : (options.rotation || 0);
       const {x, y, w, h} = options;
@@ -551,15 +550,16 @@ var gradient = svg.move(0,0 ).gradient('linear', function(add) {
       rectanglePath = rectanglePath + ` Z`
         const thisClass = `dot${this.random(0, 2560000, false)}`;
         const thisRect = svg.path(rectanglePath)
-          .fill(hasFill ? themeColor : 'transparent')
-          .stroke({
-            width: hasStroke ? strokeSize : 0,
-            color: colorStroke
-          })
+          // .fill(hasFill ? themeColor : 'transparent')
+          // .stroke({
+          //   width: hasStroke ? strokeSize : 0,
+          //   color: colorStroke
+          // })
           // .attr({
           //   style: 'fill: red'
           // })
           // .rotate(rotation)
+        this.renderColor(thisRect, data, options, svg)
         if(useAnimation){
           this.renderAnimation(thisRect, data, options, thisClass);
         }

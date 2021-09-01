@@ -23,6 +23,14 @@
             <v-btn
               x-small
               depressed
+              :color="previewMode === 'full' ? 'primary':'secondary'"
+              @click="setPreviewMode('full')"
+            >
+              FULL
+            </v-btn>
+            <v-btn
+              x-small
+              depressed
               :color="previewMode === 'view' ? 'primary':'secondary'"
               @click="setPreviewMode('view')"
             >

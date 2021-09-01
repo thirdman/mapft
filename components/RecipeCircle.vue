@@ -85,8 +85,21 @@
           </v-btn-toggle>
       </div>
       
-      <div class="col">
-        
+      <div class="col" v-if="this.localOptions.hasFill">
+        <label>Use Gradient</label>
+        <v-btn-toggle 
+          dense
+          v-if="this.localOptions.hasFill"
+        >
+          <v-btn small @click="() => setUseGradient(false)" :color="!this.localOptions.useGradient ? 'primary' : 'secondary'">
+            No
+          </v-btn>
+          <v-btn small @click="() => setUseGradient(true)" :color="this.localOptions.useGradient ? 'primary' : 'secondary'">
+            Yes
+          </v-btn>
+        </v-btn-toggle>
+      </div>
+      <div v-else class="col">
       </div>
       <div class="col">
         
@@ -117,6 +130,7 @@ export default {
         rotation: 0,
         hasStroke: false,
         hasFill: true,
+        useGradient: true
       },
       rotationOptions: [0, 90, 180, 270],
     };
@@ -155,6 +169,9 @@ export default {
     },
     setHasFill(value){
       this.localOptions.hasFill = value
+    },
+    setUseGradient(value){
+      this.localOptions.useGradient = value
     },
     handleRotate(rotation){
       console.log('rotation', rotation);
