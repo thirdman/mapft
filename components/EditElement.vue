@@ -1,94 +1,23 @@
 <template>
-  <div class="optionsControl  pa-2">
-    <v-slide-x-reverse-transition>
-      <edit-element
-        v-if="showEdit" 
-        :handleClose="() => {this.showEdit = false}" 
-        :ruledata="editData || 'ggg'"
-        />
-    </v-slide-x-reverse-transition>
-    <div class="" v-if="!showNew">
-      <v-slide-y-transition
-        class="py-0"
-        group
-        tag="v-list"
-      >
-        <template v-for="(element, index) in svgData.elements"  >
-           <div class="elementRow row" :key="`element${index}`" >
-             <div class="col-1 col">
-             <v-icon medium v-if="element.type==='background'">mdi-square</v-icon>
-             <v-icon medium v-if="element.type==='polygon'">mdi-vector-polygon</v-icon>
-              <v-icon medium v-if="element.type==='circle'">mdi-vector-circle</v-icon>
-              <v-icon medium v-if="element.type==='triangle'">mdi-vector-triangle</v-icon>
-              <v-icon medium v-if="element.type==='rectangle'">mdi-vector-rectangle</v-icon>
-              <v-icon medium v-if="element.type==='line'">mdi-vector-line</v-icon>
-              <v-icon medium v-if="element.type==='blob'">mdi-vector-ellipse</v-icon>
-             </div>
-             <div class="col col-6">
-               <label>{{element.type}}</label>
-               <div>{{element.label}}</div>
-               <div>({{element.mode}} {{element.count}})</div>
-             </div>
-            
-              <div class="col col-5">
-                <div class="buttonRow">
-                <v-btn
-                  rounded
-                  small
-                  depressed
-                  @click="() => handleRemoveElement(element.id)">x
-                </v-btn>
-                <v-btn
-                  rounded
-                  small
-                  depressed
-                  @click="() => handleDuplicateElement(index)"
-                  >
-                    <v-icon small>mdi-content-copy</v-icon>
-                </v-btn>
-                <v-btn
-                  rounded
-                  small
-                  depressed
-                  @click="moveElement(index, 'up')"
-                  >
-                    <v-icon  small>mdi-arrow-up-bold</v-icon>
-                </v-btn>
-                <v-btn
-                  rounded
-                  small
-                  depressed
-                  @click="moveElement(index, 'down')"
-                  >
-                    <v-icon small>mdi-arrow-down-bold</v-icon>
-                </v-btn>
-                <v-btn
-                  rounded
-                  small
-                  depressed
-                  @click="() => handleEditElement(index)"
-                  >
-                    <v-icon small>mdi-cog</v-icon>
-                </v-btn>
-                </div>
-              </div>
-           </div>
-        </template>
-            </v-slide-y-transition>
-             <v-btn block @click="() => {this.showNew = !this.showNew}" ><v-icon>mdi-plus-box</v-icon>add element</v-btn> 
+  <div class="newElement panel edit">
+    <v-card >
+      <v-card-title>
+        <div class="row" style="width: 100%">
+          <div class="col">
+            <label>New/Edit</label>
           </div>
-
-
-          <v-slide-x-reverse-transition>
-          <div class="newElement panel" v-if="showNew">
-            <v-card >
-            <v-card-title><label>New Element</label></v-card-title>
-            <v-card-text class="panelrow row pa-0 ma-0">
-            <div class="panelitem previewpanel col  ma-0"> 
-              <div class="previewcontainer">
-                <PreviewSvg previewMode="edit" :elements="[newRuleElement]" svgRef="previewSvg" :useGrid="true" />
-              </div>
+        
+          <div clas="col col1">
+            <v-btn @click="handleClose" v-if="handleClose">x</v-btn>
+          </div>
+        </div>
+        </v-card-title>
+        <v-card-text class="panelrow row pa-0 ma-0">     
+          <div class="panelitem previewpanel col  ma-0"> 
+            <div class="previewcontainer">
+              <PreviewSvg previewMode="edit" :elements="[newRuleElement]" svgRef="previewSvg" :useGrid="true" />
             </div>
+          </div>
               
               <div class="panelitem col  ma-0 ">
                 <div class="tabrow row ma-0">
@@ -212,161 +141,25 @@
                 </div>
               </div>
               
-            </v-card-text>
-            <v-card-actions>
-              <v-btn color="primary" small @click="() => handleAddElement()" :disabled="isNaN(toggle_type)">Add</v-btn> 
-              <v-btn outlined small @click="() => {this.showNew = false}">Cancel</v-btn> 
-              <span class="body-2 pl-4" v-if="isNaN(toggle_type)">Select a rule type</span>
-            </v-card-actions>
-              
-            </v-card>
-          </div>
-          </v-slide-x-reverse-transition> 
-  
-  
+        </v-card-text>
+ </v-card>
   </div>
 </template>
 
 <style lang="scss">
-.optionsControl{
-  // width: 100%;
-  // background: #333;
-  height: 100%;
-  // overflow: scroll;
-  // position: relative;
-  flex-basis: 100%;
-  flex-shrink: 1;
-  flex-grow: 0;
-}
-.newElement.panel{
-  box-shadow: 0 0 1rem black;
-  position: absolute;
-  z-index: 99999;
-  left: 1rem;
-  right: 1rem;
-  bottom: 2rem;
-  top: 1rem;
-  &.edit{
-    background: #333;
-    border-radius: .5rem;
-    border: 1px solid var(--line-color);
-  }
-  
-  // height: 100%;
-  &:before{
-    position: absolute;
-    z-index: -1;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    content: "";
-  }
-  .panelrow{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-  }
-  .panelitem{
-    flex-basis: 50%;
-    flex-shrink: 0;
-    &.previewpanel{
-      border-right: 1px solid var(--line-color);
-      .previewcontainer{
-        width: 100%;
-        justify-content: center;
-        display: flex;
-      }
-    }
-  }
-  .v-card.v-sheet{
-    height: 100%;
-    border: 1px solid var(--line-color);
-    display: flex;
-    flex-direction: column;
-    .v-card__title{
-      padding-top: .25rem;
-      padding-bottom: .25rem;
-      border-bottom: 1px solid var(--line-color);
-    }
-    .v-card__text{
-      overflow: scroll;
-      border-bottom: 1px solid var(--line-color);
-      
-    }
-  }
-}
-.elementRow{
-  margin: .25rem 0;
-  background: var(--line-color);
-  padding: .25rem;
-  border-radius: .5rem;
-}
-.v-btn.typeSelectButton{
-  height: 40px !important;
-}
-.typeSelectButton .v-btn__content{
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.buttonRow{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-  > .v-btn{
-    // border: 1px solid var(--line-color);
-    border-radius: 2px;
-    &:first-child{
-      border-radius: .75rem 0 0 .75rem;
-    }
-    &:last-child{
-      border-radius: 0 .75rem  .75rem 0 ;
-    }
-  }
-}
-.typeSelectWrap{
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));
-  grid-auto-rows: 1fr; 
-  gap: 0px 0px; 
-}
-.tabrow{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .newRuleTabButton{
-    border-radius: 0px;
-    background-color: #333;
-    &:first-child{
-      border-radius: 4px 0 0 4px;
-    }
-    &:last-child{
-      border-radius: 0 4px  4px 0 ;
-    }
-  }
-}
+
 </style>
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { v4 as uuidv4 } from 'uuid';
-import RecipeTriangle from './RecipeTriangle.vue';
-import RecipeRectangle from './RecipeRectangle.vue';
-import { dialog } from '@devlop-ab/dialog';
-import RuleTransform from './RuleTransform.vue';
-import RuleOffset from './RuleOffset.vue';
 export default {
-  components: { RecipeTriangle, RecipeRectangle, RuleTransform, RuleOffset },
+  props: ["ruledata", "handleClose", "mode"],
+  
   data() {
     return {
       tabView: 'meta',
       showNew: false,
-      showEdit:false,
       newElementLabel: "New Rule",
       newElementCount: 1,
       newElementX: 100,
@@ -379,7 +172,7 @@ export default {
       toggle_mode: 0,
       toggle_count: 1,
       elements: [],
-      editData: null,
+      editElement: null,
       newElementAnimations: {
         useAnimation: false,
         animationMode: 'generative',
@@ -473,8 +266,12 @@ export default {
     };
   },
   created(){
+    console.log('this', this)
+    const {ruledata} = this;
     const {svgData} = this;
-    // console.log('svgData', svgData)
+    if(ruledata){
+      console.log('ruledata', ruledata)
+    }
     if(!svgData){return}
     const {elements} = svgData
     this.elements = elements;
@@ -611,15 +408,13 @@ export default {
       newArray.push(tempObject)
       this.setSvgElements(newArray);
       this.showNew = false
-      this.showEdit = false
     },
     handleEditElement(index){
       const {svgData} = this;
       const {elements} = svgData;
       const sourceElement = elements[index];
-      this.editData = sourceElement
-      this.showNew = false
-      this.showEdit = true
+      this.editElement = sourceElement
+      this.showNew = true
     },
     setNewElementOptions(){
       const {svgData} = this;

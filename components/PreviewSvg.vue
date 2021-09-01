@@ -210,7 +210,7 @@ export default {
       const animationToString = `transform:  translateX(${animationOffsetX || 0}px) translateY(${animationOffsetY  || 0}px) scale(${animationScale  || 1}) rotate(${animationRotation}deg);`
       reference.attr({class: className})
         .style(`@keyframes test${className} { from {transform:  translateX(${0}px) translateY(${0}px) scale(1) rotate(0deg) ;} to { ${animationMode === 'generative' ? generativeAnimationToString : animationToString} }}`)
-        .style(`.${className}`, {animation: `2s ease-in-out 0s infinite alternate test${className}`})
+        .style(`.${className}`, {animation: `2s cubic-bezier(.65,0,.39,1) 0s infinite alternate test${className}`})
     },
     renderColor(reference, data, options, svg){
       const {
