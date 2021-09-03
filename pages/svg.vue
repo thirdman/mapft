@@ -9,7 +9,12 @@
             <PreviewToggle :code="svgCode" :previewData="previewData"/>
             <div class=" previewColumn svgPreviewColumn col">
               <client-only>
-                  <PreviewSvg :code="svgCode" :showGrid="false" :previewMode="previewMode" v-if="previewMode === 'edit' || previewMode === 'full'" :calculateCode="true" :setBytes="setPreviewBytes" />
+                    <!-- ref="test" -->
+                    <!-- :svgRef="this.$refs.test" -->
+                  <PreviewSvg
+                    ref="test"
+                    :code="svgCode"
+                    :showGrid="false" :previewMode="previewMode" v-if="previewMode === 'edit' || previewMode === 'full'" :calculateCode="true" :setBytes="setPreviewBytes" />
                   <!-- :previewData="previewData" -->
                   <div v-if="previewMode === 'full'" class="fullPreviewControls">
                     <v-btn 
@@ -22,6 +27,9 @@
                   </div>
               </client-only>
               <v-divider />
+              <div class="previewMetaBox col" v-if="svgData">
+                <v-btn x-small @click="handleSaveFile">Save Image</v-btn>
+              </div>
               <div class="previewMetaBox col" v-if="previewMode === 'edit' && previewBytes">
                 <div class="row" >
                   <div class="col">
@@ -156,7 +164,21 @@ console.log('this', this.svgData)
       setPreviewMode: "svgFormStore/setPreviewMode",
       setPreviewBytes: "svgFormStore/setBytes",
     }),
-    
+    ...mapActions({
+      createSvgFile: "svgFormStore/createSvgFile",
+    }),
+   handleSaveFile(){
+     console.log('here', this.svgData)
+     console.log('here', this.$refs.test)
+     const options = {
+       node : this.$refs.test,
+       width: 1600,
+       height: 1600,
+     }
+     if(this.$refs.test){
+       this.createSvgFile(options)
+     }
+   } 
   }
 }
 </script>

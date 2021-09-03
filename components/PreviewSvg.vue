@@ -72,14 +72,14 @@ export default {
    }
   },
   mounted() {
-    console.log('mounted refs:', this.$refs)
+    // console.log('mounted refs:', this.$refs)
     this.$nextTick(function() {
       const {svg} = this.$refs
       const ref = this.svgRef
       const propElements = this.elements;
       const propsExist = !!propElements;
       const target = propsExist ? ref : svg;
-      console.log('propElements', propElements, propsExist, target);
+      // console.log('propElements', propElements, propsExist, target);
       if(!target){return}
         this.handleConstruct(_, _, target);
     });
@@ -186,12 +186,12 @@ export default {
       theElements.map(recipe => {
         const recipeType = recipe.type;
         const selectedMethod =  methodArray[recipeType];
-        console.log('iterationsArray', iterationsArray)
+        
         if(!selectedMethod){return }
-        console.log('recipe.count', recipe, recipe.count)
+        // console.log('recipe.count', recipe, recipe.count)
         const iterationsArray = [...Array(Number(recipe.count))];
-        console.log('iterationsArray', iterationsArray)
-          iterationsArray.map((_, i) => {
+        // console.log('iterationsArray', iterationsArray)
+        iterationsArray.map((_, i) => {
           this[selectedMethod](theSvg, data, recipe.options, recipe.mode)
         })        
       })
@@ -246,7 +246,6 @@ export default {
             color: strokeColor
           })
           .fill(gradient)
-          console.log('reference', reference)
         }
         else{
           reference

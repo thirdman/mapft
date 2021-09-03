@@ -2,9 +2,10 @@
   <div class="newElement panel edit">
     <v-card >
       <v-card-title>
-        <div class="row" style="width: 100%">
+        <div class="row ma-0 pa-0" style="width: 100%">
           <div class="col">
-            <label>New/Edit</label>
+            <label>{{mode}} Rule{{tempElementOptions.label}} - {{tempElementOptions.type}}</label>
+              <v-btn @click="handleReset">reset</v-btn>
           </div>
         
           <div clas="col col1">
@@ -18,131 +19,149 @@
               <PreviewSvg previewMode="edit" :elements="[newRuleElement]" svgRef="previewSvg" :useGrid="true" />
             </div>
           </div>
-              
-              <div class="panelitem col  ma-0 ">
-                <div class="tabrow row ma-0">
-                  <v-btn   
-                    x-small
-                    depressed
-                    :color="tabView === 'meta' ? 'primary':'secondary'"
-                    @click="setRuleView('meta')"
-                    class="newRuleTabButton"
-                  >
-                    META
-                  </v-btn>
-                  <v-btn   
-                    x-small
-                    depressed
-                    elevation="0"
-                    :disabled="isNaN(toggle_type)"
-                    :color="tabView === 'position' ? 'primary':'secondary'"
-                    @click="setRuleView('position')"
-                    class="newRuleTabButton"
-                  >
-                    position
-                  </v-btn>
-                  <v-btn   
-                    x-small
-                    depressed
-                    :disabled="isNaN(toggle_type)"
-                    :color="tabView === 'transform' ? 'primary':'secondary'"
-                    @click="setRuleView('transform')"
-                    class="newRuleTabButton"
-                  >
-                    TRANSFORM
-                  </v-btn>
-                  <v-btn   
-                    x-small
-                    depressed
-                    :disabled="isNaN(toggle_type)"
-                    :color="tabView === 'animation' ? 'primary':'secondary'"
-                    @click="setRuleView('animation')"
-                    class="newRuleTabButton"
-                  >
-                    ANIMATION
-                  </v-btn>
-                </div>
-                
-                <div class="row" v-if="tabView === 'meta'">
-                  <div class="col">
-                  <label>Type</label><br />
-                  <v-btn-toggle 
-                    v-model="toggle_type"
-                    dense
-                    @change="handleType"
-                    class="typeSelectWrap"
-                  >
-                    <v-btn small v-for="(item, index) in typeArray" :key="index" class="typeSelectButton">
-                      <v-icon small v-if="item==='background'">mdi-square</v-icon>
-                      <v-icon small v-if="item==='polygon'">mdi-vector-polygon</v-icon>
-                      <v-icon small v-if="item==='circle'">mdi-vector-circle</v-icon>
-                      <v-icon small v-if="item==='triangle'">mdi-vector-triangle</v-icon>
-                      <v-icon small v-if="item==='rectangle'">mdi-vector-rectangle</v-icon>
-                      <v-icon small v-if="item==='line'">mdi-vector-line</v-icon>
-                      <v-icon small v-if="item==='blob'">mdi-vector-ellipse</v-icon>
-                      <v-icon small v-if="item==='art'">mdi-cloud</v-icon>
-                      {{item}}
-                    </v-btn>
-                  </v-btn-toggle>
-                  </div>
-                </div>
-                <div class="row" v-if="tabView === 'meta'">
-                  <div class="col ">
-                    <label>Label</label><br />
-                      <v-text-field small filled clearable outlined dense v-model="newElementLabel" hint="text identifier for clarity">
-                    </v-text-field>
-                  </div>
-                </div>
-                <div class="row" v-if="tabView === 'meta'">
-                  <div class="col">
-                    <label>Mode</label><br />
-                    <v-btn-toggle 
-                      v-model="toggle_mode"
-                      dense
-                    >
-                      <v-btn small v-for="(item, index) in modeArray" :key="index" :color="toggle_mode === index ? 'primary' : 'secondary'">
-                        {{item}}
-                      </v-btn>
-                    </v-btn-toggle>
-                    
-                    <p class="text-body2" v-if="modeArray[toggle_mode] === 'static'">A single element</p>
-                    <p class="text-body2" v-if="modeArray[toggle_mode] === 'repeating'">Repeat element with offset values</p>
-                    <p class="text-body2" v-if="modeArray[toggle_mode] === 'generative'">Randomly positioned elements</p>
-                  </div>
-                  <div class="col">
-                    <label>Count</label><br />
-                    <v-text-field  filled outlined dense v-model="newElementCount" />
-                  </div>
-                </div>
-                <div class="row" v-if="tabView=== 'position'">
-                  <div class="col">
-                  <recipe-background :value.sync="backgroundElementOptions" v-if="typeArray[toggle_type] === 'background'" />
-                  <recipe-rectangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'rectangle'" />
-                  <recipe-triangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'triangle'" />
-                  <recipe-circle :value.sync="newElementCircleOptions" v-if="typeArray[toggle_type] === 'circle'" />
-                  <recipe-line :value.sync="newElementLineOptions" v-if="typeArray[toggle_type] === 'line'" />
-                  <recipe-art :value.sync="newElementArtOptions" v-if="typeArray[toggle_type] === 'art'" />
-                  </div>
-                </div>
-                <div class="row" v-if="tabView=== 'position'">
-                  <div class="col">
-                    <rule-offset :value.sync="newElementOffsets" />
-                  </div>
-                </div>
-                <div class="row" v-if="tabView=== 'transform'">
-                  <div class="col">
-                    <rule-transform :value.sync="newElementTransforms" />
-                  </div>
-                </div>
-                <div class="row" v-if="tabView=== 'animation'">
-                  <div class="col">
-                    <rule-animation :value.sync="newElementAnimations" />
-                  </div>
-                </div>
+          <div class="panelitem col  ma-0 ">
+            <div class="tabrow row ma-0">
+              <v-btn   
+                x-small
+                depressed
+                :color="tabView === 'meta' ? 'primary':'secondary'"
+                @click="setRuleView('meta')"
+                class="newRuleTabButton"
+              >
+                META
+              </v-btn>
+              <v-btn   
+                x-small
+                depressed
+                elevation="0"
+                :disabled="isNaN(toggle_type)"
+                :color="tabView === 'position' ? 'primary':'secondary'"
+                @click="setRuleView('position')"
+                class="newRuleTabButton"
+              >
+                position
+              </v-btn>
+              <v-btn   
+                x-small
+                depressed
+                :disabled="isNaN(toggle_type)"
+                :color="tabView === 'transform' ? 'primary':'secondary'"
+                @click="setRuleView('transform')"
+                class="newRuleTabButton"
+              >
+                TRANSFORM
+              </v-btn>
+              <v-btn   
+                x-small
+                depressed
+                :disabled="isNaN(toggle_type)"
+                :color="tabView === 'animation' ? 'primary':'secondary'"
+                @click="setRuleView('animation')"
+                class="newRuleTabButton"
+              >
+                ANIMATION
+              </v-btn>
+            </div>
+            <rule-info
+              v-if="tabView === 'meta'"
+              :type="tempElementOptions.type"
+              :mode="mode"
+              :rule="ruledata"
+              :value.sync="tempElementOptions"
+              />
+              <!-- :value.sync="ruleOptions" -->
+            <!-- <div class="row" v-if="tabView === 'meta'">
+              <div class="col">
+              <label>Type</label><br />
+              <v-btn-toggle 
+                v-model="toggle_type"
+                dense
+                @change="handleType"
+                class="typeSelectWrap"
+              >
+                <v-btn small v-for="(item, index) in typeArray" :key="index" class="typeSelectButton">
+                  <v-icon small v-if="item==='background'">mdi-square</v-icon>
+                  <v-icon small v-if="item==='polygon'">mdi-vector-polygon</v-icon>
+                  <v-icon small v-if="item==='circle'">mdi-vector-circle</v-icon>
+                  <v-icon small v-if="item==='triangle'">mdi-vector-triangle</v-icon>
+                  <v-icon small v-if="item==='rectangle'">mdi-vector-rectangle</v-icon>
+                  <v-icon small v-if="item==='line'">mdi-vector-line</v-icon>
+                  <v-icon small v-if="item==='blob'">mdi-vector-ellipse</v-icon>
+                  <v-icon small v-if="item==='art'">mdi-cloud</v-icon>
+                  {{item}}
+                </v-btn>
+              </v-btn-toggle>
               </div>
+            </div> -->
+            
+            <div class="row" v-if="tabView === 'meta'">
+              <div class="col">
+                <label>Mode</label><br />
+                <v-btn-toggle 
+                  v-model="toggle_mode"
+                  dense
+                >
+                  <v-btn
+                    small
+                    v-for="(item, index) in modeArray"
+                    :key="index"
+                    :color="toggle_mode === index ? 'primary' : 'secondary'"
+                    @click="() => tempElementOptions.mode = item"
+                    >
+                    {{item}}
+                  </v-btn>
+                </v-btn-toggle>
+                
+                <p class="text-body2" v-if="modeArray[toggle_mode] === 'static'">A single element</p>
+                <p class="text-body2" v-if="modeArray[toggle_mode] === 'repeating'">Repeat element with offset values</p>
+                <p class="text-body2" v-if="modeArray[toggle_mode] === 'generative'">Randomly positioned elements</p>
+              </div>
+              <div class="col">
+                <label>Count</label><br />
+                <v-text-field  filled outlined dense v-model="tempElementOptions.count" />
+              </div>
+            </div>
+            <div class="row" v-if="tabView=== 'position'">
+              <div class="col">
+              <recipe-background :value.sync="backgroundElementOptions" v-if="typeArray[toggle_type] === 'background'" />
+              <recipe-rectangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'rectangle'" />
+              <recipe-triangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'triangle'" />
+              <recipe-circle :value.sync="newElementCircleOptions" v-if="typeArray[toggle_type] === 'circle'" />
+              <recipe-line :value.sync="newElementLineOptions" v-if="typeArray[toggle_type] === 'line'" />
+              <recipe-art :value.sync="newElementArtOptions" v-if="typeArray[toggle_type] === 'art'" />
+              </div>
+            </div>
+            <div class="row" v-if="tabView=== 'position'">
+              <div class="col">
+                <rule-offset :value.sync="newElementOffsets" />
+              </div>
+            </div>
+            <div class="row" v-if="tabView=== 'transform'">
+              <div class="col">
+                <rule-transform :value.sync="newElementTransforms" />
+              </div>
+            </div>
+            <div class="row" v-if="tabView=== 'animation'">
+              <div class="col">
+                <rule-animation :value.sync="newElementAnimations" />
+              </div>
+            </div>
+          </div>
               
         </v-card-text>
- </v-card>
+      <v-card-actions>
+          <v-btn
+          color="red" 
+          small
+          @click="() => handleUpdateRule()"
+          v-if="mode === 'edit'"
+          :disabled="isNaN(toggle_type)"
+          >Update
+          </v-btn>
+        <v-btn outlined small @click="handleClose" v-if="handleClose">Cancel</v-btn> 
+        <!-- <span class="body-2 pl-4" v-if="isNaN(toggle_type)">Select a rule type</span> -->
+      </v-card-actions>          
+    </v-card>
   </div>
 </template>
 
@@ -153,9 +172,13 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { v4 as uuidv4 } from 'uuid';
+import RuleInfo from './RuleInfo.vue';
 export default {
-  props: ["ruledata", "handleClose", "mode"],
-  
+  props: {
+    mode: { type: String, default: "new" },
+    ruledata: { type: Object, default: null },
+    handleClose: {type: Function, default: null},
+  },
   data() {
     return {
       tabView: 'meta',
@@ -173,6 +196,12 @@ export default {
       toggle_count: 1,
       elements: [],
       editElement: null,
+      ruleOptions: {
+        rotationOffset: null,
+        offsetX: 0,
+        offsetY: 0,
+        example: "goffset"
+      },
       newElementAnimations: {
         useAnimation: false,
         animationMode: 'generative',
@@ -192,6 +221,17 @@ export default {
         offsetX: 0,
         offsetY: 0,
         example: "goffset"
+      },
+      tempElementOptions: {
+        hue: null,
+        x: 0,
+        y: 0,
+        w: 50,
+        h: 110,
+        rotation: 0,
+        hasStroke: true,
+        hasFill: true,
+        rotationOptions: [0, 90, 180, 270],
       },
       newElementOptions: {
         hue: null,
@@ -266,17 +306,42 @@ export default {
     };
   },
   created(){
-    console.log('this', this)
     const {ruledata} = this;
     const {svgData} = this;
     if(ruledata){
       console.log('ruledata', ruledata)
+      const tempOptions = {...ruledata.options, 
+        type: ruledata.type, 
+        count: ruledata.count  || ruledata.options.label, 
+        label: ruledata.label || ruledata.options.label, 
+        // canvasWidth: ruledata.canvasWidth, 
+        // canvasHeight: ruledata.canvasHeight
+      }
+      console.log('tempOptions', tempOptions)
+      if(!tempOptions.label){
+        tempOptions.label = "test"
+      }
+      this.ruleOptions = tempOptions;
+      this.tempElementOptions = tempOptions;
+      console.log('tempElementOptions is now: ',  this.tempElementOptions)
+      const {elements} = ruledata;
+      console.log('elements is now: ', elements)
+      this.elements = elements;
+      // this.setRuleOptions(ruledata);  
     }
     if(!svgData){return}
     const {elements} = svgData
     this.elements = elements;
-    this.setNewElementOptions();
+    this.setRuleOptions(svgData);
   },
+  // watch: {
+  //   tempElementOptions: {
+  //     handler(newValue) {
+  //       console.log('tempElementOptions Updated', newValue)
+  //     },
+  //     immediate: true,
+  //   },
+  // },
   computed: {
     ...mapGetters({
       //UI
@@ -285,8 +350,9 @@ export default {
       svgData: "svgFormStore/svgData",
       previewBytes: "svgFormStore/previewBytes",
     }),
-    newRuleOptions(){
-      const {typeArray, 
+    compileOptions(){
+      const {
+      typeArray, 
       toggle_type, 
       newElementOptions, 
       newElementOffsets, 
@@ -298,7 +364,7 @@ export default {
       newElementCount
       } = this
       const type = typeArray[toggle_type]
-      // console.log('newRuleoptions type', type, typeArray, toggle_type)
+      
       if(!type){return}
       let selectedOptions = newElementOptions; // default
       if(type === 'circle') {
@@ -319,14 +385,15 @@ export default {
       return mergedSelectedOptions
     },
     newRuleElement(){
-      const {  typeArray, toggle_type, modeArray, toggle_mode, newElementLabel, newElementCount } = this
+      const { mode,  ruledata, typeArray, toggle_type, modeArray, toggle_mode, newElementLabel, newElementCount } = this
+      let source = ruledata || this.svgData;
+      
+      console.log('mode is', mode, source);
+      if(mode === 'new'){
       const type = typeArray[toggle_type]
       const mode = modeArray[toggle_mode]
       console.log('newRule', {type, mode})
-      // const selectedTranforms = this.newElementTransforms;
-      // const {rotation, minSize, maxSize, example} = selectedTranforms
-      const selectedOptions = this.newRuleOptions;
-      console.log('newrule selectedOptions', selectedOptions)
+      const selectedOptions = this.compileOptions;
       const tempValue = {
         label: "test",
         id: newElementLabel || 'new rule',
@@ -337,6 +404,12 @@ export default {
       }
       console.log('newRule', tempValue)
       return !isNaN(toggle_type) ? tempValue : null
+      } else {
+        const {options} = ruledata
+        const tempOptions = {...options}
+        // this.ruleOptions = tempOptions;
+        return tempOptions
+      }
     }
     
     
@@ -416,10 +489,10 @@ export default {
       this.editElement = sourceElement
       this.showNew = true
     },
-    setNewElementOptions(){
-      const {svgData} = this;
-      this.newElementOptions.w = svgData.canvasWidth;
-      this.newElementOptions.h = svgData.canvasHeight;
+    setRuleOptions(data){
+      this.ruleOptions = data.options
+      this.newElementOptions.w = data.canvasWidth;
+      this.newElementOptions.h = data.canvasHeight;
     },
     async moveElement(fromIndex, direction){
 
@@ -442,6 +515,35 @@ export default {
     //     okText: 'ok!',
     // });
       this.setSvgElements(sorted);
+    },
+    handleUpdateRule(){
+      const {elements} = this.svgData;
+      console.log('handleupdate', this.tempElementOptions)
+      // console.log('add element newRuleElement', this.newRuleElement)
+      const sourceOptions = this.tempElementOptions;
+      const tempObject = {
+        ...this.ruledata,
+        label: sourceOptions.label || this.ruledata.label,
+        type: sourceOptions.type || this.ruledata.type,
+        mode: sourceOptions.mode || this.ruledata.mode,
+        count: sourceOptions.count || this.ruledata.count,
+        options: sourceOptions,
+      }
+      console.log('tempObject', tempObject)
+      if(!this.ruledata){ return};
+      const tempArray = elements.slice()
+      const indexToUpdate =  tempArray.findIndex(el => el.id === this.ruledata.id );
+      if (indexToUpdate < 0){return}
+      tempArray[indexToUpdate] = tempObject;
+      console.log('tempArray', tempArray)
+      this.setSvgElements(tempArray);
+      this.handleReset()
+      this.handleClose()
+    },
+    handleReset(){
+      if(this.ruledata){
+        this.tempElementOptions = this.ruledata.options
+      }
     },
     arrayMove(arr, fromIndex, toIndex) {
       var element = arr[fromIndex];

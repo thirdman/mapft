@@ -3,8 +3,9 @@
     <v-slide-x-reverse-transition>
       <edit-element
         v-if="showEdit" 
-        :handleClose="() => {this.showEdit = false}" 
-        :ruledata="editData || 'ggg'"
+        :handleClose="handleClose" 
+        :ruledata="editData"
+        mode="edit"
         />
     </v-slide-x-reverse-transition>
     <div class="" v-if="!showNew">
@@ -620,6 +621,10 @@ export default {
       this.editData = sourceElement
       this.showNew = false
       this.showEdit = true
+    },
+    handleClose(){
+      this.showEdit = false
+      this.editData = null
     },
     setNewElementOptions(){
       const {svgData} = this;
