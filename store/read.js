@@ -6,11 +6,7 @@ export const getters = {
   showSearch: (state) => state.showSearch,
 };
 export const mutations = {
-  setShowSearch(state, value) {
-    state.showSearch = value;
-  },
-  handleSearch(state, value) {
-    console.log("value", value);
-    // state.showAccount = value
+  gareth(state, value) {
+    console.log(state);
   },
 };
