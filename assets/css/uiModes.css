@@ -31,14 +31,15 @@ header.minimal .headerRow {
 header.minimal .navItem {
   font-weight: 800;
   font-variation-settings: "wght" 800;
-  /* line-height: calc(var(--header-height-minimal, 2.5rem) - 1px); */
+  /* line-height: 2rem; */
+
   font-size: 0.875rem;
   padding: 0;
-}
-
-header.minimal .navItem:first-child .navLink {
-  border-left: none;
-  border-right: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
 }
 
 header.minimal .headerRow .brand {
@@ -66,7 +67,7 @@ header.minimal .headerRow .logoBg {
   display: none;
 }
 header.minimal .headerRow .navRow {
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
 }
 header.minimal .headerRow .navRow .navItem {
@@ -76,15 +77,15 @@ header.minimal .headerRow .navRow .navItem .navLink {
   border-left: none;
 }
 header.minimal .headerRow .navRow .navItem .navLink:hover {
-  background-color: transparent !important;
-  color: var(--ui-color) !important;
-  transform: translateY(0);
+  /* background-color: transparent !important; */
+  /* color: var(--ui-color) !important; */
+  /* transform: translateY(0);
   box-shadow: none;
   border: none;
   margin-left: 0;
-  z-index: 20;
-  height: unset;
-  line-height: unset;
+  z-index: 20; */
+  /* height: unset;
+  line-height: unset; */
 }
 
 header.minimal .headerRow .search {

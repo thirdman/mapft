@@ -113,9 +113,9 @@ export default {
     }
   },
   head: {
-    title: 'InfiNFT: Galleries',
+    title: 'SVG: Galleries',
     meta: [
-      { hid: "og:title", name: "og:title", content: "InfiNFT: Galleries" },
+      { hid: "og:title", name: "og:title", content: "SVG: Galleries" },
       {
         hid: 'og:description',
         name: 'og:description',

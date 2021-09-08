@@ -16,7 +16,13 @@
         <v-card-text class="panelrow row pa-0 ma-0">     
           <div class="panelitem previewpanel col  ma-0"> 
             <div class="previewcontainer">
-              <PreviewSvg previewMode="edit" :elements="[newRuleElement]" svgRef="previewSvg" :useGrid="true" />
+                <!-- :elements="{type: 'circle', elements: [tempElementOptions]}" -->
+              <PreviewSvg
+                previewMode="edit"
+                :previewData="this.compileElement()"
+                svgRef="previewSvg"
+                :useGrid="true"
+                />
             </div>
           </div>
           <div class="panelitem col  ma-0 ">
@@ -40,6 +46,17 @@
                 class="newRuleTabButton"
               >
                 position
+              </v-btn>
+              <v-btn   
+                x-small
+                depressed
+                elevation="0"
+                :disabled="isNaN(toggle_type)"
+                :color="tabView === 'color' ? 'primary':'secondary'"
+                @click="setRuleView('color')"
+                class="newRuleTabButton"
+              >
+                COLOR
               </v-btn>
               <v-btn   
                 x-small
@@ -68,6 +85,7 @@
               :mode="mode"
               :rule="ruledata"
               :value.sync="tempElementOptions"
+              :readOnly="mode=== 'edit'"
               />
               <!-- :value.sync="ruleOptions" -->
             <!-- <div class="row" v-if="tabView === 'meta'">
@@ -121,14 +139,19 @@
                 <v-text-field  filled outlined dense v-model="tempElementOptions.count" />
               </div>
             </div>
-            <div class="row" v-if="tabView=== 'position'">
+            <div class="row" v-if="tabView==='position'">
               <div class="col">
-              <recipe-background :value.sync="backgroundElementOptions" v-if="typeArray[toggle_type] === 'background'" />
-              <recipe-rectangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'rectangle'" />
-              <recipe-triangle :value.sync="newElementOptions" v-if="typeArray[toggle_type] === 'triangle'" />
-              <recipe-circle :value.sync="newElementCircleOptions" v-if="typeArray[toggle_type] === 'circle'" />
-              <recipe-line :value.sync="newElementLineOptions" v-if="typeArray[toggle_type] === 'line'" />
-              <recipe-art :value.sync="newElementArtOptions" v-if="typeArray[toggle_type] === 'art'" />
+              <recipe-background :value.sync="tempElementOptions" v-if="tempElementOptions.type === 'background'" />
+              <recipe-rectangle :value.sync="tempElementOptions" v-if="tempElementOptions.type === 'rectangle'" />
+              <recipe-triangle :value.sync="tempElementOptions" v-if="tempElementOptions.type === 'triangle'" />
+              <recipe-circle :value.sync="tempElementOptions" v-if="tempElementOptions.type === 'circle'" />
+              <recipe-line :value.sync="newElementLineOptions" v-if="tempElementOptions.type === 'line'" />
+              <recipe-art :value.sync="newElementArtOptions" v-if="tempElementOptions.type === 'art'" />
+              </div>
+            </div>
+            <div class="row" v-if="tabView=== 'color'">
+              <div class="col">
+                <rule-color :value.sync="tempElementOptions" />
               </div>
             </div>
             <div class="row" v-if="tabView=== 'position'">
@@ -141,6 +164,12 @@
                 <rule-transform :value.sync="newElementTransforms" />
               </div>
             </div>
+            <div class="row" v-if="tabView==='transform'">
+              <div class="col">
+                <rule-repeat :value.sync="newElementRepeats"/>
+              
+              </div>
+            </div>
             <div class="row" v-if="tabView=== 'animation'">
               <div class="col">
                 <rule-animation :value.sync="newElementAnimations" />
@@ -150,6 +179,14 @@
               
         </v-card-text>
       <v-card-actions>
+          <v-btn
+            small
+            @click="() => handleAddRule()"
+            v-if="mode === 'new'"
+            :disabled="isNaN(toggle_type)"
+          >
+            Add
+          </v-btn>
           <v-btn
           color="red" 
           small
@@ -214,13 +251,40 @@ export default {
         rotation: null,
         minSize: 100,
         maxSize: 900,
-        
+      },
+      newElementRepeats:{
+        x: 0,
+        y: 0,
+        w: 100,
+        h: 100,
+        hex: '#ff00ff',
+        rotation: 0,
+        rotationOffset: 0,
+        offsetX: 0,
+        offsetY: 20,
+        transformX: 0,
+        transformY: 0,
+        iterations: 10,
+        minSize: 100,
+        maxSize: 900,
+        canvasHeight: 1600,
+        canvasWidth: 1600,
       },
       newElementOffsets:{
         rotationOffset: null,
         offsetX: 0,
         offsetY: 0,
         example: "goffset"
+      },
+      newElementColors:{
+        // fillType: 'theme',
+        // hex: null,
+        // fillColor: null,
+        // strokeSize: 10,
+        // strokeColor: "#ff00ff",
+        // hasStroke: true,
+        // hasFill: true,
+        // useGradient: false,
       },
       tempElementOptions: {
         hue: null,
@@ -229,35 +293,33 @@ export default {
         w: 50,
         h: 110,
         rotation: 0,
-        hasStroke: true,
-        hasFill: true,
+        angle: 45,
         rotationOptions: [0, 90, 180, 270],
-      },
-      newElementOptions: {
-        hue: null,
-        x: 0,
-        y: 0,
-        w: 50,
-        h: 110,
-        rotation: 0,
-        hasStroke: true,
-        hasFill: true,
-        rotationOptions: [0, 90, 180, 270],
-      },
-      newElementCircleOptions: {
-        hue: null,
-        x: 0,
-        y: 0,
-        w: 400,
-        h: 400,
         minSize: 100,
         maxSize: 900,
-        rotation: 0,
-        hasStroke: true,
+        fillType: 'theme',
+        color: {},
+        hex: "#609CD8",
+        fillColor: null,
+        strokeSize: 10,
+        strokeColor: "#ff00ff",
+        hasStroke: false,
         hasFill: true,
-        useGradient: true,
-        rotationOptions: [0, 90, 180, 270],
+        useGradient: false,
+        lineCap: 'round',
       },
+      newElementOptions: {
+        // hue: null,
+        // x: 0,
+        // y: 0,
+        // w: 50,
+        // h: 110,
+        // rotation: 0,
+        // hasStroke: true,
+        // hasFill: true,
+        // rotationOptions: [0, 90, 180, 270],
+      },
+      
       newElementLineOptions: {
         x: 0,
         y: 0,
@@ -282,15 +344,7 @@ export default {
         hasFill: false,
       },
       backgroundElementOptions: {   
-        type: 'gradient',
-        "color": {},
-        hex: "#609CD8",
-        h: 200,
-        l: 0.61,
-        s: 0.60,
-        angle: 45,
-        hasStroke: true,
-        hasFill: true,
+        
       },
       newElementArtOptions: {   
         type: 'static',
@@ -306,16 +360,17 @@ export default {
     };
   },
   created(){
-    const {ruledata} = this;
+    const {ruledata, mode} = this;
     const {svgData} = this;
+    console.log('mode', mode)
     if(ruledata){
       console.log('ruledata', ruledata)
       const tempOptions = {...ruledata.options, 
         type: ruledata.type, 
         count: ruledata.count  || ruledata.options.label, 
         label: ruledata.label || ruledata.options.label, 
-        // canvasWidth: ruledata.canvasWidth, 
-        // canvasHeight: ruledata.canvasHeight
+        canvasWidth: ruledata.canvasWidth, 
+        canvasHeight: ruledata.canvasHeight
       }
       console.log('tempOptions', tempOptions)
       if(!tempOptions.label){
@@ -328,6 +383,19 @@ export default {
       console.log('elements is now: ', elements)
       this.elements = elements;
       // this.setRuleOptions(ruledata);  
+    }
+    if(!ruledata){
+      console.log('created. no rule data');
+      const tempOptions = {
+        type: 'circle', 
+        count: 1,
+        label: 'example', 
+        canvasWidth: svgData.canvasWidth, 
+        canvasHeight: svgData.canvasHeight,
+      }
+      this.ruleOptions = tempOptions;
+      this.tempElementOptions = tempOptions;
+      this.elements = [];
     }
     if(!svgData){return}
     const {elements} = svgData
@@ -348,28 +416,27 @@ export default {
       devMode: "ui/devMode",
       // SVG
       svgData: "svgFormStore/svgData",
+      defaultElement: "svgFormStore/defaultElement",
       previewBytes: "svgFormStore/previewBytes",
     }),
     compileOptions(){
       const {
       typeArray, 
       toggle_type, 
-      newElementOptions, 
+      tempElementOptions, 
       newElementOffsets, 
       newElementAnimations,
       backgroundElementOptions, 
       newElementLineOptions, 
-      newElementCircleOptions, 
+      newElementColors,
       newElementArtOptions, 
       newElementCount
       } = this
       const type = typeArray[toggle_type]
       
       if(!type){return}
-      let selectedOptions = newElementOptions; // default
-      if(type === 'circle') {
-        selectedOptions = newElementCircleOptions;
-      }
+      let selectedOptions = tempElementOptions; // default
+      
       if(type === 'background') {
         selectedOptions = backgroundElementOptions;
       }
@@ -380,7 +447,7 @@ export default {
         selectedOptions = newElementArtOptions
       }
       const selectedTranforms = this.newElementTransforms;
-      const mergedSelectedOptions = {...selectedOptions, ...selectedTranforms, ...newElementAnimations, ...newElementOffsets, count: newElementCount };
+      const mergedSelectedOptions = {...selectedOptions, ...selectedTranforms, ...newElementAnimations, ...newElementOffsets, ...newElementColors, count: newElementCount };
       
       return mergedSelectedOptions
     },
@@ -394,6 +461,7 @@ export default {
       const mode = modeArray[toggle_mode]
       console.log('newRule', {type, mode})
       const selectedOptions = this.compileOptions;
+      console.log('selectedOptions', this.compileOptions)
       const tempValue = {
         label: "test",
         id: newElementLabel || 'new rule',
@@ -450,24 +518,22 @@ export default {
       const newArray = temp.filter(el => el.id !== id);
       this.setSvgElements(newArray);
     },
-    handleAddElement(){
-      const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, newElementOptions, newElementCircleOptions, backgroundElementOptions, newElementLineOptions} = this;
-      const {elements} = svgData;
-      const selectedType = typeArray[toggle_type];
-      const selectedMode = modeArray[toggle_mode];
-      console.log('add element newRuleElement', this.newRuleElement)
+    // handleAddElement(){
+    //   const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, backgroundElementOptions, newElementLineOptions} = this;
+    //   const {elements} = svgData;
+    //   const selectedType = typeArray[toggle_type];
+    //   const selectedMode = modeArray[toggle_mode];
+    //   const newId = uuidv4();
       
-      const newId = uuidv4();
-      
-      const tempObject = {
-        ...this.newRuleElement,
-        id: newId,
-      }
-      const newArray = elements.slice()
-      newArray.push(tempObject)
-      this.setSvgElements(newArray);
-      this.showNew = false
-    },
+    //   const tempObject = {
+    //     ...this.newRuleElement,
+    //     id: newId,
+    //   }
+    //   const newArray = elements.slice()
+    //   newArray.push(tempObject)
+    //   this.setSvgElements(newArray);
+    //   this.showNew = false
+    // },
     handleDuplicateElement(index){
       const {svgData} = this;
       const {elements} = svgData;
@@ -491,8 +557,6 @@ export default {
     },
     setRuleOptions(data){
       this.ruleOptions = data.options
-      this.newElementOptions.w = data.canvasWidth;
-      this.newElementOptions.h = data.canvasHeight;
     },
     async moveElement(fromIndex, direction){
 
@@ -516,11 +580,40 @@ export default {
     // });
       this.setSvgElements(sorted);
     },
+    compileElement(){
+      const {ruledata, defaultElement, mode} = this;
+      const {elements} = this.svgData;
+      const sourceOptions = this.tempElementOptions;
+      console.log('defaultElement', defaultElement)
+      const tempObject = ruledata ? {
+        ...this.ruledata,
+        label: sourceOptions.label || ruledata.label,
+        type: sourceOptions.type || ruledata.type,
+        mode: sourceOptions.mode || ruledata.mode,
+        count: sourceOptions.count || ruledata.count,
+        theme:  ruledata.theme || this.svgData.theme,
+        options: sourceOptions,
+      } : {
+        label: "new element",
+        type: 'circle',
+        mode: 'static',
+        count: 1,
+        theme:  this.svgData.theme || this.activeTheme,
+        options: {...defaultElement.options, ...sourceOptions,}
+      }
+      console.log('compileElement', defaultElement, tempObject)
+      const fakeSvg = {...this.svgData, elements: [tempObject]}
+      if(mode === 'new' ){
+
+        // this.tempElementOptions = tempObject.options
+      }
+      // if(!this.ruledata){ return};
+      return fakeSvg
+    },
     handleUpdateRule(){
       const {elements} = this.svgData;
       console.log('handleupdate', this.tempElementOptions)
-      // console.log('add element newRuleElement', this.newRuleElement)
-      const sourceOptions = this.tempElementOptions;
+      const sourceOptions = {...this.tempElementOptions};
       const tempObject = {
         ...this.ruledata,
         label: sourceOptions.label || this.ruledata.label,
@@ -537,6 +630,34 @@ export default {
       tempArray[indexToUpdate] = tempObject;
       console.log('tempArray', tempArray)
       this.setSvgElements(tempArray);
+      this.handleReset()
+      this.handleClose()
+    },
+    
+    handleAddRule(){
+      const {svgData, toggle_mode, toggle_type, typeArray, modeArray, newElementLabel, newElementOptions, newElementCircleOptions, backgroundElementOptions, newElementLineOptions} = this;
+      const {elements} = this.svgData;
+      console.log('handleAdd', this.tempElementOptions)
+      const newId = uuidv4();
+      const sourceOptions = {...this.tempElementOptions};
+      
+      // const tempObject = {
+      //   ...this.newRuleElement,
+      //   id: newId,
+      // }
+      const tempObject = {
+        id: newId,
+        label: sourceOptions.label || "new ule",
+        type: sourceOptions.type || 'circle',
+        mode: sourceOptions.mode || 'static',
+        count: sourceOptions.count || 1,
+        options: sourceOptions,
+      }
+      console.log('tempObject', tempObject)
+      // if(!this.ruledata){ return};
+      const newArray = elements.slice()
+      newArray.push(tempObject)
+      this.setSvgElements(newArray);
       this.handleReset()
       this.handleClose()
     },

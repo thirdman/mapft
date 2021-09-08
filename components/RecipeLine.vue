@@ -38,7 +38,7 @@
     <div class="row">
       <div class="col">
         <label>Line size</label><br />
-          <v-text-field filled outlined dense v-model="localOptions.strokeSize" />
+        <v-text-field filled outlined dense v-model="localOptions.strokeSize" />
       </div>
       <div class="col">
         <label>Line Color</label><br />
@@ -56,7 +56,7 @@
       </div> -->
     </div>
     <div class="row">
-      <div class="col">
+      <!-- <div class="col">
         <label>offset X</label><br />
           <v-text-field filled outlined dense v-model="localOptions.offsetX" />
       </div>
@@ -69,17 +69,16 @@
         <label>Rotation offset</label>
         <br />
         <v-text-field filled outlined dense v-model="localOptions.rotationOffset" />
-      </div>
-      <div class="col">
+      </div> -->
+      <!-- <div class="col">
         <label>Transform X</label>
         <v-text-field filled outlined dense v-model="localOptions.transformX" />
       </div>
       <div class="col">
         <label>Transform Y</label>
         <v-text-field filled outlined dense v-model="localOptions.transformY" />
-      </div>
+      </div> -->
       <div class="col">
-        
         <v-btn @click="handleSpreadEvenly()">Distribute</v-btn>
       </div>
     </div>

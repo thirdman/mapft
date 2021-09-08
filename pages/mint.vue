@@ -30,7 +30,7 @@
               </div>
               <div class="connectBody">
                 <h3>Not Connected</h3>
-                <p >Connect your Ethereum Wallet to use InfiNFT minting</p>
+                <p >Connect your Ethereum Wallet to use SVG minting</p>
               </div>
             </div>
           </transition>
@@ -226,9 +226,9 @@ import ogImagePreview from '~/assets/images/preview.jpg'
 export default {
   name: "MintPage",
    head: {
-    title: 'InfiNFT: Mint Tokens',
+    title: 'Mint Tokens',
     meta: [
-      { hid: "og:title", name: "og:title", content: "InfiNFT: Mint NFT Tokens with on-chain meta" },
+      { hid: "og:title", name: "og:title", content: "Mint SVG Tokens with on-chain meta" },
       {
         hid: 'og:description',
         name: 'og:description',

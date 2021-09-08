@@ -158,7 +158,7 @@ export default {
       // const  {rotationOptions } = this;
       this.color = color.hex;
       this.localOptions.hex = color.hex;
-      this.localOptions.h = color.hsla.h;
+      this.localOptions.hue = color.hsla.h;
       this.localOptions.s = color.hsla.s;
       this.localOptions.l = color.hsla.l;
       this.localOptions.a = color.hsla.a;

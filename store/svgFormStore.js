@@ -1,5 +1,6 @@
+import { v4 as uuidv4 } from "uuid";
 import { getField, updateField } from "vuex-map-fields";
-import { removeFromArrayById } from "./../utils/misc";
+// import { removeFromArrayById } from "./../utils/misc";
 const svgContractAddressRinkeby = "0xbfa26c102a0fefa2233b2e7d32f6d504bebdf3e5";
 const svgContractAddress = "0xa5425971826f48df6509152cf6ace505776aeb69";
 const statusMap = {
@@ -523,18 +524,21 @@ const abiSVG = [
     type: "function",
   },
 ];
+// const defaultCode = `<?xml version="1.0" encoding="UTF-8"?>
+// <svg width="800px" height="536px" viewBox="0 0 800 536" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+//     <g id="logo_lowres" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+//         <g id="Group" transform="translate(0.000000, 1.000000)" fill="#111111" fill-rule="nonzero">
+//             <polygon id="Path" points="8 23.588387 340.523654 219 383 194.24697 48.3383558 0"></polygon>
+//             <polygon id="Path" points="0 40 0 496.742257 40.3763295 520 40.3763295 111.492507 283.588485 252.492253 324 229.624084"></polygon>
+//             <polygon id="Path" points="759.522657 415.38714 516.300558 274.076819 476 296.923928 800 487 800 29.5764496 759.522657 6"></polygon>
+//             <polygon id="Path" points="117 368.266374 117 416 701.626069 79.3638432 701.626069 360.130034 743 385.006284 743 6"></polygon>
+//             <polygon id="Path" points="57 141.245436 57 520 683 157.639035 683 110 98.3079748 446.915475 98.3079748 165.460919"></polygon>
+//             <polygon id="Path" points="418 331.688356 751.088584 526 791 502.247194 458.919965 308"></polygon>
+//         </g>
+//     </g>
+// </svg>`;
 const defaultCode = `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="800px" height="536px" viewBox="0 0 800 536" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="logo_lowres" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group" transform="translate(0.000000, 1.000000)" fill="#111111" fill-rule="nonzero">
-            <polygon id="Path" points="8 23.588387 340.523654 219 383 194.24697 48.3383558 0"></polygon>
-            <polygon id="Path" points="0 40 0 496.742257 40.3763295 520 40.3763295 111.492507 283.588485 252.492253 324 229.624084"></polygon>
-            <polygon id="Path" points="759.522657 415.38714 516.300558 274.076819 476 296.923928 800 487 800 29.5764496 759.522657 6"></polygon>
-            <polygon id="Path" points="117 368.266374 117 416 701.626069 79.3638432 701.626069 360.130034 743 385.006284 743 6"></polygon>
-            <polygon id="Path" points="57 141.245436 57 520 683 157.639035 683 110 98.3079748 446.915475 98.3079748 165.460919"></polygon>
-            <polygon id="Path" points="418 331.688356 751.088584 526 791 502.247194 458.919965 308"></polygon>
-        </g>
-    </g>
+<svg width="1600px" height="1600px" viewBox="0 0 1600 1600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 </svg>`;
 
 export const state = () => ({
@@ -564,11 +568,10 @@ export const state = () => ({
 
         options: {
           color: null,
-          h: 210,
           hex: "#7E93A8",
-          l: 0.6,
-          s: 0.6,
           angle: 45,
+          fillType: "theme",
+          useGradient: false,
         },
       },
       {
@@ -585,6 +588,8 @@ export const state = () => ({
           h: 1600,
           rotation: 0,
           rotationOptions: [0, 90, 180, 270],
+          fillType: "theme",
+          useGradient: false,
         },
       },
       {
@@ -607,9 +612,29 @@ export const state = () => ({
           animationOffsetY: 100,
           animationScale: 1,
           animationRotation: 0,
+          fillType: "theme",
+          useGradient: true,
         },
       },
     ],
+  },
+  defaultElement: {
+    label: "new rule",
+    type: "circle",
+    mode: "static",
+    options: {
+      hue: null,
+      x: 0,
+      y: 0,
+      w: 400,
+      h: 400,
+      useAnimation: false,
+      animationMode: "generative",
+      fillType: "theme",
+      useGradient: false,
+      hasFill: true,
+      hasStroke: false,
+    },
   },
   activeTheme: {
     id: "default",
@@ -625,7 +650,7 @@ export const state = () => ({
   svgTitle: "",
   svgCreator: "",
   svgDescription: "",
-  svgCode: defaultCode,
+  svgCode: null,
   svgTransactionId: null,
   previewBytes: null,
   calculatedFee: null,
@@ -643,6 +668,8 @@ export const getters = {
   previewMode: (state) => state.previewMode,
   showPreview: (state) => state.showPreview,
   svgCode: (state) => state.svgCode,
+  defaultCode: (state) => defaultCode,
+  defaultElement: (state) => state.defaultElement,
   svgFee: (state) => state.svgFee,
   previewBytes: (state) => state.previewBytes,
   calculatedFee: (state) => state.calculatedFee,
@@ -673,11 +700,17 @@ export const getters = {
 export const mutations = {
   updateField,
   resetSvgForm(state, newData) {
-    svgFee = 0.25;
-    svgTitle = "test";
-    svgCreator = "example title";
-    svgDescription = "example title";
-    svgCode = "<svg></svg>";
+    state.svgFee = 0.25;
+    state.svgTitle = "test";
+    state.svgCreator = "example title";
+    state.svgDescription = "";
+    state.svgCode = null;
+    state.svgData.elements = [];
+  },
+  setSvgCode(state, value) {
+    console.log("settign svg code: ", value);
+    state.svgCode = value;
+    // state.svgData.elements = [];
   },
   setActiveTheme(state, value) {
     state.activeTheme = value;
@@ -839,13 +872,66 @@ export const actions = {
     }
     return Math.floor(val);
   },
-  // countBytes(source) {
-  //   const bytes = Buffer.byteLength(source);
-  //   const gasFee = 30;
-  //   const transactionFee = (bytes / 1000000) * gasFee;
-  //   const roundedFee = parseFloat(transactionFee).toFixed(5);
-  //   return bytes;
-  // },
+
+  async saveSvgFile(context, props) {
+    const { dispatch, commit, rootState, state } = context;
+    const { node, binId = "6131a4023b222b1d0d959d75", code, name } = props;
+    const { $axios } = this;
+    let { binData } = rootState.ui;
+
+    console.log("rootState", rootState);
+    console.log("binData", binData);
+    const target = node && node.$refs.svg;
+    const source = code || target.innerHTML;
+    console.log("source", source, target);
+    if (!binData) {
+      console.log("no bindata");
+      binData = await this.dispatch("ui/getImages");
+      // return;
+    }
+    // https://api.jsonbin.io/b/6131a4023b222b1d0d959d75
+    const currentImages = binData.images || [];
+    const tempImages = [...currentImages];
+    console.log("tempImages", tempImages);
+    const newId = uuidv4();
+    const newImage = {
+      id: newId,
+      title: "test",
+      creator: name || "test",
+      src: source,
+    };
+    tempImages.push(newImage);
+    console.log("tempImages:", tempImages);
+
+    const newData = { ...binData, images: tempImages };
+    const binKey =
+      "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
+    if (!newData) {
+      return;
+    }
+
+    await commit("setBinStatus", "working");
+    const newBinData = await $axios
+      .$put(`https://api.jsonbin.io/v3/b/${binId}`, newData, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": binKey,
+          "X-Bin-Versioning": false,
+        },
+      })
+      .then((result) => {
+        console.log("success", result);
+        return result.record;
+      })
+      .catch((error) => {
+        console.error(error);
+        // commit("setConfigStatus", "error");
+        return error;
+      });
+    console.log("newBinData", newBinData);
+    // await commit("setSiteData", sitedataaa.record);
+    // await commit("setConfigStatus", "completed");
+  },
   // **
   // * Simple function that converts a plain SVG string or SVG DOM Node into an image with custom dimensions.
   // *
@@ -854,145 +940,145 @@ export const actions = {
   // * @returns {Promise}
   // */
 
-  async createSvgFile(context, props) {
-    const { dispatch } = context;
-    const { node } = props;
-    console.log("props", props);
-    const target = node.$refs.svg;
-    const source = target.innerHTML;
-    console.log("source", source, target);
+  // async createSvgFile(context, props) {
+  //   const { dispatch } = context;
+  //   const { node } = props;
+  //   console.log("props", props);
+  //   const target = node.$refs.svg;
+  //   const source = target.innerHTML;
+  //   console.log("source", source, target);
 
-    const settings = {
-      // 1. Provide the SVG DOM element
-      // svg: document.getElementById("my-svg"),
-      svg: target,
-      // 2. Provide the format of the output image
-      mimetype: "image/png",
-      // 3. Provide the dimensions of the image if you want a specific size.
-      //  - if they remain in auto, the width and height attribute of the svg will be used
-      //  - You can provide a single dimension and the other one will be automatically calculated
-      // width: "auto",
-      // height: "auto",
-      width: props.width || 1600,
-      height: props.height || 1600,
-      // 4. Specify the quality of the image
-      quality: 1,
-      // 5. Define the format of the output (base64 or blob)
-      outputFormat: "base64",
-    };
-    // console.log("info", this.random(1, 23, false));
-    const image = await dispatch("SVGToImage", settings)
-      .then(function (outputData) {
-        // If using base64 (outputs a DataURL)
-        //  data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0...
-        // Or with Blob (Blob)
-        //  Blob {size: 14353, type: "image/png"}
-        console.log(outputData);
-      })
-      .catch(function (err) {
-        // Log any error
-        console.log(err);
-      });
-    console.log("iamge", image);
-  },
-  async SVGToImage(context, settings) {
-    // SVGToImage: function (context, settings) {
-    console.log("settings", settings);
-    // SVGToImage(settings) {
-    let _settings = {
-      svg: null,
-      // Usually all SVG have transparency, so PNG is the way to go by default
-      mimetype: "image/png",
-      quality: 0.92,
-      width: "auto",
-      height: "auto",
-      outputFormat: "base64",
-    };
+  //   const settings = {
+  //     // 1. Provide the SVG DOM element
+  //     // svg: document.getElementById("my-svg"),
+  //     svg: target,
+  //     // 2. Provide the format of the output image
+  //     mimetype: "image/png",
+  //     // 3. Provide the dimensions of the image if you want a specific size.
+  //     //  - if they remain in auto, the width and height attribute of the svg will be used
+  //     //  - You can provide a single dimension and the other one will be automatically calculated
+  //     // width: "auto",
+  //     // height: "auto",
+  //     width: props.width || 1600,
+  //     height: props.height || 1600,
+  //     // 4. Specify the quality of the image
+  //     quality: 1,
+  //     // 5. Define the format of the output (base64 or blob)
+  //     outputFormat: "base64",
+  //   };
+  //   // console.log("info", this.random(1, 23, false));
+  //   const image = await dispatch("SVGToImage", settings)
+  //     .then(function (outputData) {
+  //       // If using base64 (outputs a DataURL)
+  //       //  data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0...
+  //       // Or with Blob (Blob)
+  //       //  Blob {size: 14353, type: "image/png"}
+  //       console.log(outputData);
+  //     })
+  //     .catch(function (err) {
+  //       // Log any error
+  //       console.log(err);
+  //     });
+  //   console.log("iamge", image);
+  // },
+  // async SVGToImage(context, settings) {
+  //   // SVGToImage: function (context, settings) {
+  //   console.log("settings", settings);
+  //   // SVGToImage(settings) {
+  //   let _settings = {
+  //     svg: null,
+  //     // Usually all SVG have transparency, so PNG is the way to go by default
+  //     mimetype: "image/png",
+  //     quality: 0.92,
+  //     width: "auto",
+  //     height: "auto",
+  //     outputFormat: "base64",
+  //   };
 
-    // Override default settings
-    for (let key in settings) {
-      _settings[key] = settings[key];
-    }
+  //   // Override default settings
+  //   for (let key in settings) {
+  //     _settings[key] = settings[key];
+  //   }
 
-    new Promise(function (resolve, reject) {
-      let svgNode;
+  //   new Promise(function (resolve, reject) {
+  //     let svgNode;
 
-      // Create SVG Node if a plain string has been provided
-      if (typeof _settings.svg == "string") {
-        // Create a non-visible node to render the SVG string
-        let SVGContainer = document.createElement("div");
-        SVGContainer.style.display = "none";
-        SVGContainer.innerHTML = _settings.svg;
-        svgNode = SVGContainer.firstElementChild;
-      } else {
-        svgNode = _settings.svg;
-      }
+  //     // Create SVG Node if a plain string has been provided
+  //     if (typeof _settings.svg == "string") {
+  //       // Create a non-visible node to render the SVG string
+  //       let SVGContainer = document.createElement("div");
+  //       SVGContainer.style.display = "none";
+  //       SVGContainer.innerHTML = _settings.svg;
+  //       svgNode = SVGContainer.firstElementChild;
+  //     } else {
+  //       svgNode = _settings.svg;
+  //     }
 
-      let canvas = document.createElement("canvas");
-      let context = canvas.getContext("2d");
+  //     let canvas = document.createElement("canvas");
+  //     let context = canvas.getContext("2d");
 
-      let svgXml = new XMLSerializer().serializeToString(svgNode);
-      let svgBase64 = "data:image/svg+xml;base64," + btoa(svgXml);
+  //     let svgXml = new XMLSerializer().serializeToString(svgNode);
+  //     let svgBase64 = "data:image/svg+xml;base64," + btoa(svgXml);
 
-      const image = new Image();
+  //     const image = new Image();
 
-      image.onload = function () {
-        let finalWidth, finalHeight;
+  //     image.onload = function () {
+  //       let finalWidth, finalHeight;
 
-        // Calculate width if set to auto and the height is specified (to preserve aspect ratio)
-        if (_settings.width === "auto" && _settings.height !== "auto") {
-          finalWidth = (this.width / this.height) * _settings.height;
-          // Use image original width
-        } else if (_settings.width === "auto") {
-          finalWidth = this.naturalWidth;
-          // Use custom width
-        } else {
-          finalWidth = _settings.width;
-        }
+  //       // Calculate width if set to auto and the height is specified (to preserve aspect ratio)
+  //       if (_settings.width === "auto" && _settings.height !== "auto") {
+  //         finalWidth = (this.width / this.height) * _settings.height;
+  //         // Use image original width
+  //       } else if (_settings.width === "auto") {
+  //         finalWidth = this.naturalWidth;
+  //         // Use custom width
+  //       } else {
+  //         finalWidth = _settings.width;
+  //       }
 
-        // Calculate height if set to auto and the width is specified (to preserve aspect ratio)
-        if (_settings.height === "auto" && _settings.width !== "auto") {
-          finalHeight = (this.height / this.width) * _settings.width;
-          // Use image original height
-        } else if (_settings.height === "auto") {
-          finalHeight = this.naturalHeight;
-          // Use custom height
-        } else {
-          finalHeight = _settings.height;
-        }
+  //       // Calculate height if set to auto and the width is specified (to preserve aspect ratio)
+  //       if (_settings.height === "auto" && _settings.width !== "auto") {
+  //         finalHeight = (this.height / this.width) * _settings.width;
+  //         // Use image original height
+  //       } else if (_settings.height === "auto") {
+  //         finalHeight = this.naturalHeight;
+  //         // Use custom height
+  //       } else {
+  //         finalHeight = _settings.height;
+  //       }
 
-        // Define the canvas intrinsic size
-        canvas.width = finalWidth;
-        canvas.height = finalHeight;
+  //       // Define the canvas intrinsic size
+  //       canvas.width = finalWidth;
+  //       canvas.height = finalHeight;
 
-        // Render image in the canvas
-        context.drawImage(this, 0, 0, finalWidth, finalHeight);
+  //       // Render image in the canvas
+  //       context.drawImage(this, 0, 0, finalWidth, finalHeight);
 
-        if (_settings.outputFormat == "blob") {
-          // Fullfil and Return the Blob image
-          canvas.toBlob(
-            function (blob) {
-              resolve(blob);
-            },
-            _settings.mimetype,
-            _settings.quality
-          );
-        } else {
-          // Fullfil and Return the Base64 image
-          resolve(canvas.toDataURL(_settings.mimetype, _settings.quality));
-        }
-      };
+  //       if (_settings.outputFormat == "blob") {
+  //         // Fullfil and Return the Blob image
+  //         canvas.toBlob(
+  //           function (blob) {
+  //             resolve(blob);
+  //           },
+  //           _settings.mimetype,
+  //           _settings.quality
+  //         );
+  //       } else {
+  //         // Fullfil and Return the Base64 image
+  //         resolve(canvas.toDataURL(_settings.mimetype, _settings.quality));
+  //       }
+  //     };
 
-      // Load the SVG in Base64 to the image
-      image.src = svgBase64;
-      console.log("here", image);
-    });
-    console.log("here2", image);
-    // console.log("isit", isit);
-    // await isit
-    //   .then((result) => {
-    //     console.log("result", result);
-    //   })
-    //   .catch((error) => console.error("error", error));
-  },
+  //     // Load the SVG in Base64 to the image
+  //     image.src = svgBase64;
+  //     console.log("here", image);
+  //   });
+  //   console.log("here2", image);
+  //   // console.log("isit", isit);
+  //   // await isit
+  //   //   .then((result) => {
+  //   //     console.log("result", result);
+  //   //   })
+  //   //   .catch((error) => console.error("error", error));
+  // },
 };

@@ -2,7 +2,7 @@
 
 
   <div class="toggleRow row contentRow pa-0 ma-0" >
-    <div class="col col-3">Mode: {{controlMode}}</div>
+    <div class="col col-3"><span class="column-title">EDIT MODE</span></div>
     <div class="col col-9" dark>
             <v-btn
               

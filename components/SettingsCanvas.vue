@@ -11,6 +11,7 @@
       </div>
     </div>
     <div class="row">
+      <div class="col">
       <label>Aspect</label><br />
         <v-btn-toggle 
           
@@ -38,6 +39,7 @@
             16:9
           </v-btn>
         </v-btn-toggle>
+      </div>
     </div>
   </div>
 </template>

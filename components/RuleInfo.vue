@@ -6,10 +6,11 @@
       <v-btn-toggle 
         v-model="toggle_type"
         dense
-        @change="handleType"
+        @change="!readOnly && handleType"
         class="typeSelectWrap"
       >
-        <v-btn small v-for="(item, index) in typeArray" :key="index" class="typeSelectButton" :class="type === item ? 'selected' : ''" :color="type === item ? 'primary' : ''">
+        <v-btn small v-for="(item, index) in typeArray" :key="index" class="typeSelectButton" :class="type === item ? 'selected' : ''" :color="type === item ? 'primary' : ''"
+        :disabled="readOnly">
           <v-icon small v-if="item==='background'">mdi-square</v-icon>
           <v-icon small v-if="item==='polygon'">mdi-vector-polygon</v-icon>
           <v-icon small v-if="item==='circle'">mdi-vector-circle</v-icon>
@@ -40,7 +41,7 @@
 import { mapMutations, mapGetters } from "vuex";
 
 export default {
-  props: ['value', 'type', 'mode'],
+  props: ['value', 'type', 'mode', 'readOnly'],
   data() {
     return {
       typeArray: ['rectangle', 'circle', 'polygon', 'line', 'triangle', 'blob', 'background', 'art'],

@@ -41,7 +41,7 @@
         
       </div>
     </div>
-     <div class="row">
+     <!-- <div class="row">
       <div class="col">
         <label>Use Stroke</label>
           <v-btn-toggle 
@@ -69,7 +69,7 @@
           </v-btn-toggle>
       </div>
       
-      <div class="col" v-if="this.localOptions.hasFill">
+   <div class="col" v-if="this.localOptions.hasFill">
         <label>Use Gradient</label>
         <v-btn-toggle 
           dense
@@ -82,13 +82,13 @@
             Yes
           </v-btn>
         </v-btn-toggle>
-      </div>
+      </div> >
       <div v-else class="col">
       </div>
       <div class="col">
         
       </div>
-    </div>
+    </div> -->
     <v-divider />
   </div>
 </template>
@@ -108,11 +108,7 @@ export default {
         x: 101,
         y: 102,
         w: 103,
-        h: 104,
         rotation: 0,
-        hasStroke: false,
-        hasFill: true,
-        useGradient: true
       },
       rotationOptions: [0, 90, 180, 270],
     };
@@ -146,15 +142,7 @@ export default {
     updateValue: function (value) {
       this.$emit('input', value);
     },
-    setHasStroke(value){
-      this.localOptions.hasStroke = value
-    },
-    setHasFill(value){
-      this.localOptions.hasFill = value
-    },
-    setUseGradient(value){
-      this.localOptions.useGradient = value
-    },
+    
     handleRotate(rotation){
       console.log('rotation', rotation);
       // const  {rotationOptions } = this;

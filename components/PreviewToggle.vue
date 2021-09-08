@@ -2,7 +2,7 @@
 
 <div class="toggleRow row contentRow pa-0 ma-0">
   
-          <div class="col col-3">Mode: {{previewMode}}</div>
+          <div class="col col-3"><span class="column-title">PREVIEW</span></div>
           <div class="col col-9">
             <v-btn
               x-small
@@ -12,30 +12,30 @@
             >
               EDIT
             </v-btn>
-            <v-btn
+            <!-- <v-btn
               x-small
               depressed
               :color="previewMode === 'gallery' ? 'primary':'secondary'"
               @click="setPreviewMode('gallery')"
             >
               GALLERY
-            </v-btn>
+            </v-btn> -->
             <v-btn
               x-small
               depressed
               :color="previewMode === 'full' ? 'primary':'secondary'"
               @click="setPreviewMode('full')"
             >
-              FULL
+              FULL SCREEN
             </v-btn>
-            <v-btn
+            <!-- <v-btn
               x-small
               depressed
               :color="previewMode === 'view' ? 'primary':'secondary'"
               @click="setPreviewMode('view')"
             >
               META
-            </v-btn>
+            </v-btn> -->
           </div>
       
 </div>
@@ -47,6 +47,11 @@
   
   .danger{
     color: var(--danger-color, red);
+  }
+  .column-title{
+    text-transform: uppercase;
+    font-size: .75rem;
+    font-weight: 800;
   }
 </style>
 

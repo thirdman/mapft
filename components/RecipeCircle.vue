@@ -57,7 +57,7 @@
         
       </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
       <div class="col">
         <label>Use Stroke</label>
           <v-btn-toggle 
@@ -103,9 +103,10 @@
       </div>
       <div class="col">
         
-      </div>
+      </div> 
     </div>
-    <v-divider />
+    -->
+    
   </div>
 </template>
 
@@ -128,9 +129,9 @@ export default {
         minSize: 100,
         maxSize: 300,
         rotation: 0,
-        hasStroke: false,
-        hasFill: true,
-        useGradient: true
+        // hasStroke: false,
+        // hasFill: true,
+        // useGradient: true
       },
       rotationOptions: [0, 90, 180, 270],
     };
@@ -164,15 +165,15 @@ export default {
     updateValue: function (value) {
       this.$emit('input', value);
     },
-    setHasStroke(value){
-      this.localOptions.hasStroke = value
-    },
-    setHasFill(value){
-      this.localOptions.hasFill = value
-    },
-    setUseGradient(value){
-      this.localOptions.useGradient = value
-    },
+    // setHasStroke(value){
+    //   this.localOptions.hasStroke = value
+    // },
+    // setHasFill(value){
+    //   this.localOptions.hasFill = value
+    // },
+    // setUseGradient(value){
+    //   this.localOptions.useGradient = value
+    // },
     handleRotate(rotation){
       console.log('rotation', rotation);
       // const  {rotationOptions } = this;

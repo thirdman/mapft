@@ -182,7 +182,7 @@ const generateTheme = (config) => {
     backgroundColor: `hsl(${tempHue}, 34%, 91%)`,
     lineColor: `hsla(${tempHue}, 50%, 10%, 0.3)`,
   };
-  console.log("themeObj", themeObj);
+  // console.log("themeObj", themeObj);
   return themeObj;
 };
 

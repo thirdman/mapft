@@ -89,11 +89,11 @@ import {  handleAccountLink } from "../utils/wallet";
 
 
 export default {
-  name: "MintPage",
+  name: "UserPage",
    head: {
-    title: 'InfiNFT | User Data',
+    title: 'User Data',
     meta: [
-      { hid: "og:title", name: "og:title", content: "InfiNFT | User Data" },
+      { hid: "og:title", name: "og:title", content: "SVG | User Data" },
       
       
     ],

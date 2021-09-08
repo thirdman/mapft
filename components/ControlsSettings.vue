@@ -2,6 +2,7 @@
   <div class="col">
     <h3>Settings</h3>
     <settings-canvas :value.sync="tempSettings" />
+    <settings-grid :value.sync="tempSettings" />
     <div class="row">
       <div class="col">
         <v-btn 
@@ -32,6 +33,9 @@ export default {
         canvasWidth: 1600,
         canvasHeight: 1600,
         rotationOptions: [0, 90, 180, 270],
+        grid: "1/1",
+        gridCols: 1,
+        gridRows: 1,
       },
       // tempMeta: {
       //   label: '',
@@ -46,6 +50,8 @@ export default {
       canvasWidth: sourceData.canvasWidth,
       canvasHeight: sourceData.canvasHeight,
       rotationOptions: sourceData.rotationOptions,
+      gridCols: sourceData.gridCols || 1,
+      gridRows: sourceData.gridRows || 1,
     }
     this.tempSettings = newTempObj
   },
@@ -79,12 +85,12 @@ export default {
         tempSettings,
         // tempMeta
       } = this;
-      const {canvasWidth, canvasHeight}= tempSettings
+      const {canvasWidth, canvasHeight, gridRows, gridCols}= tempSettings
       // const {elements} = svgData;
       // const selectedType = typeArray[toggle_type];
       // const selectedMode = modeArray[toggle_mode];
       console.log('applySettings ', tempSettings,)
-      const newData = {...svgData, canvasWidth: Number(canvasWidth), canvasHeight: Number(canvasHeight)}
+      const newData = {...svgData, canvasWidth: Number(canvasWidth), canvasHeight: Number(canvasHeight),  gridRows, gridCols}
       this.setSvgData(newData);
     }
   },

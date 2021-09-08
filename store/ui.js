@@ -27,6 +27,7 @@ const themeArray = [
 // console.log("ens", ens);
 export const state = () => ({
   configStatus: null,
+  setBinStatus: null,
   siteData: null,
   network: "rinkeby",
   walletChain: "ethereum",
@@ -80,6 +81,8 @@ export const state = () => ({
 export const getters = {
   getField,
   siteData: (state) => state.siteData,
+  binData: (state) => state.binData,
+  binStatus: (state) => state.binStatus,
   configStatus: (state) => state.configStatus,
   devMode: (state) => state.devMode,
   statusModalMode: (state) => state.statusModalMode,
@@ -131,8 +134,14 @@ export const mutations = {
   setConfigStatus: (state, value) => {
     state.configStatus = value;
   },
+  setBinStatus: (state, value) => {
+    state.binStatus = value;
+  },
   setSiteData: (state, value) => {
     state.siteData = value;
+  },
+  setBinData: (state, value) => {
+    state.binData = value;
   },
   add(state, text) {
     state.list.push({
@@ -375,12 +384,33 @@ export const actions = {
           "X-Master-Key": binKey,
         },
       })
-      .catch((error) => console.error(error));
-    const siteData = siteJson.record;
-    console.log("siteData", siteJson.record);
+      .catch((error) => console.error('Eerror getting siteConfig: ',error));
+    const siteData = siteJson && siteJson.record;
+    // console.log("siteData", siteJson.record);
     await commit("setSiteData", siteData);
     await commit("setConfigStatus", "completed");
     return siteData;
+  },
+  async getImages(context, data) {
+    const { commit } = context;
+    const { $axios } = this;
+    const binKey =
+      "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
+    const binId = "6131a4023b222b1d0d959d75";
+    console.log("getImagesgetImagesgetImages");
+    await commit("setBinStatus", "working");
+    const binJson = await $axios
+      .$get(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+        headers: {
+          "X-Master-Key": binKey,
+        },
+      })
+      .catch((error) => console.error(error));
+    const binData = binJson && binJson.record;
+    // console.log("binData", binJson.record);
+    await commit("setBinData", binData);
+    await commit("setBinStatus", "completed");
+    return binData;
   },
   async updateConfig(context, props) {
     const { commit, rootState, state } = context;

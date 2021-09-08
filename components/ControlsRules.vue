@@ -5,7 +5,7 @@
         v-if="showEdit" 
         :handleClose="handleClose" 
         :ruledata="editData"
-        mode="edit"
+        :mode="editMode || 'new'"
         />
     </v-slide-x-reverse-transition>
     <div class="" v-if="!showNew">
@@ -77,6 +77,8 @@
         </template>
             </v-slide-y-transition>
              <v-btn block @click="() => {this.showNew = !this.showNew}" ><v-icon>mdi-plus-box</v-icon>add element</v-btn> 
+             <v-btn block @click="handleCreateNewElement" ><v-icon>mdi-plus-box</v-icon>add element v2</v-btn> 
+             
           </div>
 
 
@@ -87,7 +89,12 @@
             <v-card-text class="panelrow row pa-0 ma-0">
             <div class="panelitem previewpanel col  ma-0"> 
               <div class="previewcontainer">
-                <PreviewSvg previewMode="edit" :elements="[newRuleElement]" svgRef="previewSvg" :useGrid="true" />
+                <PreviewSvg
+                  previewMode="edit"
+                  :elements="[{label: 'sdf', type: 'rectangle', count: 1, options: newElementOptions}]"
+                  svgRef="previewSvg"
+                  :useGrid="true"
+                  />
               </div>
             </div>
               
@@ -358,7 +365,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { v4 as uuidv4 } from 'uuid';
 import RecipeTriangle from './RecipeTriangle.vue';
 import RecipeRectangle from './RecipeRectangle.vue';
-import { dialog } from '@devlop-ab/dialog';
+// import { dialog } from '@devlop-ab/dialog';
 import RuleTransform from './RuleTransform.vue';
 import RuleOffset from './RuleOffset.vue';
 export default {
@@ -367,7 +374,9 @@ export default {
     return {
       tabView: 'meta',
       showNew: false,
+      showNew2: false,
       showEdit:false,
+      editMode: "new",
       newElementLabel: "New Rule",
       newElementCount: 1,
       newElementX: 100,
@@ -403,14 +412,18 @@ export default {
       },
       newElementOptions: {
         hue: null,
-        x: 0,
-        y: 0,
-        w: 50,
-        h: 110,
+        h: 800,
+        w: 800,
+        x: 400,
+        y: 400,
         rotation: 0,
-        hasStroke: true,
+        hasStroke: false,
         hasFill: true,
+        useGradient: false,
+        useAnimation: false,
         rotationOptions: [0, 90, 180, 270],
+        count: 1,
+        type: 'rectangle'
       },
       newElementCircleOptions: {
         hue: null,
@@ -480,6 +493,12 @@ export default {
     const {elements} = svgData
     this.elements = elements;
     this.setNewElementOptions();
+  },
+  mounted(){
+    console.log('mountedt his', this.newRuleElement)
+    
+    const value =  this.newRuleElement;
+    console.log('value', value)
   },
   computed: {
     ...mapGetters({
@@ -586,8 +605,6 @@ export default {
       const {elements} = svgData;
       const selectedType = typeArray[toggle_type];
       const selectedMode = modeArray[toggle_mode];
-      console.log('add element newRuleElement', this.newRuleElement)
-      
       const newId = uuidv4();
       
       const tempObject = {
@@ -618,7 +635,18 @@ export default {
       const {svgData} = this;
       const {elements} = svgData;
       const sourceElement = elements[index];
+      console.log('sourceElement', sourceElement)
+      this.editMode = "edit"
       this.editData = sourceElement
+      this.showNew = false
+      this.showEdit = true
+    },
+    handleCreateNewElement(){
+      const {svgData} = this;
+      //const 
+      // const sourceElement = defaultRuleData;
+      this.editMode = "new"
+      this.editData = null
       this.showNew = false
       this.showEdit = true
     },
@@ -628,8 +656,7 @@ export default {
     },
     setNewElementOptions(){
       const {svgData} = this;
-      this.newElementOptions.w = svgData.canvasWidth;
-      this.newElementOptions.h = svgData.canvasHeight;
+      
     },
     async moveElement(fromIndex, direction){
 

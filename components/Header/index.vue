@@ -9,7 +9,7 @@
         <span class="logoWrap" @click="goToHome()">
           <span class="logoBg"></span>
           <span class="logoPosition">
-            <IconLogo :fillClass="headerContrastMode" />
+            <IconLogo />
           </span>
         </span>
         <div v-if="uiMode === 'none'" class="hamburgerToggle">
@@ -24,8 +24,6 @@
       <client-only>
 
       <div class="navRow">
-        <v-btn @click="getConfig">get config</v-btn>
-        <v-btn @click="updateConfig">updateConfig</v-btn>
         <div class="navItem">
           <nuxt-link to="/about" class="plain navLink text--color">ABOUT</nuxt-link>
         </div>
@@ -43,10 +41,16 @@
           <nuxt-link to="/svg" class=" navLink">GENERATE</nuxt-link>
         </div>
         <div class="navItem" >
+          <nuxt-link to="/examples" class=" navLink">EXAMPLES</nuxt-link>
+        </div>
+        <div class="navItem" >
           <nuxt-link to="/gallery" class=" navLink">GALLERY</nuxt-link>
         </div>
       </div>
-
+      <div class="navAdmin" v-if="1===2">
+        <v-btn x-small @click="getConfig">get config</v-btn>
+        <v-btn x-small @click="updateConfig">updateConfig</v-btn>
+      </div>
       <div class="search" v-if="isSearchRoute">
         <nuxt-link to="/view" >
           <IconSearch :strokeClass="contrastMode" />
@@ -98,34 +102,6 @@
       </div>
     </client-only>
     </div>
-  <client-only>
-  <div class="devModeFlag shadow" v-if="devMode"><strong>DEV MODE</strong> <Button @click="toggleDevInfo" mode="secondary" size="small">toggle info</Button><Button @click="setDevMode(false)" mode="secondary" size="small">Switch Off</Button><br />
-    <div v-if="showDevInfo">
-        Environment: {{VERCEL_ENV}}<br />
-        rootUrl: {{rootUrl}}<br />
-        factoryContract: {{factoryContract}}<br />
-        requiredNetwork: {{requiredNetwork}}<br />
-        infuraUrl: {{infuraUrl}}<br />
-        repo: {{VERCEL_GIT_REPO_SLUG}}<br />
-        baseUrl: {{VERCEL_URL}}<br />
-        commit: {{VERCEL_GIT_COMMIT_MESSAGE}}<br />
-        <strong>Contrast Mode</strong>: {{contrastMode || "no contrast mode available"}}
-      </div>
-    </div>
-  </client-only>
-  <client-only>
-    <div>
-    <account-modal />
-    <!-- <div style="opacity: 0; visibility: 0; z-index: -1">
-      {{ shallShowStatusModal ? "yes" : "" }}
-    </div> -->
-    <status-modal />
-    <cropper-modal />
-    <chain-modal />
-    <info-modal />
-    
-    </div>
-  </client-only>
   </header>
 </template>
 
@@ -198,6 +174,9 @@
       min-width: 5rem;
     }
 
+.navAdmin{
+  text-align: right;
+}
 
 </style>
 
@@ -215,6 +194,10 @@ export default {
     if (!this.siteData) {
         this.getConfig()
         console.log('this getting ssite data')
+    }
+    if (!this.binData) {
+      console.log('getImages here', this.getImages)
+        this.getImages()
     }
     if(this.$config){
       // console.log('HEADER this.$config is available', this.$config)
@@ -246,6 +229,7 @@ export default {
   data() {
     return {
       siteData: null,
+      // binData: null,
       showDevInfo: false,
       rootUrl: "",
       factoryContract: "",
@@ -275,34 +259,15 @@ export default {
       walletChain: "ui/walletChain",
       walletName: "ui/walletName",
       ensName: "ui/ensName",
+      binData: "ui/binData",
+      binStatus: "ui/binStatus",
     }),
     isSearchRoute() {
       const routeArray = ["view-contract-id", "ViewPage", "gallery", "view"];
       const isSearchRoute = routeArray.includes(this.$route.name);
       return isSearchRoute ? true : false;
     },
-    headerContrastMode() {
-      const isLightUi = this.contrastMode === "light";
-      
-      // header items should be light if
-      // - (has light ui background) AND ui is FULL
-      // - has dark ui and ui is NOT full
-      // const condition1 = this.uiMode === 'full'
-      // const condition2 = this.contrastMode === 'light' && this.uiMode !== 'full';
-      // const headerContrastMode = this.contrastMode === 'dark' ? 'dark': 'light';
-      const headerContrastMode =
-        this.uiMode === "full" ? "dark" : this.contrastMode;
-      return headerContrastMode;
-    },
-    logoContrastMode() {
-      const logoContrastMode =
-        this.uiMode === "full" && this.headerContrastMode === "dark"
-          ? "light"
-          : "dark";
-      console.log("logoContrastMode", logoContrastMode);
-      return "dark";
-    },
-
+    
     hasWallet() {
       const walletAddress = this.$store.state.ui.walletAddress;
 
@@ -342,6 +307,7 @@ export default {
       showCropperModal: "mintFormStore/showCropperModal",
       getProfileData: "ui/getProfileData",
       getConfig: "ui/getConfig",
+      getImages: "ui/getImages",
       updateConfig: "ui/updateConfig"
     }),
     toggleDevInfo(){

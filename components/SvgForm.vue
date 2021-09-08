@@ -252,7 +252,7 @@ export default {
       canMintSvg: "svgFormStore/canMintSvg",
       svgStatus: "svgFormStore/svgStatus",
       svgStatusMessage: "svgFormStore/svgStatusMessage",
-      svgFormStatusMessage: "svgFormStore/svgFormStatusMessage",
+      svgFormStatusMessage: "svgFormStore/svgStatusMessage",
       svgTransactionId: "svgFormStore/svgTransactionId",
     }),
     

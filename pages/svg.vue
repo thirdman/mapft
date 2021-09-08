@@ -14,9 +14,12 @@
                   <PreviewSvg
                     ref="test"
                     :code="svgCode"
-                    :showGrid="false" :previewMode="previewMode" v-if="previewMode === 'edit' || previewMode === 'full'" :calculateCode="true" :setBytes="setPreviewBytes" />
-                  <!-- :previewData="previewData" -->
-                  <div v-if="previewMode === 'full'" class="fullPreviewControls">
+                    :useGrid="false"
+                    :previewMode="previewMode"
+                    v-if="(!svgCode && previewMode === 'edit') || (!svgCode && previewMode === 'full')"
+                    :calculateCode="true"
+                    :setBytes="setPreviewBytes" />
+                    <div v-if="previewMode === 'full'" class="fullPreviewControls">
                     <v-btn 
                       color="primary"
                       plain
@@ -25,10 +28,20 @@
                       <v-icon>mdi-close</v-icon>
                     </v-btn>
                   </div>
+                  <RenderCode
+                    ref="codepreview"
+                    :code="svgCode"
+                    :useTItle="false"
+                    :useGrid="true"
+                    v-if="svgCode"
+                    />
+                  
               </client-only>
               <v-divider />
               <div class="previewMetaBox col" v-if="svgData">
-                <v-btn x-small @click="handleSaveFile">Save Image</v-btn>
+                <!-- <v-btn x-small @click="handleSaveFile">Save Image</v-btn> -->
+                <v-btn x-small outlined @click="handleConvertToCode">Convert to Code</v-btn>
+                <v-btn x-small outlined @click="() => countBytes(svgCode ? 'code' : 'generated')">Calculate</v-btn>
               </div>
               <div class="previewMetaBox col" v-if="previewMode === 'edit' && previewBytes">
                 <div class="row" >
@@ -91,7 +104,8 @@
             <ControlsSettings v-if="controlMode === 'settings' " />
             <ControlsMeta v-if="controlMode === 'meta' " />
             <ControlsCode v-if="controlMode === 'code' " />
-            <SvgForm v-if="controlMode === 'mint' "/>
+            <SvgForm v-if="controlMode === 'mint' && 1===2"/>
+            <div v-if="controlMode === 'mint'"> Mint form will be here</div>
           </div>
         </div>
         
@@ -120,11 +134,11 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
-
+import { dialog } from '@devlop-ab/dialog';
 export default {
   name: "SvgPage",
   head: {
-    title: 'InfinNFT: Mint That SVG',
+    title: 'SVG Tokens',
     meta: [
       { hid: 'description', name: 'description', content: 'Mint That SVG.' },
     ],
@@ -156,29 +170,155 @@ console.log('this', this.svgData)
       previewData: "svgFormStore/previewData",
       svgData: "svgFormStore/svgData",
       svgCode: "svgFormStore/svgCode",
-      svgFormStatusMessage: "svgFormStore/svgFormStatusMessage",
+      svgFormStatusMessage: "svgFormStore/svgStatusMessage",
     }),
   },
   methods: {
     ...mapMutations({
       setPreviewMode: "svgFormStore/setPreviewMode",
       setPreviewBytes: "svgFormStore/setBytes",
+      setSvgCode: "svgFormStore/setSvgCode",
     }),
     ...mapActions({
-      createSvgFile: "svgFormStore/createSvgFile",
+      saveSvgFile: "svgFormStore/saveSvgFile",
     }),
-   handleSaveFile(){
-     console.log('here', this.svgData)
-     console.log('here', this.$refs.test)
-     const options = {
-       node : this.$refs.test,
-       width: 1600,
-       height: 1600,
-     }
-     if(this.$refs.test){
-       this.createSvgFile(options)
-     }
-   } 
+    async handleSaveFile(){
+      console.log('here', this.svgData)
+      console.log('here', this.$refs.test)
+      const code = this.svgCode;
+      const nameResult = await dialog.prompt('Enter your name', 'example name', {
+          title: 'Your name',
+          input: {
+              placeholder: 'Your full name please',
+          },
+      });
+
+      if(code){
+        const viewBox = this.getViewBox();
+        const options = {
+          node : this.$refs.test,
+          width: viewBox.width || 1600,
+          height: viewBox.height || 1600,
+          name: nameResult,
+          code 
+        }
+        this.saveSvgFile(options)
+      }
+      if(this.$refs.test){
+        const options = {
+          node : this.$refs.test,
+          width: 1600,
+          height: 1600,
+          name: nameResult
+        }
+        this.saveSvgFile(options)
+      } 
+    },
+    getViewBox(){
+      const code = this.svgCode;
+      if(code){
+        const viewBoxString = this.getSvgAttribute(this.svgCode, 'viewBox')
+        const viewBoxAsArray = viewBoxString.split(" ");
+        const viewBoxWidth = Number(viewBoxAsArray[2]) - Number(viewBoxAsArray[0])
+        const viewBoxHeight = Number(viewBoxAsArray[3]) - Number(viewBoxAsArray[1])
+        console.log('viewBoxString', viewBoxString, viewBoxAsArray,  viewBoxWidth, viewBoxHeight)
+        return {
+          width: viewBoxWidth,
+          height: viewBoxHeight,
+        }
+      } else {
+        console.log('not a code iamge')
+      }
+    },
+    countBytes(type){
+      if(type = 'code'){
+        if(!this.svgCode){return}
+        
+        const source = this.svgCode;
+        const bytes = Buffer.byteLength(source);
+        this.setPreviewBytes(bytes);
+        return bytes
+      }
+      const {svg, previewSvg} = this.$refs
+      const propElements = this.elements;
+      const propsExist = !!propElements;
+      const target = propsExist ? previewSvg : svg;
+      const source = target.innerHTML;
+      console.log('source', source.innerHTML)
+      // const bytes = new TextEncoder().encode(source).length; 
+      // const bytes = this.svgCode.length
+      const bytes = Buffer.byteLength(source);
+      // const gasFee = 30;
+      // const transactionFee = bytes / 1000000 * gasFee;
+      // // const roundedFee = Math.round((transactionFee + Number.EPSILON) * 100) / 100;
+      // const roundedFee =parseFloat(transactionFee).toFixed(5);
+      // this.$store.commit("svgFormStore/setBytes", bytes);
+      // this.$store.commit("svgFormStore/setCalculatedFee", roundedFee);
+      console.log('bytes', bytes, source)
+      if(this.setBytes){
+        this.setBytes(bytes);
+      }
+      return bytes
+    } ,
+    getSvgAttribute(htmlContent, attribute) {
+      var tmpDiv = document.createElement("div");
+      tmpDiv.innerHTML  = htmlContent;
+      // tmpDiv = temp.firstElementChild.attributes; 
+      const value = tmpDiv.querySelector('svg').getAttribute(attribute);
+      //put the attributes in a an array
+      return value;
+    },
+    async handleConvertToCode(){
+      console.log('here', this.$refs.test)
+      const result = await dialog.confirm(`This action cannot be reversed. You may view/edit result in the code tab`, {
+          title: 'Convert?',
+          okText: 'Yes, I understand',
+          cancelText: 'No',
+      });
+      // console.log('result', result);
+      if(result){
+        // const {test} = this.$refs;
+        const test = this.$refs.test
+        console.log('this.$refs, ', this.$refs)
+        console.log('test, ', test)
+        const target = test && test.$refs.svg;
+        if(!target){
+          dialog.alert(`SVG ref not found`);
+          return
+          }
+        
+          console.log('test2, ', test.$refs.svg)
+          
+          
+        const source = target.innerHTML;
+        // console.log('source', source.innerHTML)
+        // const bytes = Buffer.byteLength(source);
+        console.log('source: ', source)
+        this.setSvgCode(source)
+      }
+    }
+    // getTagContent(htmlContent, tag) {
+    //     var tmpDiv = document.createElement("div");
+    //     tmpDiv.innerHTML  = htmlContent;
+    //     //put the attributes in a an array
+    //     var list = Object.keys(tmpDiv).map( function( index ) { return temp[ index ] } );
+
+    //     console.log( list );
+    //     var parser = new DOMParser();
+    //     var parsedHtml = parser.parseFromString(htmlContent, 'text/html'); //mimeType of html is text/html
+    //     var listEls = parsedHtml.all
+    //     let value = ""
+    //   //all property is [HTMLCollection] holding all the elements (nested or otherwise) that are in the DOM tree
+    
+    //   for (var i = 0; i < listEls.length; i++) {
+    //     if (listEls[i].tagName.toLowerCase() == tag) {
+    //       console.log(listEls[i],'listEls[i]');
+    //       // tagFound = true;
+    //       value = listEls[i]
+    //     }
+    //   }
+    //   return value;
+    // },
   }
 }
 </script>
@@ -218,6 +358,12 @@ console.log('this', this.svgData)
   justify-content: stretch;
   border-right: 1px solid var(--line-color);
   flex-basis: 50%;
+  .svgPreviewColumn{
+    overflow: scroll;
+  }
+  .controlsColumn{
+    overflow: scroll;
+  }
 }
 .controlsColumn{
   flex-basis: 50%;
@@ -236,8 +382,8 @@ console.log('this', this.svgData)
     flex-basis: 40%;
     padding: .5rem;
     margin: .5rem;
-    background: #fff;
-    box-shadow: 0 2px 1rem rgba(0,0,0,1);
+    // background: #fff;
+    // box-shadow: 0 2px 1rem rgba(0,0,0,1);
     .svgPreviewWrap{
       width: 100%;
       height: 100%;

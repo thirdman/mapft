@@ -152,9 +152,9 @@ export default {
   head: {
     title: 'InfiNFT Gallery',
     meta: [
-      // { hid: 'og:title', name: 'og:title', content: `InfiNFT | ${this.galleryName}` },
+      
       { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
-      { hid: "og:site_name", name: "og:site_name", content: "InfiNFT" },
+      { hid: "og:site_name", name: "og:site_name", content: "SVG Tokens" },
       { hid: "og:type", name: "og:type", content: "website" },
       {
           hid: "og:image",
