@@ -1,12 +1,12 @@
 <template>
   <v-footer color="black" fixerd="false">
     <v-toolbar-items class="hidden-xs-only">
-      <v-btn text href="https://discord.gg/mCtsWyS" target="_blank" color="primary">
+      <!-- <v-btn text href="https://discord.gg/mCtsWyS" target="_blank" color="primary">
         <v-icon left>mdi-discord</v-icon>Discord
-      </v-btn>
-      <v-btn text href="https://twitter.com/flomentco" target="_blank" color="primary">
+      </v-btn> -->
+      <!-- <v-btn text href="https://twitter.com/flomentco" target="_blank" color="primary">
         <v-icon left>mdi-twitter</v-icon>Twitter
-      </v-btn>
+      </v-btn> -->
       <v-btn
         text
         href="https://www.youtube.com/channel/UCdtuEvDcOIhMc0zmfyeBkKQ"

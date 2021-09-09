@@ -39,7 +39,7 @@
               </client-only>
               <v-divider />
               <div class="previewMetaBox col" v-if="svgData">
-                <!-- <v-btn x-small @click="handleSaveFile">Save Image</v-btn> -->
+                <v-btn x-small @click="handleSaveFile" v-if="walletAddress === devAddress">Save Image</v-btn>
                 <v-btn x-small outlined @click="handleConvertToCode">Convert to Code</v-btn>
                 <v-btn x-small outlined @click="() => countBytes(svgCode ? 'code' : 'generated')">Calculate</v-btn>
               </div>
@@ -145,7 +145,8 @@ export default {
   },
   data() {
     return{
-      loading: true
+      loading: true,
+      devAddress: '0xd1c248d1c9879dc3b5a846d4dccc5b7aa8fbf432'
     }
   },
   asyncData() {

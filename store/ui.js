@@ -29,6 +29,7 @@ export const state = () => ({
   configStatus: null,
   setBinStatus: null,
   siteData: null,
+  binData: null,
   network: "rinkeby",
   walletChain: "ethereum",
   hasChainSelect: false,
@@ -384,7 +385,7 @@ export const actions = {
           "X-Master-Key": binKey,
         },
       })
-      .catch((error) => console.error('Eerror getting siteConfig: ',error));
+      .catch((error) => console.error("Eerror getting siteConfig: ", error));
     const siteData = siteJson && siteJson.record;
     // console.log("siteData", siteJson.record);
     await commit("setSiteData", siteData);
@@ -406,11 +407,64 @@ export const actions = {
         },
       })
       .catch((error) => console.error(error));
-    const binData = binJson && binJson.record;
-    // console.log("binData", binJson.record);
-    await commit("setBinData", binData);
+    const tempData = binJson && binJson.record;
+    // console.log("binData is now", binJson.record);
+    await commit("setBinData", tempData);
     await commit("setBinStatus", "completed");
-    return binData;
+    return tempData;
+  },
+  async saveImages(context, props) {
+    const { dispatch, commit, rootState, state } = context;
+    const { node, binId = "6131a4023b222b1d0d959d75", code, name } = props;
+    const { $axios } = this;
+    let { binData } = state;
+    console.log("saveImages", binData);
+
+    console.log("binData", binData);
+    if (!binData) {
+      console.log("no bindata");
+    }
+    const currentImages = binData.images || [];
+    // const tempImages = [...currentImages];
+    // console.log("tempImages", tempImages);
+    // const newId = uuidv4();
+    // const newImage = {
+    //   id: newId,
+    //   title: "test",
+    //   creator: name || "test",
+    //   src: source,
+    // };
+    // tempImages.push(newImage);
+    // console.log("tempImages:", tempImages);
+
+    const newData = { ...binData };
+    const binKey =
+      "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
+    // if (!newData) {
+    //   return;
+    // }
+
+    await commit("setBinStatus", "working");
+    const newBinData = await $axios
+      .$put(`https://api.jsonbin.io/v3/b/${binId}`, newData, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": binKey,
+          "X-Bin-Versioning": false,
+        },
+      })
+      .then((result) => {
+        console.log("success", result);
+        return result.record;
+      })
+      .catch((error) => {
+        console.error(error);
+        // commit("setConfigStatus", "error");
+        return error;
+      });
+    console.log("newBinData", newBinData);
+    // await commit("setSiteData", sitedataaa.record);
+    // await commit("setConfigStatus", "completed");
   },
   async updateConfig(context, props) {
     const { commit, rootState, state } = context;

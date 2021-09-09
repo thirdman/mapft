@@ -129,7 +129,7 @@ header.minimal .headerRow .profile #connectButton {
 
 /* MINIMAL FOOTER*/
 .footer.minimal {
-  background: transparent;
+  /* background: transparent; */
   color: var(--text-color, #111);
   margin-top: 0;
 }
@@ -262,42 +262,4 @@ header.none .headerRow .profile .minimalIcon {
   flex-shrink: 0;
   position: absolute;
   right: 1rem;
-}
-header.none .headerRow .profile #accountWrap {
-  background: transparent;
-}
-header.none .headerRow .profile .footerUserLabel {
-  display: none;
-}
-header.none .headerRow .profile .walletLoggedOut {
-  justify-content: flex-end;
-}
-
-/* NONE FOOTER*/
-.footer.none {
-  background: transparent;
-  color: var(--text-color, #111);
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-}
-.footer.none.hideUi {
-  display: none;
-}
-
-.footer.none .options label {
-  color: var(--text-color, #111);
-}
-
-footer.none .iconButton {
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-footer.none .corpLink {
-  display: inline-block;
-}
-footer.none .corpLink > span.defaultCorpMessage {
-  display: none;
 }

@@ -36,8 +36,20 @@ Over time I intend to migrate to main.scss
   --line-color: rgba(0, 0, 0, 0.2);
   --highlight-color: rgba(255, 255, 255, 0.2);
 
+  /* --charcoal-color: hsl(330, 5%, 14%);
+  --charcoal-dark-color: hsl(330, 15%, 8%); */
+  /* --charcoal-text-color: #c0c0c0; */
+  --charcoal-text-color: hsl(286, 12%, 90%);
+  --charcoal-color: hsl(286deg 27% 12%);
+  --charcoal-dark-color: hsl(330deg 31% 10%);
+  --charcoal-light-color: hsl(330, 2%, 30%);
+  --charcoal-fill-color: hsl(330, 0%, 24%);
+  --charcoal-ui-color: hsl(330, 4%, 7%);
+  --charcoal-background-color: hsl(320, 6%, 90%);
+  --charcoal-mode: dark;
+
   /*THEMES*/
-  --greyscale-color: #eee;
+  /* --greyscale-color: #eee;
   --greyscale-fill-color: #ddd;
   --greyscale-mode: light;
 
@@ -69,11 +81,6 @@ Over time I intend to migrate to main.scss
   --teal-background-color: #d6e8ea;
   --teal-mode: dark;
 
-  /* --charcoal-color: hsl(330, 7%, 20%); */
-  /* --charcoal-color: hsl(330, 5%, 15%); */
-  /* --charcoal-dark-color: hsl(330, 25%, 7%); */
-  /* --charcoal-light-color: hsl(330, 10%, 8%); */
-
   --charcoal-color: hsl(330, 5%, 14%);
   --charcoal-dark-color: hsl(330, 15%, 8%);
   --charcoal-light-color: hsl(330, 2%, 30%);
@@ -91,7 +98,7 @@ Over time I intend to migrate to main.scss
   --custom-ui-color: #111111;
   --custom-text-color: #333333;
   --custom-background-color: #eee;
-  --custom-mode: light;
+  --custom-mode: light; */
 
   /* DIALOG */
   --ok-button-color: pink;
@@ -336,12 +343,12 @@ footer {
 
 .footer,
 .footer.minimal {
-  background: var(--ui-color);
+  /* background: var(--ui-color); */
   position: relative;
   border-top: 1px solid var(--line-color);
   height: 2rem;
   overflow: hidden;
-  color: #888;
+  /* color: #888; */
 }
 
 .footer .social {

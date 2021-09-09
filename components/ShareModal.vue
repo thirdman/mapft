@@ -106,7 +106,7 @@
           <div >tokenId: {{tokenId}}</div>
           <div >url: {{url}}</div>
           <div >uiMode: {{uiMode}}</div>
-          <div >uiTheme: {{uiTheme}}</div>
+          <!-- <div >uiTheme: {{uiTheme}}</div> -->
         </div>
       </div>
     </div>

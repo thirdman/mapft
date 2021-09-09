@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setUiTheme: 'ui/setUiTheme',
+      
     }),
   },
 }

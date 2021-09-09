@@ -13,55 +13,6 @@
         <div class="optionsRow versionInfo xsmall" v-if="uiMode === 'minimal'">
           <span>v</span><span>{{VERCEL_GIT_COMMIT_SHA}}</span>
         </div>
-        <div class="optionsRow" v-if="uiMode === 'full'">
-          <label>UI Theme</label>
-          <div class="buttonGroup themeGroup">
-            <div class="swatch lemon" @click="setUiTheme('lemon')">
-              <span class="swatchLabel">Lemon</span>
-            </div>
-            <div class="swatch violet" @click="setUiTheme('violet')">
-              <span class="swatchLabel">Violet</span>
-            </div>
-            <div class="swatch peach" @click="setUiTheme('peach')">
-              <span class="swatchLabel">Peach</span>
-            </div>
-            <div class="swatch sand" @click="setUiTheme('sand')">
-              <span class="swatchLabel">Sand</span>
-            </div>
-            <div class="swatch grayscale" @click="setUiTheme('grayscale')">
-              <span class="swatchLabel">Gray</span>
-            </div>
-            <div class="swatch turquoise" @click="setUiTheme('turquoise')">
-              <span class="swatchLabel">Turquoise</span>
-            </div>
-            <div class="swatch teal" @click="setUiTheme('teal')">
-              <span class="swatchLabel">Teal</span>
-            </div>
-            <div class="swatch charcoal" @click="setUiTheme('charcoal')">
-              <span class="swatchLabel">Charcoal</span>
-            </div>
-          </div>
-          <label>UI MODE</label>
-          <!-- <button @click="setUiMode(targetMode)" class="btn small">uiMode</button> -->
-          <div class="buttonGroup uiMode">
-            <button
-              @click="setUiMode('full')"
-              class="small toggleItem"
-              :class="uiMode === 'full' ? 'active' : 'notActive'"
-            >Full</button>
-            <button
-              @click="setUiMode('minimal')"
-              class="small toggleItem"
-              :class="uiMode === 'minimal' ? 'active' : 'notActive'"
-            >minimal</button>
-            <button
-              @click="setUiMode('none')"
-              class="small toggleItem"
-              :class="uiMode === 'none' ? 'active' : 'notActive'"
-            >none</button>
-            <!-- <div class="col-50 toggleItem"  onClick='setClass("read", "showMeta", "showImage")'>Meta</div> -->
-          </div>
-        </div>
       </div>
       <div class="column credits col col-2 pa-0">
         <div class="corpLink">
@@ -110,7 +61,7 @@ export default {
       uiMode: 'ui/uiMode',
       contrastMode: 'ui/contrastMode',
       hideUi: 'ui/hideUi',
-      uiTheme: 'ui/uiTheme',
+      
     }),
 
     targetMode() {
@@ -120,7 +71,6 @@ export default {
   methods: {
     ...mapMutations({
       setUiMode: 'ui/setUiMode',
-      setUiTheme: 'ui/setUiTheme',
     }),
     // setTheme,
   },

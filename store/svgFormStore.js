@@ -669,7 +669,7 @@ export const getters = {
   showPreview: (state) => state.showPreview,
   svgCode: (state) => state.svgCode,
   defaultCode: (state) => defaultCode,
-  defaultElement: (state) => state.defaultElement,
+  defaultElement: (state) => defaultElement,
   svgFee: (state) => state.svgFee,
   previewBytes: (state) => state.previewBytes,
   calculatedFee: (state) => state.calculatedFee,
@@ -910,7 +910,7 @@ export const actions = {
       return;
     }
 
-    await commit("setBinStatus", "working");
+    await commit("ui/setBinStatus", "working");
     const newBinData = await $axios
       .$put(`https://api.jsonbin.io/v3/b/${binId}`, newData, {
         headers: {
