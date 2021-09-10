@@ -77,11 +77,38 @@ export const state = () => ({
   viewStatus: "",
   // DRAFTS
   draftsArray: [],
+  tiles: [
+    {
+      id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+      src: "https://gateway.pinata.cloud/ipfs/QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+      title: "north west",
+      location: [0, 0],
+    },
+    {
+      id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+      src: "https://gateway.pinata.cloud/ipfs/QmcQ8ekL1BYVFPs8eRttB91VA6iHB5oCpcBHVLXiRTNEop",
+      title: "north west",
+      location: [1, 0],
+    },
+    {
+      id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+      src: "https://gateway.pinata.cloud/ipfs/QmNuqGYX6L73M2PjWLiXPHmK1ydZJb6UnHj3GFqLu2nxXT",
+      title: "north west",
+      location: [1, 0],
+    },
+    {
+      id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
+      src: "https://gateway.pinata.cloud/ipfs/Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
+      title: "south east",
+      location: [1, 1],
+    },
+  ],
 });
 
 export const getters = {
   getField,
   siteData: (state) => state.siteData,
+  tiles: (state) => state.tiles,
   binData: (state) => state.binData,
   binStatus: (state) => state.binStatus,
   configStatus: (state) => state.configStatus,

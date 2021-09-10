@@ -7,12 +7,11 @@
       <div class=" col col-3 alternate">
         
            
-          <!-- <h1>
-            Chain Tokens
-          </h1> -->
-            <!-- <span class="betaFlag">beta</span> -->
-          <h3>Generative vector art, stored directly on-chain</h3>
-          <p class="text-body-2">Exploring the boundaries of on-chain art.</p>
+          <h1>
+            Chain Dungeons, Rooms, and maps
+          </h1>
+          <h3>Exploring NFT based social gaming</h3>
+          <!-- <p class="text-body-2">Exploring the boundaries of on-chain art.</p> -->
           
           <div class="ctaWrap">
             <nuxt-link to="/svg" class="btn hero">Get Started »</nuxt-link>
@@ -22,78 +21,15 @@
       </div>
       <div class="col col-9 ">
         <client-only>
-          <Loading text="Loading" v-if="imagesStatus === 'loading'" />
-          <div class=" introGalleryColumn">
-            <div class="galleryGrid grid panel "  v-if="binData && binData.images">
-              <div v-for="(image, index) in binData.images" :key="index" class="galleryItem gridItem">
-                <div class="preview-position" :class="showFull && index === fullIndex ? 'full' : '' " v-html="image.src"></div>
-                <label>BY {{image.creator}}</label>
-                <v-btn x-small depressed @click="handleFull(index)" v-if="!showFull"><v-icon small>mdi-arrow-expand-all</v-icon></v-btn>
-                <v-btn x-small depressed @click="handleClose(index)" class="closeBtn" v-if="showFull && index === fullIndex"><v-icon small>mdi-arrow-collapse</v-icon></v-btn>
-                <v-btn x-small depressed @click="handleRemoveItem(index)" class="" v-if="walletAddress === devAddress"><v-icon small>mdi-close</v-icon></v-btn>
-                
-              </div>
+          <!-- <Loading text="Loading" v-if="imagesStatus === 'loading'" /> -->
+          <div class=" grid-wrap">
+            <div v-for="(tile, index) in tiles" :key="index" class="grid-tile">
+              <img :src="tile.src" width="300px" />
             </div>
           </div>
-          <v-btn x-small depressed @click="saveImages" class="" v-if="walletAddress === devAddress">Update gallery</v-btn>
         </client-only>
       </div>
     </section>
-
-
-    <!-- About Container -->
-    <section id="about" class="ow">
-      <div class="tertiary col col-6">
-        <h2>About</h2>
-        <div class="aside">
-          <p>
-            {{siteName}} provides an interface for creating and storing vector art on chain.
-          </p>
-        </div>
-      </div>
-      <div class="col col6 alternate">
-        <div class style="max-width: 700px;">
-          <h3>NFT Art Forever</h3>
-          <p>
-            This app provides two things:
-          </p>
-          <p>
-            1. An interface for minting SVG art directly to the ethereum chain as a NFT.
-          </p>
-          <p>
-            2. A generator for creating vector art.
-          </p>
-          <v-divider />
-          <h3>Art Generation</h3>
-          <ul>
-            <li>
-              Rule based generation
-            </li>
-            <li>
-              Gradients
-            </li>
-            <li>
-              Animation
-            </li>
-            <li>
-              Grid
-            </li>
-            <li>
-              Repetition
-            </li>
-          </ul>
-          <v-divider />
-          <h3>NFT MINTING</h3>
-          <p>
-            Users are free to paste their own SVG code and mint. 
-          </p>
-          
-          
-        </div>
-      </div>
-      
-    </section>
-
     <Footer />
   </div>
 </template>
@@ -138,13 +74,13 @@ export default {
     ],
   },
   mounted(){
-    const params = this.$route.params;
-    if(this.binData && this.binData.images){
-      console.log('this.bindata', this.binData.images)
-      this.images = this.binData.images;
-    }
-    const id = '1234'
-    this.loadImages(id)
+    
+    // if(this.binData && this.binData.images){
+    //   console.log('this.bindata', this.binData.images)
+    //   this.images = this.binData.images;
+    // }
+    // const id = '1234'
+    // this.loadImages(id)
   },
   computed: {
     ...mapGetters({
@@ -154,6 +90,7 @@ export default {
       binData: "ui/binData",
       binStatus: "ui/binStatus",
       walletAddress: "ui/walletAddress",
+      tiles: "ui/tiles",
     }),
   },
   methods: {
@@ -222,35 +159,16 @@ export default {
 #intro{
   min-height: 90vh;;
 }
-.introGalleryColumn{
-  overflow: visible;
-  .preview-position{
-    &.full{
-      position: fixed;
-      background: blue;
-      z-index: 999999;
-      lefT: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      svg{
-        width: 100%;
-        height: 100%;
-      }
-      // width: 100%;
-      // height: 100%;
-    }
-  }
-  .closeBtn{
-    position: fixed;
-    z-index: 999999099999;
-    left: 0;
-    top: 1rem;
-    background: black;
-    background-color: black;
-    width: 2rem;
-    height: 2rem !important;
-    border-radisu: 0 4px 4px 0;
+.grid-wrap{
+  width: 604px !important;
+  display: flex;
+  flex-wrap: wrap;
+  
+
+  .grid-tile{
+    width: 300px;
+    height: 300px;
+    flex-shrink: 0;
   }
 }
 
