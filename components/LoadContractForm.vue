@@ -40,7 +40,7 @@
               name="Contract ID"
               oldId="j"
               id="temporaryContractId"
-              class="w3-input"
+              class="base-input"
               type="string"
               max="99"
               required

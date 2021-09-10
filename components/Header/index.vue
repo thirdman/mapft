@@ -387,8 +387,8 @@ export default {
         if (typeof window.ethereum !== "undefined") {
           console.log('WALLET CHECK',  window.ethereum)
           if(!this.walletNetwork){
-            // const newNetwork = this.setNetwork()
-            // initWeb3(requiredNetwork, infuraUrl);
+            const newNetwork = this.setNetwork()
+            initWeb3(requiredNetwork, infuraUrl);
           }
           // Get web3 instance
           const provider = window.ethereum;

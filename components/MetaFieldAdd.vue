@@ -11,7 +11,7 @@
           >
             <label>Name</label>
             <input
-              class="w3-input"
+              class="base-input"
               id="newName"
               type="string"
               max="999"
@@ -32,7 +32,7 @@
           >
             <label>Value</label>
             <input
-              class="w3-input"
+              class="base-input"
               name="Value"
               id="newValue"
               type="string"
@@ -46,13 +46,13 @@
         </ValidationProvider>
         <div class="column btn-column" style="padding-top: 0.25rem;">
           <label>&nbsp;</label>
-          <button class="w3-black btn btn-small" @click="addAction(fieldData)">
+          <button class=" btn btn-small" @click="addAction(fieldData)">
             Add
           </button>
         </div>
         <div class="column btn-column" style="padding-top: 0.25rem;">
           <label>&nbsp;</label>
-          <button class="w3-black btn btn-small" @click="cancelAction(false)">
+          <button class=" btn btn-small" @click="cancelAction(false)">
             Cancel
           </button>
         </div>

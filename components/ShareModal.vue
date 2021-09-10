@@ -43,7 +43,7 @@
           <div class="column col-66">
             <input
               name="Url"
-              class="w3-input invert"
+              class="base-input invert"
               type="string"
               style="font-size: .75rem"
               :value="this.createUrl(false)"

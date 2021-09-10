@@ -39,7 +39,7 @@
               <input
                 name="Contract ID"
                 id="giftTokenId"
-                class="w3-input"
+                class="base-input"
                 type="string"
                 max="99"
                 required
@@ -67,7 +67,7 @@
               <input
                 name="Token ID"
                 id="giftTokenId"
-                class="w3-input small"
+                class="base-input small"
                 type="string"
                 max="99"
                 required
@@ -93,7 +93,7 @@
               <input
                 name="Recipient Address"
                 id="giftWalletAddress"
-                class="w3-input"
+                class="base-input"
                 type="string"
                 required
                 placeholder="Eg. 0xd0c402bcbcb5..."

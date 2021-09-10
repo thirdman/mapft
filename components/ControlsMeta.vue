@@ -54,6 +54,9 @@ export default {
   methods: {
     ...mapMutations({
       setSvgData: "svgFormStore/setSvgData",
+      setSvgDescription: "svgFormStore/setSvgDescription",
+      setSvgTitle: "svgFormStore/setSvgTitle",
+      setSvgCreator: "svgFormStore/setSvgCreator",
     }),
     ...mapActions({
 
@@ -67,6 +70,15 @@ export default {
       } = this;
       console.log('tempMata', tempMeta)
       const newData = {...svgData, ...tempMeta}
+      if(newData.description){
+        this.setSvgDescription(newData.description)
+      }
+      if(newData.creator){
+        this.setSvgCreator(newData.creator)
+      }
+      if(newData.label){
+        this.setSvgTitle(newData.label)
+      }
       this.setSvgData(newData);
     }
   },

@@ -335,10 +335,7 @@ strong {
   min-height: calc(100vh - 6rem);
   flex-basis: 20%;
 }
-.w3-top,
-footer {
-  z-index: 20;
-}
+
 /* FOOTER*/
 
 .footer,
@@ -1084,9 +1081,6 @@ ul.heroList {
 * NAV 
 */
 
-.w3-top {
-  z-index: 12;
-}
 .headerRow {
   /* background: rgba(0,0,0,.02); */
   background: var(--ui-color);
@@ -1543,27 +1537,20 @@ a.navLink.active {
 /*
 * FORMS
 */
-
+.base-input {
+  padding: 8px;
+  display: block;
+  border: none;
+  border-bottom: 0px solid #ccc;
+  width: 100%;
+  background: var(--background-color, #eee);
+}
 .row .form.create.column {
   flex-basis: 66%;
   flex-shrink: 1;
   flex-grow: 0;
-  /* overflow: hidden; */
 }
-/* .row .previewColumn {
-  flex-basis: 34%;
-  flex-shrink: 1;
-  flex-grow: 0;
-  position: sticky;
-  top: calc(0px - 2px);
-}
-.previewColumn .previewBackground {
-  background: #eee;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-} */
+
 .svgPreviewGrid {
   background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% /
     20px 20px;
@@ -1874,7 +1861,6 @@ a.navLink.active {
   max-width: 680px;
   position: relative;
   padding: 1.5rem 1rem 1rem;
-  border-top: 1px solid var(--ui-color, #111);
 }
 .form .fieldset:first-child,
 .form .fieldset.imageContent {

@@ -524,19 +524,7 @@ const abiSVG = [
     type: "function",
   },
 ];
-// const defaultCode = `<?xml version="1.0" encoding="UTF-8"?>
-// <svg width="800px" height="536px" viewBox="0 0 800 536" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-//     <g id="logo_lowres" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-//         <g id="Group" transform="translate(0.000000, 1.000000)" fill="#111111" fill-rule="nonzero">
-//             <polygon id="Path" points="8 23.588387 340.523654 219 383 194.24697 48.3383558 0"></polygon>
-//             <polygon id="Path" points="0 40 0 496.742257 40.3763295 520 40.3763295 111.492507 283.588485 252.492253 324 229.624084"></polygon>
-//             <polygon id="Path" points="759.522657 415.38714 516.300558 274.076819 476 296.923928 800 487 800 29.5764496 759.522657 6"></polygon>
-//             <polygon id="Path" points="117 368.266374 117 416 701.626069 79.3638432 701.626069 360.130034 743 385.006284 743 6"></polygon>
-//             <polygon id="Path" points="57 141.245436 57 520 683 157.639035 683 110 98.3079748 446.915475 98.3079748 165.460919"></polygon>
-//             <polygon id="Path" points="418 331.688356 751.088584 526 791 502.247194 458.919965 308"></polygon>
-//         </g>
-//     </g>
-// </svg>`;
+
 const defaultCode = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="1600px" height="1600px" viewBox="0 0 1600 1600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 </svg>`;
@@ -712,6 +700,18 @@ export const mutations = {
     state.svgCode = value;
     // state.svgData.elements = [];
   },
+  setSvgDescription(state, value) {
+    console.log("setting svg description: ", value);
+    state.svgDescription = value;
+  },
+  setSvgTitle(state, value) {
+    console.log("setting svg description: ", value);
+    state.svgTitle = value;
+  },
+  setSvgCreator(state, value) {
+    console.log("setting svg description: ", value);
+    state.svgCreator = value;
+  },
   setActiveTheme(state, value) {
     state.activeTheme = value;
   },
@@ -803,6 +803,12 @@ export const actions = {
   handleMintSvg: async function (context, data) {
     // console.log("mint this: ", this);
     // const context = this;
+    const walletAddress = "0xd1C248d1c9879dC3b5A846D4DcCC5b7aA8fbF432";
+    const INFURA_URL_MAIN =
+      "https://mainnet.infura.io/v3/46aac655d58d4fc198a43792d193fd70";
+    const INFURA_URL_RINKEBY =
+      "https://rinkeby.infura.io/v3/46aac655d58d4fc198a43792d193fd70";
+    const infuraUrl = INFURA_URL_RINKEBY;
     const { state, rootState } = context;
 
     console.log("context", context);
@@ -815,11 +821,46 @@ export const actions = {
     const { svgFee, svgTitle, svgCreator, svgDescription, svgCode } = state;
     const network = rootState.ui.network;
     // const network = context.$config.network;
-    const doIt = true;
+    const doIt = false;
     console.log("network", network);
+    console.log("window.ethereum", window.ethereum);
+    console.log("Web3", Web3);
+
+    if (!Web3) {
+      console.error("no Web3");
+      return;
+    }
+    // if (!web3) {
+    //   console.error("no web3", this);
+    // }
+    if (!window.ethereum) {
+      console.error("no window.ethereum", window.ethereum);
+      return;
+    }
     context.commit("setSvgStatus", { status: "confirming" });
-    var contractSVG = web3.eth.contract(abiSVG).at(svgContractAddressRinkeby);
+    // var contractSVG = web3.eth.contract(abiSVG).at(svgContractAddressRinkeby);
+    const newWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
+    if (!newWeb3) {
+      console.error("no newWeb3");
+      return;
+    }
+
+    console.log("window.web3Write", window.web3Write);
+    console.log("newWeb3", newWeb3);
+    if (!window.web3Write) {
+      console.error("no window.web3Write");
+      return;
+    }
+    const contractSVG = new window.web3Write.eth.Contract(
+      abiSVG,
+      svgContractAddressRinkeby
+    );
+
+    // var contractSVG = window.web3Write.eth
+    //   .contract(abiSVG)
+    //   .at(svgContractAddressRinkeby);
     console.log("active contract: ", contractSVG);
+
     // const tempData = { name: state.name, symbol: state.symbol }
     const weiValue = 50000000000000000; // rinkeby
     // const weiValue = 100000000000000000 // main
@@ -835,26 +876,89 @@ export const actions = {
       console.error("canMint is false");
       return null;
     }
-    const createTransationId = contractSVG.createNFT(
-      svgTitle,
-      svgCreator,
-      svgDescription,
-      svgCode,
-      { value: weiValue },
-      (err, result) => {
-        if (err) {
-          console.log("contractSVG err", err);
-          return null;
-        } else {
-          console.log("contractSVG result", result);
-          // const mintTransactionId = result;
-          context.commit("setSvgStatus", { status: "working" });
-          context.commit("setSvgTransactionId", result);
-          return result;
-        }
-      }
-    );
-    console.log("createTransationId id: ", createTransationId);
+    const options = { value: weiValue, from: walletAddress };
+    contractSVG.methods
+      .createNFT(svgTitle, svgCreator, svgDescription, svgCode)
+      .send(options)
+      .on("transactionHash", function (transactionId) {
+        console.log("transactionId", transactionId);
+        // const mintTransactionLabel = document.getElementById(
+        //   "mintTransactionLabel"
+        // );
+        // if (mintTransactionLabel) {
+        //   mintTransactionLabel.innerHTML = `Transaction: ${transactionId}`;
+        // }
+        // // setMintStatus('working')
+        // context.commit("mintFormStore/setMintTransactionId", transactionId);
+        // context.commit("mintFormStore/setMintStatus", "working");
+      })
+      .then((completedTransaction) => {
+        console.log("done, completedTransaction = ", completedTransaction);
+        // if (completedTransaction.status === true) {
+        //   // setMintStatus('completed')
+        //   context.commit("mintFormStore/setMintStatus", "completed");
+        //   const events = completedTransaction.events;
+        //   console.log("events", events);
+        //   // const NewArtAddtData = events.NewArtAddtData.returnValues;
+        //   const NewArtMetadata = events.NewArtMetadata.returnValues;
+        //   // const newAddress = completedTransaction.logs[0].address;
+        //   // const newTokenTopics = completedTransaction.logs[0].topics;
+        //   // const newTokenIdHex = newTokenTopics && newTokenTopics[3];
+        //   // console.log("newTokenIdHex", newTokenIdHex);
+        //   // const newTokenId = decodeHexSequence(newTokenIdHex);
+        //   const newTokenId = NewArtMetadata.tokenID;
+        //   console.log("newTokenId", newTokenId);
+
+        //   console.log("network = ", network);
+        //   const mintedData = {
+        //     contractId: userContractAddress,
+        //     tokenId: newTokenId,
+        //     network: network,
+        //   };
+        //   console.log("mintedData = ", mintedData);
+
+        //   context.commit("mintFormStore/setMintedData", mintedData);
+        // } else {
+        //   context.commit(
+        //     "mintFormStore/setMintStatus",
+        //     "error",
+        //     "Something went wrong. Transaction was returned but completedTransaction.status was not true"
+        //   );
+        //   console.error(
+        //     "something went wrong. Transaction was returned but completedTransaction.status was not true"
+        //   );
+        // }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        // commit("setTransactionStatus", "error")
+        // commit("setTransactionError", error.message)
+        // commit("setPendingToken", null)
+        // commit("setTransactionId", null)
+        // return error
+      });
+
+    // const createTransationId = contractSVG.methids.createNFT(
+    //   svgTitle,
+    //   svgCreator,
+    //   svgDescription,
+    //   svgCode,
+    //   { value: weiValue },
+    //   (err, result) => {
+    //     if (err) {
+    //       console.log("contractSVG err", err);
+    //       return null;
+    //     } else {
+    //       console.log("contractSVG result", result);
+    //       // const mintTransactionId = result;
+    //       context.commit("setSvgStatus", { status: "working" });
+    //       context.commit("setSvgTransactionId", result);
+    //       return result;
+    //     }
+    //   }
+    // );
+
+    // console.log("createTransationId id: ", createTransationId);
   },
   canMint(_, parameters) {
     console.log("parameters", parameters);

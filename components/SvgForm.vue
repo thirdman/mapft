@@ -1,7 +1,7 @@
 <template>
   <div
     id="svgForm"
-    class="form column"
+    class="col formnot svgFormColumn"
     :class="svgStatus === 'error' ? 'error' : ''"
   >
     
@@ -28,6 +28,9 @@
       <div class="sectionTitle">
         <h6>Source Code</h6>
       </div>
+      <div v-if="!svgCode">
+        <v-btn color="primary" @click="compileCode">Compile Code</v-btn>
+      </div>
       <ValidationProvider rules="required">
         <div
           class="formItem required"
@@ -40,7 +43,7 @@
               max="999"
               name="Svg Code"
               id="svgCreator"
-              class="w3-input codeInput"
+              class="base-input codeInput"
               type="string"
               required
               placeholder=""
@@ -69,6 +72,19 @@
         Length: {{this.countBytes()}} bytes / {{previewBytes}}
       </div>
     </div>
+    <div class="row">
+      <div class="col">
+        <settings-meta :value.sync="tempMeta" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <v-btn 
+          x-small 
+          color="primary"
+          @click="applySettings">Apply</v-btn>
+      </div>
+    </div>
     <div class="fieldset metaContent" v-if="svgStatus !== 'completed'">
       <div class="sectionNumber">2.</div>
       <div class="sectionTitle">
@@ -85,7 +101,7 @@
             <input
               name="Title"
               id="svgTitle"
-              class="w3-input"
+              class="base-input"
               type="string"
               max="99"
               required
@@ -114,7 +130,7 @@
              <textarea
               name="NFT Name"
               id="svgDescription"
-              class="w3-input"
+              class="base-input"
               type="string"
               required
               placeholder="Eg. This is my cool SVG"
@@ -144,11 +160,11 @@
             <input
               name="NFT Creator"
               id="svgCreator"
-              class="w3-input"
+              class="base-input"
               type="string"
               required
               placeholder="My Cool Name"
-              v-model="svgCreator"
+              v-model="svgDescription"
             />
             <div>
               <span class="validationMessage">{{ errors[0] }}</span>
@@ -176,29 +192,31 @@
         id="fieldsetAction"
         style="padding-top: 0.5rem"
       >
-        <Button
+        <!-- <Button
           :disabled="!this.svgCode"
           mode="primary"
           size="medium"
           @click="() => setShowPreview(true)"
           >
             Update Preview
-        </Button>
-        <h1 class="w3-xlarge" style="max-width: 1000px; margin: auto">
-          <button
+        </Button> -->
+        <h1 class="hero" style="">
+          <v-btn
+            large
+            color="primary"
             id="h"
-            class="w3-button w3-block w3-padding-large w3-black w3-margin-bottom"
+            class=""
             :disabled="!canMintSvg || previewBytes > 15000"
             @click="handleMintSvg(this)"
           >
-            MINT SVG TOKEN
-          </button>
+            MINT NFT
+          </v-btn>
         </h1>
         
         <Button mode="secondary" size="medium" @click="resetSvgForm">
           Reset Form
         </Button>
-      </div>
+    </div>
       
   </div>
 </template>
@@ -237,7 +255,20 @@ export default {
       // These are the validation arrays
       errors: [],
       classes: [],
+      
+      tempMeta: {
+        label: '',
+        description: '',
+        creator: '',
+      },
     };
+  },
+  created(){
+    const {label, description, creator}  = this.svgData;
+    const newTempObj = {
+      label, description, creator
+    }
+    this.tempMeta = newTempObj;
   },
   computed: {
     ...mapGetters({
@@ -247,6 +278,7 @@ export default {
       activeContractName: "ui/activeContractName",
       activeContractSymbol: "ui/activeContractSymbol",
       // SVG
+      svgData: "svgFormStore/svgData",
       showPreview: "svgFormStore/showPreview",
       previewBytes: "svgFormStore/previewBytes",
       canMintSvg: "svgFormStore/canMintSvg",
@@ -270,18 +302,41 @@ export default {
       setSvgStatus: "svgFormStore/setSvgStatus",
       resetSvgForm: "svgFormStore/resetSvgForm",
       setShowPreview: "svgFormStore/setShowPreview",  
-      setBytes: "svgFormStore/setBytes"
+      setBytes: "svgFormStore/setBytes",
+      setSvgData: "svgFormStore/setSvgData",
+      setSvgDescription: "svgFormStore/setSvgDescription",
+      setSvgTitle: "svgFormStore/setSvgTitle",
+      setSvgCreator: "svgFormStore/setSvgCreator",
     }),
     ...mapActions({
       handleMintSvg: "svgFormStore/handleMintSvg",
       // setContractData: "svgFormStore/setContractData",
     }),
-    
+    applySettings(){
+      const {
+        svgData, 
+        tempMeta
+      } = this;
+      console.log('tempMata', tempMeta)
+      const newData = {...svgData, ...tempMeta}
+      if(newData.description){
+        this.setSvgDescription(newData.description)
+      }
+      if(newData.creator){
+        this.setSvgCreator(newData.creator)
+      }
+      if(newData.label){
+        this.setSvgTitle(newData.label)
+      }
+      this.setSvgData(newData);
+    },
     updatePreview() {
       alert('up')
       // this.$store.commit("deployFormStore/addMetaTemplate", obj);
     },
-    
+    compileCode(){
+      console.log('here')
+    },
     countBytes(){
       const source = this.svgCode;
       // const bytes = new TextEncoder().encode(source).length; 

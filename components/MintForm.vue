@@ -270,7 +270,7 @@
           <div class="validatedInputWrap">
             <input
               name="Artist / Author Name"
-              class="w3-input"
+              class="base-input"
               id="a"
               oldId="a"
               type="string"
@@ -301,7 +301,7 @@
           <label>Art Title*</label>
           <div class="validatedInputWrap">
             <input
-              class="w3-input"
+              class="base-input"
               type="string"
               max="99"
               required
@@ -337,7 +337,7 @@
           <label>Artist Note</label>
           <div class="validatedInputWrap">
             <textarea
-              class="w3-input"
+              class="base-input"
               type="string"
               max="999"
               name="Description"
@@ -365,7 +365,7 @@
           <label>Total Editions* (Max of 10)</label>
           <div class="validatedInputWrap">
             <input
-              class="small w3-input"
+              class="small base-input"
               type="number"
               min="1"
               max="10"
@@ -403,7 +403,7 @@
         <div class="formItem" :class="classes" slot-scope="{ classes, errors }">
           <label>Exhibition / Set</label>
           <input
-            class="w3-input"
+            class="base-input"
             type="string"
             max="999"
             name="Series"
@@ -431,7 +431,7 @@
           <label>Royalty Fee</label>
           <div class="validatedInputWrap">
             <input
-              class="small w3-input"
+              class="small base-input"
               type="number"
               min="0"
               max="99"
@@ -460,7 +460,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       <div class="formItem" :style="`${devMode ? 'visibility: visible;' : 'display: none; visibilty: hidden;'}`" >
         <label>File Type</label>sdf {{devMode ? "devmode" :"not"}}
         <input
-          class="small w3-input"
+          class="small base-input"
           id="g"
           type="string"
           max="99"
@@ -508,24 +508,24 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
             <div class="row">
               <div class="column col-33">
                 <label>Name</label>
-                <input class="w3-input" id="newName" type="string" max="999"
+                <input class="base-input" id="newName" type="string" max="999"
                 onchange="updateMetaField(event, "name")" />
               </div>
               <div class="column col-66" style="padding-left: 1rem;">
                 <label>Value</label>
-                <input class="w3-input" id="newValue" type="string" max="999"
+                <input class="base-input" id="newValue" type="string" max="999"
                 onchange="updateMetaField(event, "value")" />
               </div>
               <div class="column btn-column">
                 <label>&nbsp;</label>
-                <button class="w3-black btn btn-small" onclick="addMetaField()">
+                <button class=" btn btn-small" onclick="addMetaField()">
                   Add
                 </button>
               </div>
               <div class="column btn-column">
                 <label>&nbsp;</label>
                 <button
-                  class="w3-black btn btn-small"
+                  class=" btn btn-small"
                   onclick="hideNewMetaField()"
                 >
                   Cancel
@@ -541,7 +541,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
           </div>
         </div> -->
         <div class="row" style="padding-bottom: 1rem">
-          <Button class="w3-black btn" @click="setShowNewMetaField(true)"
+          <Button class=" btn" @click="setShowNewMetaField(true)"
             >New Meta Field</Button
           >
         </div>
@@ -655,7 +655,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
       <h1 class="w3-xlarge" style="max-width: 1000px; margin: auto">
         <button
           id="h"
-          class="w3-button w3-block w3-padding-large w3-black w3-margin-bottom"
+          class="w3-button w3-block w3-padding-large  w3-margin-bottom"
           :disabled="!canMint"
           @click="handleMint"
         >
@@ -684,7 +684,7 @@ onChange='updatePreview(event, "royaltyFee");validateMintForm(event)'
         Save Draft...
       </Button>
       <Button @click="resetMintForm()" mode="hollow">Reset Form</Button>
-      <!-- <button class="w3-button w3-block w3-black" id="resetFormButton" style="margin-left: .25rem;">
+      <!-- <button class="w3-button w3-block " id="resetFormButton" style="margin-left: .25rem;">
         Reset Form
       </button> -->
       </div>

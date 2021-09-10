@@ -104,7 +104,7 @@
             <ControlsSettings v-if="controlMode === 'settings' " />
             <ControlsMeta v-if="controlMode === 'meta' " />
             <ControlsCode v-if="controlMode === 'code' " />
-            <SvgForm v-if="controlMode === 'mint' && 1===2"/>
+            <SvgForm v-if="controlMode === 'mint'" :target="this.$refs.previewSvg || this.$refs.svg"/>
             <div v-if="controlMode === 'mint'"> Mint form will be here</div>
           </div>
         </div>
@@ -246,8 +246,6 @@ console.log('this', this.svgData)
       const target = propsExist ? previewSvg : svg;
       const source = target.innerHTML;
       console.log('source', source.innerHTML)
-      // const bytes = new TextEncoder().encode(source).length; 
-      // const bytes = this.svgCode.length
       const bytes = Buffer.byteLength(source);
       // const gasFee = 30;
       // const transactionFee = bytes / 1000000 * gasFee;
@@ -366,6 +364,9 @@ console.log('this', this.svgData)
     overflow: scroll;
   }
 }
+  .svgFormColumn{
+    overflow: scroll;
+  }
 .controlsColumn{
   flex-basis: 50%;
   height: 100%;

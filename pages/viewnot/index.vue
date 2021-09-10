@@ -40,7 +40,7 @@
               <!-- <button
               id="xx"
               type="submit"
-              class="w3-black btn-large"
+              class=" btn-large"
               @click="doTest"
             >
               READ

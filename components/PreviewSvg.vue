@@ -104,7 +104,7 @@ export default {
     this.loading = false;
    if(this.calculateCode){
      console.log('should calculate code')
-     this.countBytes()
+     this.countBytes();
    } 
   },
   
@@ -161,6 +161,9 @@ export default {
   },
 
   methods: {
+    ...mapMutations({
+      setSvgCode: "svgFormStore/setSvgCode",
+    }),
     ...mapActions({
       getColor: "svgFormStore/getColor",
     }),
@@ -805,8 +808,7 @@ console.log('drawbackground fillColor, fillType', fillColor, fillType)
       const target = propsExist ? previewSvg : svg;
       const source = target.innerHTML;
       console.log('source', source.innerHTML)
-      // const bytes = new TextEncoder().encode(source).length; 
-      // const bytes = this.svgCode.length
+      this.setSvgCode(source)
       const bytes = Buffer.byteLength(source);
       // const gasFee = 30;
       // const transactionFee = bytes / 1000000 * gasFee;

@@ -20,7 +20,7 @@
             id="newId"
             v-model="newId"
             name="Template Id"
-            class="w3-input small"
+            class="base-input small"
             type="string"
             max="999"
           />
@@ -45,7 +45,7 @@
           <input
             id="newName"
             name="New Title"
-            class="w3-input"
+            class="base-input"
             type="string"
             max="999"
             v-model="newName"
@@ -66,7 +66,7 @@
         <label>Type</label>
         <div class="buttonGroup">
           <button
-            class="btn btn-small w3-black selected"
+            class="btn btn-small  selected"
             onClick='alert("body", "lemon")'
           >
             Text
@@ -97,7 +97,7 @@
           <label>Help Text</label>
           <input
             id="newHelpText"
-            class="w3-input"
+            class="base-input"
             type="string"
             max="999"
             name="Help Text"
@@ -118,13 +118,13 @@
         <MetaFieldEdit :field="previewData" :removeAction="fakeRemove" />
       </div>
       <div style="padding-top: 1rem;">
-        <button class="w3-black btn btn-large" @click="showPreview = true">
+        <button class=" btn btn-large" @click="showPreview = true">
           Preview
         </button>
-        <button class="w3-black btn btn-large" @click="addAction(templateData)">
+        <button class=" btn btn-large" @click="addAction(templateData)">
           Add
         </button>
-        <button class="w3-black btn btn-large" @click="cancelAction(false)">
+        <button class=" btn btn-large" @click="cancelAction(false)">
           Cancel
         </button>
       </div>

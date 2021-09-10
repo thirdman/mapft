@@ -135,7 +135,7 @@
             <input
               name="Custom Contract ID"
               id="customTokenId"
-              class="w3-input"
+              class="base-input"
               type="string"
               max="99"
               required

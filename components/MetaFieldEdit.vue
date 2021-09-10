@@ -9,7 +9,7 @@
         id="field.id"
         name="field.name"
         type="field.string"
-        class="w3-input"
+        class="base-input"
         :value="field.value"
         required="field.required"
       />
@@ -17,7 +17,7 @@
       <div class="column btn-column">
         <button
           @click="removeAction(field.id)"
-          class="w3-black btn btn-small"
+          class=" btn btn-small"
           :disabled="field.required"
         >
           Remove

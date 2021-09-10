@@ -15,7 +15,7 @@
       <div class="column btn-column">
         <button
           @click="removeAction(template.id)"
-          class="w3-black btn btn-small"
+          class=" btn btn-small"
         >
           Remove
         </button>

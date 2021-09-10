@@ -24,7 +24,7 @@
             <input
               name="Symbol"
               id="j"
-              class="w3-input small"
+              class="base-input small"
               type="string"
               max="99"
               required
@@ -55,7 +55,7 @@
             <input
               name="NFT Name"
               id="i"
-              class="w3-input"
+              class="base-input"
               type="string"
               required
               placeholder="Eg. Crypt0 Kytty Punkz"
@@ -121,7 +121,7 @@
             <p class="help"></p>
             <input
               id="newId"
-              class="w3-input small"
+              class="base-input small"
               type="string"
               max="999"
               onChange='updateTemplateField(event, "id");'
@@ -140,7 +140,7 @@
             <label>Display Title</label>
             <input
               id="newId"
-              class="w3-input"
+              class="base-input"
               type="string"
               max="999"
               onChange='updateTemplateField(event, "name");'
@@ -160,7 +160,7 @@
             <label>Type</label>
             <div class="buttonGroup">
               <button
-                class="btn btn-small w3-black selected"
+                class="btn btn-small  selected"
                 onClick='alert("body", "lemon")'
               >
                 Text
@@ -186,7 +186,7 @@
             <label>Help Text</label>
             <input
               id="newHelpText"
-              class="w3-input"
+              class="base-input"
               type="string"
               max="999"
               onChange='updateTemplateField(event, "helpText");'
@@ -204,13 +204,13 @@
 
           <div style="padding-top: 1rem">
             <button
-              class="w3-black btn btn-large"
+              class=" btn btn-large"
               onClick="addMetaTemplate()"
             >
               Add
             </button>
             <button
-              class="w3-black btn btn-large"
+              class=" btn btn-large"
               onClick="hideNewMetaTemplate()"
             >
               Cancel
@@ -219,7 +219,7 @@
         </div>
       </div>
       <div class="row">
-        <Button class="w3-black btn" @click="setShowNewMetaTemplate(true)"
+        <Button class=" btn" @click="setShowNewMetaTemplate(true)"
           >New Meta Template</Button
         >
       </div>
@@ -264,7 +264,7 @@
       <h1 class="w3-xlarge" style="max-width: 1000px; margin: auto">
         <button
           id="h"
-          class="w3-button w3-block w3-padding-large w3-black w3-margin-bottom"
+          class="w3-button w3-block w3-padding-large  w3-margin-bottom"
           :disabled="!canDeploy"
           @click="handleDeploy2"
         >

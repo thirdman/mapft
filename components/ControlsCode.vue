@@ -8,7 +8,7 @@
             max="999"
             name="Svg Code"
             id="svgCreator"
-            class="w3-input codeInput"
+            class="base-input code-input"
             type="string"
             required
             placeholder=""
@@ -56,13 +56,13 @@
 <style lang="scss">
 .codeControl{
   width: 100%;
-  .codeInput{
+}
+  .code-input{
     border: 1px solid var(--line-color);
     background: #222;
     color: #eee;
     font-family: monospace;
   }
-}
 </style>
 
 <script>
