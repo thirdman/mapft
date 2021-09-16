@@ -1,0 +1,145 @@
+<template>
+  <div
+    class="grid-tile"
+    :class="`${tile.canGenerate ? 'generate' : ''} ${selected ? 'selected' : ''} ${fill ? 'fill' : ''} ${highlighted ? 'highlighted' : ''}`"
+    @click="handleSelect && handleSelect(index)"
+     :style="size ? `width: ${size}px; height: ${size}px` :`width: 100%; height: auto`"
+    >
+     <!-- :style="size && `width: ${size}px; height: ${size}px`" -->
+    <!-- !tile.canGenerate &&  -->
+    <!-- width="240px" -->
+    <img
+      :src="tile.src" 
+      :style="size && `width: ${size}px; height: ${size}px`"
+     />
+      <!-- :style="fill ? `width: 100%; height: auto` : `width:` " -->
+    <Card  :asset="tile.meta.creature" v-if="!hideAsset && tile.meta.creature && tile.meta.creature.id" :showmeta="false" :card="false" />
+    <!-- <img v-if="tile.meta && tile.meta.creatureSrc" :src="tile.meta.creatureSrc" width="100px" class="creature-image" /> -->
+    <div class="tile-current" v-if="tile.meta && tile.meta.value">
+      <div class="tile-team" :class="tile.meta.team" :style="`background: ${tile.meta.team ? getColor(tile.meta.team) : ''}`"></div>
+      <div class="tile-value" >{{tile.meta.value}}</div>
+      <div class="tile-owner" v-if="tile.meta && tile.meta.value && tile.meta.owner === walletAddress">
+        <v-icon light color="white" x-small>mdi-account-circle</v-icon>
+      </div>
+      <div class="tile-defence" v-if="tile.meta && tile.meta.defence">
+        <v-icon color="white" medium>mdi-shield</v-icon>
+        {{tile.meta.defence}}
+      </div>
+    </div>
+    <div class="emptyinfo" v-if="tile.meta && tile.meta.value && !tile.meta.creature && tile.meta.owner !== walletAddress">
+      Uncontested
+    </div>
+    <div class="blankinfo" v-if="tile.meta && !tile.meta.value && tile.canGenerate">
+      <v-icon large>mdi-help-box</v-icon>
+      <v-btn @click="() => {onAction && onAction(tile.location)}" primary>
+        Generate tile
+      </v-btn>
+    </div>
+    <div class="metainfo">
+      <div class="inside ">
+        <div class="row ma-0">
+          <div class="col pa-0">
+            Click to view tile information
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss">
+.grid-tile{
+  width: 100%;
+  height: auto;
+  transition: transform .3s ease;
+  &.fill{
+    img{
+      width: 100%;
+      height: auto;
+    }
+  }
+  &.highlighted{
+      opacity: 1;
+      z-index: 999;
+      box-shadow: 0 0 2rem -5px #d0b900, 0 0 4px 1px white;
+      transform: scale3d(1.1, 1.1, 1.1);
+      .tile-current{
+        // transform: scale(2);
+        // transform-origin: top left;
+        .tile-team{
+          transform: scale(1.4);
+          transform-origin: center center;
+        }
+        .tile-value{}
+        .tile-owner{
+          transform: scale(1.4);
+          transform-origin: center center;
+        }
+        .tile-defence{
+          transform: scale(1.4);
+          transform-origin: center center;
+          
+        }
+      }
+      // .asset{
+      //   transform: scale3d(1.1, 1.1, 1.1) translateY(0px);
+      //   transition-delay: .3s;;
+      // }
+    }
+  .asset{
+    background: transparent;
+    border: none;
+    box-shadow: none;;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100px;
+    margin-left: -50px;
+    margin-top: -70px;
+    z-index: 2;
+    filter: drop-shadow(0px 5px 10px rgba(0,0,0,.5));
+    transform: scale3d(1, 1, 1) translateY(0);
+    transition: transform .3s ease;
+    transition-delay: 0s;
+    
+  }
+}
+</style>
+
+<script>
+import { mapMutations, mapGetters } from "vuex";
+
+export default {
+  props: ['tile', 'handleSelect', 'selected', 'index', 'size',  'onAction', 'hideAsset', 'fill', 'highlighted'],
+  data() {
+    return {
+      
+    };
+  },
+  created(){
+  },
+  
+  computed: {
+    ...mapGetters({
+      walletAddress: "ui/walletAddress",
+      gameTeams: "ui/gameTeams",
+    }),
+    
+  },
+
+  methods: {
+    ...mapMutations({
+    }),
+    getColor(team){
+      const {gameTeams} = this;
+      if(!gameTeams || !team){return}
+      const teamObj = gameTeams.filter(t => t.team === team)
+      const color = teamObj && teamObj[0].color
+      return color
+    }
+    
+  },
+};
+</script>
+
+

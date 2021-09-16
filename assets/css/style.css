@@ -508,6 +508,7 @@ h6 {
 }
 
 label {
+  display: block;
   font-size: 0.75rem;
   opacity: 0.7;
   text-transform: uppercase;
@@ -812,9 +813,8 @@ a.iconButton {
 /* SECTIONS */
 
 section {
-  min-height: calc(100vh - 80px);
+  /* min-height: calc(100vh - 80px);
   min-height: calc(100vh - var(--header-height, 80px));
-  /* // position: relative; */
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -823,48 +823,37 @@ section {
   max-width: 1440px;
   margin-left: auto;
   margin-right: auto;
-  padding: 0;
+  padding: 0; */
 }
 section > .row {
-  align-self: stretch;
-  justify-self: stretch;
+  /* align-self: stretch;
+  justify-self: stretch; */
 }
 section > .row > .col {
-  align-self: stretch;
-  /* justify-self: stretch; */
+  /* align-self: stretch; */
 }
 section#appSection {
-  min-height: calc(100vh - 2rem - 4rem);
-  height: calc(100vh - 2rem - 4rem);
+  /* min-height: calc(100vh - 2rem - 4rem);
+  height: calc(100vh - 2rem - 4rem); */
   /* height - footer - header*/
 }
 
-#body.full {
-  border-left: 1px dotted var(--line-color);
-  border-right: 1px dotted var(--line-color);
-}
 #body.minimal section {
   /* min-height: calc(100vh - 80px); */
 }
 
-section.marker:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: calc(0px - 2px);
-  width: 2rem;
-  height: 2px;
-  background: var(--ui-color);
+section.hero {
+  padding: 2rem 4rem;
 }
-section.marker:after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: calc(80px - 2px);
-  width: 2rem;
-  height: 2px;
-  background: #333;
+.col h1 {
+  text-align: center;
+  margin: 0 auto;
 }
+section.content {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
 section > div {
   flex-shrink: 1;
 }
@@ -979,7 +968,6 @@ ul.heroList {
   font-variation-settings: "wght" 400;
 }
 .ctaWrap {
-  padding: 2rem 0 0;
 }
 .ctaWrap .btn.hero {
   background: var(--ui-color, #111);
@@ -1093,14 +1081,12 @@ ul.heroList {
   /* border-bottom: 2px solid #222;
   border-top: 2px solid #222; */
   height: 4rem;
-  z-index: 10;
+  /* z-index: 10; */
   position: relative;
 }
 .navRow {
   position: relative;
-  z-index: 10;
   flex-basis: 80%;
-
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -1696,127 +1682,6 @@ a.navLink.active {
 .buttonGroup.uiMode .toggleItem:last-child {
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
-}
-
-/*OPENSEA PREVIEW*/
-.opensea {
-}
-.opensea .preview {
-  width: 220px;
-  margin: 0.5rem auto;
-  border-radius: 2px;
-  background-color: #fff;
-  position: relative;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12),
-    0 3px 1px -2px rgba(0, 0, 0, 0.2);
-}
-.opensea .preview .previewImage {
-  height: 75%;
-  width: 100%;
-  max-width: 250px;
-  margin: auto;
-  border-bottom: 1px solid #e0e0e0;
-}
-.opensea .preview .previewImage img {
-  object-fit: contain;
-  max-height: 200px;
-  min-height: 150px;
-  display: block;
-  border-radius: 2px 2px 0 0;
-  position: relative;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-.opensea .divider {
-  height: 1px;
-  overflow: hidden;
-  background-color: #e0e0e0;
-}
-.opensea .assetPills {
-  display: block;
-  width: auto;
-  height: 24px;
-  position: relative;
-  left: 10px;
-  top: -11px;
-  z-index: 1;
-  text-align: left;
-  overflow: hidden;
-}
-.opensea .assetPills .assetPill {
-  border: 1px solid #e2e6ef;
-  background: #fff;
-  border-radius: 50px;
-  color: #828282;
-  font-size: 12px;
-
-  width: auto;
-  vertical-align: top;
-  padding: 9px 6px 9px 3px;
-  height: 17px;
-  max-width: 158px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-}
-.assetPillImage {
-  background: #e0e0e0;
-  display: inline-block;
-  width: 14px;
-  border-radius: 100px;
-  height: 14px;
-  vertical-align: top;
-}
-.opensea .assetPills .assetPill span {
-  font-size: 10px;
-  position: relative;
-  vertical-align: top;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  margin-left: 5px;
-  display: inline-block;
-  width: calc(100% - 23px);
-}
-.opensea .previewImage ~ .previewContent {
-  font-size: 11px;
-  padding: 0.5rem;
-}
-.opensea .assetPills ~ .previewContent {
-  position: relative;
-  top: -14px;
-}
-.opensea .previewContent label {
-  display: none;
-}
-.opensea .previewContent .row,
-.opensea .previewContent .col-50 {
-  display: inline;
-}
-.opensea .previewContent .previewElement {
-  font-size: 12px;
-  color: rgb(46, 54, 59);
-  height: 30px;
-  white-space: normal;
-
-  text-transform: none;
-  line-height: 14px;
-  display: inline-block;
-}
-.opensea .previewContent .previewElement div {
-  display: inline;
-}
-.opensea .previewContent .artistName,
-.opensea .previewContent .artistNote,
-.opensea .previewContent .royaltyFee {
-  display: none;
-}
-
-.opensea .previewContent .editionsCount:before {
-  content: "#1 of ";
-  color: rgb(46, 54, 59);
-  font-size: 14px;
 }
 
 /* FORM VALIDATION*/

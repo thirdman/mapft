@@ -11,6 +11,426 @@ import {
 // import { getContrast } from "../utils/theme";
 // import { resolveEns } from "../utils/wallet";
 
+const defaultTiles = [
+  {
+    id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+    src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/nw.png",
+    title: "north west",
+    location: [0, 0],
+    meta: {
+      value: 18,
+      attack: 4,
+      defence: 6,
+      team: "Yellow",
+      owner: "0x1234",
+      // creature:
+      //   "https://testnets.opensea.io/assets/0x749335b3a18034118c37841286256d57f770c40f/1",
+      // creatureSrc:
+      //   "https://storage.opensea.io/gods-unchained-asset-images/v0_0/proto121/quality4.png",
+      creature: {
+        id: 319,
+        name: "Griffith, The Chosen",
+        effect:
+          "Protected. Ward.\u003cbr\u003eRoar: Set the strength of all other creatures with strength 4 or more to 1.",
+        god: "light",
+        rarity: "legendary",
+        tribe: {
+          String: "",
+          Valid: false,
+        },
+        mana: 7,
+        attack: {
+          Int64: 6,
+          Valid: true,
+        },
+        health: {
+          Int64: 7,
+          Valid: true,
+        },
+        type: "creature",
+        set: "genesis",
+        collectable: true,
+        live: "true",
+        art_id: "C136",
+        lib_id: "L1-319",
+      },
+    },
+  },
+  {
+    id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+    src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/h.png",
+    title: "north",
+    location: [1, 0],
+    meta: {
+      value: 8,
+      attack: 3,
+      defence: 6,
+      team: "Purple",
+      owner: "0x1234",
+      // creature:
+      //   "https://opensea.io/assets/0x0e3a2a1f2146d86a604adc220b4967a898d7fe07/24647211",
+      // creatureSrc:
+      //   "https://storage.opensea.io/gods-unchained-asset-images/v0_0/proto341/quality4.png",
+      creature: {
+        id: 341,
+        name: "Merchant Prince",
+        effect:
+          "Roar: Reduce the cost of all cards in your hand that did not start in your deck by 1.",
+        god: "deception",
+        rarity: "rare",
+        tribe: {
+          String: "guild",
+          Valid: true,
+        },
+        mana: 4,
+        attack: {
+          Int64: 2,
+          Valid: true,
+        },
+        health: {
+          Int64: 4,
+          Valid: true,
+        },
+        type: "creature",
+        set: "genesis",
+        collectable: true,
+        live: "true",
+        art_id: "C315",
+        lib_id: "L1-341",
+      },
+    },
+  },
+  {
+    id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+    src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/n.png",
+    title: "north east",
+    location: [2, 0],
+    meta: {
+      value: 13,
+      attack: 3,
+      defence: 4,
+      team: "Blue",
+      owner: "0x1234",
+      // creature:
+      //   "https://opensea.io/assets/0x0e3a2a1f2146d86a604adc220b4967a898d7fe07/24702253",
+      // creatureSrc:
+      //   "https://storage.opensea.io/gods-unchained-asset-images/v0_0/proto23/quality4.png",
+      creature: {
+        id: 23,
+        name: "Portal Wrangler",
+        effect: "Roar: Add a copy of the last creature played to your hand.",
+        god: "magic",
+        rarity: "common",
+        tribe: {
+          String: "mystic",
+          Valid: true,
+        },
+        mana: 4,
+        attack: {
+          Int64: 3,
+          Valid: true,
+        },
+        health: {
+          Int64: 4,
+          Valid: true,
+        },
+        type: "creature",
+        set: "genesis",
+        collectable: true,
+        live: "true",
+        art_id: "C69",
+        lib_id: "L1-023",
+      },
+    },
+  },
+  {
+    id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+    src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/ne.png",
+    title: "north east",
+    location: [2, 0],
+    meta: {
+      value: 9,
+      attack: 3,
+      defence: 4,
+      team: "Blue",
+      owner: "0x1234",
+      // creature:
+      //   "https://opensea.io/assets/0x0e3a2a1f2146d86a604adc220b4967a898d7fe07/24702253",
+      // creatureSrc:
+      //   "https://storage.opensea.io/gods-unchained-asset-images/v0_0/proto23/quality4.png",
+      creature: {
+        id: 401,
+        name: "Light's Bidding",
+        effect:
+          "Roar: Transform a creature with strength 2 or less into a 2/2 Acolyte. Gain control of the Acolyte.",
+        god: "light",
+        rarity: "common",
+        tribe: {
+          String: "",
+          Valid: false,
+        },
+        mana: 6,
+        attack: {
+          Int64: 2,
+          Valid: true,
+        },
+        health: {
+          Int64: 3,
+          Valid: true,
+        },
+        type: "creature",
+        set: "promo",
+        collectable: true,
+        live: "true",
+        art_id: "C471",
+        lib_id: "L4-002",
+      },
+    },
+  },
+
+  // ROW 2
+  {
+    id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+    src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/w.png",
+    title: "West",
+    location: [0, 1],
+    meta: {
+      value: 7,
+      attack: 0,
+      defence: 0,
+      team: null,
+      owner: null,
+
+      creature: null,
+    },
+  },
+  {
+    id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
+    src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/ne.png",
+    title: "Middle",
+    location: [1, 1],
+    meta: {
+      value: 4,
+      attack: 6,
+      defence: 6,
+      team: "Red",
+      owner: "0x1234",
+      creature: {
+        id: 195,
+        name: "Cyclops",
+        effect:
+          "After Cyclops attacks a creature, deal 1 damage to each other creature.",
+        god: "war",
+        rarity: "rare",
+        tribe: {
+          String: "wild",
+          Valid: true,
+        },
+        mana: 6,
+        attack: {
+          Int64: 5,
+          Valid: true,
+        },
+        health: {
+          Int64: 5,
+          Valid: true,
+        },
+        type: "creature",
+        set: "genesis",
+        collectable: true,
+        live: "true",
+        art_id: "C278",
+        lib_id: "L1-195",
+      },
+
+      // creature:
+      //   "https://opensea.io/assets/0x0e3a2a1f2146d86a604adc220b4967a898d7fe07/3920662",
+      // creatureSrc:
+      //   "https://storage.opensea.io/gods-unchained-asset-images/v0_0/proto195/quality4.png",
+    },
+  },
+  {
+    id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
+    src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/v.png",
+    title: "East",
+    location: [2, 1],
+    meta: {
+      value: 4,
+      attack: 6,
+      defence: 6,
+      team: "Purple",
+      owner: "0x1234",
+      creature: {
+        id: 276,
+        name: "Vile Mantis",
+        effect:
+          "Roar: Destroy two other random friendly creatures. This creature gains +2/+3 for each creature destroyed.",
+        god: "death",
+        rarity: "common",
+        tribe: {
+          String: "",
+          Valid: false,
+        },
+        mana: 4,
+        attack: {
+          Int64: 3,
+          Valid: true,
+        },
+        health: {
+          Int64: 2,
+          Valid: true,
+        },
+        type: "creature",
+        set: "genesis",
+        collectable: true,
+        live: "true",
+        art_id: "C19",
+        lib_id: "L1-276",
+      },
+
+      //   "https://testnets.opensea.io/assets/0x749335b3a18034118c37841286256d57f770c40f/1",
+      // creatureSrc:
+      //   "https://storage.opensea.io/gods-unchained-asset-images/v0_0/proto276/quality4.png",
+    },
+  },
+  {
+    id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+    src: null,
+    title: "north east",
+    location: [4, 2],
+    canGenerate: true,
+    meta: {
+      value: null,
+      attack: null,
+      defence: null,
+      team: null,
+      owner: null,
+      creature: null,
+      creatureSrc: null,
+    },
+  },
+  // ROW 3
+  {
+    id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+    src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/ds.png",
+    title: "South West",
+    location: [0, 2],
+    meta: {
+      value: 21,
+      attack: 6,
+      defence: 5,
+      team: "Red",
+      owner: "0x1234",
+      creature: {
+        id: 163,
+        name: "Mercenary Daemon",
+        effect:
+          "Frontline.\u003cbr\u003eRoar: Give an enemy creature frontline.",
+        god: "war",
+        rarity: "common",
+        tribe: {
+          String: "nether",
+          Valid: true,
+        },
+        mana: 5,
+        attack: {
+          Int64: 6,
+          Valid: true,
+        },
+        health: {
+          Int64: 5,
+          Valid: true,
+        },
+        type: "creature",
+        set: "genesis",
+        collectable: true,
+        live: "true",
+        art_id: "C307",
+        lib_id: "L1-163",
+      },
+
+      //   "https://opensea.io/assets/0x0e3a2a1f2146d86a604adc220b4967a898d7fe07/16154254",
+      // creatureSrc:
+      //   "https://storage.opensea.io/gods-unchained-asset-images/v0_0/proto163/quality4.png",
+    },
+  },
+  {
+    id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
+    src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/sw.png",
+    title: "South",
+    location: [2, 2],
+    meta: {
+      value: 13,
+      attack: 4,
+      defence: 4,
+      team: "Green",
+      owner: "0x1234",
+      creature: {
+        id: 295,
+        name: "Ferocious Rougarou",
+        effect:
+          "Regen 2.\u003cbr\u003eWhen a friendly creature is summoned, this creature gets +1/+1.\u003cbr\u003eWhen a friendly creature dies, this creature takes 1 damage.",
+        god: "nature",
+        rarity: "common",
+        tribe: {
+          String: "amazon",
+          Valid: true,
+        },
+        mana: 5,
+        attack: {
+          Int64: 4,
+          Valid: true,
+        },
+        health: {
+          Int64: 4,
+          Valid: true,
+        },
+        type: "creature",
+        set: "genesis",
+        collectable: true,
+        live: "true",
+        art_id: "C255",
+        lib_id: "L1-295",
+      },
+
+      //   "https://opensea.io/assets/0x0e3a2a1f2146d86a604adc220b4967a898d7fe07/16136745",
+      // creatureSrc:
+      //   "https://storage.opensea.io/gods-unchained-asset-images/v0_0/proto295/quality4.png",
+    },
+  },
+  {
+    id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
+    src: null,
+    title: "south",
+    location: [4, 3],
+    canGenerate: true,
+    meta: {
+      value: null,
+      attack: null,
+      defence: null,
+      team: null,
+      owner: null,
+      creature: null,
+    },
+  },
+  {
+    id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
+    src: null,
+    title: "South West",
+    location: [4, 4],
+    canGenerate: true,
+    meta: {
+      value: null,
+      attack: null,
+      defence: null,
+      team: null,
+      owner: null,
+      creature: null,
+    },
+  },
+];
+const defaultCreatures = [106, 319, 341, 23, 401, 22, 195, 276, 163, 295];
+
 const themeArray = [
   "lemon",
   "sand",
@@ -22,12 +442,29 @@ const themeArray = [
   "teal",
   "charcoal",
 ];
+
+const defaultTeams = [
+  { team: "Red", count: 0, totalValue: 0, god: "war", color: "#d15a47" },
+  { team: "Green", count: 0, totalValue: 0, god: "nature", color: "#68cb4d" },
+  { team: "Blue", count: 0, totalValue: 0, god: "magic", color: "#404dbf" },
+  {
+    team: "Purple",
+    count: 0,
+    totalValue: 0,
+    god: "deception",
+    color: "#ad43d0",
+  },
+  { team: "Yellow", count: 0, totalValue: 0, god: "light", color: "#d9b826" },
+  { team: "Teal", count: 0, totalValue: 0, god: "death", color: "#22c3a3" },
+];
 // import ens from "ethereum-ens";
 // const ens = require("ethereum-ens");
 // console.log("ens", ens);
 export const state = () => ({
   configStatus: null,
   setBinStatus: null,
+  userAssets: null,
+  assetsStatus: null,
   siteData: null,
   binData: null,
   network: "rinkeby",
@@ -71,44 +508,27 @@ export const state = () => ({
   // SEARCH FIELDS
   searchContractId: "",
   searchTokenId: "",
-  // VIEW DATA
-  viewData: "",
-  viewData2: "", // to refactor out.
-  viewStatus: "",
-  // DRAFTS
-  draftsArray: [],
-  tiles: [
-    {
-      id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
-      src: "https://gateway.pinata.cloud/ipfs/QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
-      title: "north west",
-      location: [0, 0],
-    },
-    {
-      id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
-      src: "https://gateway.pinata.cloud/ipfs/QmcQ8ekL1BYVFPs8eRttB91VA6iHB5oCpcBHVLXiRTNEop",
-      title: "north west",
-      location: [1, 0],
-    },
-    {
-      id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
-      src: "https://gateway.pinata.cloud/ipfs/QmNuqGYX6L73M2PjWLiXPHmK1ydZJb6UnHj3GFqLu2nxXT",
-      title: "north west",
-      location: [1, 0],
-    },
-    {
-      id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
-      src: "https://gateway.pinata.cloud/ipfs/Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
-      title: "south east",
-      location: [1, 1],
-    },
-  ],
+  // USER
+  userTeam: null,
+  instructionsRead: false,
+  // viewData: "",
+  // viewData2: "", // to refactor out.
+  // viewStatus: "",
+  // GAME
+
+  tiles: defaultTiles,
+  creatures: defaultCreatures,
+  gameTeams: defaultTeams,
 });
 
 export const getters = {
   getField,
   siteData: (state) => state.siteData,
   tiles: (state) => state.tiles,
+  creatures: (state) => state.creatures,
+  gameTeams: (state) => state.gameTeams,
+  userTeam: (state) => state.userTeam,
+  userAssets: (state) => state.userAssets,
   binData: (state) => state.binData,
   binStatus: (state) => state.binStatus,
   configStatus: (state) => state.configStatus,
@@ -142,6 +562,7 @@ export const getters = {
   draftsArray: (state) => state.draftsArray,
   activityId: (state) => state.activityId,
   tempViewItem: (state) => state.tempViewItem,
+  instructionsRead: (state) => state.instructionsRead,
   searchData: (state) => {
     return {
       searchContractId: state.searchContractId,
@@ -159,6 +580,28 @@ export const getters = {
 };
 export const mutations = {
   updateField,
+
+  setUserTeam: (state, value) => {
+    state.userTeam = value;
+  },
+  setTiles: (state, value) => {
+    state.tiles = value;
+  },
+  setCreatures: (state, value) => {
+    state.creatures = value;
+  },
+  resetGame: (state, value) => {
+    state.tiles = defaultTiles;
+  },
+  setAssetsStatus: (state, value) => {
+    state.assetsStatus = value;
+  },
+  setUserAssets: (state, value) => {
+    state.userAssets = value;
+  },
+  setInstructionsRead: (state, value) => {
+    state.instructionsRead = value;
+  },
   setConfigStatus: (state, value) => {
     state.configStatus = value;
   },
@@ -398,6 +841,36 @@ export const mutations = {
 };
 
 export const actions = {
+  async getAssets(context, data) {
+    const { commit, state } = context;
+    const { $axios } = this;
+    const { walletAddress } = state;
+    if (!walletAddress) {
+      console.error("no wallet address");
+    }
+    // const binKey =
+    //   "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
+    // const binId = "612d98a5259bcb6118ef73a4";
+
+    await commit("setAssetsStatus", "working");
+    const assetData = await $axios
+      .$get(
+        // `https://api.opensea.io/api/v1/assets?owner=0xd1C248d1c9879dC3b5A846D4DcCC5b7aA8fbF432&order_direction=desc&offset=0&limit=20&collection=gods-unchained`,
+        // 0x03f0D81C9a73930B8034553fC54152CBd6958D0B
+        `https://api.godsunchained.com/v0/user/${"0x03f0D81C9a73930B8034553fC54152CBd6958D0B"}/inventory?sort=mana&order=desc&type=creature`,
+        {
+          headers: {
+            // "X-Master-Key": binKey,
+          },
+        }
+      )
+      .catch((error) => console.error("Error getting assets: ", error));
+    const userAssets = assetData && assetData.records;
+    // console.log("siteData", siteJson.record);
+    await commit("setUserAssets", userAssets);
+    await commit("setAssetsStatus", "completed");
+    return userAssets;
+  },
   async getConfig(context, data) {
     const { commit } = context;
     const { $axios } = this;

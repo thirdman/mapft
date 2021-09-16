@@ -16,6 +16,7 @@
   "dependencies": {
     "@devlop-ab/dialog": "^1.2.0",
     "@georgedoescode/spline": "^1.0.1",
+    "@mdi/js": "^6.1.95",
     "@metamask/safe-event-emitter": "^2.0.0",
     "@nuxt/content": "^1.14.0",
     "@nuxtjs/axios": "^5.13.6",

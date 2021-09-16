@@ -96,58 +96,6 @@ section#read.showMeta .imageColumn {
 #body.view.glb .tokenImage3d {
   min-height: 600px;
 }
-/*
-ARTISTS
-*/
-.alpha section {
-  margin-bottom: -2px;
-}
-.alpha section > .primary {
-  max-width: 1800px;
-  margin: 0 auto;
-  padding-top: 0 !important;
-}
-.alpha .secondary,
-.alpha .tertiary {
-  display: none;
-}
-.alpha .gridWrap {
-  -webkit-column-gap: 2px;
-  -moz-column-gap: 2px;
-  column-gap: 2px;
-  -webkit-column-count: 5;
-  -moz-column-count: 5;
-  column-count: 5;
-  -webkit-column-width: 280px;
-  -moz-column-width: 280px;
-  column-width: 280px;
-  -webkit-column-rule: 1px dotted rgba(0, 0, 0, 0.2);
-  -moz-column-rule: 1px dotted rgba(0, 0, 0, 0.2);
-  column-rule: 1px dotted rgba(0, 0, 0, 0.2);
-}
-
-/* 
-[short], [small] {
-  grid-row: span 10;
-  background-color: green;
-}
-
-[tall] {
-  grid-row: span 25;
-  background-color: crimson;
-}
-
-[taller] {
-  grid-row: span 30;
-  background-color: blue;
-}
-
-[tallest] {
-  grid-row: span 35;
-  background-color: gray;
-} */
-.artistItem.small {
-}
 
 /*
 SEARCH*/

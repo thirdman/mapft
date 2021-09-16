@@ -31,22 +31,18 @@
         <!-- <div class="navItem" v-if="devMode">
           <nuxt-link to="/mint" class=" navLink">Mint</nuxt-link>
         </div>
-        <div class="navItem" v-if="devMode">
-          <nuxt-link to="/gallery" class=" navLink">Gallery</nuxt-link>
-        </div>
-        <div class="navItem" v-if="devMode">
-          <nuxt-link to="/view" class=" navLink">View</nuxt-link>
-        </div> -->
+         -->
         <div class="navItem" >
-          <nuxt-link to="/svg" class=" navLink">GENERATE</nuxt-link>
+          <nuxt-link to="/game" class=" navLink">GAME</nuxt-link>
         </div>
         <div class="navItem" >
+          <nuxt-link to="/generate" class=" navLink">MAP</nuxt-link>
+        </div>
+        <!-- <div class="navItem" >
           <nuxt-link to="/examples" class=" navLink">EXAMPLES</nuxt-link>
-        </div>
-        <div class="navItem" >
-          <nuxt-link to="/gallery" class=" navLink">GALLERY</nuxt-link>
-        </div>
+        </div> -->
       </div>
+      
       <div class="navAdmin" v-if="1===2">
         <v-btn x-small @click="getConfig">get config</v-btn>
         <v-btn x-small @click="updateConfig">updateConfig</v-btn>
@@ -85,13 +81,14 @@
           <div class="networkItem networkName" v-if="walletAddress && uiMode !== 'full'" v-tooltip="'Your current network'">
             {{walletNetwork}}
           </div>
+          <team-swatch :team="userTeam" />
           <ProfileButton />
           
           <Button
             @click.native="handleModal"
             class="btn iconButton minimalButton"
             :class="contrastMode"
-            v-tooltip="'Manage your settings'"
+            
             >
             <IconSettings :strokeClass="contrastMode" />
           </Button>
@@ -243,7 +240,8 @@ export default {
       showIt: false,
       connectStatus: "",
       connectError: "",
-      siteName: "SVGTokens"
+      siteName: "Location Nation",
+      
     };
   },
   computed: {
@@ -261,6 +259,7 @@ export default {
       ensName: "ui/ensName",
       binData: "ui/binData",
       binStatus: "ui/binStatus",
+      userTeam: "ui/userTeam",
     }),
     isSearchRoute() {
       const routeArray = ["view-contract-id", "ViewPage", "gallery", "view"];
