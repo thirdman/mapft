@@ -5,23 +5,25 @@
     @click="handleSelect && handleSelect(index)"
      :style="size ? `width: ${size}px; height: ${size}px` :`width: 100%; height: auto`"
     >
+    
      <!-- :style="size && `width: ${size}px; height: ${size}px`" -->
     <!-- !tile.canGenerate &&  -->
     <!-- width="240px" -->
     <img
       :src="tile.src" 
-      :style="size && `width: ${size}px; height: ${size}px`"
+      v-if="tile.src"
+      :style="size && `width: ${size}px; height: ${size}px; border: none;`"
      />
       <!-- :style="fill ? `width: 100%; height: auto` : `width:` " -->
     <Card  :asset="tile.meta.creature" v-if="!hideAsset && tile.meta.creature && tile.meta.creature.id" :showmeta="false" :card="false" />
     <!-- <img v-if="tile.meta && tile.meta.creatureSrc" :src="tile.meta.creatureSrc" width="100px" class="creature-image" /> -->
     <div class="tile-current" v-if="tile.meta && tile.meta.value">
-      <div class="tile-team" :class="tile.meta.team" :style="`background: ${tile.meta.team ? getColor(tile.meta.team) : ''}`"></div>
-      <div class="tile-value" >{{tile.meta.value}}</div>
-      <div class="tile-owner" v-if="tile.meta && tile.meta.value && tile.meta.owner === walletAddress">
+      <div class="tile-team"  v-tooltip="tile.meta.team ? `${tile.meta.team} controls this tile` : 'Tile Controller'"  :class="tile.meta.team" :style="`background: ${tile.meta.team ? getColor(tile.meta.team) : ''}`"></div>
+      <div class="tile-value" v-tooltip="`Tile Value: ${tile.meta.value}`" >{{tile.meta.value}}</div>
+      <div class="tile-owner"  v-tooltip="tile.meta && tile.meta.value && tile.meta.owner === walletAddress ? 'You own this tile!' : `Tile Owner`"  v-if="tile.meta && tile.meta.value && tile.meta.owner === walletAddress">
         <v-icon light color="white" x-small>mdi-account-circle</v-icon>
       </div>
-      <div class="tile-defence" v-if="tile.meta && tile.meta.defence">
+      <div class="tile-defence"  v-tooltip="`Defence value: ${tile.meta.defence}`"  v-if="tile.meta && tile.meta.defence">
         <v-icon color="white" medium>mdi-shield</v-icon>
         {{tile.meta.defence}}
       </div>
@@ -35,7 +37,7 @@
         Generate tile
       </v-btn>
     </div>
-    <div class="metainfo">
+    <!-- <div class="metainfo">
       <div class="inside ">
         <div class="row ma-0">
           <div class="col pa-0">
@@ -43,7 +45,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

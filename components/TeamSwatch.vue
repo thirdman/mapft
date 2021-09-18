@@ -40,9 +40,7 @@ export default {
     };
   },
   created(){
-    console.log('this.team', this.team);
     const {team, gameTeams} = this;
-      console.log('this.gameTeams', this.gameTeams);
       if(!team || !gameTeams){
         return null;
       }

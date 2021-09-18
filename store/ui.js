@@ -10,13 +10,18 @@ import {
 } from "../utils/web3Read";
 // import { getContrast } from "../utils/theme";
 // import { resolveEns } from "../utils/wallet";
-
+// moTileMap: [
+//   [6, 14, 14, 12],
+//   [5, 1, 7, 0],
+//   [3, 10, 0, 0]
 const defaultTiles = [
   {
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
     src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/nw.png",
     title: "north west",
     location: [0, 0],
+    index: 6,
+    sides: [],
     meta: {
       value: 18,
       attack: 4,
@@ -61,6 +66,8 @@ const defaultTiles = [
     src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/h.png",
     title: "north",
     location: [1, 0],
+    index: 14,
+    sides: [],
     meta: {
       value: 8,
       attack: 3,
@@ -105,6 +112,8 @@ const defaultTiles = [
     src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/n.png",
     title: "north east",
     location: [2, 0],
+    index: 14,
+    sides: [],
     meta: {
       value: 13,
       attack: 3,
@@ -147,7 +156,9 @@ const defaultTiles = [
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
     src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/ne.png",
     title: "north east",
-    location: [2, 0],
+    location: [3, 0],
+    index: 12,
+    sides: [],
     meta: {
       value: 9,
       attack: 3,
@@ -194,6 +205,8 @@ const defaultTiles = [
     src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/w.png",
     title: "West",
     location: [0, 1],
+    index: 5,
+    sides: [],
     meta: {
       value: 7,
       attack: 0,
@@ -209,6 +222,8 @@ const defaultTiles = [
     src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/ne.png",
     title: "Middle",
     location: [1, 1],
+    index: 1,
+    sides: [],
     meta: {
       value: 4,
       attack: 6,
@@ -254,6 +269,8 @@ const defaultTiles = [
     src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/v.png",
     title: "East",
     location: [2, 1],
+    index: 7,
+    sides: [],
     meta: {
       value: 4,
       attack: 6,
@@ -297,7 +314,9 @@ const defaultTiles = [
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
     src: null,
     title: "north east",
-    location: [4, 2],
+    location: [3, 1],
+    index: false,
+    sides: [],
     canGenerate: true,
     meta: {
       value: null,
@@ -315,6 +334,8 @@ const defaultTiles = [
     src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/ds.png",
     title: "South West",
     location: [0, 2],
+    index: 3,
+    sides: [],
     meta: {
       value: 21,
       attack: 6,
@@ -358,7 +379,9 @@ const defaultTiles = [
     id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
     src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/sw.png",
     title: "South",
-    location: [2, 2],
+    location: [1, 2],
+    index: 10,
+    sides: [],
     meta: {
       value: 13,
       attack: 4,
@@ -402,7 +425,9 @@ const defaultTiles = [
     id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
     src: null,
     title: "south",
-    location: [4, 3],
+    location: [2, 2],
+    index: false,
+    sides: [],
     canGenerate: true,
     meta: {
       value: null,
@@ -417,7 +442,9 @@ const defaultTiles = [
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
     src: null,
     title: "South West",
-    location: [4, 4],
+    location: [3, 2],
+    index: false,
+    sides: [],
     canGenerate: true,
     meta: {
       value: null,
@@ -510,7 +537,9 @@ export const state = () => ({
   searchTokenId: "",
   // USER
   userTeam: null,
+  showTeamSelect: false,
   instructionsRead: false,
+  introRead: false,
   // viewData: "",
   // viewData2: "", // to refactor out.
   // viewStatus: "",
@@ -546,6 +575,7 @@ export const getters = {
   ensName: (state) => state.ensName,
   profileObject: (state) => state.profileObject,
   showSearch: (state) => state.showSearch,
+  showTeamSelect: (state) => state.showTeamSelect,
   viewData: (state) => state.viewData,
   viewStatus: (state) => state.viewStatus,
   uiMode: (state) => state.uiMode,
@@ -563,6 +593,7 @@ export const getters = {
   activityId: (state) => state.activityId,
   tempViewItem: (state) => state.tempViewItem,
   instructionsRead: (state) => state.instructionsRead,
+  introRead: (state) => state.introRead,
   searchData: (state) => {
     return {
       searchContractId: state.searchContractId,
@@ -577,12 +608,34 @@ export const getters = {
     const walletName = state.ensName || state.walletAddress;
     return walletName;
   },
+  tileMap: (state) => {
+    const {tiles} = state;
+    const locations = tiles.map(t => t.location);
+    const rows = locations.filter(l => l[0] === 1);
+    const cols = locations.filter(l => l[1] === 1);
+    
+    if(!rows){return}
+    const blankArray = new Array(rows.length).fill();
+    console.log('blankArray', blankArray)
+    const compiledMap = blankArray.map((_, rowIndex) => {
+      const thisContent = tiles.filter(tile => tile.location[1] === rowIndex);
+      const asIndexes = thisContent.map(col=> col.index)
+      console.log('asIndexes', asIndexes)
+      return asIndexes
+    })
+    // console.log('tilemap rows', cols, rows)
+    console.log('compiledMap ', compiledMap)
+    return compiledMap;
+  },
 };
 export const mutations = {
   updateField,
 
   setUserTeam: (state, value) => {
     state.userTeam = value;
+  },
+  setShowTeamSelect: (state, value) => {
+    state.showTeamSelect = value;
   },
   setTiles: (state, value) => {
     state.tiles = value;
@@ -601,6 +654,10 @@ export const mutations = {
   },
   setInstructionsRead: (state, value) => {
     state.instructionsRead = value;
+  },
+  setIntroRead: (state, value) => {
+    console.log('value', value)
+    state.introRead = value;
   },
   setConfigStatus: (state, value) => {
     state.configStatus = value;

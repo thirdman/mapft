@@ -4,7 +4,7 @@
     :class="`${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''} ${card ? 'card' : ''}`"
     @click="onSelect && !disabled && onSelect(index)"
     >
-      <img :src="`https://card.godsunchained.com/?id=${asset.id.Int64 || asset.id}&q=${4}&w=256&png=true`" width="100px" />
+      <img :src="`https://card.godsunchained.com/?id=${asset.id.Int64 || asset.id}&q=${4}&w=128&png=true`" width="128px" />
       <div v-if="showmeta">
         {{asset.name}}
         <br />
@@ -18,7 +18,6 @@
 
 <style lang="scss">
 .card-select-row{
-  border: 1px solid red;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +29,7 @@
 import { mapMutations, mapGetters } from "vuex";
 
 export default {
-  props: ['asset', 'onSelect', 'selected', 'disabled', 'showmeta', 'card'],
+  props: ['asset', 'onSelect', 'selected', 'disabled', 'showmeta', 'card', 'index'],
   data() {
     return {
       

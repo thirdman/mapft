@@ -1,6 +1,9 @@
 <template>
   <div class="pageContainer">
     <Header />
+    <dialog-intro :show="!introRead" />
+    <dialog-team-select   />
+    
     <!-- <team-select
       :team="userTeam"
       :teams="gameTeams"
@@ -41,8 +44,18 @@
       <v-card-text>
         <div class="row claim-row">
           <div class="col col-6 claimCol pr-0">  
+            
+            
             <div class="row ma-0 d-flex justify-center">
             <label>Tile Defence</label>
+            </div>
+            <div class="row ma-2 d-flex justify-center" v-if="selectedData">                   
+              <div class="feature" :style="`background: ${this.getColor(selectedData.meta.team)}` " v-if="selectedData">
+                <v-icon color="white" medium>mdi-shield-outline</v-icon>
+              </div>
+              <div class="feature feature-outline">
+                {{selectedData && selectedData.meta.creature && selectedData.meta.creature.attack.Int64}}
+              </div>
             </div>
             <div v-if="selectedData " class="actionzone tile">
                 <Card 
@@ -51,26 +64,21 @@
                   :showmeta="false" :card="false"
                   />
             </div>
-            <div class="row" v-if="selectedData">
-              <div class="col">
-                <label>Attack</label>
-                <div class="feature">
-                {{selectedData.meta.creature && selectedData.meta.creature.attack.Int64}}
-                </div>
-              </div>
-              <div class="col">
-                <label>Defence</label>
-                <div class="feature">
-                  {{selectedData.meta.creature && selectedData.meta.creature.health.Int64}}
-                </div>
-              </div>
-            </div>
+
 
           </div>
           <div class="col col-6 claimCol pl-0">
             <div class="row ma-0 d-flex justify-center">
               <label>Your Attack</label>
             </div>
+            <div class="row ma-2 d-flex justify-center" v-if="selectedAsset">
+                <div class="feature" :style="`background: ${this.getColor(userTeam)}` " v-if="userTeam">
+                  <v-icon color="white" medium>mdi-sword</v-icon>
+                </div>
+                <div class="feature feature-outline">
+                  {{selectedAsset && selectedAsset.attack.Int64}}
+                </div>
+              </div>
             <div class="actionzone user">
               <div v-if="!userAssets && !isLoadingAssets" >
                 No Assets.
@@ -100,18 +108,7 @@
                   Select Another</v-btn>
               </div>
             </div>
-              <div class="row" v-if="selectedAsset">
-                <div class="col">
-                  <label>Attack</label>
-                  <div class="feature">
-                    {{selectedAsset.attack.Int64}}
-                  </div>
-                </div>
-                <div class="col">
-                  <label>Defence</label>
-                  {{selectedAsset.health.Int64}}
-                </div>
-              </div>
+              
             
             <!-- <v-btn @click="getCards" v-if="!userAssets" class="btn hero">Get Cards</v-btn> -->
             
@@ -227,18 +224,12 @@
           <div class="col ctaWrap"  v-if="!userTeam">
               <v-btn @click="handleUser" class="btn hero">Get Started »</v-btn>
               <nuxt-link to="/about" class="btn hollow asButton">What is this?</nuxt-link>
+              
               <!-- <a href="#about" class="btn hollow asButton">What is this?</a> -->
           </div>
-          <div class="col" v-else>
-            <v-card outlined  class="pa-2" >
-              <v-btn @click="getCards" class="btn hero">Get Cards</v-btn>
-              <div :class="`controller ${userTeam}`">
-                Team {{userTeam}} <v-btn text x-small @click="resetGame">Reset</v-btn>
-              </div>
-              </v-card>
-          </div>
+          
         </div>
-        <div class="row ma-0 tabs-container">
+        <div class="row mx-0 tabs-container">
           <v-card  outlined class="pa-0" style="width: 100%;" >
           <v-tabs 
             v-model="tab"
@@ -288,17 +279,18 @@
             >
               <v-divider class="ma-0 pa-0" />
               <div class="text-body-2 pl-4 pt-4">
-                Creatures previously used in this game
+                Creatures  used in this game
+                
               </div>
-              <div v-if="creatures" class="pa-4">
-                <div v-for="(id, index) in creatures" :key="index">{{id}}</div>
-              </div>
+              <v-divider class="my-2" />
+              <asset-list :array="creatures" />
+              
             </v-tab-item>
             <v-tab-item
               key="User"
             >
-              <v-divider class="ma-0 pa-0" />
-              <v-btn @click="getCards" class="btn hero">Get Cards</v-btn>
+              <v-divider class="ma-0 pa-2" />
+              <v-btn @click="getCards" small outlined >Get Cards</v-btn>
               <div v-if="userAssets" class="assetGrid flow">
                 <Card
                   :onSelect="false"
@@ -313,6 +305,25 @@
             </v-tab-item>
           </v-tabs-items>
           </v-card>
+        </div>
+        <div class="game-options-row">
+          <v-divider class="my-4" />
+          <div class="row">
+            <div class="col" >
+              <v-card outlined  class="pa-2" >
+                <div :class="`controller ${userTeam}`" v-if="userTeam">
+                  Team {{userTeam}} 
+                </div>
+              </v-card>
+            </div>
+          </div>
+        </div>
+        <div class="row ma-0">
+          <div class="col">
+            <v-btn text x-small outlined @click="resetGame">Reset Game</v-btn>
+            <v-btn text x-small outlined @click="setIntroRead(!introRead)">Show Introduction</v-btn>
+            <v-btn text x-small outlined @click="setShowTeamSelect(!showTeamSelect)">Show Team Select</v-btn>
+          </div>
         </div>
        </div>
        <v-slide-x-transition>
@@ -345,42 +356,7 @@
               :highlighted="highlightedIndex === index"
               :onAction="handleGenerate"
               />
-            <!-- <div
-              v-for="(tile, index) in tiles"
-              :key="index"
-              class="grid-tile"
-              :class="`${tile.canGenerate ? 'generate' : ''} ${selectedTile === index ? 'selected' : ''}`"
-              @click="handleSelect(index)"
-              >
-              <img :src="tile.src" width="240px" />
-              
-              <img v-if="tile.meta && tile.meta.creatureSrc" :src="tile.meta.creatureSrc" width="100px" class="creature-image" />
-              <div class="tile-current" v-if="tile.meta && tile.meta.value">
-                <div class="tile-team" :class="tile.meta.team"></div>
-                <div class="tile-vlaue" >{{tile.meta.value}}</div>
-              </div>
-              <div class="emptyinfo" v-if="tile.meta && tile.meta.value && !tile.meta.creatureSrc && tile.meta.owner !== walletAddress">
-                Uncontrolled
-              </div>
-              <div class="ownertile" v-if="tile.meta && tile.meta.value && tile.meta.owner === walletAddress">
-                <v-icon large>mdi-account-box</v-icon> YOU
-              </div>
-              <div class="blankinfo" v-if="tile.meta && !tile.meta.value && tile.canGenerate">
-                <v-icon large>mdi-help-box</v-icon>
-                <v-btn @click="handleGenerate(tile.location)" primary>
-                  Generate tile
-                </v-btn>
-              </div>
-              <div class="metainfo">
-                <div class="inside ">
-                  <div class="row ma-0">
-                    <div class="col pa-0">
-                      Click to view tile information
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
+            
           </div>
           </div>
         </client-only>
@@ -399,10 +375,15 @@ const BASE_URL = process.env.tempUrl || "https://infinft.app"
 import ogImagePreview from '~/assets/images/preview.jpg'
 import { dialog } from '@devlop-ab/dialog';
 import GenerateTile from '../components/GenerateTile.vue';
+import AssetList from '../components/AssetList.vue';
+import DialogIntro from '../components/DialogIntro.vue';
+import DialogTeamSelect from '../components/DialogTeamSelect.vue';
  
 export default {
+  components: { DialogTeamSelect },
   name: 'ViewPageParams',
-  data() {
+  data(
+    DialogIntro) {
     
     return {
       baseUrl: "https://localhost:3333",
@@ -472,6 +453,8 @@ export default {
       userTeam: "ui/userTeam",
       userAssets: "ui/userAssets",
       instructionsRead: "ui/instructionsRead",
+      introRead: "ui/introRead",
+      showTeamSelect: "ui/showTeamSelect",
     }),
     theTile(){
       const {tiles, selectedTile} = this;
@@ -490,7 +473,9 @@ export default {
       setTiles: "ui/setTiles",
       setCreatures: "ui/setCreatures",
       resetGame: "ui/resetGame",
-      setInstructionsRead: 'ui/setInstructionsRead'
+      setInstructionsRead: 'ui/setInstructionsRead',
+      setIntroRead: 'ui/setIntroRead',
+      setShowTeamSelect: 'ui/setShowTeamSelect'
     }),
     ...mapActions({
       getImages: "ui/getImages",
@@ -778,6 +763,11 @@ section#intro{
 }
 .info-column{
   min-width: 320px;
+  .game-options-row{
+    height: 3rem;
+    flex-basis: 3rem;
+    
+  }
 }
 .map-container{
   // overflow: scroll;
@@ -882,6 +872,7 @@ section#intro{
   background-size: contain;
   &.generate{
     // border: 2px dotted #222;
+    border: none;
     background: transparent;
     &:before{
     opacity: .9;
@@ -1204,11 +1195,13 @@ section#intro{
         box-shadow: 0 2px 5px black;
         padding: .25rem;
         border: 1px solid #333;
-        margin: 0 2px 2px 0;
+        margin: 0 4px 4px 0;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        width: calc(128px + 8px);
+
       }
       img{
         width: 100%;

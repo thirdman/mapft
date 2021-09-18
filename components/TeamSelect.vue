@@ -1,19 +1,11 @@
 <template>
   <v-card
-    outlined
     class="team-select"
     :class="direction === 'column' ? 'vertical' : 'horizontal' "
     >
+    <!-- outlined -->
     <!-- @click="onSelect && !disabled && onSelect(index)" -->
     <v-card-text >
-      {{direction}}
-      <div class="row">
-        <div class="col">
-          <label>
-          Select your team:
-          </label>
-        </div>
-      </div>
       <div class="buttons-row d-flex justify-center"  v-if="teams">
         <v-btn
           elevation="2"
@@ -33,7 +25,7 @@
 
 <style lang="scss">
 .team-select{
-  bordeR: 10px solid red;
+  
   &.vertical{
     .v-card__text{
       .buttons-row{
