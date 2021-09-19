@@ -1,103 +1,140 @@
 <template>
   <v-card outlined elevation="4" class="claim claim-generate" :class="location ? 'active' : ''" >
       <v-card-title>
-        <div class="row">
-          <div class="col">
+        <div class="row ma-0">
+          <div class="col pa-0">
             <span>Generate Tile for location {{location}}</span>
           </div>
           <v-btn plain @click="onClose"><v-icon>mdi-close</v-icon></v-btn>
         </div>
       </v-card-title>
+      <v-divider class="ma-0" />
       <v-card-text>
         <div class="row claim-row" style="overflow: scroll">
           <div class="col col-6 claimCol">
-              <v-btn primary @click="calualateThisTile(location[1], location[0])" v-if="location && location[1]">generate</v-btn>
-              <v-btn @click="compileNewTile(location)">compile</v-btn>
-              <v-btn @click="doApply(location)">Apply</v-btn>
-              <v-btn small @click="calculateIndex">getindex</v-btn>
-              <div class="tileGrid">
-                <div v-for="(t, i) in demoArray" :key="i" :class="`preview-tile preview${i}` ">
-                  <img :src="`https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${t}.${t === 0 ? 'jpg' : 'png'}`" width="100px" />
+            <div class="row">
+              <div class="col d-flex justify-center">
+                <Loading v-if="status === 'working'" message="Working..." />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <p class="text-body-2">
+                  Generating will create a matching tile, but cost you points
+                </p>
+                <p>Your points: {{userPoints}}</p>
+                <p>Generation Cost: 12</p>
+              </div>
+            </div>
+            <div class="tileGrid">
+              <div v-for="(t, i) in demoArray" :key="i" :class="`preview-tile preview${i}` ">
+                <img :src="`https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${t}.${t === 0 ? 'jpg' : 'png'}`" width="100px" />
               </div> 
             </div>
+            <div v-if="devMode">
             <label>tile map</label>
             {{demoTileMap && demoTileMap.length}}
               <div class="map-grid" v-if="demoTileMap">
-              <div v-for="(row, rowIndex) in demoTileMap" :key="rowIndex" class="map-row" >
-                <div class="map-col" v-for="(col, colIndex) in row" :key="colIndex">
-                  <img :src="`https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${col}.${col === 0 ? 'jpg' : 'png'}`" width="100px" />
-                  <v-btn x-small @click="calualateThisTile(rowIndex, colIndex)">get {{rowIndex}}, {{colIndex}}</v-btn>
+                <div v-for="(row, rowIndex) in demoTileMap" :key="rowIndex" class="map-row" >
+                  <div class="map-col" v-for="(col, colIndex) in row" :key="colIndex">
+                    <img
+                    :src="`https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${col}.${col === 0 ? 'jpg' : 'png'}`"
+                    width="60px"
+                    v-if="col"
+                    />
+                    <div v-else class="emptyImage">
+                      
+                    </div>
+                    <v-btn x-small @click="calualateThisTile(rowIndex, colIndex)">get {{rowIndex}}, {{colIndex}}</v-btn>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="col col-6 claimCol" >
+            <div class="row">
+              <div class="col d-flex justify-center">
+                <Loading v-if="status === 'working'" message="Working..." />
+              </div>
+            </div>
+            <div  v-if="previewTile && status !== 'working'">
             <Tile
               size="240"
               :tile="previewTile"
-              v-if="previewTile"
+              v-if="previewTile && status !== 'working'"
               :handleSelect="false"
               :onAction="false"
               />
-              <label>New newTileIndex</label>
-              <div>{{newTileIndex}}</div>
-              
-              <label>New Value</label>
-              <div>{{newTileValue}}</div>
-
-              <div v-if="newSrc"><img :src="newSrc" width="200px" /></div>
-              <!-- <label>All tiles</label>
-              <div v-for="(t, i) in tileArray" :key="i">
-                {{t}}
-                <img :src="`https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${t}.${t === 0 ? 'jpg' : 'png'}`" width="200px" />
-              </div> -->
-              
-              
+              <div class="row">
+                <div class="col">
+                  <label>index</label>
+                  <div>{{newTileIndex}}</div>
+                </div>
+                <div class="col">
+                  <label>New Value</label>
+                  <div>{{newTileValue}}</div>
+                </div>
+              </div>
+            </div>
+            <div v-if="devMode && newSrc && status !== 'working'"><img :src="newSrc" width="200px" /></div>  
           </div>
         </div>
       </v-card-text>
+      <v-divider class="ma-0" />
       <v-card-actions>
-            <v-btn @click="onClose">Cancel</v-btn>
+        <v-btn class="primary" @click="doApply(location)">Apply</v-btn>
+        <v-btn outlined @click="onClose">Cancel</v-btn>
+        <v-btn outlined @click="doTimer" v-if="devMode">do Timer</v-btn>
+        <v-btn primary @click="calualateThisTile(location[1], location[0])" v-if="location && location[1]">Re-Generate</v-btn>
+              <v-btn @click="compileNewTile(location)">compile</v-btn>
+              
+              <v-btn small @click="calculateIndex">getindex</v-btn>
+              
       </v-card-actions>
     </v-card>
 </template>
 
 <style lang="scss">
 .claim{
-  
   &.claim-generate{
     width: 700px;
+    .v-card__text{
+      overflow: scroll;
+      // height: calc(500px - 2rem - 2rem);
+      height: calc(500px - 68px - 68px);
+    }
   }
 }
 .map-grid{
-  width: 406px;
-  height: 306px;
+  width: 244px;
+  height: 184px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
-  bordeR: 1px solid brown;
+  
   .map-row{
-    bordeR: 1px solid blue;
-    height: 100px;
+    height: 60px;
     display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-  bordeR: 1px solid violet;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    
 
     .map-col{
-      width: 100px;
-      height: 100px;
+      width: 60px;
+      height: 60px;
       display: block;
-      background: lime;
-      border-right: 1px solid red;
-      border-bottom: 1px solid red;
       position: relative;
       img{
         width: 100%;
+      }
+      .emptyImage{
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.2);
       }
       button{
         position: absolute;
@@ -140,6 +177,7 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import { dialog } from '@devlop-ab/dialog';
 const tileArray = ['nw', 'ne', 'sw', 'se', 'n', 'w', 's', 'e', 'dn', 'dw', 'de', 'ds', '00']
 const tileIndexArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
@@ -191,6 +229,8 @@ export default {
   props: ['location', 'handleSelect', 'selected', 'index', 'onAction', 'onClose', 'onGenerate'],
   data() {
     return {
+      devMode: false,
+      status: 'loading',
       mapString: null,
       previewTile: null,
       tileArray: tileIndexArray,
@@ -200,6 +240,7 @@ export default {
       demoTileMap: null,
       newTileValue: null,
       newTileIndex: null,
+      generationCost: 12
     };
   },
   created(){
@@ -208,6 +249,8 @@ export default {
     if(!location){return}
     console.log('created', this.location)
     this.calualateThisTile(this.location[1], this.location[0]); // inverted due to coords being x, y
+    this.status = "working";
+    this.doTimer()
   },
   
   computed: {
@@ -216,24 +259,39 @@ export default {
       gameTeams: "ui/gameTeams",
       tiles: "ui/tiles",
       tileMap: "ui/tileMap",
+      userPoints: "ui/userPoints",
     }),
     
   },
 
   methods: {
     ...mapMutations({
-      setTiles: 'ui/setTiles'
+      setTiles: 'ui/setTiles',
+      setUserPoints: 'ui/setUserPoints',
     }),
-    getIndex(name){
-      const index = indexMap[name]
-
+    doTimer(){
+      const delayAmount = 1000
+      this.status = 'working';
+      setTimeout(() => {
+        this.status = 'completed';
+        }, delayAmount);
     },
     calualateThisTile(row, col){
       const tileMap = this.tileMap
+      const {userPoints, generationCost} = this;
+      
       if(!tileMap){
         console.log('no tile map')
         return
       }
+      if(!userPoints || userPoints < generationCost) {
+        console.log('userPoints < generationCost', userPoints , generationCost)
+        dialog.alert(`Not Enough Points (${userPoints})`,  {
+          title: 'Oops',
+        })
+        return
+      }
+       
       const tempTileValue = this.random(5, 30, false);
       const thisTile = tileMap[row][col];
       console.log('thisTile', thisTile);
@@ -276,7 +334,10 @@ export default {
       this.newTileIndex = tileIndex
       if(tileIndex && tempTileValue){
         this.compileNewTile(location)
+        const newPoints  = userPoints - generationCost;
+        this.setUserPoints(newPoints)
       }
+      this.doTimer()
     },
     getTile(row, col){
       const tileMap = [
@@ -376,9 +437,7 @@ export default {
       const tempTiles = tiles.slice();
       const theIndex = tempTiles.findIndex(tile => tile.location === location);
       tempTiles[theIndex] = previewTile;
-      
-      this.setTiles(tempTiles);
-      console.log('this.tiles', this.tiles)
+      this.setTiles(tempTiles);      
       this.mapString = null;
       this.previewTile = null;
       this.onClose()

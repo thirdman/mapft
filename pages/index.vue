@@ -71,14 +71,18 @@
             <div class="row ma-0 d-flex justify-center">
               <label>Your Attack</label>
             </div>
-            <div class="row ma-2 d-flex justify-center" v-if="selectedAsset">
-                <div class="feature" :style="`background: ${this.getColor(userTeam)}` " v-if="userTeam">
-                  <v-icon color="white" medium>mdi-sword</v-icon>
-                </div>
-                <div class="feature feature-outline">
-                  {{selectedAsset && selectedAsset.attack.Int64}}
-                </div>
+            <div class="row ma-2 d-flex justify-center" >
+              <div class="feature" :style="`background: ${this.getColor(userTeam)}` " v-if="userTeam">
+                <v-icon color="white" medium>mdi-sword</v-icon>
               </div>
+              <div class="feature" :style="`background: #333` " v-else>
+                <v-icon color="white" medium>mdi-sword</v-icon>
+              </div>
+              
+              <div class="feature feature-outline" >
+                {{selectedAsset && selectedAsset.attack.Int64}}
+              </div>
+            </div>
             <div class="actionzone user">
               <div v-if="!userAssets && !isLoadingAssets" >
                 No Assets.
@@ -1176,7 +1180,10 @@ section#intro{
       flex-wrap: wrap;
       overflow: scroll;
       width: 100%;
-      
+      .asset{
+        width: 96px;
+      min-height: 131px;
+      }
       &.flow{
         flex-wrap: wrap;
         overflow: inherit;
@@ -1188,8 +1195,8 @@ section#intro{
       
     }
     .asset{
-      min-width: 80px;
-      max-width: 180px;;
+      min-width: 96px;
+      max-width: 180px;
       &.card{
         background: #111;
         box-shadow: 0 2px 5px black;
@@ -1201,7 +1208,10 @@ section#intro{
         align-items: center;
         justify-content: center;
         width: calc(128px + 8px);
-
+      }
+      
+      .card-meta-text{
+        font-size: .75rem;
       }
       img{
         width: 100%;

@@ -74,7 +74,7 @@
             </div>
           </div>
           <div v-else>
-            nothing ownerd
+            -
           </div>
           <div v-if="selectedData.meta && selectedData.meta.asset">
             <v-divider class="my-2" />
@@ -88,8 +88,6 @@
           {{selectedData.meta.attack || '-'}}
         </div>
       </div>
-      <!-- if there is no owner -->
-      <!-- <p class="body-text-2">This tile is uncontested. Claim tile to increas your team power</p> -->
     </div>
     <div v-if="showTeamSelect" class="tile-actions">
       <v-divider class="ma-0" />
@@ -103,7 +101,7 @@
       <v-divider class="ma-0" />
       <div class="row ma-0 tile-actions">
         <div class="col">
-          <v-btn depressed outlined primary @click="onClaimSelect && onClaimSelect(selectedData.location)">Claim Tile...</v-btn>
+          <v-btn depressed outlined primary block @click="onClaimSelect && onClaimSelect(selectedData.location)">Claim Tile...</v-btn>
           <v-btn depressed outlined primary v-if="!userTeam" @click="() => this.showTeamSelect = true">Select Team to Play</v-btn>
           <div v-if="selectedData.canGenerate" >
             <v-btn @click="onGenerateSelect && onGenerateSelect(selectedData.location)">Generate Tile</v-btn>

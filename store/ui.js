@@ -537,6 +537,7 @@ export const state = () => ({
   searchTokenId: "",
   // USER
   userTeam: null,
+  userPoints: 50,
   showTeamSelect: false,
   instructionsRead: false,
   introRead: false,
@@ -557,6 +558,7 @@ export const getters = {
   creatures: (state) => state.creatures,
   gameTeams: (state) => state.gameTeams,
   userTeam: (state) => state.userTeam,
+  userPoints: (state) => state.userPoints,
   userAssets: (state) => state.userAssets,
   binData: (state) => state.binData,
   binStatus: (state) => state.binStatus,
@@ -633,6 +635,9 @@ export const mutations = {
 
   setUserTeam: (state, value) => {
     state.userTeam = value;
+  },
+  setUserPoints: (state, value) => {
+    state.userPoints = value;
   },
   setShowTeamSelect: (state, value) => {
     state.showTeamSelect = value;
