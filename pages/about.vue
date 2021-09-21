@@ -32,12 +32,14 @@
     </section>
     <section class="row ma-0 content">
         <div class="col col-6 intro-column ">
-          <v-icon size="large">mdi-help-box</v-icon>
+          <h3>What if you could make your own games using the NFT assets you already own</h3>
         </div>
         <div class="col col-6 intro-column">
           <h3>Goal</h3>
           <p>Present ideas for how NFT's can be used as game elements, combining assets from different projects in new and interesting ways.</p>
           <p>Ideally, a systematic approach</p>
+          <p>Replayable games</p>
+          <p>set your own prizes, rules, teams, win conditions</p>
           <h4>Notes:</h4>
             <ul style="margin: 0; padding: 0;">
               <li class="small">Beta functionality: use at your own risk</li>
