@@ -3,6 +3,12 @@
     <Header />
     <dialog-intro :show="!introRead" />
     <dialog-team-select   />
+    <dialog-new-game 
+      v-if="showNewGameDialog"
+      :onClose="() => this.showNewGameDialog = false"
+      :onAction="handleGenerateGame"
+      />
+    
     
     <!-- <team-select
       :team="userTeam"
@@ -155,8 +161,8 @@
             </div>
             <h2>Battle!</h2>
             
-            <v-btn @click="handleClaimCancel">Cancel</v-btn>
-            <v-btn @click="() => {this.isBattling = !this.isBattling}">toggle</v-btn>
+            <v-btn @click="handleClaimCancel" v-if="devMode">Cancel</v-btn>
+            <v-btn @click="() => {this.isBattling = !this.isBattling}" v-if="devMode">toggle</v-btn>
           </div>
           <div v-if="userAssets && showSelectAsset" class="assetGrid claim-layer">
             <Card
@@ -219,21 +225,13 @@
     <section id="intro" class="row ma-0 ">
       <div class=" col col-3 info-column">
         <div class="info-game" v-if="!selectedTile">
-        <h3>
-          Map, Dungeons, Rooms, and Oh My NFT!
-        </h3>
-        <p class="text-body-2">Exploring possibilities of NFT based gaming.</p>
-          
-        <div class="row">
-          <div class="col ctaWrap"  v-if="!userTeam">
+          <!-- <div class="row">
+            <div class="col ctaWrap"  v-if="!userTeam">
               <v-btn @click="handleUser" class="btn hero">Get Started »</v-btn>
               <nuxt-link to="/about" class="btn hollow asButton">What is this?</nuxt-link>
-              
-              <!-- <a href="#about" class="btn hollow asButton">What is this?</a> -->
-          </div>
-          
-        </div>
-        <div class="row mx-0 tabs-container">
+            </div>
+          </div> -->
+        <div class="row mx-0 my-4 tabs-container">
           <v-card  outlined class="pa-0" style="width: 100%;" >
           <v-tabs 
             v-model="tab"
@@ -310,23 +308,25 @@
           </v-tabs-items>
           </v-card>
         </div>
-        <div class="game-options-row">
-          <v-divider class="my-4" />
-          <div class="row">
-            <div class="col" >
-              <v-card outlined  class="pa-2" >
-                <div :class="`controller ${userTeam}`" v-if="userTeam">
-                  Team {{userTeam}} 
-                </div>
-              </v-card>
+        
+        <div class="row ma-0 options-row">
+          <div class="col pa-0">
+            <v-divider class="my-4" />
+            <div class="row ma-0">
+              <div class="col pa-0 d-flex justify-stretch align-center">
+                <v-btn plain @click="() => showGameOptions = !showGameOptions">
+                  <v-icon size="large">mdi-cog</v-icon>
+                <div>Options</div>
+                </v-btn>
+                <v-divider vertical class="mx-4" />
+                <v-card outlined  class="pa-1" >
+                  <div :class="`controller ${userTeam}`" v-if="userTeam">
+                    Team {{userTeam}} 
+                  </div>
+                </v-card>
+              </div>
+              
             </div>
-          </div>
-        </div>
-        <div class="row ma-0">
-          <div class="col">
-            <v-btn text x-small outlined @click="resetGame">Reset Game</v-btn>
-            <v-btn text x-small outlined @click="setIntroRead(!introRead)">Show Introduction</v-btn>
-            <v-btn text x-small outlined @click="setShowTeamSelect(!showTeamSelect)">Show Team Select</v-btn>
           </div>
         </div>
        </div>
@@ -343,12 +343,38 @@
             />
         </div>
        </v-slide-x-transition>
+       <v-slide-y-reverse-transition>
+        <div class="options-content col pa-4" v-if="showGameOptions">
+          <div class="row">
+            <div class="col">
+              <h4>Options</h4>
+            </div>
+            <div class="col">
+              <v-btn plain @click="() => showGameOptions = !showGameOptions">
+                <v-icon size="large">mdi-close</v-icon>
+              </v-btn>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+            <v-btn block outlined @click="setShowTeamSelect(!showTeamSelect)">Show Team Select</v-btn>
+            <v-btn block outlined @click="resetGame">Reset Game</v-btn>
+            <v-divider />
+            <v-btn block small outlined @click="() => {this.showNewGameDialog = true}">New Game</v-btn>
+            <v-divider />
+            <v-btn block small outlined @click="setIntroRead(!introRead)">Show Introduction</v-btn>
+            </div>
+          </div>
+        </div>
+       </v-slide-y-reverse-transition>
       </div>
-      <div class="col col-7 ">
+      <div class="col col-7 content-column">
         <client-only>
           <!-- <Loading text="Loading" v-if="imagesStatus === 'loading'" /> -->
           <div class="map-container">
-          <div class=" grid-wrap">
+          <div
+            class="grid-wrap"
+            :style="tileMap && tileMap[0] && `width: ${tileMap[0].length * 240 + 2}px; height: ${tileMap.length * 240 + 2}px;`">
             <Tile
               size="240"
               :tile="tile"
@@ -390,6 +416,7 @@ export default {
     DialogIntro) {
     
     return {
+      devMode: false,
       baseUrl: "https://localhost:3333",
       previewUrl: `images/preview.jpg`,
       siteName: "SVG Tokens",
@@ -400,12 +427,14 @@ export default {
       devAddress: '0xd1c248d1c9879dc3b5a846d4dccc5b7aa8fbf432',
       gameData: null,
       showInfo: false,
+      showNewGameDialog: false,
       selectedTile: null,
       selectedData: null,
       claimLocation: null,
       generateLocation: null,
       showSelectAsset: true,
       showGenerate: false,
+      showGameOptions: false,
       selectedAsset: null,
       highlightedIndex: null,
       tab: "Scores",
@@ -459,6 +488,7 @@ export default {
       instructionsRead: "ui/instructionsRead",
       introRead: "ui/introRead",
       showTeamSelect: "ui/showTeamSelect",
+      tileMap: 'ui/tileMap'
     }),
     theTile(){
       const {tiles, selectedTile} = this;
@@ -485,7 +515,8 @@ export default {
       getImages: "ui/getImages",
       saveImages: "ui/saveImages",
       updateConfig: "ui/updateConfig",
-      getAssets: "ui/getAssets"
+      getAssets: "ui/getAssets",
+      generateGame: 'ui/generateGame'
     }),
     handleTeamSelect(teamObj){
       const userTeam = teamObj.team;
@@ -544,10 +575,10 @@ export default {
       
     },
     async handleGenerate(location){
-      await dialog.alert('Generation is demo only', {
-        title: 'Mockup',
-        okText: 'OK',
-      });
+      // await dialog.alert('Generation is demo only', {
+      //   title: 'Mockup',
+      //   okText: 'OK',
+      // });
       this.generateLocation = location
     },
     doGenerateTile(location){
@@ -603,6 +634,10 @@ export default {
         const tempTiles = [...this.tiles];
         const existingTile = tempTiles[this.selectedTile];
         console.log('existingTile', existingTile);
+        if(!existingTile){
+          console.error('no existing tile', existingTile)
+          return false
+        }
         const defence = existingTile.meta.defence;
         const assetAttack = asset.attack.Int64;
         const assetHealth = asset.health.Int64;
@@ -743,6 +778,11 @@ export default {
       // this.binData images - 
       console.log('do it')
     },
+    handleGenerateGame(props){
+      console.log('do it', props);
+      this.showNewGameDialog = false,
+      this.generateGame(props);
+    },
     getColor(team){
       const {gameTeams} = this;
       if(!gameTeams || !team){return}
@@ -767,14 +807,32 @@ section#intro{
 }
 .info-column{
   min-width: 320px;
-  .game-options-row{
-    height: 3rem;
-    flex-basis: 3rem;
-    
+  border-right: 1px solid var(--line-color);
+  .info-game{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .options-row{
+      flex-basis: 1rem;
+      flex-shrink: 1;
+      flex-grow: 1;
+      justify-self: flex-end;
+    }
+    // .game-options-row{
+    //   height: 3rem;
+    //   flex-basis: 3rem;
+    //   flex-grow: 1;
+    //   flex-shrink: 0;    
+    // }
   }
+  
+}
+.content-column{
+  height: 100%;
 }
 .map-container{
-  // overflow: scroll;
+  overflow: scroll;
+  height: 100%;
 }
 .grid-wrap{
   width: 960px;
@@ -983,24 +1041,26 @@ section#intro{
     z-index: 1;
     
   }
-  .selected-content{
-    z-index: 2;
+  .options-content, .selected-content{
+z-index: 2;
     position: absolute;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    // background: #111;
     border-right: 1px solid var(--line-color);
-    // border-bottom: 1px solid var(--line-color);
     overflow-y: scroll;
-    // min-height: calc(100vh - 80px);
     padding: 0;
+  }
+  .selected-content{  
     .emptytile{
       background: rgba(255,255,255,.05);
       padding: .5rem;
       border: .5rem;
     }
+  }
+  .options-content{
+    background: var(--ui-color);
   }
     .controller{
         &:before{

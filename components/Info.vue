@@ -91,11 +91,12 @@
     </div>
     <div v-if="showTeamSelect" class="tile-actions">
       <v-divider class="ma-0" />
-        <team-select
+        <!-- <team-select
         :team="userTeam" :teams="gameTeams" direction="column"
         :onSelect="handleTeamSelect"
-        />
-          <v-btn depressed outlined primary @click="() => this.showTeamSelect = false">cancel</v-btn>
+        /> -->
+        <v-btn depressed outlined primary @click="() => this.showTeamSelect = false">cancel</v-btn>
+        <v-btn depressed outlined @click="setShowTeamSelect(!showTeamSelect)">Select Team</v-btn>
     </div>
     <div v-if="!showTeamSelect && selectedData" >
       <v-divider class="ma-0" />
@@ -103,21 +104,21 @@
         <div class="col">
           <v-btn depressed outlined primary block @click="onClaimSelect && onClaimSelect(selectedData.location)">Claim Tile...</v-btn>
           <v-btn depressed outlined primary v-if="!userTeam" @click="() => this.showTeamSelect = true">Select Team to Play</v-btn>
-          <div v-if="selectedData.canGenerate" >
+          <!-- <div v-if="selectedData.canGenerate" >
             <v-btn @click="onGenerateSelect && onGenerateSelect(selectedData.location)">Generate Tile</v-btn>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
 
 
-    <div class="metainfo">
+    <!-- <div class="metainfo">
       <div>
         <div class="emptytile">
           empty tile actions
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -139,14 +140,13 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
-import TeamSelect from './TeamSelect.vue';
+// import TeamSelect from './TeamSelect.vue';
 
 export default {
-  components: { TeamSelect },
   props: ['tile', 'handleSelect', 'selected', 'onAction', 'onClose', 'selectedData', 'index', 'onGenerateSelect', 'onClaimSelect', 'handleClaim'],
   data() {
     return {
-      showTeamSelect: false,
+      // showTeamSelect: false,
     };
   },
   created(){
@@ -164,13 +164,14 @@ export default {
 
   methods: {
     ...mapMutations({
-      setUserTeam: 'ui/setUserTeam'
+      setUserTeam: 'ui/setUserTeam',
+      showTeamSelect: "ui/showTeamSelect",
     }),
-    handleTeamSelect(teamObj){
-      const userTeam = teamObj.team;
-      this.setUserTeam(userTeam);
-      this.showTeamSelect = false;
-    },
+    // handleTeamSelect(teamObj){
+    //   const userTeam = teamObj.team;
+    //   this.setUserTeam(userTeam);
+    //   this.showTeamSelect = false;
+    // },
     getColor(team){
       const {gameTeams} = this;
       if(!gameTeams || !team){return}

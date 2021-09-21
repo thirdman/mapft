@@ -240,7 +240,7 @@ export default {
       showIt: false,
       connectStatus: "",
       connectError: "",
-      siteName: "Location Nation",
+      siteName: "Unnamed Game",
       
     };
   },

@@ -1,19 +1,19 @@
 <template>
   <div
     class="grid-tile"
-    :class="`${tile.canGenerate ? 'generate' : ''} ${selected ? 'selected' : ''} ${fill ? 'fill' : ''} ${highlighted ? 'highlighted' : ''}`"
+    :class="`${!tile.src ? 'generate' : ''} ${selected ? 'selected' : ''} ${fill ? 'fill' : ''} ${highlighted ? 'highlighted' : ''}`"
     @click="handleSelect && handleSelect(index)"
      :style="size ? `width: ${size}px; height: ${size}px` :`width: 100%; height: auto`"
     >
     
      <!-- :style="size && `width: ${size}px; height: ${size}px`" -->
-    <!-- !tile.canGenerate &&  -->
     <!-- width="240px" -->
     <img
       :src="tile.src" 
       v-if="tile.src"
       :style="size && `width: ${size}px; height: ${size}px; border: none;`"
      />
+     
       <!-- :style="fill ? `width: 100%; height: auto` : `width:` " -->
     <Card  :asset="tile.meta.creature" v-if="!hideAsset && tile.meta.creature && tile.meta.creature.id" :showmeta="false" :card="false" />
     <!-- <img v-if="tile.meta && tile.meta.creatureSrc" :src="tile.meta.creatureSrc" width="100px" class="creature-image" /> -->
@@ -31,7 +31,7 @@
     <div class="emptyinfo" v-if="tile.meta && tile.meta.value && !tile.meta.creature && tile.meta.owner !== walletAddress">
       Uncontested
     </div>
-    <div class="blankinfo" v-if="tile.meta && !tile.meta.value && tile.canGenerate">
+    <div class="blankinfo" v-if="tile.meta && !tile.meta.value && !tile.src">
       <v-icon large>mdi-help-box</v-icon>
       <v-btn @click="() => {onAction && onAction(tile.location)}" primary>
         Generate tile

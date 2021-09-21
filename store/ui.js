@@ -14,6 +14,24 @@ import {
 //   [6, 14, 14, 12],
 //   [5, 1, 7, 0],
 //   [3, 10, 0, 0]
+const tileTemplate = {
+  id: null,
+  src: null,
+  title: null,
+  location: null,
+  index: null,
+  sides: [],
+  tile: null,
+  meta: {
+    value: null,
+    attack: null,
+    defence: null,
+    team: null,
+    owner: null,
+    creature: null
+  },
+  
+}
 const defaultTiles = [
   {
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
@@ -266,10 +284,10 @@ const defaultTiles = [
   },
   {
     id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
-    src: "https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/v.png",
+    src: "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/5.png",
     title: "East",
     location: [2, 1],
-    index: 7,
+    index: 5,
     sides: [],
     meta: {
       value: 4,
@@ -317,7 +335,6 @@ const defaultTiles = [
     location: [3, 1],
     index: false,
     sides: [],
-    canGenerate: true,
     meta: {
       value: null,
       attack: null,
@@ -428,7 +445,6 @@ const defaultTiles = [
     location: [2, 2],
     index: false,
     sides: [],
-    canGenerate: true,
     meta: {
       value: null,
       attack: null,
@@ -445,7 +461,6 @@ const defaultTiles = [
     location: [3, 2],
     index: false,
     sides: [],
-    canGenerate: true,
     meta: {
       value: null,
       attack: null,
@@ -456,6 +471,7 @@ const defaultTiles = [
     },
   },
 ];
+
 const defaultCreatures = [106, 319, 341, 23, 401, 22, 195, 276, 163, 295];
 
 const themeArray = [
@@ -537,7 +553,7 @@ export const state = () => ({
   searchTokenId: "",
   // USER
   userTeam: null,
-  userPoints: 50,
+  userPoints: 1000,
   showTeamSelect: false,
   instructionsRead: false,
   introRead: false,
@@ -612,21 +628,19 @@ export const getters = {
   },
   tileMap: (state) => {
     const {tiles} = state;
+    if(!tiles){
+      /** no tiles array exists yet */
+      return
+    }
     const locations = tiles.map(t => t.location);
-    const rows = locations.filter(l => l[0] === 1);
-    const cols = locations.filter(l => l[1] === 1);
-    
-    if(!rows){return}
+    const rows = locations.filter(l => l[0] === 0);
+    const cols = locations.filter(l => l[1] === 0);
     const blankArray = new Array(rows.length).fill();
-    console.log('blankArray', blankArray)
     const compiledMap = blankArray.map((_, rowIndex) => {
       const thisContent = tiles.filter(tile => tile.location[1] === rowIndex);
       const asIndexes = thisContent.map(col=> col.index)
-      console.log('asIndexes', asIndexes)
       return asIndexes
     })
-    // console.log('tilemap rows', cols, rows)
-    console.log('compiledMap ', compiledMap)
     return compiledMap;
   },
 };
@@ -644,6 +658,9 @@ export const mutations = {
   },
   setTiles: (state, value) => {
     state.tiles = value;
+  },
+  setTileMap: (state, value) => {
+    state.tileMap = value;
   },
   setCreatures: (state, value) => {
     state.creatures = value;
@@ -903,6 +920,46 @@ export const mutations = {
 };
 
 export const actions = {
+  generateGame(context, payload){    
+    const {rows, cols} = payload;
+    console.log('generate Game', rows, cols);
+    const newTileArray = new Array(rows * cols).fill(tileTemplate);
+    let newGameArray = [];
+    const blankRowsArray = new Array(rows).fill();
+    const blankColsArray = new Array(cols).fill();
+    console.log('blankRowsArray', blankRowsArray)
+    console.log('blankColsArray', blankColsArray);
+    let flatLocations = []
+    const compiledLocations = blankRowsArray.map((_, rowIndex) => {
+      const thisRowLocations = blankColsArray.map((_, colIndex) => {
+        const thisLocation = [colIndex, rowIndex]
+        const thisTile = {
+          ...tileTemplate, 
+          id: `${colIndex}_${rowIndex}`,
+          location: thisLocation
+        }
+        newGameArray.push(thisTile)
+        flatLocations.push(thisLocation);
+        return [colIndex, rowIndex]
+      })
+      // console.log('thisRowLocations', thisRowLocations)
+      return  thisRowLocations;
+    });
+    const newTileMap = blankRowsArray.map((_, rowIndex) => {
+      const thisRowIndexes = blankColsArray.map((_, colIndex) => {
+        return null
+      })
+      return  thisRowIndexes;
+    })
+    console.log('newTileMap', newTileMap)
+    console.log('compiledLocations', compiledLocations)
+    console.log('flatLocations', flatLocations)
+    flatLocations.map((loc, i) => {
+      newTileArray[i].location = loc
+    });
+    context.commit('setTiles', newGameArray)
+    // context.commit('setTileMap', newTileMap)
+  },
   async getAssets(context, data) {
     const { commit, state } = context;
     const { $axios } = this;

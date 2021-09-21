@@ -1,0 +1,108 @@
+<template>
+  <v-dialog
+      v-model="showDialog"
+      width="500"
+    >
+    <v-card>
+      <v-card-title class="text-h5 ">
+          New Game
+      </v-card-title>
+        <v-card-text>
+      <div class="row">
+        <div class="col">
+          <label>Rows</label>
+        </div>
+        <div class="col">
+          <label>Columns</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <v-btn text x-small outlined @click="removeRow"> - 1</v-btn>
+          <div class="feature">{{newRows}}</div>
+          <v-btn text x-small outlined @click="addRow"> + 1</v-btn>
+        </div>
+        <div class="col">
+          <div class="row ma-0">
+            <v-btn text x-small outlined @click="removeCol"> - 1</v-btn>
+            <div class="feature">{{newCols}}</div>
+            <v-btn text x-small outlined @click="addCol"> + 1</v-btn>
+          </div>
+        </div>
+      </div>
+        </v-card-text>
+        <v-divider class="ma-0"></v-divider>
+        <v-card-actions>
+          <v-btn class="primary" @click="onAction({rows: newRows, cols: newCols})">New Game</v-btn>
+          <v-spacer></v-spacer>
+            <v-btn depressed text @click="onClose(null)">cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+
+</template>
+
+<style lang="scss">
+
+</style>
+
+<script>
+import { mapMutations, mapGetters } from "vuex";
+
+export default {
+  props: ['onAction', 'onClose', 'show', 'rows', 'cols'],
+  data() {
+    return {
+      showDialog: true,
+      newRows: 3,
+      newCols: 4,
+    };
+  },
+  created(){
+    
+  },
+  mounted(){
+    
+  },
+  
+  computed: {
+    ...mapGetters({
+      walletAddress: "ui/walletAddress",
+    }),
+    
+  },
+
+  methods: {
+    ...mapMutations({
+      // setIntroRead: "ui/setIntroRead",
+    }),
+    addRow(){
+      this.newRows = this.newRows + 1;
+    },
+    removeRow(){
+      if(this.newRows === 1){
+        alert('Cannot be less than 1');
+        return
+      }
+      else {
+        this.newRows = this.newRows - 1;
+      }
+    },
+    addCol(){
+      this.newCols = this.newCols + 1;
+    },
+    removeCol(){
+      if(this.newCols === 1){
+        alert('Cannot be less than 1');
+        return
+      }
+      else {
+        this.newCols = this.newCols - 1;
+      }
+    },
+  },
+};
+</script>
+
+

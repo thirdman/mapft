@@ -17,13 +17,22 @@
                 <Loading v-if="status === 'working'" message="Working..." />
               </div>
             </div>
-            <div class="row">
+            <div class="row" v-if="status !== 'working'">
               <div class="col">
                 <p class="text-body-2">
                   Generating will create a matching tile, but cost you points
                 </p>
+                <p class="text-body-2">
+                  Unknown tile areas have a 75% chance of being conneted;
+                </p>
                 <p>Your points: {{userPoints}}</p>
                 <p>Generation Cost: 12</p>
+                  <v-btn block class="primary" @click="calualateThisTile(location[1], location[0])" v-if="!previewTile && location">Generate</v-btn>
+              </div>
+            </div>
+            <div v-if="requiredPaths && devMode">
+              <div v-for="(path, i) in requiredPaths" :key="i">
+                {{path}},
               </div>
             </div>
             <div class="tileGrid">
@@ -82,13 +91,12 @@
       </v-card-text>
       <v-divider class="ma-0" />
       <v-card-actions>
-        <v-btn class="primary" @click="doApply(location)">Apply</v-btn>
+        <v-btn class="primary" @click="doApply(location)" :disabled="!previewTile">Apply</v-btn>
         <v-btn outlined @click="onClose">Cancel</v-btn>
         <v-btn outlined @click="doTimer" v-if="devMode">do Timer</v-btn>
-        <v-btn primary @click="calualateThisTile(location[1], location[0])" v-if="location && location[1]">Re-Generate</v-btn>
-              <v-btn @click="compileNewTile(location)">compile</v-btn>
-              
-              <v-btn small @click="calculateIndex">getindex</v-btn>
+        <v-btn @click="calualateThisTile(location[1], location[0])" v-if="previewTile && location">Regenerate</v-btn>
+        <v-btn @click="compileNewTile(location)" v-if="devMode">compile</v-btn>      
+        <v-btn small @click="calculateIndex" v-if="devMode">getindex</v-btn>
               
       </v-card-actions>
     </v-card>
@@ -229,7 +237,7 @@ export default {
   props: ['location', 'handleSelect', 'selected', 'index', 'onAction', 'onClose', 'onGenerate'],
   data() {
     return {
-      devMode: false,
+      devMode: true,
       status: 'loading',
       mapString: null,
       previewTile: null,
@@ -240,17 +248,21 @@ export default {
       demoTileMap: null,
       newTileValue: null,
       newTileIndex: null,
-      generationCost: 12
+      generationCost: 12,
+      requiredPaths: null,
     };
   },
   created(){
     console.log('this getter tilemap: ', this.tileMap);
     this.demoTileMap = this.tileMap
     if(!location){return}
-    console.log('created', this.location)
-    this.calualateThisTile(this.location[1], this.location[0]); // inverted due to coords being x, y
-    this.status = "working";
-    this.doTimer()
+    // console.log('created', this.location)
+    // this.calualateThisTile(this.location[1], this.location[0]); // inverted due to coords being x, y
+    // this.status = "working";
+    // this.doTimer()
+  },
+  mounted(){
+    this.status = "ready";
   },
   
   computed: {
@@ -270,7 +282,7 @@ export default {
       setUserPoints: 'ui/setUserPoints',
     }),
     doTimer(){
-      const delayAmount = 1000
+      const delayAmount = 500
       this.status = 'working';
       setTimeout(() => {
         this.status = 'completed';
@@ -291,42 +303,51 @@ export default {
         })
         return
       }
-       
+       console.log('tileMap', tileMap);
+      if(!tileMap[row]){
+        alert('missing tolemap 0');
+        return
+      }
       const tempTileValue = this.random(5, 30, false);
       const thisTile = tileMap[row][col];
       console.log('thisTile', thisTile);
       console.log('tileMap.length', tileMap.length);
-      const notFirstRow = row > 0;
-      const notLastCol = col <  tileMap[row].length - 1;
-      const notLastRow = row <  tileMap.length - 1;
-      const notFirstCol = col > 0;
-      const north = notFirstRow ? tileMap[row - 1][col] : false;
-      const east = notLastCol ? tileMap[row][col +1] : false;
-      const south = notLastRow ? tileMap[row + 1][col] : false;
-      const west = notFirstCol ? tileMap[row][col - 1] : false;
-      console.log('north', north);
-      console.log('east',  east);
-      console.log('south',  south);
-      console.log('west',  west);
-      const northSides = north && tileSidesMap[north] || false;
-      const eastSides = east && tileSidesMap[east]  || false;
-      const southSides = south && tileSidesMap[south] || false;
-      const westSides = west && tileSidesMap[west] || false;
-      console.log('thisTile sides', {northSides, eastSides, southSides, westSides});
-      /** get the facing (inverse) value for the tiles surrounding */
-      /** 
-       * check for borders, (if global setting) and set false
-       * check for undefined, which means we can randomly choose (lean towards true) sicne the tile is blank
-       */
-      const northPath = notFirstRow ? (northSides[2] || true) : false;
-      const eastPath = notLastCol ? (eastSides[3] || true) : false;
-      const southPath = notLastRow ? (southSides[0] || true) : false;
-      const westPath = notFirstCol ? (westSides[1] || true) : false;
-      console.log('thisTile paths', {northPath, eastPath, southPath, westPath});
-      const tileIndex = this.calculateTileIndex(northPath, eastPath, southPath, westPath);
+      
+      // const notFirstRow = row > 0;
+      // const notLastCol = col <  tileMap[row].length - 1;
+      // const notLastRow = row <  tileMap.length - 1;
+      // const notFirstCol = col > 0;
+      // const north = notFirstRow ? tileMap[row - 1][col] : 'unknown';
+      // const east = notLastCol ? tileMap[row][col +1] : 'unknown';
+      // const south = notLastRow ? tileMap[row + 1][col] : 'unknown';
+      // const west = notFirstCol ? tileMap[row][col - 1] : 'unknown';
+      // console.log('north', north);
+      // console.log('east',  east);
+      // console.log('south',  south);
+      // console.log('west',  west);
+      // const northSides = north && tileSidesMap[north] || false;
+      // const eastSides = east && tileSidesMap[east]  || false;
+      // const southSides = south && tileSidesMap[south] || false;
+      // const westSides = west && tileSidesMap[west] || false;
+      // console.log('thisTile sides', {northSides, eastSides, southSides, westSides});
+      
+      const isPossibleNorth = this.determinePossible({direction: 'north', row, col, tileMap});
+      const isPossibleEast = this.determinePossible({ direction: 'east', row, col, tileMap});
+      const isPossibleSouth = this.determinePossible({ direction: 'south', row, col, tileMap});
+      const isPossibleWest = this.determinePossible({ direction: 'west', row, col, tileMap});
+      // const northPath = notFirstRow ? (northSides[2] || false) : false;
+      // const eastPath = notLastCol ? (eastSides[3] || false) : false;
+      // const southPath = notLastRow ? (southSides[0] || false) : false;
+      // const westPath = notFirstCol ? (westSides[1] || false) : false;
+      // this.requiredPaths = [northPath, eastPath, southPath, westPath];
+      // console.log('requiredSides', {northSides, eastSides, southSides, westSides});
+      // console.log('requiredPaths', {northPath, eastPath, southPath, westPath});
+      console.log('possibles', {isPossibleNorth, isPossibleEast, isPossibleSouth, isPossibleWest});
+      const tileIndex = this.calculateTileIndex(isPossibleNorth, isPossibleEast, isPossibleSouth, isPossibleWest);
       console.log('tileIndex', tileIndex)
       this.newSrc = `https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${tileIndex}.${tileIndex === 0 ? 'jpg' : 'png'}`
       let tempTileMap = tileMap.slice();
+      
       tileMap[row][col] = tileIndex;
       // setTileMap(tempTileMap)
       this.demoTileMap = tempTileMap;
@@ -338,6 +359,94 @@ export default {
         this.setUserPoints(newPoints)
       }
       this.doTimer()
+    },
+    determinePossible(options){
+      const {direction, row, col, tileMap} = options;
+      if(!tileMap){return}
+      /** possible outcomes: generatable, true, false */
+      console.log('options', options);
+      const totelRows = tileMap[0].length;
+      const totelCols = tileMap.length;
+      const isFirstRow = row === 0;
+      const isLastCol = col ===  totelRows - 1;
+      const isLastRow = row ===  totelCols - 1;
+      const isFirstCol = col === 0;
+      console.log({totelRows, totelCols, isFirstRow, isLastRow, isFirstCol, isLastCol})
+      /** CHeck For Edges of Map */
+      if(direction === 'north' && isFirstRow){
+        return false;
+      }
+      if(direction === 'east' && isLastCol){
+        return false;
+      }
+      if(direction === 'south' && isLastRow){
+        return false;
+      }
+      if(direction === 'west' && isFirstCol){
+        return false;
+      }
+      /** CHeck For existence of tile 
+       * In this situation, the tile can have an index, which represents a tile.
+       * we look for null or undefined, which means the tile is empty but can exist in the future.
+      */
+     // let targetTileSides;
+    // const targetE = tileMap[row][col +1];
+    // const targetS = tileMap[row + 1][col];
+    // const targetW = tileMap[row][col - 1];
+      let targetIsGeneratable = false;
+      const mapInverseDirections = {
+        'north' : 2,
+        'east' : 3,
+        'south' : 0,
+        'west' : 1,
+      }
+      // const mapTargetLocations = {
+      //   'north' : tileMap[row - 1][col],
+      //   'east' : tileMap[row][col +1],
+      //   'south' : tileMap[row + 1][col],
+      //   'west' : tileMap[row][col - 1],
+      // }
+      const invertDirection = mapInverseDirections[direction];
+      console.log('invertDirection', invertDirection)
+      let target;
+        /** gets the image index in the target direction */
+      if(direction === 'north'){
+        target = tileMap[row - 1][col];
+      }
+      if(direction === 'east'){
+        target = tileMap[row][col +1];
+      }
+      if(direction === 'south'){
+        target = tileMap[row + 1][col];
+      }
+      if(direction === 'west'){
+        target = tileMap[row][col - 1];
+      }
+      console.log('target', target)
+      const targetTileSides = tileSidesMap[target];
+      console.log('targetTileSides', targetTileSides)
+      if(!targetTileSides){
+        console.log('tile is not generated yet');
+        targetIsGeneratable = true;
+        // return 'generate'
+      } else {
+        const hasPath = targetTileSides[invertDirection] === 1 ? true : false; // gets the matching edge (clockwise 0, 1, 2, 3)
+        console.log('hasPath', hasPath)
+        return hasPath;
+      }
+      console.log('targetIsGeneratable', targetIsGeneratable);
+      if(targetIsGeneratable){
+        return this.generateUnknownDirection(75);
+      }
+      /**if we get here somethign is missing */
+      console.error('how did we get here?');
+      return false;
+    },
+    generateUnknownDirection(percent = 75){
+      /** isf less than 75% then make a path */
+      const number = this.random(0, 100, false);
+      console.log('isGeneratable number', number)
+      return number < percent;
     },
     getTile(row, col){
       const tileMap = [
@@ -420,7 +529,6 @@ export default {
         }, 
         index: newTileIndex,
         location: location,
-        canGenerate: false,
         title: 'blah',
         id: "123",
         src: '',
