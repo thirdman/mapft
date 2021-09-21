@@ -6,7 +6,7 @@
         <h1>Game elements as NFT » NFT as game elements</h1>
       </div>
     </section>
-    <section class="row ma-0 content">
+    <!-- <section class="row ma-0 content">
       <div class=" col col-6 intro-column">
         <div class="info-game">
           <h3>
@@ -47,7 +47,7 @@
             </ul>
         </div>
       
-    </section>
+    </section> -->
     <!-- <Footer /> -->
   </div>
 </template>

@@ -1,10 +1,9 @@
 <template>
   <div class="pageContainer">
-    <Header />
-    
+    <!-- <Header /> -->
+<!--     
     <section  class="">
       <div class="tertiary">
-        <!-- <h2>&nbsp;</h2> -->
         <br/>
         <br/>
         <br/>
@@ -12,7 +11,6 @@
           <p>
             User data is stored <strong>only</strong> in your browser local storage.
           </p>
-          <!-- <Button @click="getProfileData(walletAddress)">get profile</Button> -->
         </div>
       </div>
       <div class="primary">
@@ -72,9 +70,9 @@
       </div>
     </section>
 
+     -->
     
-    
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>
 

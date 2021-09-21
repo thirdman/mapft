@@ -1,4 +1,5 @@
 module.exports = {
+  mode: 'production',
   outputDir: "docs",
   transpileDependencies: ["vuetify"],
   // "lintOnSave": false

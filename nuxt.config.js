@@ -121,14 +121,14 @@ export default {
           secondary: "#424242",
           accent: "#FF1744",
           error: "#b71c1c",
-          transparent: "rgba(0,0,0,.00)",
+          transparent: "rgba(0,0,0,0)",
         },
         light: {
           primary: "#101010",
           secondary: "#424242",
           accent: "#FF1744",
           error: "#b71c1c",
-          transparent: "rgba(0,0,0,.00)",
+          transparent: "rgba(0,0,0,0)",
         },
       },
     },
@@ -193,5 +193,6 @@ export default {
     // ...
     // },
     friendlyErrors: false,
+    
   },
 };
