@@ -5,9 +5,9 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 
 let web3Modal;
 const requiredNetwork =
-  process.env.PROD_NETWORK ||
-  process.env.STAGING_NETWORK ||
-  process.env.DEV_NETWORK ||
+  // process.env.PROD_NETWORK ||
+  // process.env.STAGING_NETWORK ||
+  // process.env.DEV_NETWORK ||
   "rinkeby";
 
 // SET MODAL THEME COLORS
@@ -54,12 +54,8 @@ function init(requiredNetwork, infuraUrl) {
 
 export default async ({ app, store, $axios, isHMR }, inject) => {
   if (process.client) {
-    // console.log("INIT");
     const { requiredNetwork, infuraUrl } = app.$config;
     init(requiredNetwork, infuraUrl);
-
-    // inject("hello", (msg) => console.log(`Hello ${msg}!`));
-    inject("web3Modal", web3Modal);
+     inject("web3Modal", web3Modal);
   }
-  // console.log("WHAT");
 };

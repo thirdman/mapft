@@ -111,3 +111,5 @@ sw.*
 
 #vscode
 static/sw.js
+
+.vercel

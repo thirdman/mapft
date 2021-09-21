@@ -94,11 +94,8 @@ export default {
     { src: "~/plugins/localStorage.js", ssr: false },
     { src: "~plugins/vue-js-modal.js" }, // mode: 'client'
     { src: "~plugins/web3ModalPlugin.js", mode: "client" },
-    { src: "~plugins/web3Load.js", mode: "client" },
-    { src: "~/plugins/vue-tooltip.js", mode: "client" },
-    // { src: "~/plugins/vuetify.js", mode: "client" },
-
-    // { src: "~plugins/arweaveInit.js" }, // mode: 'client'
+    // { src: "~plugins/web3Load.js", mode: "client" },
+    // { src: "~/plugins/vue-tooltip.js", mode: "client" },
   ],
   /*
    ** Auto import components
