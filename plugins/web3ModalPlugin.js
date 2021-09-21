@@ -1,5 +1,4 @@
-import Vue from "vue";
-import Web3 from "web3";
+// import Vue from "vue";
 import Web3Modal from "web3modal";
 // import Portis from "@portis/web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";

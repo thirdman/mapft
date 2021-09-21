@@ -178,8 +178,8 @@
 </style>
 
 <script>
-import Web3 from "web3";
-import Web3Modal from "web3modal";
+// import Web3 from "web3";
+// import Web3Modal from "web3modal";
 
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import {  handleAccountLink, setConnectedNetwork, getProviderType, getConnectedNetwork, initWeb3 } from "../../utils/wallet.js";
