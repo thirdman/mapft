@@ -383,7 +383,7 @@ const startUploadThumbnailProcess = async (
 };
 
 const personalSignFiles = async (message) => {
-  console.log("personalSignFiles web3", web3, message);
+  
   return new Promise((res, rej) => {
     web3.personal.sign(message, web3.eth.accounts[0], (error, result) => {
       if (error) {

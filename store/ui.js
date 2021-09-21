@@ -1,4 +1,3 @@
-// import * as Web3 from 'web3'
 
 import { getField, updateField } from "vuex-map-fields";
 import { v4 as uuidv4 } from "uuid";
