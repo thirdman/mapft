@@ -46,7 +46,7 @@
 <script>
 // import { mapMutations, mapGetters, mapActions } from 'vuex'
 import movieImage from "~/assets/images/defaultImageMovie.png"
-const BASE_URL = process.env.tempUrl || "https://infinft.app"
+
 export default {
   props: ['src', 'thumbnail', 'poster'],
   data() {

@@ -126,9 +126,6 @@ export default {
       this.desiredNetwork = requiredNetwork;
       this.baseUrl = rootUrl;
     }
-    // console.log('MOUNTED this.$config', this.$config)
-    // console.log('MOUNTED baseUrl', process.env.baseUrl)
-    // console.log('MOUNTED route: ', this.$route)
     const rootUrl = this.$config.rootUrl
     const path = this.$route.path
     this.path = path;

@@ -198,24 +198,24 @@ export default {
     }
     if(this.$config){
       // console.log('HEADER this.$config is available', this.$config)
-      const rootUrl = this.$config.rootUrl;
-      const requiredNetwork = this.$config.requiredNetwork;
-      const factoryContract = this.$config.factoryContract;
+      // const rootUrl = this.$config.rootUrl;
+      // const requiredNetwork = this.$config.requiredNetwork;
+      // const factoryContract = this.$config.factoryContract;
       const infuraUrl = this.$config.infuraUrl;
-      const VERCEL_ENV = this.$config.VERCEL_ENV || "local"
-      const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
-      const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
-      const VERCEL_GIT_COMMIT_MESSAGE = this.$config.VERCEL_GIT_COMMIT_MESSAGE || '-'
+      // const VERCEL_ENV = this.$config.VERCEL_ENV || "local"
+      // const VERCEL_GIT_REPO_SLUG = this.$config.VERCEL_GIT_REPO_SLUG || "local"
+      // const VERCEL_GIT_COMMIT_SHA = this.$config.VERCEL_GIT_COMMIT_SHA || "local"
+      // const VERCEL_GIT_COMMIT_MESSAGE = this.$config.VERCEL_GIT_COMMIT_MESSAGE || '-'
       
-      this.rootUrl = rootUrl;
-      this.factoryContract = factoryContract;
-      this.requiredNetwork = requiredNetwork;
+      // this.rootUrl = rootUrl;
+      // this.factoryContract = factoryContract;
+      // this.requiredNetwork = requiredNetwork;
       this.infuraUrl = infuraUrl;
-      this.VERCEL_ENV = VERCEL_ENV
-      this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
-      this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
-      this.VERCEL_GIT_COMMIT_MESSAGE = VERCEL_GIT_COMMIT_MESSAGE
-      this.VERCEL_URL = this.$config.VERCEL_URL || 'local'
+      // this.VERCEL_ENV = VERCEL_ENV
+      // this.VERCEL_GIT_REPO_SLUG = VERCEL_GIT_REPO_SLUG
+      // this.VERCEL_GIT_COMMIT_SHA = VERCEL_GIT_COMMIT_SHA
+      // this.VERCEL_GIT_COMMIT_MESSAGE = VERCEL_GIT_COMMIT_MESSAGE
+      // this.VERCEL_URL = this.$config.VERCEL_URL || 'local'
     }
     if (process.client) {
       this.walletCheck();

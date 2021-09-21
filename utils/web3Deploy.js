@@ -132,7 +132,7 @@ const deployThatShit = (state, context, walletAddress) => {
   const network = context.$config.network;
   const requiredNetwork = context.$config.requiredNetwork;
   const factoryContract = context.$config.factoryContract;
-  const ENV = context.$config.VERCEL_ENV || "development";
+  // const ENV = context.$config.VERCEL_ENV || "development";
   // console.log("requiredNetwork", requiredNetwork);
   // console.log("factoryContract", factoryContract);
   // console.log("ENV", ENV);
@@ -145,7 +145,7 @@ const deployThatShit = (state, context, walletAddress) => {
 
   const doIt = true;
   const web3Write = window.web3Write;
-  const infuraUrl = context.$config.infuraUrl;
+  // const infuraUrl = context.$config.infuraUrl;
   // console.log("DEPLOY: infuraUrl", infuraUrl);
   // console.log("factoryContract: ", factoryContract);
   // console.log("walletAddress: ", walletAddress);

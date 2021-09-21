@@ -220,7 +220,7 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { handleAccountLink } from "../utils/wallet";
-const BASE_URL = process.env.tempUrl || "https://infinft.app"
+const BASE_URL = "sss"
 import ogImagePreview from '~/assets/images/preview.jpg'
 
 export default {

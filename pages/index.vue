@@ -401,7 +401,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-const BASE_URL = process.env.tempUrl || "https://infinft.app"
+const BASE_URL = "https://unknowngame.site"
 import ogImagePreview from '~/assets/images/preview.jpg'
 import { dialog } from '@devlop-ab/dialog';
 import GenerateTile from '../components/GenerateTile.vue';
