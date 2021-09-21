@@ -17,35 +17,33 @@ export default {
     network: "rinkeby",
     infuraUrlRinkeby: process.env.INFURA_URL_RINKEBY,
     infuraUrlMain: process.env.INFURA_URL_RINKEBY,
-    baseUrl: process.env.BASE_URL,
-    rootUrl:
-      process.env.PROD_BASE_URL ||
-      process.env.STAGING_BASE_URL ||
-      process.env.DEV_BASE_URL,
-    factoryContract:
-      process.env.PROD_FACTORY_CONTRACT ||
-      process.env.STAGING_FACTORY_CONTRACT ||
-      process.env.DEV_FACTORY_CONTRACT,
-    requiredNetwork:
-      process.env.PROD_NETWORK ||
-      process.env.STAGING_NETWORK ||
-      process.env.DEV_NETWORK,
-    infuraUrl:
-      process.env.PROD_INFURA_URL ||
-      process.env.STAGING_INFURA_URL ||
-      process.env.DEV_INFURA_URL,
-    ARWEAVE_WALLET_ID: process.env.ARWEAVE_WALLET_ID,
-    ARWEAVE_WALLET_KEY: process.env.ARWEAVE_WALLET_KEY,
-    VERCEL_ENV: process.env.VERCEL_ENV,
-    VERCEL_GIT_REPO_SLUG: process.env.VERCEL_GIT_REPO_SLUG,
-    VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
-    VERCEL_GIT_COMMIT_MESSAGE: process.env.VERCEL_GIT_COMMIT_MESSAGE,
+    // baseUrl: process.env.BASE_URL,
+    // rootUrl:
+    //   process.env.PROD_BASE_URL ||
+    //   process.env.STAGING_BASE_URL ||
+    //   process.env.DEV_BASE_URL,
+    // factoryContract:
+    //   process.env.PROD_FACTORY_CONTRACT ||
+    //   process.env.STAGING_FACTORY_CONTRACT ||
+    //   process.env.DEV_FACTORY_CONTRACT,
+    // requiredNetwork:
+    //   process.env.PROD_NETWORK ||
+    //   process.env.STAGING_NETWORK ||
+    //   process.env.DEV_NETWORK,
+    // infuraUrl:
+    //   process.env.PROD_INFURA_URL ||
+    //   process.env.STAGING_INFURA_URL ||
+    //   process.env.DEV_INFURA_URL,
+    // VERCEL_ENV: process.env.VERCEL_ENV,
+    // VERCEL_GIT_REPO_SLUG: process.env.VERCEL_GIT_REPO_SLUG,
+    // VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+    // VERCEL_GIT_COMMIT_MESSAGE: process.env.VERCEL_GIT_COMMIT_MESSAGE,
   },
   env: {
     tempUrl:
-      process.env.PROD_BASE_URL ||
-      process.env.STAGING_BASE_URL ||
-      process.env.DEV_BASE_URL ||
+      // process.env.PROD_BASE_URL ||
+      // process.env.STAGING_BASE_URL ||
+      // process.env.DEV_BASE_URL ||
       "http://localhost:3333",
   },
   /*
@@ -53,7 +51,7 @@ export default {
    ** See https://nuxtjs.org/api/configuration-head
    */
   head: {
-    title: "SVGTokens",
+    title: "Unknown Game",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
