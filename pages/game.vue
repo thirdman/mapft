@@ -1,6 +1,6 @@
 <template>
   <div class="pageContainer">
-    <Header />
+    <!-- <Header /> -->
     <dialog-intro :show="!introRead" />
     <dialog-team-select   />
     <dialog-new-game 

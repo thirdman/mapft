@@ -3,7 +3,6 @@ export default {
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
    */
-  // mode: "universal", // deprecaded
   /*
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
@@ -15,29 +14,29 @@ export default {
    */
   publicRuntimeConfig: {
     network: "rinkeby",
-    infuraUrlRinkeby: process.env.INFURA_URL_RINKEBY,
-    infuraUrlMain: process.env.INFURA_URL_RINKEBY,
+    infuraUrlRinkeby: process.env.INFURA_URL_RINKEBY || "example",
+    infuraUrlMain: process.env.INFURA_URL_RINKEBY || "example",
     // baseUrl: process.env.BASE_URL,
-    // rootUrl:
-    //   process.env.PROD_BASE_URL ||
-    //   process.env.STAGING_BASE_URL ||
-    //   process.env.DEV_BASE_URL,
-    // factoryContract:
-    //   process.env.PROD_FACTORY_CONTRACT ||
-    //   process.env.STAGING_FACTORY_CONTRACT ||
-    //   process.env.DEV_FACTORY_CONTRACT,
-    // requiredNetwork:
-    //   process.env.PROD_NETWORK ||
-    //   process.env.STAGING_NETWORK ||
-    //   process.env.DEV_NETWORK,
-    // infuraUrl:
-    //   process.env.PROD_INFURA_URL ||
-    //   process.env.STAGING_INFURA_URL ||
-    //   process.env.DEV_INFURA_URL,
-    // VERCEL_ENV: process.env.VERCEL_ENV,
-    // VERCEL_GIT_REPO_SLUG: process.env.VERCEL_GIT_REPO_SLUG,
-    // VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
-    // VERCEL_GIT_COMMIT_MESSAGE: process.env.VERCEL_GIT_COMMIT_MESSAGE,
+    rootUrl:
+      process.env.PROD_BASE_URL ||
+      process.env.STAGING_BASE_URL ||
+      process.env.DEV_BASE_URL || "example",
+    factoryContract:
+      process.env.PROD_FACTORY_CONTRACT ||
+      process.env.STAGING_FACTORY_CONTRACT ||
+      process.env.DEV_FACTORY_CONTRACT  || "example",
+    requiredNetwork:
+      process.env.PROD_NETWORK ||
+      process.env.STAGING_NETWORK ||
+      process.env.DEV_NETWORK  || "example",
+    infuraUrl:
+      process.env.PROD_INFURA_URL ||
+      process.env.STAGING_INFURA_URL ||
+      process.env.DEV_INFURA_URL || "example",
+    VERCEL_ENV: process.env.VERCEL_ENV || "example",
+    VERCEL_GIT_REPO_SLUG: process.env.VERCEL_GIT_REPO_SLUG || "example",
+    VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA || "example",
+    VERCEL_GIT_COMMIT_MESSAGE: process.env.VERCEL_GIT_COMMIT_MESSAGE || "example",
   },
   env: {
     tempUrl:
@@ -107,7 +106,7 @@ export default {
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    "@nuxtjs/eslint-module",
+    // "@nuxtjs/eslint-module",
     "@nuxtjs/google-analytics",
     "@nuxtjs/vuetify",
   ],
