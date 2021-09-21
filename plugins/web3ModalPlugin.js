@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
-import Portis from "@portis/web3";
+// import Portis from "@portis/web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 let web3Modal;
@@ -37,12 +37,12 @@ function init(requiredNetwork, infuraUrl) {
         infuraId: "27e484dcd9e3efcfd25a83a78777cdf1",
       },
     },
-    portis: {
-      package: Portis, // required
-      options: {
-        id: "4a848529-8cb2-4d9a-8001-6e0b5172fd3c", // required
-      },
-    },
+    // portis: {
+    //   package: Portis, // required
+    //   options: {
+    //     id: "4a848529-8cb2-4d9a-8001-6e0b5172fd3c", // required
+    //   },
+    // },
   };
 
   web3Modal = new Web3Modal({

@@ -805,10 +805,9 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 import { ValidationProvider, extend } from "vee-validate";
 import { required, min, max, email, regex } from "vee-validate/dist/rules";
-import vueFilePond from "vue-filepond";
 import { v4 as uuidv4 } from 'uuid';
 
-import "filepond/dist/filepond.min.css";
+
 const customMinterMap = {
   "0xcd8a0e29514910532db4b500ad109927262f54d8": {
     id: "garethProd",
@@ -834,7 +833,7 @@ const customMinterMap = {
   
 };
 
-const FilePond = vueFilePond();
+
 const imageTypes = ["jpg", "png", "gif"];
 
 extend("min", {
@@ -984,11 +983,11 @@ export default {
     }),
     ...mapActions({
       // ARWEAVE
-      getBalance: "arweaveStore/getBalance",
-      arUploadFile: "arweaveStore/arUploadFile",
-      lastTransaction: "arweaveStore/lastTransaction",
-      getTransactionStatus: "arweaveStore/getTransactionStatus",
-      getTransactionData: "arweaveStore/getTransactionData",
+      // getBalance: "arweaveStore/getBalance",
+      // arUploadFile: "arweaveStore/arUploadFile",
+      // lastTransaction: "arweaveStore/lastTransaction",
+      // getTransactionStatus: "arweaveStore/getTransactionStatus",
+      // getTransactionData: "arweaveStore/getTransactionData",
     }),
     goTo(path){
       this.$router.push(path);
@@ -1032,12 +1031,7 @@ export default {
         //  this.$modal.hide('status-modal')
       }
     },
-    handleFilePondInit: function () {
-      // console.log("FilePond has initialized");
-      // FilePond instance methods are available on `this.$refs.pond`
-    },
-    
-    onRequestSave: function (props) {
+        onRequestSave: function (props) {
       alert("request save called");
 
       const { id, name, folder, file, target, mode } = props;

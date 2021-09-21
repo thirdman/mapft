@@ -57,19 +57,12 @@ export default {
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "og:site_name", name: "og:site_name", content: "SVG Tokens" },
+      { hid: "og:site_name", name: "og:site_name", content: "Unknown Game" },
       {
         hid: "description",
         name: "description",
-        content: "NFT creation with on-chain images.",
+        content: "NFT map tiles.",
       },
-
-      // {
-      //   hid: "ogimage2",
-      //   name: "og:image",
-      //   // content: "/images/preview.jpg",
-      //   content: "https://staging.infinft.app/_nuxt/assets/images/preview.jpg",
-      // },
     ],
     link: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
@@ -192,7 +185,6 @@ export default {
     // Add exception
     transpile: [
       "vee-validate/dist/rules",
-      "@georgedoescode/spline",
       "@devlop-ab/dialog",
     ],
     babel: {

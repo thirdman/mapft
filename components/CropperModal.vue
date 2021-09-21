@@ -103,7 +103,7 @@ export default {
     }),
     ...mapActions({
       showCropperModal: 'mintFormStore/showCropperModal',
-      arUploadFile: "arweaveStore/arUploadFile",
+      
     }),
     handleModal(newState) {
       console.log('this.$modal', this.$modal)
