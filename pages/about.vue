@@ -1,6 +1,6 @@
 <template>
   <div class="pageContainer">
-    <!-- <Header /> -->
+    <Header />
     <section class="row hero  content">
       <div class="col">
         <h1>Game elements as NFT » NFT as game elements</h1>

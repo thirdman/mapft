@@ -1,7 +1,7 @@
 <template>
   <div class="pageContainer">
-    <!-- <Header /> -->
-<!--     
+    <Header />
+    
     <section  class="">
       <div class="tertiary">
         <br/>
@@ -70,9 +70,9 @@
       </div>
     </section>
 
-     -->
     
-    <!-- <Footer /> -->
+    
+    <Footer />
   </div>
 </template>
 
