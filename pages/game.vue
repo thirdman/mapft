@@ -393,9 +393,6 @@
           </div>
         </client-only>
       </div>
-      <div class="col col2">
-  
-      </div>
     </section>
     <Footer />
   </div>
