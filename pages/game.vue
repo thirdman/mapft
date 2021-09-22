@@ -118,10 +118,6 @@
                   Select Another</v-btn>
               </div>
             </div>
-              
-            
-            <!-- <v-btn @click="getCards" v-if="!userAssets" class="btn hero">Get Cards</v-btn> -->
-            
           </div>
           <div v-if="isBattling" class="claim-layer battle">
             <div class="row" style="width: 100%; align-items: stretch;">
@@ -223,7 +219,7 @@
       </v-slide-y-transition>
     <!-- HERO Container -->
     <section id="intro" class="row ma-0 ">
-      <div class=" col col-3 info-column">
+      <div class="col col-3 info-column">
         <div class="info-game" v-if="!selectedTile">
           <!-- <div class="row">
             <div class="col ctaWrap"  v-if="!userTeam">
@@ -231,7 +227,7 @@
               <nuxt-link to="/about" class="btn hollow asButton">What is this?</nuxt-link>
             </div>
           </div> -->
-        <div class="row mx-0 my-4 tabs-container">
+        <div class="row mx-0 my-0 tabs-container">
           <v-card  outlined class="pa-0" style="width: 100%;" >
           <v-tabs 
             v-model="tab"
@@ -291,8 +287,13 @@
             <v-tab-item
               key="User"
             >
-              <v-divider class="ma-0 pa-2" />
-              <v-btn @click="getCards" small outlined >Get Cards</v-btn>
+              <v-divider class="ma-0 " />
+              <div class="pa-2">
+              <div class="text-body-2">
+                Your Gods Unchained assets.
+              </div>
+              <Loading message="Loading assets..." v-if="isLoadingAssets" />
+              <v-btn @click="getCards" small outlined v-if="!userAssets" >Get Cards</v-btn>
               <div v-if="userAssets" class="assetGrid flow">
                 <Card
                   :onSelect="false"
@@ -303,6 +304,7 @@
                   :disabled="creatureExists(asset)"
                   :card="false"
                 />
+              </div>
               </div>
             </v-tab-item>
           </v-tabs-items>
@@ -1382,10 +1384,10 @@ z-index: 2;
     .tabs-container{
       min-width: 200px;
       width: 100%;
-    }
-    .tabs-row, .v-tabs-bar{
-      height: 24px;
-      width: 100%;
+      .tabs-row, .v-tabs-bar{
+        height: 24px;
+        width: 100%;
+      }
     }
     .tab-element{
       font-size: .75rem;
