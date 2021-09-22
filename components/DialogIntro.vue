@@ -3,17 +3,6 @@
       v-model="introRead"
       width="500"
     >
-      <!-- <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="red lighten-2"
-          dark
-          v-bind="attrs"
-          v-on="on"
-        >
-          Click Me
-        </v-btn>
-      </template> -->
-
       <v-card>
         <v-card-title class="text-h5 ">
           Interface for an Unknown Game
@@ -22,15 +11,19 @@
           <p>Oh, hi there!</p>
           <p>What are NFT for?</p>
           <p>This interface shows a game that might be created combining nft that are map tiles with those from elsewhere (gods unchained) as xxxxx to make secondary value. </p>
-          <nuxt-link to="/about" class="btn hollow asButton">What is this? »</nuxt-link>
-
+          <nuxt-link to="/about" class="btn hero asButton">More Info »</nuxt-link>
+          <dialog-team-select   />
+          
         </v-card-text>
         <v-divider class="ma-0"></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
+          <team-swatch :team="userTeam" v-if="userTeam" :text="userTeam" />
+          <v-btn class="primary" v-if="!userTeam" @click="setShowTeamSelect">select your team!</v-btn>
           <v-btn
-            color="primary"
-            text
+            :color="userTeam && 'primary'"
+            texty
+            :disabled="!userTeam"
             @click="() => setIntroRead(false)"
           >
             Lets Goooo!
@@ -94,13 +87,15 @@ export default {
     ...mapGetters({
       walletAddress: "ui/walletAddress",
       introRead: "ui/introRead",
+      userTeam: "ui/userTeam",
     }),
     
   },
 
   methods: {
     ...mapMutations({
-      setIntroRead: "ui/setIntroRead"
+      setIntroRead: "ui/setIntroRead",
+      setShowTeamSelect: "ui/setShowTeamSelect",
     }),
     
   },

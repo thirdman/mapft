@@ -16,8 +16,8 @@
             
           <div class="row">
             <div class="col ctaWrap" >
-                <v-btn @click="() => {router.push('/')}" class="btn hero">Get Started »</v-btn>
-                <nuxt-link to="/" class="btn hollow asButton">Get Started »</nuxt-link>
+                <!-- <v-btn @click="() => {router.push('/')}" class="btn hero">Get Started »</v-btn> -->
+                <nuxt-link to="/game" class="btn hero asButton">Get Started »</nuxt-link>
                 <nuxt-link to="#more" class="btn hollow asButton">More...</nuxt-link>
               
             </div>

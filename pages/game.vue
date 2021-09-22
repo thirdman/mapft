@@ -368,10 +368,10 @@
         </div>
        </v-slide-y-reverse-transition>
       </div>
-      <div class="col col-7 content-column">
+      <div class="col col-9 content-column">
         <client-only>
-          <!-- <Loading text="Loading" v-if="imagesStatus === 'loading'" /> -->
-          <div class="map-container">
+          <Loading message="Loading..." v-if="gameStatus === 'loading'" />
+          <div class="map-container" v-if="gameStatus !== 'loading'">
           <div
             class="grid-wrap"
             :style="tileMap && tileMap[0] && `width: ${tileMap[0].length * 240 + 2}px; height: ${tileMap.length * 240 + 2}px;`">
@@ -412,16 +412,15 @@ import DialogTeamSelect from '../components/DialogTeamSelect.vue';
 export default {
   components: { DialogTeamSelect },
   name: 'ViewPageParams',
-  data(
-    DialogIntro) {
+  data() {
     
     return {
+      gameStatus: 'loading',
       devMode: false,
       baseUrl: "https://localhost:3333",
       previewUrl: `images/preview.jpg`,
       siteName: "SVG Tokens",
       images: null,
-      imagesStatus: 'loading',
       fullIndex: null,
       showFull: false,
       devAddress: '0xd1c248d1c9879dc3b5a846d4dccc5b7aa8fbf432',
@@ -471,6 +470,9 @@ export default {
     // const id = '1234'
     // this.loadImages(id)
     this.loadData();
+    setTimeout(() =>{
+      this.gameStatus = 'ready'
+      }, 2000);
   },
   computed: {
     ...mapGetters({
@@ -512,8 +514,6 @@ export default {
       setShowTeamSelect: 'ui/setShowTeamSelect'
     }),
     ...mapActions({
-      getImages: "ui/getImages",
-      saveImages: "ui/saveImages",
       updateConfig: "ui/updateConfig",
       getAssets: "ui/getAssets",
       generateGame: 'ui/generateGame'
