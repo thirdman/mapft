@@ -1,7 +1,7 @@
 <template>
   <v-dialog
       v-model="showDialog"
-      width="500"
+      width="640"
     >
     <v-card>
       <v-card-title class="text-h5 ">
@@ -15,19 +15,28 @@
         <div class="col">
           <label>Columns</label>
         </div>
+        <div class="col" style="flex-basis: 300px; flex-grow: 0; flex-shrink: 0;">
+          <label>Preview</label>
+        </div>
       </div>
+      
       <div class="row">
         <div class="col">
-          <v-btn text x-small outlined @click="removeRow"> - 1</v-btn>
-          <div class="feature">{{newRows}}</div>
-          <v-btn text x-small outlined @click="addRow"> + 1</v-btn>
+          <div class="row ma-0 f-flex align-center">
+            <v-btn text x-small outlined @click="removeRow"> - 1</v-btn>
+            <div class="feature">{{newRows}}</div>
+            <v-btn text x-small outlined @click="addRow"> + 1</v-btn>
+          </div>
         </div>
         <div class="col">
-          <div class="row ma-0">
+          <div class="row ma-0 f-flex align-center">
             <v-btn text x-small outlined @click="removeCol"> - 1</v-btn>
             <div class="feature">{{newCols}}</div>
             <v-btn text x-small outlined @click="addCol"> + 1</v-btn>
           </div>
+        </div>
+        <div class="col" style="flex-basis: 300px; flex-grow: 0; flex-shrink: 0;">
+          <map-preview :rows="newRows" :cols="newCols" />
         </div>
       </div>
         </v-card-text>
@@ -49,8 +58,10 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import MapPreview from './MapPreview.vue';
 
 export default {
+  components: { MapPreview },
   props: ['onAction', 'onClose', 'show', 'rows', 'cols'],
   data() {
     return {

@@ -50,8 +50,6 @@
       <v-card-text>
         <div class="row claim-row">
           <div class="col col-6 claimCol pr-0">  
-            
-            
             <div class="row ma-0 d-flex justify-center">
             <label>Tile Defence</label>
             </div>
@@ -220,7 +218,7 @@
     <!-- HERO Container -->
     <section id="intro" class="row ma-0 ">
       <div class="col col-3 info-column">
-        <div class="info-game" v-if="!selectedTile">
+        <div class="info-game" v-if="!selectedData">
           <!-- <div class="row">
             <div class="col ctaWrap"  v-if="!userTeam">
               <v-btn @click="handleUser" class="btn hero">Get Started »</v-btn>
@@ -338,7 +336,7 @@
             :selectedData="selectedData"
             :index="selectedTile"
             :tile="theTile"
-            :onClose="handleSelect"
+            :onClose="handleTileSelect"
             :onClaimSelect="handleClaimSelect"
             :onGenerateSelect="handleGenerate"
             :onClaim="handleClaim"
@@ -374,22 +372,22 @@
         <client-only>
           <Loading message="Loading..." v-if="gameStatus === 'loading'" />
           <div class="map-container" v-if="gameStatus !== 'loading'">
-          <div
-            class="grid-wrap"
-            :style="tileMap && tileMap[0] && `width: ${tileMap[0].length * 240 + 2}px; height: ${tileMap.length * 240 + 2}px;`">
-            <Tile
-              size="240"
-              :tile="tile"
-              :handleSelect="handleSelect"
-              v-for="(tile, index) in tiles"
-              :key="index"
-              :index="index"
-              :selected="selectedTile === index"
-              :highlighted="highlightedIndex === index"
-              :onAction="handleGenerate"
-              />
-            
-          </div>
+            <div
+              class="grid-wrap"
+              :style="tileMap && tileMap[0] && `width: ${tileMap[0].length * 240 + 2}px; height: ${tileMap.length * 240 + 2}px;`">
+              <Tile
+                size="240"
+                :tile="tile"
+                :handleSelect="handleTileSelect"
+                v-for="(tile, index) in tiles"
+                :key="index"
+                :index="index"
+                :selected="selectedTile === index"
+                :highlighted="highlightedIndex === index"
+                :onAction="handleGenerate"
+                />
+              
+            </div>
           </div>
         </client-only>
       </div>
@@ -726,10 +724,8 @@ export default {
       console.log('asset', asset, this.selectedAsset)
       this.showSelectAsset = false;
     },
-    handleSelect(index){
+    handleTileSelect(index){
       console.log('index', index)
-      // console.log('Number(index)', Number(index))
-      // console.log('isNaN(index)', isNaN(index))
       if(!this.tiles){return}
 
       if(isNaN(index) || index === this.selectedTile){
@@ -737,7 +733,6 @@ export default {
         this.selectedTile = null;
         this.selectedData = null
       } else {
-        // console.log('shoudl do it')
         this.showInfo = true;
         this.selectedTile = index;
         this.selectedData = this.tiles[index]

@@ -102,8 +102,15 @@
       <v-divider class="ma-0" />
       <div class="row ma-0 tile-actions">
         <div class="col">
-          <v-btn depressed outlined primary block @click="onClaimSelect && onClaimSelect(selectedData.location)">Claim Tile...</v-btn>
-          <v-btn depressed outlined primary v-if="!userTeam" @click="() => this.showTeamSelect = true">Select Team to Play</v-btn>
+          <v-btn
+            depressed
+            primary
+            block
+            :color="userTeam && 'primary'"
+            @click="onClaimSelect && onClaimSelect(selectedData.location)"
+            :disabled="!userTeam"
+            >Claim Tile...</v-btn>
+          <v-btn block depressed outlined primary v-if="!userTeam" @click="() => setShowTeamSelect(true)">Select Team to Play</v-btn>
           <!-- <div v-if="selectedData.canGenerate" >
             <v-btn @click="onGenerateSelect && onGenerateSelect(selectedData.location)">Generate Tile</v-btn>
           </div> -->
@@ -158,6 +165,7 @@ export default {
       gameTeams: "ui/gameTeams",
       userTeam: "ui/userTeam",
       tiles: "ui/tiles",
+      showTeamSelect: "ui/showTeamSelect",
     }),
     
   },
@@ -165,7 +173,7 @@ export default {
   methods: {
     ...mapMutations({
       setUserTeam: 'ui/setUserTeam',
-      showTeamSelect: "ui/showTeamSelect",
+      setShowTeamSelect: "ui/setShowTeamSelect",
     }),
     // handleTeamSelect(teamObj){
     //   const userTeam = teamObj.team;

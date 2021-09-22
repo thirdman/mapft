@@ -34,7 +34,7 @@ const tileTemplate = {
 const defaultTiles = [
   {
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
-    src: "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/6.png",
+    src: "https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/6.png",
     title: "north west",
     location: [0, 0],
     index: 6,
@@ -80,7 +80,7 @@ const defaultTiles = [
   },
   {
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
-    src: "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/14.png",
+    src: "https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/14.png",
     title: "north",
     location: [1, 0],
     index: 14,
@@ -126,7 +126,7 @@ const defaultTiles = [
   },
   {
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
-    src: "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/14.png",
+    src: "https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/14.png",
     title: "north east",
     location: [2, 0],
     index: 14,
@@ -171,7 +171,7 @@ const defaultTiles = [
   },
   {
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
-    src: "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/12.png",
+    src: "https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/12.png",
     title: "north east",
     location: [3, 0],
     index: 12,
@@ -219,7 +219,7 @@ const defaultTiles = [
   // ROW 2
   {
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
-    src: "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/7.png",
+    src: "https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/7.png",
     title: "West",
     location: [0, 1],
     index: 5,
@@ -236,7 +236,7 @@ const defaultTiles = [
   },
   {
     id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
-    src: "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/12.png",
+    src: "https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/12.png",
     title: "Middle",
     location: [1, 1],
     index: 1,
@@ -283,7 +283,7 @@ const defaultTiles = [
   },
   {
     id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
-    src: "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/5.png",
+    src: "https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/5.png",
     title: "East",
     location: [2, 1],
     index: 5,
@@ -347,7 +347,7 @@ const defaultTiles = [
   // ROW 3
   {
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
-    src: "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/1.png",
+    src: "https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/1.png",
     title: "South West",
     location: [0, 2],
     index: 3,
@@ -393,7 +393,7 @@ const defaultTiles = [
   },
   {
     id: "Qmevue8kqHJqH1sZWjTuZkNcpF2v3sUsx7zP68jmJmPyDx",
-    src: "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/3.png",
+    src: "https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/3.png",
     title: "South",
     location: [1, 2],
     index: 10,
@@ -561,6 +561,7 @@ export const state = () => ({
   // viewStatus: "",
   // GAME
 
+  games: [],
   tiles: defaultTiles,
   creatures: defaultCreatures,
   gameTeams: defaultTeams,
@@ -569,6 +570,7 @@ export const state = () => ({
 export const getters = {
   getField,
   siteData: (state) => state.siteData,
+  games: (state) => state.games,
   tiles: (state) => state.tiles,
   creatures: (state) => state.creatures,
   gameTeams: (state) => state.gameTeams,
@@ -654,6 +656,9 @@ export const mutations = {
   },
   setShowTeamSelect: (state, value) => {
     state.showTeamSelect = value;
+  },
+  setGames: (state, value) => {
+    state.games = value;
   },
   setTiles: (state, value) => {
     state.tiles = value;
@@ -920,8 +925,9 @@ export const mutations = {
 
 export const actions = {
   generateGame(context, payload){    
-    const {rows, cols} = payload;
-    console.log('generate Game', rows, cols);
+    const {rows, cols, id} = payload;
+    console.log('generate Game', rows, cols, id);
+    const {games} = context.state;
     const newTileArray = new Array(rows * cols).fill(tileTemplate);
     let newGameArray = [];
     const blankRowsArray = new Array(rows).fill();
@@ -942,6 +948,20 @@ export const actions = {
         return [colIndex, rowIndex]
       })
       // console.log('thisRowLocations', thisRowLocations)
+      if(id){
+        const tempGames = games.slice();
+        const thisGame = {
+          id: id, 
+          tiles: compiledLocations,
+          owner: 'sdf',
+          map: {
+            rows: rows,
+            cols: cols,
+          }
+        }
+        tempGames.push(thisGame)
+        context.commit('setGames', tempGames);
+      }
       return  thisRowLocations;
     });
     const newTileMap = blankRowsArray.map((_, rowIndex) => {
@@ -1199,7 +1219,7 @@ export const actions = {
       if (isAlpha) {
         linkDataAlpha = {
           fileArweaveUrl: `https://arweave.rocks/${result.fileArweaveHash}`,
-          fileIpfsUrl: `https://gateway.pinata.cloud/ipfs/${result.fileIpfsHash}`,
+          fileIpfsUrl: `https://ipfs.cf-ipfs.com/ipfs/${result.fileIpfsHash}`,
           thumbnailUrl: result.thumbnailUrl,
         };
         // console.log("ISALPHA", linkDataAlpha);
