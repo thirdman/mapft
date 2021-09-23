@@ -1,4 +1,3 @@
-
 import { getField, updateField } from "vuex-map-fields";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -27,10 +26,9 @@ const tileTemplate = {
     defence: null,
     team: null,
     owner: null,
-    creature: null
+    creature: null,
   },
-  
-}
+};
 const defaultTiles = [
   {
     id: "QmRzcsXyxP4zDhmYiY1h9c5bExuxRxxExxGBwMvB6uozCo",
@@ -562,6 +560,7 @@ export const state = () => ({
   // GAME
 
   games: [],
+  activeGame: null,
   tiles: defaultTiles,
   creatures: defaultCreatures,
   gameTeams: defaultTeams,
@@ -571,6 +570,7 @@ export const getters = {
   getField,
   siteData: (state) => state.siteData,
   games: (state) => state.games,
+  activeGame: (state) => state.activeGame,
   tiles: (state) => state.tiles,
   creatures: (state) => state.creatures,
   gameTeams: (state) => state.gameTeams,
@@ -628,21 +628,65 @@ export const getters = {
     return walletName;
   },
   tileMap: (state) => {
-    const {tiles} = state;
-    if(!tiles){
+    const { tiles } = state;
+    if (!tiles) {
       /** no tiles array exists yet */
-      return
+      return;
     }
-    const locations = tiles.map(t => t.location);
-    const rows = locations.filter(l => l[0] === 0);
-    const cols = locations.filter(l => l[1] === 0);
+    const locations = tiles.map((t) => t.location);
+    const rows = locations.filter((l) => l[0] === 0);
+    const cols = locations.filter((l) => l[1] === 0);
     const blankArray = new Array(rows.length).fill();
     const compiledMap = blankArray.map((_, rowIndex) => {
-      const thisContent = tiles.filter(tile => tile.location[1] === rowIndex);
-      const asIndexes = thisContent.map(col=> col.index)
-      return asIndexes
-    })
+      const thisContent = tiles.filter((tile) => tile.location[1] === rowIndex);
+      const asIndexes = thisContent.map((col) => col.index);
+      return asIndexes;
+    });
     return compiledMap;
+  },
+  // gameData: (state) => {
+  //   const {tiles, activeGameId, games, creatures, gameTeams} = state;
+  //   if(activeGameId){
+  //     const gameData = games.find(game => game.id === activeGameId);
+  //     return gameData
+  //   } else {
+  //     let demoData = {
+  //       tiles,
+  //       id:'demo',
+  //       creatures,
+  //       gameTeams,
+  //     }
+  //     return demoData
+  //   }
+  // },
+  demoData: (state) => {
+    const { tiles, activeGameId, games, creatures, gameTeams } = state;
+
+    // teams: defaultTeams,
+
+    let demoData = {
+      tiles,
+      id: "demo",
+      creatures,
+      teams: defaultTeams,
+      tileMap: [],
+      players: [],
+      creatures: [],
+      options: {
+        rows: 3,
+        cols: 4,
+      },
+      map: {
+        rows: 3,
+        cols: 4,
+      },
+      owner: "admin",
+      settings: {
+        generateMap: false,
+        hasValues: true,
+      },
+    };
+    return demoData;
   },
 };
 export const mutations = {
@@ -659,6 +703,9 @@ export const mutations = {
   },
   setGames: (state, value) => {
     state.games = value;
+  },
+  setActiveGame: (state, value) => {
+    state.activeGame = value;
   },
   setTiles: (state, value) => {
     state.tiles = value;
@@ -682,7 +729,7 @@ export const mutations = {
     state.instructionsRead = value;
   },
   setIntroRead: (state, value) => {
-    console.log('value', value)
+    console.log("value", value);
     state.introRead = value;
   },
   setConfigStatus: (state, value) => {
@@ -924,59 +971,74 @@ export const mutations = {
 };
 
 export const actions = {
-  generateGame(context, payload){    
-    const {rows, cols, id} = payload;
-    console.log('generate Game', rows, cols, id);
-    const {games} = context.state;
+  generateGame(context, payload) {
+    const { rows, cols, owner } = payload;
+    const options = { ...payload };
+    const id = uuidv4();
+    console.log("generate Game", rows, cols, id);
+    const { games } = context.state;
     const newTileArray = new Array(rows * cols).fill(tileTemplate);
     let newGameArray = [];
     const blankRowsArray = new Array(rows).fill();
     const blankColsArray = new Array(cols).fill();
-    console.log('blankRowsArray', blankRowsArray)
-    console.log('blankColsArray', blankColsArray);
-    let flatLocations = []
+    console.log("blankRowsArray", blankRowsArray);
+    console.log("blankColsArray", blankColsArray);
+    let flatLocations = [];
     const compiledLocations = blankRowsArray.map((_, rowIndex) => {
       const thisRowLocations = blankColsArray.map((_, colIndex) => {
-        const thisLocation = [colIndex, rowIndex]
+        const thisLocation = [colIndex, rowIndex];
         const thisTile = {
-          ...tileTemplate, 
+          ...tileTemplate,
           id: `${colIndex}_${rowIndex}`,
-          location: thisLocation
-        }
-        newGameArray.push(thisTile)
+          location: thisLocation,
+        };
+        newGameArray.push(thisTile);
         flatLocations.push(thisLocation);
-        return [colIndex, rowIndex]
-      })
+        return [colIndex, rowIndex];
+      });
       // console.log('thisRowLocations', thisRowLocations)
-      if(id){
-        const tempGames = games.slice();
-        const thisGame = {
-          id: id, 
-          tiles: compiledLocations,
-          owner: 'sdf',
-          map: {
-            rows: rows,
-            cols: cols,
-          }
-        }
-        tempGames.push(thisGame)
-        context.commit('setGames', tempGames);
-      }
-      return  thisRowLocations;
+      return thisRowLocations;
     });
+
     const newTileMap = blankRowsArray.map((_, rowIndex) => {
       const thisRowIndexes = blankColsArray.map((_, colIndex) => {
-        return null
-      })
-      return  thisRowIndexes;
-    })
-    console.log('newTileMap', newTileMap)
-    console.log('compiledLocations', compiledLocations)
-    console.log('flatLocations', flatLocations)
-    flatLocations.map((loc, i) => {
-      newTileArray[i].location = loc
+        return null;
+      });
+      return thisRowIndexes;
     });
-    context.commit('setTiles', newGameArray)
+    console.log("newTileMap", newTileMap);
+    console.log("compiledLocations", compiledLocations);
+    console.log("flatLocations", flatLocations);
+
+    if (id) {
+      const tempGames = games.slice();
+      const thisGame = {
+        ...payload,
+        id,
+        options: options,
+        tiles: newGameArray,
+        tileMap: newTileMap,
+        owner: owner,
+        settings: {
+          generateMap: false,
+          hasValues: true,
+        },
+        map: {
+          rows: rows,
+          cols: cols,
+        },
+        creatures: [],
+        players: [owner],
+        teams: defaultTeams,
+      };
+      tempGames.push(thisGame);
+      context.commit("setGames", tempGames);
+    }
+
+    flatLocations.map((loc, i) => {
+      newTileArray[i].location = loc;
+    });
+    context.commit("setTiles", newGameArray);
     // context.commit('setTileMap', newTileMap)
   },
   async getAssets(context, data) {

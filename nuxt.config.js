@@ -20,23 +20,28 @@ export default {
     rootUrl:
       process.env.PROD_BASE_URL ||
       process.env.STAGING_BASE_URL ||
-      process.env.DEV_BASE_URL || "example",
+      process.env.DEV_BASE_URL ||
+      "example",
     factoryContract:
       process.env.PROD_FACTORY_CONTRACT ||
       process.env.STAGING_FACTORY_CONTRACT ||
-      process.env.DEV_FACTORY_CONTRACT  || "example",
+      process.env.DEV_FACTORY_CONTRACT ||
+      "example",
     requiredNetwork:
       process.env.PROD_NETWORK ||
       process.env.STAGING_NETWORK ||
-      process.env.DEV_NETWORK  || "example",
+      process.env.DEV_NETWORK ||
+      "example",
     infuraUrl:
       process.env.PROD_INFURA_URL ||
       process.env.STAGING_INFURA_URL ||
-      process.env.DEV_INFURA_URL || "example",
+      process.env.DEV_INFURA_URL ||
+      "example",
     VERCEL_ENV: process.env.VERCEL_ENV || "example",
     VERCEL_GIT_REPO_SLUG: process.env.VERCEL_GIT_REPO_SLUG || "example",
     VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA || "example",
-    VERCEL_GIT_COMMIT_MESSAGE: process.env.VERCEL_GIT_COMMIT_MESSAGE || "example",
+    VERCEL_GIT_COMMIT_MESSAGE:
+      process.env.VERCEL_GIT_COMMIT_MESSAGE || "example",
   },
   env: {
     tempUrl:
@@ -121,6 +126,8 @@ export default {
           accent: "#FF1744",
           error: "#b71c1c",
           transparent: "rgba(0,0,0,0)",
+          card: "#201424",
+          background: "pink",
         },
         light: {
           primary: "#101010",
@@ -128,6 +135,8 @@ export default {
           accent: "#FF1744",
           error: "#b71c1c",
           transparent: "rgba(0,0,0,0)",
+          card: "#201424",
+          background: "pink",
         },
       },
     },
@@ -177,10 +186,7 @@ export default {
    */
   build: {
     // Add exception
-    transpile: [
-      "vee-validate/dist/rules",
-      "@devlop-ab/dialog",
-    ],
+    transpile: ["vee-validate/dist/rules", "@devlop-ab/dialog"],
     babel: {
       plugins: [["@babel/plugin-proposal-private-methods", { loose: true }]],
     },
@@ -192,6 +198,5 @@ export default {
     // ...
     // },
     friendlyErrors: false,
-    
   },
 };

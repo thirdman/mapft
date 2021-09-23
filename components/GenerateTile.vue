@@ -237,7 +237,7 @@ export default {
   props: ['location', 'handleSelect', 'selected', 'index', 'onAction', 'onClose', 'onGenerate'],
   data() {
     return {
-      devMode: true,
+      devMode: false,
       status: 'loading',
       mapString: null,
       previewTile: null,
@@ -269,16 +269,23 @@ export default {
     ...mapGetters({
       walletAddress: "ui/walletAddress",
       gameTeams: "ui/gameTeams",
-      tiles: "ui/tiles",
+      // tiles: "ui/tiles",
       tileMap: "ui/tileMap",
       userPoints: "ui/userPoints",
+      activeGame: "ui/activeGame",
     }),
     
+    tiles(){
+      const {activeGame} = this;
+      const {tiles} = activeGame;
+      console.log('activeGame', activeGame, tiles)
+      return tiles;
+    }
   },
 
   methods: {
     ...mapMutations({
-      setTiles: 'ui/setTiles',
+      // setTiles: 'ui/setTiles',
       setUserPoints: 'ui/setUserPoints',
     }),
     doTimer(){
@@ -511,8 +518,9 @@ export default {
     //   ); 
     // };
 
-    compileNewTile(location){
-      const {tiles, newTileValue, newTileIndex} = this;
+    compileNewTile(){
+      const {tiles, newTileValue, newTileIndex, location} = this;
+      
       this.mapString = null;
       const tempTiles = [...tiles]
       const activeTile = tempTiles && tempTiles.find(tile => tile.location === location);
@@ -536,7 +544,7 @@ export default {
     
       const string = `https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${newTileIndex}.png`;
       tempTile.src = string;
-      console.log('tempTile', tempTile)
+      console.log('compileNewTile tempTile', tempTile)
       this.mapString = string
       this.previewTile = tempTile
     },
@@ -545,10 +553,11 @@ export default {
       const tempTiles = tiles.slice();
       const theIndex = tempTiles.findIndex(tile => tile.location === location);
       tempTiles[theIndex] = previewTile;
-      this.setTiles(tempTiles);      
+      // this.setTiles(tempTiles);      
+      this.onGenerate(location, previewTile);
       this.mapString = null;
       this.previewTile = null;
-      this.onClose()
+      // this.onClose()
     },
     random(min, max, float = false) {
       const val = Math.random() * (max - min) + min;

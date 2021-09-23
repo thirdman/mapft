@@ -33,10 +33,10 @@
         </div>
          -->
         <div class="navItem" >
-          <nuxt-link to="/game" class=" navLink">GAME</nuxt-link>
+          <nuxt-link to="/game/demo" class=" navLink">DEMO</nuxt-link>
         </div>
         <div class="navItem" >
-          <nuxt-link to="/generate" class=" navLink">MAP</nuxt-link>
+          <nuxt-link to="/generate" class=" navLink">NEW</nuxt-link>
         </div>
         <!-- <div class="navItem" >
           <nuxt-link to="/examples" class=" navLink">EXAMPLES</nuxt-link>

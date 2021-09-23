@@ -41,7 +41,8 @@ Over time I intend to migrate to main.scss
   /* --charcoal-text-color: #c0c0c0; */
   --charcoal-text-color: hsl(286, 12%, 90%);
   --charcoal-color: hsl(286deg 27% 12%);
-  --charcoal-dark-color: hsl(330deg 31% 10%);
+  /* --charcoal-dark-color: hsl(330deg 31% 10%); */
+  --charcoal-dark-color: hsl(328, 94%, 12%);
   --charcoal-light-color: hsl(330, 2%, 30%);
   --charcoal-fill-color: hsl(330, 0%, 24%);
   --charcoal-ui-color: hsl(330, 4%, 7%);
@@ -846,8 +847,12 @@ section.hero {
   padding: 2rem 4rem;
 }
 .col h1 {
-  text-align: center;
+  text-align: left;
   margin: 0 auto;
+  text-shadow: 0 4px 13px black;
+  line-height: 0.8em;
+  letter-spacing: -5.3px;
+  font-size: 4rem;
 }
 section.content {
   max-width: 1440px;

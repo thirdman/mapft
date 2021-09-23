@@ -13,10 +13,15 @@
             Generate your own
           </h3>
           <p class="text-body-2">Exploring possibilities of NFT based gaming.</p>
+          <nuxt-link to="/game/demo">demo</nuxt-link>
           <v-btn block small outlined @click="() => {this.showNewGameDialog = true}">New Game</v-btn>
+          <div v-if="activeGame">
+            activeGame: {{activeGame.id}}
+          </div>
           <div v-if="games">
             <div v-for="(game, index) in games" :key="index">
-              <div>{{game.id.substring(0, 3)}} - {{game.map && game.map.rows}} rows, {{game.map && game.map.cols}} columns,  </div>
+              <game-info :game="game" :expanded="false" />
+              <div>{{game.id.substring(0, 3)}} - {{game.map && game.map.rows}} rows, {{game.map && game.map.cols}} columns <v-btn text @click="loadGame(game.id)">load</v-btn>  </div>
             </div>
 
           </div>
@@ -26,7 +31,7 @@
         <div class="map-container" v-if="gameStatus !== 'loading'">
             <div
               class="grid-wrap"
-              :style="tileMap && tileMap[0] && `width: ${tileMap[0].length * tileSize + 2}px; height: ${tileMap.length * tileSize + 2}px;`">
+              :style="tileMap && tileMap[0] && `width: ${tileMap[0].length * tileSize}px; height: ${tileMap.length * tileSize}px;`">
               <div class="grid-tile" v-for="(tile, index) in tiles"
                 :key="index"
                 :style="`width: ${tileSize}px; height: ${tileSize}px;`"
@@ -54,8 +59,10 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import { v4 as uuidv4 } from 'uuid';
+import GameInfo from '../components/GameInfo.vue';
+// import { v4 as uuidv4 } from 'uuid';
 export default {
+  components: { GameInfo },
   head: {
     title: 'Generate',
     // meta: [
@@ -67,7 +74,7 @@ export default {
       showNewGameDialog: false,
       tileSize: 128,
       gameStatus: "ready",
-      gameId: null,
+      // gameId: null,
     }
   },
   computed: {
@@ -75,19 +82,31 @@ export default {
       tileMap: 'ui/tileMap',
       tiles: 'ui/tiles',
       games: 'ui/games',
+      activeGame: 'ui/activeGame',
     })
   },
   methods: {
+    ...mapMutations({
+       setActiveGame: 'ui/setActiveGame',
+      
+    }),
      ...mapActions({
       generateGame: 'ui/generateGame',
     }),
     handleGenerateGame(props){
-      const newId = uuidv4();
-      this.gameId = newId;
+      // const newId = uuidv4();
+      // this.gameId = newId;
       this.showNewGameDialog = false;
-      const gameOptions = {...props, id: newId}
-      this.generateGame(gameOptions);
+      // const gameOptions = {...props, id: newId}
+      this.generateGame(props);
     },
+    loadGame(id){
+      console.log('id', id);
+      const game = this.games && this.games.find(game => game.id === id);
+      console.log('game', game)
+      this.setActiveGame(game);
+      this.$router.push(`/game/${game.id}`)
+    }
   }
 }
 </script>

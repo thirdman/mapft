@@ -3,33 +3,8 @@
     <Header />
     <dialog-intro :show="!introRead" />
     <dialog-team-select   />
-    <dialog-new-game 
-      v-if="showNewGameDialog"
-      :onClose="() => this.showNewGameDialog = false"
-      :onAction="handleGenerateGame"
-      />
     
     
-    <!-- <team-select
-      :team="userTeam"
-      :teams="gameTeams"
-      :onSelect="handleTeamSelect"
-      :onClose="() => {}"
-    /> -->
-    <div v-if="1==2">
-    <v-icon color="white" large>mdi-trophy-outline</v-icon>
-    <v-icon color="white" large>mdi-shield-sword-outline</v-icon>
-    <v-icon color="white" large>mdi-sword</v-icon>
-    <v-icon color="white" large>mdi-shield-outline</v-icon>
-    <v-icon color="white" large>mdi-axe-battle</v-icon>
-    <v-icon color="white" large>mdi-skull-outline</v-icon>
-    <v-icon color="white" large>mdi-script</v-icon>
-    <v-icon color="white" large>mdi-sack</v-icon>
-    <v-icon color="white" large>mdi-knife-military</v-icon>
-    <v-icon color="white" large>mdi-crown-circle</v-icon>
-    <v-icon color="white" large>mdi-cards-outline</v-icon>
-    <v-icon color="white" large>mdi-cards</v-icon>
-    </div>
     <v-slide-y-transition>
     <generate-tile
       :location="generateLocation"
@@ -401,10 +376,10 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 const BASE_URL = "https://unknowngame.site"
 import ogImagePreview from '~/assets/images/preview.jpg'
 import { dialog } from '@devlop-ab/dialog';
-import GenerateTile from '../components/GenerateTile.vue';
-import AssetList from '../components/AssetList.vue';
-import DialogIntro from '../components/DialogIntro.vue';
-import DialogTeamSelect from '../components/DialogTeamSelect.vue';
+import GenerateTile from '../../../components/GenerateTile.vue';
+import AssetList from '../../../components/AssetList.vue';
+import DialogIntro from '../../../components/DialogIntro.vue';
+import DialogTeamSelect from '../../../components/DialogTeamSelect.vue';
  
 export default {
   components: { DialogTeamSelect },
@@ -800,7 +775,7 @@ section#intro{
   height: calc(100vh - 4rem);
 }
 .info-column{
-  min-width: 320px;
+  // min-width: 320px;
   border-right: 1px solid var(--line-color);
   .info-game{
     height: 100%;

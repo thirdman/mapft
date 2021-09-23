@@ -3,7 +3,7 @@
     <Header />
     <section class="row hero  content">
       <div class="col">
-        <h1>Game elements as NFT » NFT as game elements</h1>
+        <h1>Game elements as NFT «» NFT as game elements</h1>
       </div>
     </section>
     <section class="row ma-0 content">
@@ -17,7 +17,7 @@
           <div class="row">
             <div class="col ctaWrap" >
                 <!-- <v-btn @click="() => {router.push('/')}" class="btn hero">Get Started »</v-btn> -->
-                <nuxt-link to="/game" class="btn hero asButton">Get Started »</nuxt-link>
+                <nuxt-link to="/game/demo" class="btn hero asButton">Get Started »</nuxt-link>
                 <nuxt-link to="#more" class="btn hollow asButton">More...</nuxt-link>
               
             </div>

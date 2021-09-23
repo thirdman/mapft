@@ -8,6 +8,35 @@
           New Game
       </v-card-title>
         <v-card-text>
+        <div class="row">
+          <div class="col">
+            <label>Teams</label>
+            
+            <div>
+              <div class="text-body-2">
+              Use Default Teams
+              </div>
+              <v-switch
+                disabled
+                v-model="optionUseDefault"
+                :label="`${optionUseDefault ? 'Yes' : 'no'}`"
+                v-tooltip="`Coming Soon`"
+              ></v-switch>
+            </div>
+          </div>
+          <div class="col">
+            <label>Map Tiles</label>
+            <div class="text-body-2">
+              Generate when game is created
+              </div>
+            <div>
+              <v-switch
+                v-model="generateMap"
+                :label="`${generateMap ? 'yes' : 'no'}`"
+              ></v-switch>
+            </div>  
+          </div>
+        </div>
       <div class="row">
         <div class="col">
           <label>Rows</label>
@@ -42,7 +71,7 @@
         </v-card-text>
         <v-divider class="ma-0"></v-divider>
         <v-card-actions>
-          <v-btn class="primary" @click="onAction({rows: newRows, cols: newCols})">New Game</v-btn>
+          <v-btn class="primary" @click="onAction(compiledOptions)">New Game</v-btn>
           <v-spacer></v-spacer>
             <v-btn depressed text @click="onClose(null)">cancel</v-btn>
         </v-card-actions>
@@ -68,6 +97,8 @@ export default {
       showDialog: true,
       newRows: 3,
       newCols: 4,
+      generateMap: false,
+      optionUseDefault: true,
     };
   },
   created(){
@@ -81,7 +112,11 @@ export default {
     ...mapGetters({
       walletAddress: "ui/walletAddress",
     }),
-    
+    compiledOptions(){
+      const {newRows, newCols, optionUseDefault, generateMap, walletAddress} = this
+      const options = {rows: newRows, cols: newCols, useDefaultTeams: optionUseDefault, generateMap, owner: walletAddress}
+      return options;
+    }
   },
 
   methods: {
