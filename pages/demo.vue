@@ -399,7 +399,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 const BASE_URL = "https://unknowngame.site"
-import ogImagePreview from '~/assets/images/preview.jpg'
+import ogImagePreview from '~/assets/images/preview.png'
 import { dialog } from '@devlop-ab/dialog';
 import GenerateTile from '../components/GenerateTile.vue';
 import AssetList from '../components/AssetList.vue';
@@ -415,7 +415,7 @@ export default {
       gameStatus: 'loading',
       devMode: false,
       baseUrl: "https://localhost:3333",
-      previewUrl: `images/preview.jpg`,
+      previewUrl: `images/preview.png`,
       siteName: "SVG Tokens",
       images: null,
       fullIndex: null,

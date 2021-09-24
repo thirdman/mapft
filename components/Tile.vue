@@ -1,7 +1,7 @@
 <template>
   <div
     class="grid-tile"
-    :class="`${!tile.src ? 'generate' : ''} ${selected ? 'selected' : ''} ${fill ? 'fill' : ''} ${highlighted ? 'highlighted' : ''}`"
+    :class="`${!tile.src ? 'generate' : ''} ${selected ? 'selected' : ''} ${fill ? 'fill' : ''} ${highlighted ? 'highlighted' : ''}  ${tile.meta.team ? tile.meta.team.toLowerCase() : ''}`"
     @click="handleSelect && handleSelect(index)"
      :style="size ? `width: ${size}px; height: ${size}px` :`width: 100%; height: auto`"
     >

@@ -1,6 +1,5 @@
 <template>
-    
-  <div :class="`UserPanel connectPanel shadow`">
+  <div :class="`UserPanel`">
       <div class="connectSelect row">
         <div class="column" :class="selectedPanel === 'drafts' ? 'selected' : 'notselected' "
           @click="setSelectedPanel('drafts')"

@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer row ma-0" :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`">
+  <footer class="footer row ma-0" :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`" v-if="show">
     
       <div class="column social col col-1 pa-0">
         <a href="https://twitter.com/nft4ever" target="_blank">
@@ -34,16 +34,8 @@
 import { mapGetters, mapMutations } from 'vuex'
 // import { setTheme } from '../utils/theme.js'
 
-const myMixin = {
-  
-  methods: {
-    hello: () => {
-      console.log('hello from mixin!')
-    },
-  },
-}
-export default {
-  mixins: [myMixin],
+export default {  
+  props: 'show',
   data() {
     return {
       VERCEL_GIT_COMMIT_SHA: '',

@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined class="game-info" :class="expanded ? 'expanded' : ''"  v-if="game" >
+  <div outlined class="game-info" :class="expanded ? 'expanded' : ''"  v-if="game" >
     <v-card-text class="pa-0">
     
     <v-expansion-panels
@@ -37,7 +37,7 @@
     </v-expansion-panel>
     </v-expansion-panels>
     </v-card-text>
-  </v-card>
+  </div>
 </template>
 
 <style lang="scss">

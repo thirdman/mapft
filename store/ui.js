@@ -1041,6 +1041,18 @@ export const actions = {
     context.commit("setTiles", newGameArray);
     // context.commit('setTileMap', newTileMap)
   },
+  generateMapTiles(context, payload) {
+    console.log("payload", payload);
+    const { gameData } = payload;
+    const { tiles } = gameData;
+    // console.log("tiles", gameData.tiles);
+    if (!tiles) {
+      return;
+    }
+    tiles.map((tile) => {
+      console.log("tile.location", tile.location);
+    });
+  },
   async getAssets(context, data) {
     const { commit, state } = context;
     const { $axios } = this;

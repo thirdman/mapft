@@ -2,36 +2,48 @@
   <div class="pageContainer">
     <Header />
     
-    <section  class="">
-      <div class="tertiary">
-        <br/>
-        <br/>
-        <br/>
-        <div class="aside">
-          <p>
-            User data is stored <strong>only</strong> in your browser local storage.
-          </p>
-        </div>
+    <section id="intro" class="row ">
+      <div class="col col-3">
       </div>
-      <div class="primary">
+      <div class="col col-9">
         <client-only>
-          <transition name="fade" appear>
-            <div v-if="!walletAddress" class="connectPanel shadow">
-              <div class="connectHeader">
-                <div class="connectUserIcon shadow">
-                <IconUser size="large" :strokeClass="contrastMode" />
+            <v-card
+              v-if="!walletAddress"
+              class="user-card"
+              elevation="4"
+              >
+              <v-card-title>
+                <v-icon>
+                  mdi-account
+                </v-icon>
+                <span>Not Connected</span>
+              </v-card-title>
+              <v-card-text>
+                <p >Connect your Ethereum Wallet </p>
+                <v-btn depressed outlined :disabled="walletAddress" @click="setWallet('example-user')">Use fake wallet</v-btn>
+              </v-card-text>
+            </v-card>
+          
+          <v-card
+              v-if="walletAddress"
+              class="user-card logged-in"
+              elevation="4"
+              >
+              <v-card-title>
+                <AccountHeader v-if="walletAddress" />
+              </v-card-title>
+              <v-card-text>
+                <div class="row">
+                  <div class="col">
+                    <label>Games</label>
+                    <div>-</div>
+                  </div>
                 </div>
-              </div>
-              <div class="connectBody">
-                <h3>Not Connected</h3>
-                <p >Connect your Ethereum Wallet to use InfiNFT</p>
-               
-              </div>
-            </div>
-          </transition>
-          <AccountHeader v-if="walletAddress" />
+              </v-card-text>
+          </v-card>
 
-          <label v-if="walletAddress && activeContractId">Active Contract</label>
+                <!-- <UserData :selected="selected" /> -->
+          <!-- <label v-if="walletAddress && activeContractId">Active Contract</label>
           <div class="activeContractWrap shadow" v-if="walletAddress && activeContractId">
             <div class="row" v-if="activeContractSymbol">
               <div class="column col-50">
@@ -57,17 +69,11 @@
                 Disconnnect
               </Button>
             </div>
-          </div>
-          <div v-if="walletAddress" class="row">
-            <UserData :selected="selected" />
-          </div>
+          </div> -->
+          
         </client-only>
       </div>
-      <div class="secondary">
-        <div class="aside help">
-         
-        </div>
-      </div>
+      
     </section>
 
     
@@ -77,7 +83,13 @@
 </template>
 
 <style lang="scss">
-
+.user-card{
+  width: 500px;
+  &.logged-in{
+    width: unset;
+    max-width: 600px;
+  }
+}
 
 </style>
 

@@ -35,6 +35,11 @@
                 {{path}},
               </div>
             </div>
+            <div v-if="possibles" class="possible-box">
+              <div v-for="(possible, i) in possibles" :key="i" :class="`possible-${i}`">
+                {{possible}}
+              </div>
+            </div>
             <div class="tileGrid">
               <div v-for="(t, i) in demoArray" :key="i" :class="`preview-tile preview${i}` ">
                 <img :src="`https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${t}.${t === 0 ? 'jpg' : 'png'}`" width="100px" />
@@ -85,7 +90,7 @@
                 </div>
               </div>
             </div>
-            <div v-if="devMode && newSrc && status !== 'working'"><img :src="newSrc" width="200px" /></div>  
+            <div v-if="devMode && newTileSrc && status !== 'working'"><img :src="newTileSrc" width="200px" /></div>  
           </div>
         </div>
       </v-card-text>
@@ -95,8 +100,9 @@
         <v-btn outlined @click="onClose">Cancel</v-btn>
         <v-btn outlined @click="doTimer" v-if="devMode">do Timer</v-btn>
         <v-btn @click="calualateThisTile(location[1], location[0])" v-if="previewTile && location">Regenerate</v-btn>
-        <v-btn @click="compileNewTile(location)" v-if="devMode">compile</v-btn>      
-        <v-btn small @click="calculateIndex" v-if="devMode">getindex</v-btn>
+        <!-- <v-btn @click="compileNewTile(location)" v-if="devMode">compile</v-btn>       -->
+        <!-- <v-btn small @click="calculateIndex" v-if="devMode">getindex</v-btn> -->
+        <!-- <v-btn small @click="handleTest" v-if="devMode">handleTest</v-btn> -->
               
       </v-card-actions>
     </v-card>
@@ -181,11 +187,45 @@
   }
 }
 
+.possible-box{
+  width: 100px;
+  height: 100px;
+  margin-left: 50px;
+  position: relative;
+  background: #444;
+  > div{
+    font-size: .75rem;
+    border: 1px solid red;
+    width: 50px;
+    text-align: center;
+    &:nth-child(1){
+      position: absolute;
+      left: 25px;
+      top: -1rem;
+    }
+    &:nth-child(2){
+      position: absolute;
+      left: 75px;
+      top: 50px;
+    }
+    &:nth-child(3){
+      position: absolute;
+      left: 25px;
+      top: 100%;
+    }
+    &:nth-child(4){
+      position: absolute;
+      left: -25px;
+      top: 50px;
+    }
+  }
+}
 </style>
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
 import { dialog } from '@devlop-ab/dialog';
+import {calculateTile, compileTile} from "../utils/generate"
 const tileArray = ['nw', 'ne', 'sw', 'se', 'n', 'w', 's', 'e', 'dn', 'dw', 'de', 'ds', '00']
 const tileIndexArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
@@ -234,22 +274,24 @@ const indexMap = {
 //         [3, 10, 0, 0], // 11
 //       ],
 export default {
-  props: ['location', 'handleSelect', 'selected', 'index', 'onAction', 'onClose', 'onGenerate'],
+  props: ['location', 'handleSelect', 'selected', 'index', 'onAction', 'onClose', 'onGenerate', 'tiles'],
   data() {
     return {
-      devMode: false,
+      devMode: true,
       status: 'loading',
       mapString: null,
       previewTile: null,
       tileArray: tileIndexArray,
       newNumber: null,
-      newSrc: null,
+      // newSrc: null,
       demoArray: null,
       demoTileMap: null,
       newTileValue: null,
       newTileIndex: null,
+      newTileSrc: null,
       generationCost: 12,
       requiredPaths: null,
+      possibles: null,
     };
   },
   created(){
@@ -275,12 +317,12 @@ export default {
       activeGame: "ui/activeGame",
     }),
     
-    tiles(){
-      const {activeGame} = this;
-      const {tiles} = activeGame;
-      console.log('activeGame', activeGame, tiles)
-      return tiles;
-    }
+    // tiles(){
+    //   const {activeGame} = this;
+    //   const {tiles} = activeGame;
+    //   console.log('activeGame', activeGame, tiles)
+    //   return tiles;
+    // }
   },
 
   methods: {
@@ -289,15 +331,36 @@ export default {
       setUserPoints: 'ui/setUserPoints',
     }),
     doTimer(){
-      const delayAmount = 500
+      const delayAmount = 300
       this.status = 'working';
       setTimeout(() => {
         this.status = 'completed';
         }, delayAmount);
     },
+    // handleTest(){
+    //   const {location} = this;
+    //   const usePoints = false;
+    //   const tileMap = this.tileMap
+      
+    //   if(!location){return}
+    //   if(!tileMap){
+    //     console.log('no tile map')
+    //     return
+    //   }
+    //   if(usePoints){
+    //     const {userPoints, generationCost} = this;
+    //     const refuse = (!userPoints || userPoints < generationCost)
+    //     console.log('refuse', refuse);
+    //     return
+    //   }
+    //   const result = calculateTile({location, tileMap});
+    //   // console.log('calculateTile', this.calculateTile, calculateTile)
+    //   console.log('restult', result)
+    // },
     calualateThisTile(row, col){
-      const tileMap = this.tileMap
-      const {userPoints, generationCost} = this;
+      const tileMap = this.tileMap;
+      const tiles = this.tiles;
+      const {userPoints, generationCost, location, walletAddress} = this;
       
       if(!tileMap){
         console.log('no tile map')
@@ -310,206 +373,198 @@ export default {
         })
         return
       }
-       console.log('tileMap', tileMap);
       if(!tileMap[row]){
         alert('missing tolemap 0');
         return
       }
       const tempTileValue = this.random(5, 30, false);
-      const thisTile = tileMap[row][col];
-      console.log('thisTile', thisTile);
-      console.log('tileMap.length', tileMap.length);
-      
-      // const notFirstRow = row > 0;
-      // const notLastCol = col <  tileMap[row].length - 1;
-      // const notLastRow = row <  tileMap.length - 1;
-      // const notFirstCol = col > 0;
-      // const north = notFirstRow ? tileMap[row - 1][col] : 'unknown';
-      // const east = notLastCol ? tileMap[row][col +1] : 'unknown';
-      // const south = notLastRow ? tileMap[row + 1][col] : 'unknown';
-      // const west = notFirstCol ? tileMap[row][col - 1] : 'unknown';
-      // console.log('north', north);
-      // console.log('east',  east);
-      // console.log('south',  south);
-      // console.log('west',  west);
-      // const northSides = north && tileSidesMap[north] || false;
-      // const eastSides = east && tileSidesMap[east]  || false;
-      // const southSides = south && tileSidesMap[south] || false;
-      // const westSides = west && tileSidesMap[west] || false;
-      // console.log('thisTile sides', {northSides, eastSides, southSides, westSides});
-      
-      const isPossibleNorth = this.determinePossible({direction: 'north', row, col, tileMap});
-      const isPossibleEast = this.determinePossible({ direction: 'east', row, col, tileMap});
-      const isPossibleSouth = this.determinePossible({ direction: 'south', row, col, tileMap});
-      const isPossibleWest = this.determinePossible({ direction: 'west', row, col, tileMap});
-      // const northPath = notFirstRow ? (northSides[2] || false) : false;
-      // const eastPath = notLastCol ? (eastSides[3] || false) : false;
-      // const southPath = notLastRow ? (southSides[0] || false) : false;
-      // const westPath = notFirstCol ? (westSides[1] || false) : false;
-      // this.requiredPaths = [northPath, eastPath, southPath, westPath];
-      // console.log('requiredSides', {northSides, eastSides, southSides, westSides});
-      // console.log('requiredPaths', {northPath, eastPath, southPath, westPath});
-      console.log('possibles', {isPossibleNorth, isPossibleEast, isPossibleSouth, isPossibleWest});
-      const tileIndex = this.calculateTileIndex(isPossibleNorth, isPossibleEast, isPossibleSouth, isPossibleWest);
-      console.log('tileIndex', tileIndex)
-      this.newSrc = `https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${tileIndex}.${tileIndex === 0 ? 'jpg' : 'png'}`
+      const newTileImageData = calculateTile({location, tileMap, includeContext: true, settings: {}, tiles});
       let tempTileMap = tileMap.slice();
+      // const thisTile = tileMap[row][col];
+      // console.log('thisTile', thisTile);
+      // console.log('tileMap.length', tileMap.length);
+      // const isPossibleNorth = this.determinePossible({direction: 'north', row, col, tileMap});
+      // const isPossibleEast = this.determinePossible({ direction: 'east', row, col, tileMap});
+      // const isPossibleSouth = this.determinePossible({ direction: 'south', row, col, tileMap});
+      // const isPossibleWest = this.determinePossible({ direction: 'west', row, col, tileMap});
+      // console.log('possibles', {isPossibleNorth, isPossibleEast, isPossibleSouth, isPossibleWest});
+      // const tileIndex = this.calculateTileIndex(isPossibleNorth, isPossibleEast, isPossibleSouth, isPossibleWest);
+      // console.log('tileIndex', tileIndex)
+      // this.newSrc = `https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${tileIndex}.${tileIndex === 0 ? 'jpg' : 'png'}`
       
-      tileMap[row][col] = tileIndex;
+      
+      // tileMap[row][col] = tileIndex;
       // setTileMap(tempTileMap)
+
+      const {tileImageIndex, imageSrc, possibles} = newTileImageData;
+      this.possibles = possibles;
       this.demoTileMap = tempTileMap;
       this.newTileValue = tempTileValue
-      this.newTileIndex = tileIndex
-      if(tileIndex && tempTileValue){
-        this.compileNewTile(location)
+      this.newTileIndex = tileImageIndex;
+      this.newTileSrc = imageSrc;
+      const dataObj = {
+        newTileValue: tempTileValue,
+        newTileIndex: tileImageIndex,
+        newTileSrc: imageSrc,
+        location,
+        tiles,
+        walletAddress,
+        
+      }
+      const newTile = compileTile(dataObj)
+      
+      // this.previewTile = tempTile;
+      if(newTile){
+        this.previewTile = newTile
+        // this.compileNewTile(location)
         const newPoints  = userPoints - generationCost;
         this.setUserPoints(newPoints)
       }
       this.doTimer()
     },
-    determinePossible(options){
-      const {direction, row, col, tileMap} = options;
-      if(!tileMap){return}
-      /** possible outcomes: generatable, true, false */
-      console.log('options', options);
-      const totelRows = tileMap[0].length;
-      const totelCols = tileMap.length;
-      const isFirstRow = row === 0;
-      const isLastCol = col ===  totelRows - 1;
-      const isLastRow = row ===  totelCols - 1;
-      const isFirstCol = col === 0;
-      console.log({totelRows, totelCols, isFirstRow, isLastRow, isFirstCol, isLastCol})
-      /** CHeck For Edges of Map */
-      if(direction === 'north' && isFirstRow){
-        return false;
-      }
-      if(direction === 'east' && isLastCol){
-        return false;
-      }
-      if(direction === 'south' && isLastRow){
-        return false;
-      }
-      if(direction === 'west' && isFirstCol){
-        return false;
-      }
-      /** CHeck For existence of tile 
-       * In this situation, the tile can have an index, which represents a tile.
-       * we look for null or undefined, which means the tile is empty but can exist in the future.
-      */
-     // let targetTileSides;
-    // const targetE = tileMap[row][col +1];
-    // const targetS = tileMap[row + 1][col];
-    // const targetW = tileMap[row][col - 1];
-      let targetIsGeneratable = false;
-      const mapInverseDirections = {
-        'north' : 2,
-        'east' : 3,
-        'south' : 0,
-        'west' : 1,
-      }
-      // const mapTargetLocations = {
-      //   'north' : tileMap[row - 1][col],
-      //   'east' : tileMap[row][col +1],
-      //   'south' : tileMap[row + 1][col],
-      //   'west' : tileMap[row][col - 1],
-      // }
-      const invertDirection = mapInverseDirections[direction];
-      console.log('invertDirection', invertDirection)
-      let target;
-        /** gets the image index in the target direction */
-      if(direction === 'north'){
-        target = tileMap[row - 1][col];
-      }
-      if(direction === 'east'){
-        target = tileMap[row][col +1];
-      }
-      if(direction === 'south'){
-        target = tileMap[row + 1][col];
-      }
-      if(direction === 'west'){
-        target = tileMap[row][col - 1];
-      }
-      console.log('target', target)
-      const targetTileSides = tileSidesMap[target];
-      console.log('targetTileSides', targetTileSides)
-      if(!targetTileSides){
-        console.log('tile is not generated yet');
-        targetIsGeneratable = true;
-        // return 'generate'
-      } else {
-        const hasPath = targetTileSides[invertDirection] === 1 ? true : false; // gets the matching edge (clockwise 0, 1, 2, 3)
-        console.log('hasPath', hasPath)
-        return hasPath;
-      }
-      console.log('targetIsGeneratable', targetIsGeneratable);
-      if(targetIsGeneratable){
-        return this.generateUnknownDirection(75);
-      }
-      /**if we get here somethign is missing */
-      console.error('how did we get here?');
-      return false;
-    },
-    generateUnknownDirection(percent = 75){
-      /** isf less than 75% then make a path */
-      const number = this.random(0, 100, false);
-      console.log('isGeneratable number', number)
-      return number < percent;
-    },
-    getTile(row, col){
-      const tileMap = [
-        [6, 0, 0, 0],
-        [7, 1, 0, 0],
-        [0, 0, 0, 0],
-      ];
-      const result = tileMap[row][col];
-      console.log('result', result, tileMap[row]);
-      return result
-    },
+    // determinePossible(options){
+    //   const {direction, row, col, tileMap} = options;
+    //   if(!tileMap){return}
+    //   /** possible outcomes: generatable, true, false */
+    //   console.log('options', options);
+    //   const totelRows = tileMap[0].length;
+    //   const totelCols = tileMap.length;
+    //   const isFirstRow = row === 0;
+    //   const isLastCol = col ===  totelRows - 1;
+    //   const isLastRow = row ===  totelCols - 1;
+    //   const isFirstCol = col === 0;
+    //   console.log({totelRows, totelCols, isFirstRow, isLastRow, isFirstCol, isLastCol})
+    //   /** CHeck For Edges of Map */
+    //   if(direction === 'north' && isFirstRow){
+    //     return false;
+    //   }
+    //   if(direction === 'east' && isLastCol){
+    //     return false;
+    //   }
+    //   if(direction === 'south' && isLastRow){
+    //     return false;
+    //   }
+    //   if(direction === 'west' && isFirstCol){
+    //     return false;
+    //   }
+    //   /** CHeck For existence of tile 
+    //    * In this situation, the tile can have an index, which represents a tile.
+    //    * we look for null or undefined, which means the tile is empty but can exist in the future.
+    //   */
+    //  // let targetTileSides;
+    // // const targetE = tileMap[row][col +1];
+    // // const targetS = tileMap[row + 1][col];
+    // // const targetW = tileMap[row][col - 1];
+    //   let targetIsGeneratable = false;
+    //   const mapInverseDirections = {
+    //     'north' : 2,
+    //     'east' : 3,
+    //     'south' : 0,
+    //     'west' : 1,
+    //   }
+    //   // const mapTargetLocations = {
+    //   //   'north' : tileMap[row - 1][col],
+    //   //   'east' : tileMap[row][col +1],
+    //   //   'south' : tileMap[row + 1][col],
+    //   //   'west' : tileMap[row][col - 1],
+    //   // }
+    //   const invertDirection = mapInverseDirections[direction];
+    //   console.log('invertDirection', invertDirection)
+    //   let target;
+    //     /** gets the image index in the target direction */
+    //   if(direction === 'north'){
+    //     target = tileMap[row - 1][col];
+    //   }
+    //   if(direction === 'east'){
+    //     target = tileMap[row][col +1];
+    //   }
+    //   if(direction === 'south'){
+    //     target = tileMap[row + 1][col];
+    //   }
+    //   if(direction === 'west'){
+    //     target = tileMap[row][col - 1];
+    //   }
+    //   console.log('target', target)
+    //   const targetTileSides = tileSidesMap[target];
+    //   console.log('targetTileSides', targetTileSides)
+    //   if(!targetTileSides){
+    //     console.log('tile is not generated yet');
+    //     targetIsGeneratable = true;
+    //     // return 'generate'
+    //   } else {
+    //     const hasPath = targetTileSides[invertDirection] === 1 ? true : false; // gets the matching edge (clockwise 0, 1, 2, 3)
+    //     console.log('hasPath', hasPath)
+    //     return hasPath;
+    //   }
+    //   console.log('targetIsGeneratable', targetIsGeneratable);
+    //   if(targetIsGeneratable){
+    //     return this.generateUnknownDirection(75);
+    //   }
+    //   /**if we get here somethign is missing */
+    //   console.error('how did we get here?');
+    //   return false;
+    // },
+    // generateUnknownDirection(percent = 75){
+    //   /** isf less than 75% then make a path */
+    //   const number = this.random(0, 100, false);
+    //   console.log('isGeneratable number', number)
+    //   return number < percent;
+    // },
+    // getTile(row, col){
+    //   const tileMap = [
+    //     [6, 0, 0, 0],
+    //     [7, 1, 0, 0],
+    //     [0, 0, 0, 0],
+    //   ];
+    //   const result = tileMap[row][col];
+    //   console.log('result', result, tileMap[row]);
+    //   return result
+    // },
     
-    calculateIndex(){
-      // const number = this.random(0, 15, false);
-      // const tileMap = [
-      //   [1, 1, 1],
-      //   [1, 0, 0],
-      //   [0, 0, 0],
-      // ];
-      const hasBorderAbove = this.getTile(2, 0);
-      console.log('hasBorderAbove', hasBorderAbove)
-      const number = 15;
-      this.newNumber = number;
-      this.newSrc = `https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${number}.${number === 0 ? 'jpg' : 'png'}`
-      const tempArray = [0,0,0, 0, number, 0, 0, 0, 0];
-      // const nextNumber = this.random(number, 15, false);
-      const tile0 = this.calculateTileIndex(false, true, true, false);
-      const tile1 = this.calculateTileIndex(false, true, true, true);
-      const tile2 = this.calculateTileIndex(false, false, true, true);
-      const tile3 = this.calculateTileIndex(true, false, true, false);
-      const tile5 = this.calculateTileIndex(true, true, true, false);
-      const tile6 = this.calculateTileIndex(true, true, false, false);
-      const tile7 = this.calculateTileIndex(false, true, false, true);
-      const tile8 = this.calculateTileIndex(true, true, false, true);
+    // calculateIndex(){
+    //   // const number = this.random(0, 15, false);
+    //   // const tileMap = [
+    //   //   [1, 1, 1],
+    //   //   [1, 0, 0],
+    //   //   [0, 0, 0],
+    //   // ];
+    //   const hasBorderAbove = this.getTile(2, 0);
+    //   console.log('hasBorderAbove', hasBorderAbove)
+    //   const number = 15;
+    //   this.newNumber = number;
+    //   // this.newSrc = `https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${number}.${number === 0 ? 'jpg' : 'png'}`
+    //   const tempArray = [0,0,0, 0, number, 0, 0, 0, 0];
+    //   // const nextNumber = this.random(number, 15, false);
+    //   const tile0 = this.calculateTileIndex(false, true, true, false);
+    //   const tile1 = this.calculateTileIndex(false, true, true, true);
+    //   const tile2 = this.calculateTileIndex(false, false, true, true);
+    //   const tile3 = this.calculateTileIndex(true, false, true, false);
+    //   const tile5 = this.calculateTileIndex(true, true, true, false);
+    //   const tile6 = this.calculateTileIndex(true, true, false, false);
+    //   const tile7 = this.calculateTileIndex(false, true, false, true);
+    //   const tile8 = this.calculateTileIndex(true, true, false, true);
       
-      tempArray[0] = tile0;
-      tempArray[1] = tile1;
-      tempArray[2] = tile2;
-      tempArray[3] = tile3;
-      tempArray[5] = tile5;
-      tempArray[6] = tile6;
-      tempArray[7] = tile7;
-      tempArray[8] = tile8;
-      console.log('tile0', [tile0, tile1])
+    //   tempArray[0] = tile0;
+    //   tempArray[1] = tile1;
+    //   tempArray[2] = tile2;
+    //   tempArray[3] = tile3;
+    //   tempArray[5] = tile5;
+    //   tempArray[6] = tile6;
+    //   tempArray[7] = tile7;
+    //   tempArray[8] = tile8;
+    //   console.log('tile0', [tile0, tile1])
 
-      this.demoArray = tempArray;
+    //   this.demoArray = tempArray;
       
-    },
-    calculateTileIndex(north, east, south, west) { 
-      var sum = 0; 
-      if (north) sum += 1; 
-      if (east) sum += 2; 
-      if (south) sum += 4; 
-      if (west) sum += 8; 
-      return sum; 
-    },
+    // },
+    // calculateTileIndex(north, east, south, west) { 
+    //   var sum = 0; 
+    //   if (north) sum += 1; 
+    //   if (east) sum += 2; 
+    //   if (south) sum += 4; 
+    //   if (west) sum += 8; 
+    //   return sum; 
+    // },
     // drawTile(context, tileIndex, x, y) { 
     //   xStart = tileIndex * xTileSize; 
     //   context.drawImage(sheetImage, 
@@ -518,36 +573,36 @@ export default {
     //   ); 
     // };
 
-    compileNewTile(){
-      const {tiles, newTileValue, newTileIndex, location} = this;
+    // compileNewTile(){
+    //   const {tiles, newTileValue, newTileIndex, location} = this;
       
-      this.mapString = null;
-      const tempTiles = [...tiles]
-      const activeTile = tempTiles && tempTiles.find(tile => tile.location === location);
-      // const sourceTile = activeTile[0];
-      const tempTile = {
-        meta: {
-          value: newTileValue,
-          owner: this.walletAddress,
-          attack: null,
-          defence: null,
-          team: null,
-          owner: null,
-          creature: null,
-        }, 
-        index: newTileIndex,
-        location: location,
-        title: 'blah',
-        id: "123",
-        src: '',
-      }
+    //   this.mapString = null;
+    //   const tempTiles = [...tiles]
+    //   const activeTile = tempTiles && tempTiles.find(tile => tile.location === location);
+    //   // const sourceTile = activeTile[0];
+    //   const tempTile = {
+    //     meta: {
+    //       value: newTileValue,
+    //       owner: this.walletAddress,
+    //       attack: null,
+    //       defence: null,
+    //       team: null,
+    //       owner: null,
+    //       creature: null,
+    //     }, 
+    //     index: newTileIndex,
+    //     location: location,
+    //     title: 'blah',
+    //     id: "123",
+    //     src: '',
+    //   }
     
-      const string = `https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${newTileIndex}.png`;
-      tempTile.src = string;
-      console.log('compileNewTile tempTile', tempTile)
-      this.mapString = string
-      this.previewTile = tempTile
-    },
+    //   const string = `https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/${newTileIndex}.png`;
+    //   tempTile.src = string;
+    //   console.log('compileNewTile tempTile', tempTile)
+    //   this.mapString = string
+    //   this.previewTile = tempTile
+    // },
     doApply(location){
       const {tiles, previewTile} = this;
       const tempTiles = tiles.slice();

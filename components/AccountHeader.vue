@@ -1,9 +1,13 @@
 <template>
-  <div class="account-header" v-if="walletAddress">
-        <div class="row titleRow contentRow between">
-          <div class="column avatarColumn">
+  <div class="account-header row" v-if="walletAddress">
+        <div class="col">
+          <div class="row">
+          <div class="col">
             <div class="userAvatar shadow">
-              <img class="userAvatarImage" :src="getProfileImage(profileObject.profileImageHash)" v-if="profileObject && profileObject.profileImageHash" />
+              <img class="userAvatarImage"
+                :src="getProfileImage(profileObject.profileImageHash)"
+                v-if="profileObject && profileObject.profileImageHash"
+                />
               <IconUser
                 v-if="!profileObject || !profileObject.profileImageHash"
                 :strokeClass="contrastMode === 'dark' ? 'light' : 'dark'"
@@ -11,11 +15,14 @@
               />
             </div>
           </div>
-          <div class="column titleColumn">
-            <h4>{{profileObject && profileObject.name}}</h4>
+          <div class="col">
+            <h4 v-if="profileObject && profileObject.name">{{profileObject && profileObject.name}}</h4>
             <div class="subtitle">{{ walletName }}</div>
           </div>
-          <div class="column actionColumn">
+        </div>
+        
+        <div class="row">
+          <div class="col">
             <Button
               @click="handleDisconnect"
               size="small"
@@ -25,6 +32,7 @@
               Disconnect
             </Button>
           </div>
+        </div>
         </div>
       </div>
 </template>
@@ -76,23 +84,15 @@ export default {
 
 <style lang="scss">
 .account-header {
-  padding: 0 0 1rem 0;
-  border-bottom: 1px solid var(--ui-color, #111);
-  margin-bottom: 1rem;;
-  .titleRow{
-    align-items: flex-start;
-  }
+  // border-bottom: 1px solid var(--line-color, #111);
+  
+  
   .avatarColumn{
     flex-basis: 3rem;
     flex-shrink: 0;
     flex-grow: 0;
   }
-  .titleColumn{
-    h4{margin: 0}
-    .subtitle{
-      font-size: .875rem;
-    }
-  }
+  
   .actionColumn{
     display: flex;
     align-items: flex-end;

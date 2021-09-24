@@ -65,14 +65,6 @@
           >Connnect</Button>
         </client-only>
         <client-only>
-          <div class="modaltest" v-if="hasChainSelect" >
-            <Button
-              size="small"
-              mode="secondary"
-              @click="handleChainModal"
-              >Connect</Button
-            >
-          </div>
           <div class="walletInfo ">
               <span class="errorMsg danger" v-if="walletStatus === 'denied'"
                 >Wallet Denied</span
@@ -82,17 +74,7 @@
             {{walletNetwork}}
           </div>
           <team-swatch :team="userTeam" />
-          <ProfileButton />
-          
-          <Button
-            @click.native="handleModal"
-            class="btn iconButton minimalButton"
-            :class="contrastMode"
-            
-            >
-            <IconSettings :strokeClass="contrastMode" />
-          </Button>
-
+          <ProfileButton />          
         </client-only>
 
         
