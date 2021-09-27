@@ -35,10 +35,17 @@
                 {{path}},
               </div>
             </div>
-            <div v-if="possibles" class="possible-box">
-              <div v-for="(possible, i) in possibles" :key="i" :class="`possible-${i}`">
-                {{possible}}
+            <div class="debug-box"  v-if="devMode && (possibles || cardinals)" > 
+              <div v-if="possibles" class="possible-box">
+                <div v-for="(possible, i) in possibles" :key="i" :class="`possible-${i}`">
+                  {{possible}}
+                </div>
               </div>
+              <div v-if="cardinals" class="cardinal-box">
+                <div v-for="(cardinal, index) in cardinals" :key="index" :class="`cardinal cardinal-${index}`">
+                  <v-icon x-small :color="cardinal ? 'lime' : 'red'">{{cardinal ? 'mdi-check' : 'mdi-close'}}</v-icon>
+                </div>
+            </div>
             </div>
             <div class="tileGrid">
               <div v-for="(t, i) in demoArray" :key="i" :class="`preview-tile preview${i}` ">
@@ -97,7 +104,7 @@
       <v-divider class="ma-0" />
       <v-card-actions>
         <v-btn class="primary" @click="doApply(location)" :disabled="!previewTile">Apply</v-btn>
-        <v-btn outlined @click="onClose">Cancel</v-btn>
+        <v-btn text @click="onClose">Cancel</v-btn>
         <v-btn outlined @click="doTimer" v-if="devMode">do Timer</v-btn>
         <v-btn @click="calualateThisTile(location[1], location[0])" v-if="previewTile && location">Regenerate</v-btn>
         <!-- <v-btn @click="compileNewTile(location)" v-if="devMode">compile</v-btn>       -->
@@ -186,18 +193,30 @@
     }
   }
 }
-
-.possible-box{
+.debug-box{
   width: 100px;
   height: 100px;
   margin-left: 50px;
   position: relative;
-  background: #444;
+  background: #222;
+  border: 1px dashed #444;
+  border-radius: 1rem;
+  
+}
+.possible-box, .cardinal-box{
+  // width: 100px;
+  // height: 100px;
+  // margin-left: 50px;
+  // position: relative;
+  // background: #444;
   > div{
     font-size: .75rem;
-    border: 1px solid red;
+    background: #444;
     width: 50px;
     text-align: center;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    border-radius: .25rem;
     &:nth-child(1){
       position: absolute;
       left: 25px;
@@ -206,18 +225,31 @@
     &:nth-child(2){
       position: absolute;
       left: 75px;
-      top: 50px;
+      top: 40px;
     }
     &:nth-child(3){
       position: absolute;
       left: 25px;
-      top: 100%;
+      top: 90%;
     }
     &:nth-child(4){
       position: absolute;
       left: -25px;
-      top: 50px;
+      top: 40px;
     }
+  }
+}
+.cardinal-box{
+  
+  > div.cardinal{
+    margin-top: 1.125rem;
+    margin-left: -.5rem;
+    background: #333;
+    border-radius: 1rem;
+    font-size: .75rem;
+    padding: 0 4px;
+    width: auto;
+
   }
 }
 </style>
@@ -268,16 +300,11 @@ const indexMap = {
 'ground': 0
 }
 
-// demoTileMap: [
-//         [6, 14, 14, 12],
-//         [5, 1, 7, 0],
-//         [3, 10, 0, 0], // 11
-//       ],
 export default {
-  props: ['location', 'handleSelect', 'selected', 'index', 'onAction', 'onClose', 'onGenerate', 'tiles'],
+  props: ['location', 'handleSelect', 'selected', 'index', 'onAction', 'onClose', 'onGenerate', 'tiles', 'gameData'],
   data() {
     return {
-      devMode: true,
+      devMode: false,
       status: 'loading',
       mapString: null,
       previewTile: null,
@@ -292,16 +319,16 @@ export default {
       generationCost: 12,
       requiredPaths: null,
       possibles: null,
+      cardinals: null,
     };
   },
   created(){
-    console.log('this getter tilemap: ', this.tileMap);
-    this.demoTileMap = this.tileMap
-    if(!location){return}
+    // console.log('this getter tilemap: ', this.tileMap);
+    // this.demoTileMap = this.tileMap
+    // if(!location){return}
     // console.log('created', this.location)
     // this.calualateThisTile(this.location[1], this.location[0]); // inverted due to coords being x, y
     // this.status = "working";
-    // this.doTimer()
   },
   mounted(){
     this.status = "ready";
@@ -337,31 +364,12 @@ export default {
         this.status = 'completed';
         }, delayAmount);
     },
-    // handleTest(){
-    //   const {location} = this;
-    //   const usePoints = false;
-    //   const tileMap = this.tileMap
-      
-    //   if(!location){return}
-    //   if(!tileMap){
-    //     console.log('no tile map')
-    //     return
-    //   }
-    //   if(usePoints){
-    //     const {userPoints, generationCost} = this;
-    //     const refuse = (!userPoints || userPoints < generationCost)
-    //     console.log('refuse', refuse);
-    //     return
-    //   }
-    //   const result = calculateTile({location, tileMap});
-    //   // console.log('calculateTile', this.calculateTile, calculateTile)
-    //   console.log('restult', result)
-    // },
+    
     calualateThisTile(row, col){
-      const tileMap = this.tileMap;
-      const tiles = this.tiles;
-      const {userPoints, generationCost, location, walletAddress} = this;
-      
+      // const tileMap = this.tileMap;
+      // const tiles = this.tiles;
+      const {userPoints, generationCost, location, walletAddress, gameData} = this;
+      const {tiles, tileMap} = gameData;
       if(!tileMap){
         console.log('no tile map')
         return
@@ -396,8 +404,9 @@ export default {
       // tileMap[row][col] = tileIndex;
       // setTileMap(tempTileMap)
 
-      const {tileImageIndex, imageSrc, possibles} = newTileImageData;
+      const {tileImageIndex, imageSrc, possibles, cardinals} = newTileImageData;
       this.possibles = possibles;
+      this.cardinals = cardinals;
       this.demoTileMap = tempTileMap;
       this.newTileValue = tempTileValue
       this.newTileIndex = tileImageIndex;

@@ -32,9 +32,10 @@
     </section>
     <section class="row ma-0 content">
         <div class="col col-6 intro-column ">
-          <h3>What if you could make your own games using the NFT assets you already own</h3>
+          <h3>Make games using the NFT assets you already own</h3>
         </div>
         <div class="col col-6 intro-column">
+          <p>[name] enables users to create an dplay boardgame-like games, using their NFT's as maps, units, loot and rewards. </p>
           <h3>Goal</h3>
           <p>Present ideas for how NFT's can be used as game elements, combining assets from different projects in new and interesting ways.</p>
           <p>Ideally, a systematic approach</p>

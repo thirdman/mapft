@@ -109,8 +109,22 @@
             :color="userTeam && 'primary'"
             @click="onClaimSelect && onClaimSelect(selectedData.location)"
             :disabled="!userTeam"
+            v-if="selectedData.src"
             >Claim Tile...</v-btn>
           <v-btn block depressed outlined primary v-if="!userTeam" @click="() => setShowTeamSelect(true)">Select Team to Play</v-btn>
+          
+            <v-btn
+              outlined
+              depressed
+              block
+              
+              v-if="selectedData.meta && !selectedData.meta.value && !selectedData.src"
+              @click="() => {onAction && onAction(tile.location)}"
+              class="primary"
+              >
+              Generate tile
+            </v-btn>
+          
           <!-- <div v-if="selectedData.canGenerate" >
             <v-btn @click="onGenerateSelect && onGenerateSelect(selectedData.location)">Generate Tile</v-btn>
           </div> -->
@@ -150,7 +164,7 @@ import { mapMutations, mapGetters } from "vuex";
 // import TeamSelect from './TeamSelect.vue';
 
 export default {
-  props: ['tile', 'handleSelect', 'selected', 'onAction', 'onClose', 'selectedData', 'index', 'onGenerateSelect', 'onClaimSelect', 'handleClaim'],
+  props: ['tile', 'handleSelect', 'selected', 'onAction', 'onClose', 'onAction', 'selectedData', 'index', 'onGenerateSelect', 'onClaimSelect', 'handleClaim'],
   data() {
     return {
       // showTeamSelect: false,

@@ -93,12 +93,16 @@ export default {
      ...mapActions({
       generateGame: 'ui/generateGame',
     }),
-    handleGenerateGame(props){
+    async handleGenerateGame(props){
       // const newId = uuidv4();
       // this.gameId = newId;
       this.showNewGameDialog = false;
       // const gameOptions = {...props, id: newId}
-      this.generateGame(props);
+      const gameId = await this.generateGame(props);
+      console.log('gameId', gameId)
+      if(gameId){
+        this.loadGame(gameId);
+      }
     },
     loadGame(id){
       console.log('id', id);

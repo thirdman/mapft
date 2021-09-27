@@ -84,7 +84,6 @@ export default {
 
 <style lang="scss">
 .account-header {
-  // border-bottom: 1px solid var(--line-color, #111);
   
   
   .avatarColumn{

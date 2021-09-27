@@ -480,8 +480,7 @@ export default {
 }
 
 .account-header {
-  padding: 1rem;
-  border-bottom: 1px solid var(--ui-color, #111);
+  
 }
 .titleRow {
   align-items: center;

@@ -35,10 +35,29 @@
               <v-card-text>
                 <div class="row">
                   <div class="col">
+                    <!-- <label>Profile</label>
+                    <nuxt-link to="/user/edit">edit</nuxt-link> -->
+                    <label>Display Name</label>
+                    <v-btn>Edit...</v-btn>
+                  </div>
+                  <div class="col">
+                    <label>Player Icon</label>
+                    <v-btn>Select...</v-btn>
+                    <p class="text-body-2">Select the image other players will see</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
                     <label>Games</label>
                     <div>-</div>
                   </div>
+                  <div class="col">
+                    <label>Sources</label>
+                    <div>Loot, Assets, Player Units</div>
+                  </div>
                 </div>
+                <v-divider />
+                
               </v-card-text>
           </v-card>
 

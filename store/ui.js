@@ -672,6 +672,12 @@ export const getters = {
       tileMap: [],
       players: [],
       creatures: [],
+      units: [
+        {
+          id: "admin",
+          location: [0, 0],
+        },
+      ],
       options: {
         rows: 3,
         cols: 4,
@@ -684,6 +690,7 @@ export const getters = {
       settings: {
         generateMap: false,
         hasValues: true,
+        hasUnits: true,
       },
     };
     return demoData;
@@ -1022,6 +1029,7 @@ export const actions = {
         settings: {
           generateMap: false,
           hasValues: true,
+          hasUnits: true,
         },
         map: {
           rows: rows,
@@ -1040,6 +1048,7 @@ export const actions = {
     });
     context.commit("setTiles", newGameArray);
     // context.commit('setTileMap', newTileMap)
+    return id;
   },
   generateMapTiles(context, payload) {
     console.log("payload", payload);

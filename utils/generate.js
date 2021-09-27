@@ -213,6 +213,15 @@ const determinePossible = (options) => {
    * In this situation, the tile can have an index, which represents a tile.
    * we look for null or undefined, which means the tile is empty but can exist in the future.
    */
+  let targetExists = false;
+  if (direction === "north") {
+    const isTarget = tileMap[row - 1][col];
+    console.log("isTarget", isTarget);
+  }
+  /** CHeck For existence of tile
+   * In this situation, the tile can have an index, which represents a tile.
+   * we look for null or undefined, which means the tile is empty but can exist in the future.
+   */
   let targetIsGeneratable = false;
   const mapInverseDirections = {
     north: 2,
@@ -243,9 +252,10 @@ const determinePossible = (options) => {
   if (direction === "west") {
     target = tileMap[row][col - 1];
   }
-  console.log("target", target, tileMap);
   const targetTileSides = tileSidesMap[target];
-  console.log("targetTileSides", targetTileSides);
+  console.log("gene target", target);
+  console.log("gene targetTileSides", targetTileSides);
+  console.log("gene tileMap", tileMap);
   if (!targetTileSides) {
     // console.log("tile is not generated yet");
     targetIsGeneratable = true;

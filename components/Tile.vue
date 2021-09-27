@@ -13,6 +13,9 @@
       v-if="tile.src"
       :style="size && `width: ${size}px; height: ${size}px; border: none;`"
      />
+    <div class="card-unit" v-if="unit" v-tooltip="`Player`" >
+      <div class="team-marker" :style="`background: ${userTeam ? getColor(userTeam) : ''}`" />
+    </div>
      
       <!-- :style="fill ? `width: 100%; height: auto` : `width:` " -->
     <Card  :asset="tile.meta.creature" v-if="!hideAsset && tile.meta.creature && tile.meta.creature.id" :showmeta="false" :card="false" />
@@ -33,7 +36,7 @@
     </div>
     <div class="blankinfo" v-if="tile.meta && !tile.meta.value && !tile.src">
       <v-icon large>mdi-help-box</v-icon>
-      <v-btn @click="() => {onAction && onAction(tile.location)}" primary>
+      <v-btn outlined small @click="() => {onAction && onAction(tile.location)}" primary>
         Generate tile
       </v-btn>
     </div>
@@ -106,13 +109,49 @@
     
   }
 }
+.card-unit{
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  margin: 10px 0 0 -70px;
+  z-index: 99;
+  width: 60px;
+  height: 60px;
+  border-radius: 100px;
+  background: white;
+  box-shadow: 0 3px 12px black;
+  background: url(https://ipfs.io/ipfs/QmWY5NJR6BwjxPCt6pQg1p1As5LcWMxJvzfHsFfRia5Q2X) center center no-repeat;
+    background-size: auto;
+    background-size: contain;
+    border: 1px solid white;
+    &:before{
+      content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-image: linear-gradient(135deg, #ffffffc2, #fff0);
+        border-radius: 100px;
+    }
+    .team-marker{
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 8px;
+      background: violet;
+      border: 1px solid white;
+    }
+}
 </style>
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
 
 export default {
-  props: ['tile', 'handleSelect', 'selected', 'index', 'size',  'onAction', 'hideAsset', 'fill', 'highlighted'],
+  props: ['tile', 'handleSelect', 'selected', 'index', 'size',  'onAction', 'hideAsset', 'fill', 'highlighted', 'unit'],
   data() {
     return {
       
@@ -125,6 +164,7 @@ export default {
     ...mapGetters({
       walletAddress: "ui/walletAddress",
       gameTeams: "ui/gameTeams",
+      userTeam: "ui/userTeam",
     }),
     
   },

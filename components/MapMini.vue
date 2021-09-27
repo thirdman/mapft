@@ -1,11 +1,11 @@
 <template>
-  
-      <div class="row">
-        <div class="map-container preview" :style="`width: 100%; height: ${previewSize}px;`">
+  <v-card outlined>
+      <div class="row ma-0">
+        <div class="map-container mini col pa-0" :style="`width: 100%; height: ${previewSize}px;`" v-if="gameData">
           
           <div
               class="grid-wrap"
-              :style="tempTileMap && tempTileMap[0] && `width: ${tileSize * cols}px; height: ${tileSize * rows}px;`"
+              :style="tempTileMap && tempTileMap[0] && `width: ${tileSize * gameData.options.cols}px; height: ${tileSize * gameData.options.rows}px;`"
               >
               <div v-for="(row, rowIndex) in tempTileMap"
                 :key="rowIndex"
@@ -13,34 +13,45 @@
                 :style="`width: 100%; height: ${tileSize}px`"
                 >
                 <div v-for="(col, colIndex) in row"
-                :key="colIndex"
-                :class="`grid-tile`" 
-                :style="`width: ${tileSize}px; height: ${tileSize}px`"
-                >
+                  :key="colIndex"
+                  :class="`grid-tile`" 
+                  :style="`width: ${tileSize}px; height: ${tileSize}px; background: ${col.color}`"
+                  >
                 </div>
               </div>
               </div>
           </div>
         </div>
       </div>
+  </v-card>
       
 </template>
 
 <style lang="scss">
   .map-container{
-    &.preview{
+    &.mini{
+      position: relative;
+      margin: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+      .grid-wrap{
+        width: 100%;
+        height: 100%;
+        background: transparent;
+      }
       .grid-row{
         display: flex;
         flex-direction: row;
         align-items: flex-start;
         justify-content: flex-start;
         background: rgba(255,255,255,.1);
-        box-shadow: 0 0 0 1px rgba(255,255,255,.1) inset;
-        width: 100%;
-        height: 30px;
+      
       }
       .grid-tile{
-        
+        background: transparent;
+        box-shadow: 0 0 0 1px black inset;
         
       }
     }
@@ -51,10 +62,10 @@
 import { mapMutations, mapGetters } from "vuex";
 
 export default {
-  props: ['onAction', 'onClose', 'tiles', 'rows', 'cols'],
+  props: ['onAction', 'onClose', 'gameData'],
   data() {
     return {
-      previewSize: 100,
+      previewSize: 80,
     };
   },
   created(){
@@ -69,37 +80,51 @@ export default {
       // walletAddress: "ui/walletAddress",
     }),
     mapWidth(){
-      const {cols, previewSize} = this
+      const {gameData,  previewSize} = this
+      const {cols} = gameData.options;
       const tileSize = previewSize / cols;
       const theWidth = tileSize * cols;
       console.log('tileSize', tileSize, theWidth)
       return theWidth
     },
     mapHeight(){
-      const {rows, previewSize} = this
+      const {gameData,  previewSize} = this
+      const {rows} = gameData.options;
       const tileSize = previewSize / rows;
       const theHeight = tileSize * rows;
       console.log('tileSize', tileSize, theWidth)
       return theHeight
     },
     tileSize(){
-      const {rows, previewSize} = this
+      const {gameData,  previewSize} = this
+      const {rows} = gameData.options;
       const tileSize = previewSize / rows;
-      
       return tileSize
     },
     tempTileMap(){
-      const {rows, cols} = this;
+      const {gameData} = this;
+      
+      if(!gameData){return}
+      
+      const {rows, cols} = gameData.options;
       console.log('rows, cols', rows, cols)
       if(!rows || !cols){
         return
       }
       
-      const blankArray = new Array(rows).fill();
+      const blankRows = new Array(rows).fill();
       const blankCols = new Array(cols).fill();
-      const compiledMap = blankArray.map((_, rowIndex) => {
+      const compiledMap = blankRows.map((_, rowIndex) => {
         // const thisContent = blankCols.maps(tile => tile.location[1] === rowIndex);
-        const asIndexes = blankCols.map(col=> "0")
+        const asIndexes = blankCols.map((col, colIndex) => {
+          const thislocation = [rowIndex, colIndex].toString();
+          console.log('thisLocation', thislocation)
+          const locationTile = gameData.tiles && gameData.tiles.find(tile => tile.location.toString() === thislocation);
+          const team = locationTile && locationTile.meta.team;
+
+          console.log('locationTile', locationTile, team)
+          return {color: team, index: 0}
+          })
         return asIndexes
       })
       console.log('tempTileMap', compiledMap)

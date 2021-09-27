@@ -1,7 +1,7 @@
 <template>
   <v-dialog
       v-model="showDialog"
-      width="640"
+      width="700"
     >
     <v-card>
       <v-card-title class="text-h5 ">
@@ -11,7 +11,6 @@
         <div class="row">
           <div class="col">
             <label>Teams</label>
-            
             <div>
               <div class="text-body-2">
               Use Default Teams
@@ -25,9 +24,9 @@
             </div>
           </div>
           <div class="col">
-            <label>Map Tiles</label>
+            <label>Exploration</label>
             <div class="text-body-2">
-              Generate when game is created
+              Tiles Start Hidden
               </div>
             <div>
               <v-switch
@@ -35,6 +34,20 @@
                 :label="`${generateMap ? 'yes' : 'no'}`"
               ></v-switch>
             </div>  
+          </div>
+          <div class="col">
+          <label>Players</label>
+            <div>
+              <div class="text-body-2">
+              Show Player Locations
+              </div>
+              <v-switch
+                disabled
+                v-model="optionUsePlayerUnits"
+                :label="`${optionUsePlayerUnit ? 'Yes' : 'no'}`"
+                v-tooltip="`Coming Soon`"
+              ></v-switch>
+            </div>
           </div>
         </div>
       <div class="row">
@@ -68,6 +81,59 @@
           <map-preview :rows="newRows" :cols="newCols" />
         </div>
       </div>
+      <v-divider />
+        <div class="row">
+          <div class="col">
+            <label >Mechanic</label>
+            <div class="text-body-2">How will this game work?</div>
+            <v-btn-toggle
+                v-model="toggle_mechanic"
+                mandatory
+                dense
+              >
+                <v-btn x-small v-tooltip="`Control the entire board.`" :color="toggle_mechanic === 0 ? 'primary' : ''">
+                  Conquest
+                </v-btn>
+
+                <v-btn  x-small disabled v-tooltip="`Coming Soon: Capture opponent team tile`">
+                  Capture the Flag
+                </v-btn >
+
+                <v-btn  disabled x-small v-tooltip="`Coming Soon: Leading team after timeframe.`">
+                  Timed
+                </v-btn>
+
+                <v-btn x-small disabled v-tooltip="`Coming Soon: Most value Explorred Tiles`">
+                  Exploration
+                </v-btn>
+              </v-btn-toggle>
+            </div>
+          </div>
+        </div>
+        <v-divider />
+        <div class="row">
+          <div class="col">
+            <label >Map Set</label>
+            <!-- <div class="text-body-2">Tile Map Style</div> -->
+            <v-btn-toggle
+                v-model="toggle_tileset"
+                mandatory
+                dense
+              >
+                <v-btn x-small v-tooltip="`Basic dungeon rooms (16 variations)`" :color="toggle_tileset === 0 ? 'primary' : ''">
+                  Default
+                </v-btn>
+
+                <v-btn  x-small disabled v-tooltip="`Coming Soon`">
+                  Castle
+                </v-btn >
+
+                <v-btn x-small disabled v-tooltip="`Coming Soon: Upload your own style`">
+                  Custom
+                </v-btn>
+              </v-btn-toggle>
+          </div>
+        </div>
         </v-card-text>
         <v-divider class="ma-0"></v-divider>
         <v-card-actions>
@@ -99,6 +165,8 @@ export default {
       newCols: 4,
       generateMap: false,
       optionUseDefault: true,
+      optionUsePlayerUnit: false,
+      toggle_mechanic: null,
     };
   },
   created(){

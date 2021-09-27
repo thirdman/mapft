@@ -38,6 +38,9 @@
         <div class="navItem" >
           <nuxt-link to="/generate" class=" navLink">NEW</nuxt-link>
         </div>
+        <div class="navItem" >
+          <nuxt-link to="/resources" class=" navLink">ELEMENTS</nuxt-link>
+        </div>
         <!-- <div class="navItem" >
           <nuxt-link to="/examples" class=" navLink">EXAMPLES</nuxt-link>
         </div> -->

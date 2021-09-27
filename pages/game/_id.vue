@@ -9,6 +9,7 @@
       :onClose="() => {this.generateLocation = null;}"
       :onGenerate="handleGenerateTile"
       :tiles="gameData.tiles"
+      :gameData="gameData"
       v-if="generateLocation && gameData"
       /> 
       <!-- //:gameData="gameData" -->
@@ -199,7 +200,7 @@
             <game-info :game="gameData" :expanded="false" />
           </div>
           <div class="row mx-0 my-0 info-item tabs-container">
-            <v-card  outlined class="pa-0" style="width: 100%;" >
+            <v-card  outlined class="pa-0 card-bg" style="width: 100%;" >
               <v-tabs 
                 v-model="tab"
                 class="tabs-row"
@@ -284,6 +285,9 @@
             </v-card>
           </div>
         
+        <div class="row ma-0 mt-0  info-item minimap-row" v-if="this.gameData" >
+          <map-mini :gameData="this.gameData" />
+        </div>
         <div class="row ma--4 mt-0  info-item options-row">
           <div class="col pa-0">
             <v-divider class="my-0" />
@@ -315,6 +319,7 @@
             :onClaimSelect="handleClaimSelect"
             :onGenerateSelect="handleGenerateSelect"
             :onClaim="handleClaim"
+            :onAction="handleGenerateSelect"
             />
         </div>
        </v-slide-x-transition>
@@ -368,6 +373,7 @@
                 :selected="selectedTile === index"
                 :highlighted="highlightedIndex === index"
                 :onAction="handleGenerateSelect"
+                :unit="gameData && gameData.settings && gameData.settings.hasUnits && getUnit(tile.location)"
                 />
               
             </div>
@@ -388,9 +394,10 @@ import GenerateTile from '../../components/GenerateTile.vue';
 import AssetList from '../../components/AssetList.vue';
 import DialogIntro from '../../components/DialogIntro.vue';
 import DialogTeamSelect from '../../components/DialogTeamSelect.vue';
+import MapMini from '../../components/MapMini.vue';
  
 export default {
-  components: { DialogTeamSelect },
+  components: { DialogTeamSelect, MapMini },
   name: 'ViewPageParams',
   data() {
     
@@ -421,6 +428,7 @@ export default {
       tabs: ['Scores', 'Creatures', 'User'],
       isBattling: false,
       isLoadingAssets: false,
+      units: null,
     }
   },
   head: {
@@ -523,6 +531,25 @@ export default {
       const userTeam = teamObj.team;
       this.setUserTeam(userTeam);
     },
+    getUnit(location){
+      const {units} = this;
+      if(!units){
+        return
+      } 
+      // const temp = [0, 1];
+      // const tempLocation = temp.toString();
+      const stringLocation = location.toString();
+      // console.log('thisunit', tempLocation, stringLocation)
+      // const thisUnit1 = units.map(u => {
+      //     console.log('map', u.location, location);
+
+      //   });
+       const thisUnit = units.find(u => u.location.toString() === stringLocation);
+       
+         return thisUnit
+       
+      
+    },
     handleAutoFill(){
       console.log('handle auto fill', this.gameData);
       const {activeGameId, gameData} = this;
@@ -600,12 +627,18 @@ export default {
       //    this.gameData = this.demoData;
       //  }
       const {gameTeams, gameData} = this;
-      const {tiles} = gameData;
+      const {tiles, units} = gameData;
       const newTileMap = this.compileTileMap(tiles);
       console.log('newTIlemap', newTileMap) 
+      
+      console.log('units', units)
+      
       if(!tiles){
         console.error('no tiles');
         return
+      }
+      if(units){
+        this.units = units;
       }
       const tempTeams = [...gameTeams];
       tiles.map(tile => {
@@ -697,6 +730,7 @@ export default {
       this.previewTile = null;
       this.updateData();
       this.generateLocation = null;
+      this.handleTileSelect(null)
     },
     handleClaimCancel(){
       this.selectedAsset = null;
@@ -778,10 +812,12 @@ export default {
         // this.setTiles(tempTiles);
         // console.log('tiles', this.tiles)
         const tempCreatures = this.compileGameCreatures(asset, location);
+        
         let tempGameData = {...gameData}
         tempGameData.tiles = tempTiles;
         tempGameData.creatures = tempCreatures;
         this.gameData = tempGameData;
+        
         // this.setTiles(tempTiles)
         this.isBattling = false;
         this.updateData();
@@ -966,6 +1002,10 @@ section#intro{
       flex-shrink: 0;
       flex-grow: 0;
       justify-self: flex-end;
+    }
+    &.minimap-row{
+      flex-basis: 120px;
+      
     }
   }
   .info-game{
@@ -1588,6 +1628,23 @@ z-index: 2;
     }
     100% {
       transform: scale(1);
+    }
+  }
+  .card-bg{
+    // background-color: var(--v-card-base) !important;
+    &.v-card{
+      &.theme--dark{
+        background-color: var(--v-card-base);
+        .v-tabs-bar, .v-tabs-items{
+          background-color: var(--v-card-base);
+        }
+      }
+    }
+    &.v-expansion-panel{
+      border: 1px solid var(--line-color);
+      .theme--dark &{
+        background-color: var(--v-card-base);
+      }
     }
   }
 </style>

@@ -1,12 +1,13 @@
 <template>
-  <div outlined class="game-info" :class="expanded ? 'expanded' : ''"  v-if="game" >
+  <div outlined class="game-info " :class="expanded ? 'expanded' : ''"  v-if="game" >
     <v-card-text class="pa-0">
     
     <v-expansion-panels
       v-model="showPanel"
-      flat
+      flat 
+      
     >
-    <v-expansion-panel>
+    <v-expansion-panel class="card-bg">
       <v-expansion-panel-header class="header-panel">
         <div class="header-text">{{game.options.rows}}x{{game.options.cols}}:{{game.id}}</div>
       </v-expansion-panel-header>
