@@ -30,9 +30,9 @@ const compileTile = (data) => {
   } = data;
   console.log("tiles", tiles);
 
-  const tempTiles = [...tiles];
+  const tempTiles = tiles && [...tiles];
   const activeTile =
-    tempTiles && tempTiles.find((tile) => tile.location === location);
+    (tempTiles && tempTiles.find((tile) => tile.location === location)) || {};
 
   // const sourceTile = activeTile[0];
   const tempTile = {
@@ -68,6 +68,7 @@ const calculateTile = (data) => {
   } = data;
   const row = location[1];
   const col = location[0];
+  console.error("calculateTile location", location);
   // const { minValue = 10, maxValue = 20 } = settings;
   if (!tileMap[row]) {
     console.error("missing tilemap 0");

@@ -387,6 +387,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import {calculateTile, compileTile} from "../../utils/generate"
 const BASE_URL = "https://unknowngame.site"
 import ogImagePreview from '~/assets/images/preview.png'
 import { dialog } from '@devlop-ab/dialog';
@@ -551,9 +552,43 @@ export default {
       
     },
     handleAutoFill(){
-      console.log('handle auto fill', this.gameData);
+      
       const {activeGameId, gameData} = this;
-      this.generateMapTiles({gameData: gameData});
+      const {tileMap, tiles} = gameData;
+      console.log('handle auto fill', gameData, tileMap, tiles);
+      // const testLocation = tiles[0].location;
+      // const testImageData = calculateTile({location: testLocation, tileMap, settings: {}, tiles});
+      // console.log('test', testImageData);
+
+      
+      let tempTiles = tiles;
+      const compiledTiles = tiles.map((tile, tileIndex) => {
+        console.group(`compile ${tileIndex}`)
+        const calculatedTile = calculateTile({location: tile.location, tileMap, settings: {}, tiles});
+        const {tileImageIndex, imageSrc, possibles, cardinals} = calculatedTile;
+        console.log('calculatedTile', calculatedTile);
+        const tempTileValue = 99;
+          const dataObj = {
+            newTileValue: tempTileValue,
+            newTileIndex: tileImageIndex,
+            newTileSrc: imageSrc,
+            location: tile.location,
+            tiles: tempTiles,
+            // walletAddress, 
+          }
+          const newTile = compileTile(dataObj)
+          
+          console.log('newTile', newTile)
+          tempTiles[tileIndex] = newTile;
+          console.groupEnd();
+          return newTile
+      });
+      console.log('compiledTiles', compiledTiles)
+      // calculateTile({location, tileMap, includeContext: true, settings: {}, tiles});
+      // this.generateMapTiles({gameData: gameData});
+      const newData = {...gameData}
+      newData.tiles = compiledTiles;
+      this.gameData = newData;
     },
      async getCards(){
        this.isLoadingAssets = true;

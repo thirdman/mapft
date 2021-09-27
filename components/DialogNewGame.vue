@@ -165,7 +165,7 @@ export default {
       newCols: 4,
       generateMap: false,
       optionUseDefault: true,
-      optionUsePlayerUnit: false,
+      optionUsePlayerUnits: false,
       toggle_mechanic: null,
     };
   },
