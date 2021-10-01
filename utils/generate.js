@@ -58,25 +58,44 @@ const compileTile = (data) => {
   return tempTile;
 };
 
+const forceCalculateTile = (data) => {
+  const {
+    directions = { north: true, west: false, south: false, east: false },
+    location,
+    tileSetId,
+  } = data;
+  const { north, east, south, west } = directions;
+  const tileImageIndex = calculateImageIndex(north, east, south, west);
+  const imageSrc = generateSrc({
+    tileIndex: tileImageIndex,
+    tileSetId: tileSetId,
+  });
+
+  const resultObj = {
+    tileImageIndex,
+    imageSrc,
+  };
+  return resultObj;
+};
 const calculateTile = (data) => {
   const {
     location,
     tileMap,
-    settings = {},
+    settings = { tileSetId: "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me" },
     includeContext = false,
     tiles,
+    force = "south",
   } = data;
   const row = location[1];
   const col = location[0];
-  console.error("calculateTile location", location);
+  console.log("calculateTile location", location);
   // const { minValue = 10, maxValue = 20 } = settings;
+  const { preferConnection = true, connectionChance = 75 } = settings;
   if (!tileMap[row]) {
     console.error("missing tilemap 0");
+    console.groupEnd();
     return;
   }
-  // const tempTileValue = random(minValue, maxValue, false);
-  // const thisTile = tileMap[row][col];
-  // console.log("tempTileValue", tempTileValue, thisTile);
   let isPossibleNorth = determinePossible({
     direction: "north",
     row,
@@ -117,30 +136,67 @@ const calculateTile = (data) => {
       row,
       col,
     });
-    console.log("contestArray", contextArray);
+    console.log("contextArray", contextArray);
   }
   console.log("possibles", possibles);
-  const isNorth =
+  let isNorth =
     isPossibleNorth === "maybe"
-      ? generateUnknownDirection(50)
+      ? generateUnknownDirection({ chance: connectionChance, preferConnection })
       : isPossibleNorth;
-  const isEast =
-    isPossibleEast === "maybe" ? generateUnknownDirection(50) : isPossibleEast;
-  const isSouth =
+  let isEast =
+    isPossibleEast === "maybe"
+      ? generateUnknownDirection({ chance: connectionChance, preferConnection })
+      : isPossibleEast;
+  let isSouth =
     isPossibleSouth === "maybe"
-      ? generateUnknownDirection(50)
+      ? generateUnknownDirection({ chance: connectionChance, preferConnection })
       : isPossibleSouth;
-  const isWest =
-    isPossibleWest === "maybe" ? generateUnknownDirection(50) : isPossibleWest;
+  let isWest =
+    isPossibleWest === "maybe"
+      ? generateUnknownDirection({ chance: connectionChance, preferConnection })
+      : isPossibleWest;
   const cardinals = {
     isNorth,
     isEast,
     isSouth,
     isWest,
   };
+  if (preferConnection) {
+    const hasTrue = isNorth || isEast || isSouth || isWest;
+    if (!hasTrue) {
+      const tempPossibles = [];
+      isPossibleNorth && tempPossibles.push("north");
+      isPossibleEast && tempPossibles.push("east");
+      isPossibleSouth && tempPossibles.push("south");
+      isPossibleWest && tempPossibles.push("west");
+      const randIndex = random(0, tempPossibles.length, false);
+      if (tempPossibles.length > 0) {
+        // ie. if there's something we can posisbely change;
+        const directionToChange = tempPossibles[randIndex];
+        // console.log("directionToChange", directionToChange);
+        if (directionToChange === "north") {
+          isNorth = true;
+        }
+        if (directionToChange === "east") {
+          isEast = true;
+        }
+        if (directionToChange === "south") {
+          isSouth = true;
+        }
+        if (directionToChange === "west") {
+          isWest = true;
+        }
+      }
+    }
+  }
   console.log("cardinals new", cardinals);
   const tileImageIndex = calculateImageIndex(isNorth, isEast, isSouth, isWest);
-  const imageSrc = generateSrc(tileImageIndex);
+  const imageSrc = generateSrc({
+    tileIndex: tileImageIndex,
+    tileSetId: settings.tileSetId,
+    // base: null,
+    blankIsJpg: false,
+  });
 
   const resultObj = {
     tileImageIndex,
@@ -177,7 +233,7 @@ const generateContext = (data) => {
   return tempArray;
 };
 const determinePossible = (options) => {
-  const { direction, row, col, tileMap } = options;
+  const { direction, row, col, tileMap, mapMode = "static" } = options;
   if (!tileMap) {
     return;
   }
@@ -185,10 +241,10 @@ const determinePossible = (options) => {
   /** possible outcomes: generatable, true, false */
   const totelRows = tileMap[0].length;
   const totelCols = tileMap.length;
-  const isFirstRow = row === 0;
-  const isLastCol = col === totelRows - 1;
-  const isLastRow = row === totelCols - 1;
-  const isFirstCol = col === 0;
+  const isFirstRow = mapMode !== "explore" && row === 0;
+  const isLastCol = mapMode !== "explore" && col === totelRows - 1;
+  const isLastRow = mapMode !== "explore" && row === totelCols - 1;
+  const isFirstCol = mapMode !== "explore" && col === 0;
   console.log("determine:", {
     totelRows,
     totelCols,
@@ -214,9 +270,9 @@ const determinePossible = (options) => {
    * In this situation, the tile can have an index, which represents a tile.
    * we look for null or undefined, which means the tile is empty but can exist in the future.
    */
-  let targetExists = false;
+  // let targetExists = false;
   if (direction === "north") {
-    const isTarget = tileMap[row - 1][col];
+    const isTarget = tileMap[row - 1] && tileMap[row - 1][col];
     console.log("isTarget", isTarget);
   }
   /** CHeck For existence of tile
@@ -242,16 +298,21 @@ const determinePossible = (options) => {
   let target;
   /** gets the image index in the target direction */
   if (direction === "north") {
-    target = tileMap[row - 1][col];
+    if (mapMode === "explore") {
+      const isFirstRow = tileMap[row - 1];
+      console.log("test for isNorth", isFirstRow);
+    } else {
+      target = tileMap[row - 1][col];
+    }
   }
   if (direction === "east") {
-    target = tileMap[row][col + 1];
+    target = tileMap[row] && tileMap[row][col + 1];
   }
   if (direction === "south") {
-    target = tileMap[row + 1][col];
+    target = tileMap[row + 1] && tileMap[row + 1][col];
   }
   if (direction === "west") {
-    target = tileMap[row][col - 1];
+    target = tileMap[row] && tileMap[row][col - 1];
   }
   const targetTileSides = tileSidesMap[target];
   console.log("gene target", target);
@@ -276,11 +337,12 @@ const determinePossible = (options) => {
   return false;
 };
 
-const generateUnknownDirection = (percent = 75) => {
+const generateUnknownDirection = (options) => {
+  const { chance = 75, preferConnection = true } = options;
   /** isf less than 75% then make a path */
   const number = random(0, 100, false);
   // console.log("isGeneratable number", number);
-  return number < percent;
+  return number < chance;
 };
 
 const calculateImageIndex = (north, east, south, west) => {
@@ -293,14 +355,19 @@ const calculateImageIndex = (north, east, south, west) => {
   return sum;
 };
 
-const generateSrc = (
+const generateSrc = ({
   tileIndex,
+  tileSetId = "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me",
   base = "https://gateway.pinata.cloud/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/",
-  blankIsJpg = true
-) => {
-  const newSrc = `${base}${tileIndex}.${
+  blankIsJpg = true,
+}) => {
+  const fileBase = tileSetId
+    ? `https://gateway.pinata.cloud/ipfs/${tileSetId}/`
+    : base;
+  const newSrc = `${fileBase}${tileIndex}.${
     blankIsJpg && tileIndex === 0 ? "jpg" : "png"
   }`;
+  console.log("newSrc", newSrc);
   return newSrc;
 };
 const random = (min, max, float = false) => {
@@ -311,4 +378,4 @@ const random = (min, max, float = false) => {
   return Math.floor(val);
 };
 
-export { calculateTile, compileTile };
+export { calculateTile, forceCalculateTile, compileTile };

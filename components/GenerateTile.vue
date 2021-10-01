@@ -1,9 +1,15 @@
 <template>
-  <v-card outlined elevation="4" class="claim claim-generate" :class="location ? 'active' : ''" >
+  <v-card outlined elevation="4" class="claim claim-generate" :class="location ? 'active' : ''" 
+  :style="`visibility: ${displayMode};` "
+  v-if="!immediate"
+  >
       <v-card-title>
         <div class="row ma-0">
           <div class="col pa-0">
             <span>Generate Tile for location {{location}}</span>
+            <span v-if="devMode" class="mode-tag">{{mapMode}} </span>
+            <span v-if="devMode" class="exists-tag">Exists: {{tileExists ? 'yes' : 'no'}} </span>
+            
           </div>
           <v-btn plain @click="onClose"><v-icon>mdi-close</v-icon></v-btn>
         </div>
@@ -107,6 +113,7 @@
         <v-btn text @click="onClose">Cancel</v-btn>
         <v-btn outlined @click="doTimer" v-if="devMode">do Timer</v-btn>
         <v-btn @click="calualateThisTile(location[1], location[0])" v-if="previewTile && location">Regenerate</v-btn>
+        <v-btn @click="forceCalculate({south: true, east: false, north: false, west: false})" v-if="devMode">Force genrate</v-btn>
         <!-- <v-btn @click="compileNewTile(location)" v-if="devMode">compile</v-btn>       -->
         <!-- <v-btn small @click="calculateIndex" v-if="devMode">getindex</v-btn> -->
         <!-- <v-btn small @click="handleTest" v-if="devMode">handleTest</v-btn> -->
@@ -116,6 +123,16 @@
 </template>
 
 <style lang="scss">
+.mode-tag, .exists-tag{
+  background: rgb(12, 165, 12);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: .675rem;
+  font-weight: bold;
+}
+.exists-tag{
+  background: violet;
+}
 .claim{
   &.claim-generate{
     width: 700px;
@@ -257,7 +274,7 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 import { dialog } from '@devlop-ab/dialog';
-import {calculateTile, compileTile} from "../utils/generate"
+import {calculateTile, forceCalculateTile, compileTile} from "../utils/generate"
 const tileArray = ['nw', 'ne', 'sw', 'se', 'n', 'w', 's', 'e', 'dn', 'dw', 'de', 'ds', '00']
 const tileIndexArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
@@ -301,10 +318,11 @@ const indexMap = {
 }
 
 export default {
-  props: ['location', 'handleSelect', 'selected', 'index', 'onAction', 'onClose', 'onGenerate', 'tiles', 'gameData'],
+  props: ['location', 'handleSelect', 'selected', 'index', 'onAction', 'onClose', 'onGenerate', 'tiles', 'gameData', 'immediate'],
   data() {
     return {
-      devMode: false,
+      devMode: true,
+      displayMode: 'visable',
       status: 'loading',
       mapString: null,
       previewTile: null,
@@ -331,6 +349,15 @@ export default {
     // this.status = "working";
   },
   mounted(){
+    const {immediate, location, previewTile} = this;
+    if(immediate && location){
+      this.displayMode = 'hidden';
+      const newTile = this.calualateThisTile(location[1], location[0]);
+      console.log('mounted, does preview TIle existss', newTile)
+      if(newTile){
+        this.doApply(location);
+      }
+    }
     this.status = "ready";
   },
   
@@ -342,7 +369,25 @@ export default {
       tileMap: "ui/tileMap",
       userPoints: "ui/userPoints",
       activeGame: "ui/activeGame",
+      defaultTile: "ui/defaultTile",
     }),
+    mapMode(){
+      const {gameData} = this;
+      return gameData.options.mapMode
+    },
+    tileExists(){
+      const {location, gameData, mapMode} = this;
+      const {tiles} = gameData;
+      if(mapMode === 'explore'){
+        const tile = tiles.find(tile => tile.location.toString() === location.toString());
+        // console.log('tile exists', 'explore', tile)
+        return tile ? true : false
+      } else {
+        const tile = tiles.find(tile => tile.location.toString() === location.toString());
+        // console.log('tile exists', tile)
+        return tile ? true : false
+      }
+    }
     
     // tiles(){
     //   const {activeGame} = this;
@@ -364,12 +409,25 @@ export default {
         this.status = 'completed';
         }, delayAmount);
     },
-    
+    forceCalculate(directions){
+      console.log('directions', directions)
+      const newThing = forceCalculateTile({directions});
+      console.log('new thing', newThing);
+
+      /** TODO
+       * add row/col to tilemap
+       * add to tiles?
+       * re-save tiles on apply?
+       */
+    },
     calualateThisTile(row, col){
       // const tileMap = this.tileMap;
       // const tiles = this.tiles;
       const {userPoints, generationCost, location, walletAddress, gameData} = this;
-      const {tiles, tileMap} = gameData;
+      const {tiles, tileMap, options} = gameData;
+      const {mapMode} = options
+      const {tileExists} = this;
+      console.log('mapMode', mapMode, tileExists);
       if(!tileMap){
         console.log('no tile map')
         return
@@ -381,12 +439,19 @@ export default {
         })
         return
       }
-      if(!tileMap[row]){
+      if(!tileMap[row] && mapMode !== 'explore'){
         alert('missing tolemap 0');
+        console.log('mapMode', mapMode)
         return
       }
+      if(mapMode === 'explore'){
+        console.log('mapMode', mapMode)
+        // return
+      }
+      
+      
       const tempTileValue = this.random(5, 30, false);
-      const newTileImageData = calculateTile({location, tileMap, includeContext: true, settings: {}, tiles});
+      const newTileImageData = calculateTile({location, tileMap, includeContext: true, settings: gameData.settings || {}, tiles});
       let tempTileMap = tileMap.slice();
       // const thisTile = tileMap[row][col];
       // console.log('thisTile', thisTile);
@@ -428,6 +493,7 @@ export default {
         // this.compileNewTile(location)
         const newPoints  = userPoints - generationCost;
         this.setUserPoints(newPoints)
+        return newTile;
       }
       this.doTimer()
     },

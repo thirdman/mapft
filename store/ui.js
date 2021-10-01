@@ -12,6 +12,16 @@ import {
 //   [6, 14, 14, 12],
 //   [5, 1, 7, 0],
 //   [3, 10, 0, 0]
+const tileSets = [
+  {
+    name: "default",
+    id: "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me",
+  },
+  {
+    name: "water",
+    id: "QmPEDQuK7orQKbKwsw3z8nPJcaAXSwXT4q5E7sdgjaSvpP",
+  },
+];
 const tileTemplate = {
   id: null,
   src: null,
@@ -557,11 +567,13 @@ export const state = () => ({
   // viewData: "",
   // viewData2: "", // to refactor out.
   // viewStatus: "",
+  // TILES
+  tileSets: tileSets,
   // GAME
-
   games: [],
   activeGame: null,
   tiles: defaultTiles,
+  tileTemplate: tileTemplate,
   creatures: defaultCreatures,
   gameTeams: defaultTeams,
 });
@@ -572,11 +584,13 @@ export const getters = {
   games: (state) => state.games,
   activeGame: (state) => state.activeGame,
   tiles: (state) => state.tiles,
+  tileTemplate: (state) => state.tileTemplate,
   creatures: (state) => state.creatures,
   gameTeams: (state) => state.gameTeams,
   userTeam: (state) => state.userTeam,
   userPoints: (state) => state.userPoints,
   userAssets: (state) => state.userAssets,
+  tileSets: (state) => state.tileSets,
   binData: (state) => state.binData,
   binStatus: (state) => state.binStatus,
   configStatus: (state) => state.configStatus,
@@ -661,7 +675,7 @@ export const getters = {
   // },
   demoData: (state) => {
     const { tiles, activeGameId, games, creatures, gameTeams } = state;
-
+    const options = {};
     // teams: defaultTeams,
 
     let demoData = {
@@ -670,7 +684,7 @@ export const getters = {
       creatures,
       teams: defaultTeams,
       tileMap: [],
-      players: [],
+      players: ["admin"],
       creatures: [],
       units: [
         {
@@ -681,6 +695,7 @@ export const getters = {
       options: {
         rows: 3,
         cols: 4,
+        mapMode: "static",
       },
       map: {
         rows: 3,
@@ -688,6 +703,7 @@ export const getters = {
       },
       owner: "admin",
       settings: {
+        ...options,
         generateMap: false,
         hasValues: true,
         hasUnits: true,
@@ -1028,6 +1044,7 @@ export const actions = {
         owner: owner,
         settings: {
           generateMap: false,
+          tileSetId: "QmPEDQuK7orQKbKwsw3z8nPJcaAXSwXT4q5E7sdgjaSvpP",
           hasValues: true,
           hasUnits: true,
         },

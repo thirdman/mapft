@@ -13,23 +13,34 @@
             Generate your own
           </h3>
           <p class="text-body-2">Exploring possibilities of NFT based gaming.</p>
-          <nuxt-link to="/game/demo">demo</nuxt-link>
-          <v-btn block small outlined @click="() => {this.showNewGameDialog = true}">New Game</v-btn>
+          <!-- <v-btn block small outlined @click="() => {this.showNewGameDialog = true}">New Game</v-btn> -->
+          <div class="row">
+            <div class="col">
+              <nuxt-link to="/game/demo" class="asButton">View Demo</nuxt-link>
+            </div>
+          </div>
           <div v-if="activeGame">
             activeGame: {{activeGame.id}}
           </div>
+          
+        </div>
+      </div>
+      <div class="col col-9">
+        <h2>
+          Generate Game
+        </h2>
+        <v-btn large outlined raised @click="() => {this.showNewGameDialog = true}">New Game</v-btn>
+        <div class="map-container" v-if="gameStatus !== 'loading'">
+          <p>Set map and game rules using your own or shared assets.</p>
+          <v-divider />
           <div v-if="games">
+            <label>Current Games</label>
             <div v-for="(game, index) in games" :key="index">
               <game-info :game="game" :expanded="false" />
               <div>{{game.id.substring(0, 3)}} - {{game.map && game.map.rows}} rows, {{game.map && game.map.cols}} columns <v-btn text @click="loadGame(game.id)">load</v-btn>  </div>
             </div>
-
           </div>
-        </div>
-      </div>
-      <div class="col col-9">
-        <div class="map-container" v-if="gameStatus !== 'loading'">
-            <div
+            <!-- <div
               class="grid-wrap"
               :style="tileMap && tileMap[0] && `width: ${tileMap[0].length * tileSize}px; height: ${tileMap.length * tileSize}px;`">
               <div class="grid-tile" v-for="(tile, index) in tiles"
@@ -37,19 +48,8 @@
                 :style="`width: ${tileSize}px; height: ${tileSize}px;`"
                 >
               </div>
-              <!-- <Tile
-                v-for="(tile, index) in tiles"
-                :key="index"
-                size="240"
-                :tile="tile"
-                :handleSelect="handleTileSelect"
-                :index="index"
-                /> -->
-                <!-- :selected="selectedTile === index"
-                :highlighted="highlightedIndex === index"
-                :onAction="handleGenerate" -->
-              
-            </div>
+            </div> -->
+
           </div>
       </div>
     </section>
@@ -105,9 +105,12 @@ export default {
       }
     },
     loadGame(id){
-      console.log('id', id);
+      console.log('loadGame id', id);
+      if(!id){
+        console.log('something went wrong, id is missing', id)
+      }
       const game = this.games && this.games.find(game => game.id === id);
-      console.log('game', game)
+      console.log('game is', game)
       this.setActiveGame(game);
       this.$router.push(`/game/${game.id}`)
     }

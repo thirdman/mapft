@@ -3,12 +3,12 @@
     :class="`tile-info col pa-0 ${selected ? 'selected' : ''}`"
     >
     
-    <div class="row ma-0" >
-      <div class="col ma-0">
-        <h4>Tile</h4>
+    <div class="row ma-0 d-flex align-center" >
+      <div class="col pa-2">
+        <label>Tile</label>
       </div>
-      <div class="col col-3">
-        <v-btn text depressed @click="onClose"><v-icon>mdi-close</v-icon></v-btn>
+      <div class="col col-2 pa-2">
+        <v-btn text depressed icon @click="onClose"><v-icon>mdi-close</v-icon></v-btn>
       </div>
     </div>
     
@@ -23,7 +23,9 @@
           :handleSelect="false"
           :onAction="false"
           :hideAsset="true"
-          :fill="true"
+          :fill="false"
+          size="200"
+
           />
           <!-- size="140" -->
           <!-- :fill="true" -->
@@ -147,6 +149,9 @@
 <style lang="scss">
 .tile-info{
  // padding: 2rem; 
+ .tile{
+   box-shadow: none !important;
+ }
 }
 .controller-section{
   position: relative;

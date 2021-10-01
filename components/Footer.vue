@@ -35,7 +35,7 @@ import { mapGetters, mapMutations } from 'vuex'
 // import { setTheme } from '../utils/theme.js'
 
 export default {  
-  props: 'show',
+  props: ['show'],
   data() {
     return {
       VERCEL_GIT_COMMIT_SHA: '',

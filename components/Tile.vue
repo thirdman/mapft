@@ -32,13 +32,17 @@
       </div>
     </div>
     <div class="emptyinfo" v-if="tile.meta && tile.meta.value && !tile.meta.creature && tile.meta.owner !== walletAddress">
-      Uncontested
+      Uncontested 
     </div>
-    <div class="blankinfo" v-if="tile.meta && !tile.meta.value && !tile.src">
-      <v-icon large>mdi-help-box</v-icon>
+    <div class="blank-info" v-if="tile.meta && !tile.meta.value && !tile.src">
+      <v-icon medium>mdi-help</v-icon>
       <v-btn outlined small @click="() => {onAction && onAction(tile.location)}" primary>
-        Generate tile
+        <span>Generate</span>
       </v-btn>
+      <v-btn outlined x-small @click="() => {onAction && onAction(tile.location)}" primary>
+        <span>Place Tile...</span>
+      </v-btn>
+      <div v-if="devMode" class="location-info">{{tile.location}}</div>
     </div>
     <!-- <div class="metainfo">
       <div class="inside ">
@@ -145,6 +149,17 @@
       border: 1px solid white;
     }
 }
+.location-info{
+  font-size: .75rem;
+  color: var(--primary-color, #eee);
+}
+.blank-info{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
 </style>
 
 <script>
@@ -154,7 +169,7 @@ export default {
   props: ['tile', 'handleSelect', 'selected', 'index', 'size',  'onAction', 'hideAsset', 'fill', 'highlighted', 'unit'],
   data() {
     return {
-      
+      devMode: true
     };
   },
   created(){

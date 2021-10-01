@@ -115,14 +115,10 @@ export default {
       const blankRows = new Array(rows).fill();
       const blankCols = new Array(cols).fill();
       const compiledMap = blankRows.map((_, rowIndex) => {
-        // const thisContent = blankCols.maps(tile => tile.location[1] === rowIndex);
-        const asIndexes = blankCols.map((col, colIndex) => {
-          const thislocation = [rowIndex, colIndex].toString();
-          console.log('thisLocation', thislocation)
+        const asIndexes = blankCols.map((_, colIndex) => {
+          const thislocation = [colIndex, rowIndex].toString();
           const locationTile = gameData.tiles && gameData.tiles.find(tile => tile.location.toString() === thislocation);
           const team = locationTile && locationTile.meta.team;
-
-          console.log('locationTile', locationTile, team)
           return {color: team, index: 0}
           })
         return asIndexes
