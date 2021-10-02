@@ -45,8 +45,9 @@
           <nuxt-link to="/examples" class=" navLink">EXAMPLES</nuxt-link>
         </div> -->
       </div>
-      
-      <div class="navAdmin" v-if="1===2">
+      <Loading v-if="configStatus === 'working'" />
+      <div class="navAdmin" v-if="isDevAddress">
+        <v-btn x-small @click="() => setDevMode(!devMode)">Toggle Dev {{devMode ? 'off' : 'on'}}</v-btn>
         <v-btn x-small @click="getConfig">get config</v-btn>
         <v-btn x-small @click="updateConfig">updateConfig</v-btn>
       </div>
@@ -174,8 +175,8 @@ export default {
   
   mounted() {
     if (!this.siteData) {
-        this.getConfig()
-        console.log('this getting ssite data')
+      console.log('this getting ssite data')
+      this.getConfig()
     }
     if (!this.binData) {
       console.log('getImages here', this.getImages)
@@ -236,6 +237,7 @@ export default {
       contrastMode: "ui/contrastMode",
       hideUi: "ui/hideUi",
       devMode: "ui/devMode",
+      configStatus: "ui/configStatus",
       walletNetwork: "ui/walletNetwork",
       walletAddress: "ui/walletAddress",
       walletStatus: "ui/walletStatus",
@@ -245,6 +247,7 @@ export default {
       binData: "ui/binData",
       binStatus: "ui/binStatus",
       userTeam: "ui/userTeam",
+      isDevAddress: 'ui/isDevAddress'
     }),
     isSearchRoute() {
       const routeArray = ["view-contract-id", "ViewPage", "gallery", "view"];
@@ -283,7 +286,7 @@ export default {
       setWallet: "ui/setWallet",
       setWalletChain: "ui/setWalletChain",
       setNetworkName: "ui/setNetworkName",
-      setDevMode: "ui/setDevMode"
+      setDevMode: "ui/setDevMode",
     }),
 
     ...mapActions({

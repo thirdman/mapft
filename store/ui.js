@@ -515,6 +515,7 @@ const defaultTeams = [
 // const ens = require("ethereum-ens");
 // console.log("ens", ens);
 export const state = () => ({
+  devMode: true,
   configStatus: null,
   setBinStatus: null,
   userAssets: null,
@@ -543,7 +544,7 @@ export const state = () => ({
   usedContractsObj: null,
   tempUsedContractsObj: null,
   activityId: "1234",
-  devMode: false,
+
   hasVerticalGridLines: false,
   statusModalMode: "fixed",
   uiMode: "minimal",
@@ -576,6 +577,7 @@ export const state = () => ({
   tileSets: tileSets,
   // GAME
   games: [],
+  localGames: [],
   activeGame: null,
   tiles: defaultTiles,
   tileTemplate: tileTemplate,
@@ -587,6 +589,7 @@ export const getters = {
   getField,
   siteData: (state) => state.siteData,
   games: (state) => state.games,
+  localGames: (state) => state.localGames,
   activeGame: (state) => state.activeGame,
   tiles: (state) => state.tiles,
   tileTemplate: (state) => state.tileTemplate,
@@ -680,7 +683,7 @@ export const getters = {
   //   }
   // },
   demoData: (state) => {
-    const { tiles, activeGameId, games, creatures, gameTeams } = state;
+    const { tiles, activeGameId, localGames, creatures, gameTeams } = state;
     const options = {};
     // teams: defaultTeams,
 
@@ -729,6 +732,9 @@ export const mutations = {
   },
   setShowTeamSelect: (state, value) => {
     state.showTeamSelect = value;
+  },
+  setLocalGames: (state, value) => {
+    state.localGames = value;
   },
   setGames: (state, value) => {
     state.games = value;
@@ -1005,7 +1011,7 @@ export const actions = {
     const options = { ...payload };
     const id = uuidv4();
     console.log("generate Game", rows, cols, id);
-    const { games } = context.state;
+    const { localGames } = context.state;
     const newTileArray = new Array(rows * cols).fill(tileTemplate);
     let newGameArray = [];
     const blankRowsArray = new Array(rows).fill();
@@ -1040,7 +1046,7 @@ export const actions = {
     console.log("flatLocations", flatLocations);
 
     if (id) {
-      const tempGames = games.slice();
+      const tempGames = localGames.slice();
       const thisGame = {
         ...payload,
         id,
@@ -1063,7 +1069,7 @@ export const actions = {
         teams: defaultTeams,
       };
       tempGames.push(thisGame);
-      context.commit("setGames", tempGames);
+      context.commit("setLocalGames", tempGames);
     }
 
     flatLocations.map((loc, i) => {
@@ -1116,11 +1122,12 @@ export const actions = {
     return userAssets;
   },
   async getConfig(context, data) {
+    console.log("get");
     const { commit } = context;
     const { $axios } = this;
     const binKey =
       "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
-    const binId = "612d98a5259bcb6118ef73a4";
+    const binId = "6157cf3f9548541c29bc55e3";
 
     await commit("setConfigStatus", "working");
     const siteJson = await $axios
@@ -1129,10 +1136,14 @@ export const actions = {
           "X-Master-Key": binKey,
         },
       })
-      .catch((error) => console.error("Eerror getting siteConfig: ", error));
+      .catch((error) => console.error("Error getting siteConfig: ", error));
     const siteData = siteJson && siteJson.record;
-    // console.log("siteData", siteJson.record);
+
+    console.log("siteData", siteJson.record);
     await commit("setSiteData", siteData);
+    if (siteData.games) {
+      await commit("setGames", siteData.games);
+    }
     await commit("setConfigStatus", "completed");
     return siteData;
   },
@@ -1159,7 +1170,7 @@ export const actions = {
   },
   async saveImages(context, props) {
     const { dispatch, commit, rootState, state } = context;
-    const { node, binId = "6131a4023b222b1d0d959d75", code, name } = props;
+    const { node, binId = "6157cf3f9548541c29bc55e3", code, name } = props;
     const { $axios } = this;
     let { binData } = state;
     console.log("saveImages", binData);
@@ -1213,39 +1224,36 @@ export const actions = {
   async updateConfig(context, props) {
     const { commit, rootState, state } = context;
     const { $axios } = this;
+    const { game, games } = props;
+
     const {
       svgFormStore: { svgData, activeTheme },
     } = rootState;
     const { siteData } = state;
-    const currentImages = siteData.images || [];
-    const tempImages = [...currentImages];
-    const newDraftId = uuidv4();
-    const newImage = { ...svgData, theme: activeTheme };
-    console.log("updateconfig activeTheme", activeTheme);
-    const newTempImage = {
-      image: newImage,
-      id: newDraftId,
-      label: "new label",
-      author: "new author",
-    };
-    tempImages.push(newTempImage);
-    const newData = { updated: "now" };
+    const tempData = { ...siteData };
+    const currentGames = siteData.games || [];
+    const tempGames = [...currentGames, game];
+    // const newImage = { ...svgData, theme: activeTheme };
+    // const newGame = { aaa: "bbb" };
 
-    newData.images = tempImages;
+    if (game) {
+      tempGames.push(game);
+    }
+    const newData = { ...tempData, modified: "now" };
+
+    newData.games = games ? games : tempGames;
     console.log("newData", newData);
     const binKey =
       "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
-    const binId = "612d98a5259bcb6118ef73a4";
-    const tempConfig = newData;
-    // const tempConfig = { nope: "nope" };
+    const binId = "6157cf3f9548541c29bc55e3";
 
-    if (!tempConfig) {
+    if (!newData) {
       return;
     }
-    console.log("updateConfig CONFIG: ", tempConfig);
+    console.log("updateConfig CONFIG: ", newData);
     await commit("setConfigStatus", "working");
     const sitedataaa = await $axios
-      .$put(`https://api.jsonbin.io/v3/b/${binId}`, tempConfig, {
+      .$put(`https://api.jsonbin.io/v3/b/${binId}`, newData, {
         headers: {
           "Content-Type": "application/json",
           "X-Master-Key": binKey,

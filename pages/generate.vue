@@ -33,11 +33,24 @@
         <div class="map-container" v-if="gameStatus !== 'loading'">
           <p>Set map and game rules using your own or shared assets.</p>
           <v-divider />
-          <div v-if="games">
-            <label>Current Games</label>
+            <label>Games</label>
             <div v-for="(game, index) in games" :key="index">
               <game-info :game="game" :expanded="false" />
-              <div>{{game.id.substring(0, 3)}} - {{game.map && game.map.rows}} rows, {{game.map && game.map.cols}} columns <v-btn text @click="loadGame(game.id)">load</v-btn>  </div>
+              <div>{{game.id.substring(0, 3)}} - {{game.map && game.map.rows}} rows, {{game.map && game.map.cols}} columns 
+                <v-btn text @click="loadGame(game.id)">load</v-btn>  
+                <v-btn text @click="removeGame(index)">remove</v-btn>  
+              </div>
+            </div>
+          <div v-if="localGames">
+          <v-divider />
+            <label>Temporary Games</label>
+            <div v-for="(game, index) in localGames" :key="index">
+              <game-info :game="game" :expanded="false" />
+              <div>
+                {{game.id.substring(0, 3)}} - {{game.map && game.map.rows}} rows, {{game.map && game.map.cols}} columns 
+                <v-btn text @click="loadGame(game.id)">load</v-btn> 
+                <v-btn text @click="saveGame(game.id)">save</v-btn> 
+              </div>
             </div>
           </div>
             <!-- <div
@@ -82,16 +95,18 @@ export default {
       tileMap: 'ui/tileMap',
       tiles: 'ui/tiles',
       games: 'ui/games',
+      localGames: 'ui/localGames',
       activeGame: 'ui/activeGame',
     })
   },
   methods: {
     ...mapMutations({
        setActiveGame: 'ui/setActiveGame',
-      
+       
     }),
      ...mapActions({
       generateGame: 'ui/generateGame',
+      updateConfig: 'ui/updateConfig',
     }),
     async handleGenerateGame(props){
       // const newId = uuidv4();
@@ -109,10 +124,28 @@ export default {
       if(!id){
         console.log('something went wrong, id is missing', id)
       }
-      const game = this.games && this.games.find(game => game.id === id);
+      // const gameLocal = this.localGames && this.localGames.find(game => game.id === id);
+      // const gameRemote = this.games && this.games.find(game => game.id === id);
+      // const thisGame = gameRemote || gameLocal;
+      // console.log('game is', thisGame)
+      // this.setActiveGame(thisGame);
+      this.$router.push(`/game/${id}`)
+    },
+    saveGame(id){
+      console.log('loadGame id', id);
+      if(!id){
+        console.log('something went wrong, id is missing', id)
+      }
+      const game = this.localGames && this.localGames.find(game => game.id === id);
       console.log('game is', game)
-      this.setActiveGame(game);
-      this.$router.push(`/game/${game.id}`)
+      this.updateConfig({game});
+      // this.$router.push(`/game/${game.id}`)
+    },
+    removeGame(index){
+      const games = this.games && this.games.filter((game, i) => i !== index);
+      console.log('filtered games would be: ', games)
+      this.updateConfig({games});
+      
     }
   }
 }

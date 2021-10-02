@@ -374,6 +374,7 @@
             <v-divider />
             <v-btn block small outlined @click="setIntroRead(!introRead)">Show Introduction</v-btn>
             <v-btn block small outlined @click="setMapSelect(!showMapSelect)">Select Map Style</v-btn>
+            <v-btn block small outlined @click="saveGame()">Save Game</v-btn>
             </div>
           </div>
           <div class="row">
@@ -583,7 +584,11 @@ export default {
   created(){
     const {params} = this.$route;
     const {id} = params;
+    const {siteData} = this;
     console.log('created: ', id);
+    if(!siteData){
+      this.getConfig();
+    }
   },
   mounted(){
     const {params} = this.$route;
@@ -596,14 +601,16 @@ export default {
       this.gameStatus = 'ready'
       return
     }
-    const {games} = this;
-    console.log('mounted games', games)
-    if(!games){
+    const {localGames, games} = this;
+    console.log('mounted localGames', localGames)
+    if(!localGames){
       this.gameStatus="error";
       return
     }
     console.log('mounted id', id)
-    const thisGame = games.find(game => game.id === id);
+    const thisGameLocal = localGames.find(game => game.id === id);
+    const thisGameRemote = games.find(game => game.id === id);
+    const thisGame = thisGameRemote || thisGameLocal;
     console.log('mounted thisGame', thisGame)
     console.log('here', this.activeGame)
     console.log('thisgame exists', thisGame, this.activeGame)
@@ -624,6 +631,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      siteData: 'ui/siteData',
       contrastMode: 'ui/contrastMode',
       hasChainSelect: 'ui/hasChainSelect',
       hasVerticalGridLines: 'ui/hasVerticalGridLines',
@@ -632,6 +640,7 @@ export default {
       walletAddress: "ui/walletAddress",
       // tiles: "ui/tiles",
       games: "ui/games",
+      localGames: "ui/localGames",
       userTeam: "ui/userTeam",
       userAssets: "ui/userAssets",
       instructionsRead: "ui/instructionsRead",
@@ -690,6 +699,7 @@ export default {
       setActiveGame: 'ui/setActiveGame'
     }),
     ...mapActions({
+      getConfig: "ui/getConfig",
       updateConfig: "ui/updateConfig",
       getAssets: "ui/getAssets",
       generateGame: 'ui/generateGame',
@@ -829,17 +839,18 @@ export default {
       this.isLoadingAssets = false;
     },
     async loadData(id){
-      const {activeGame, games} = this;
+      const {activeGame, localGames, games, siteData} = this;
       console.log('loadData activeGame: ', activeGame)
       if(id){
         let tempGame = activeGame;
         console.log('Game id exists, load data', id, activeGame)
         if(!activeGame){
-          console.log('no activegame, setting', games)
-          const thisGame = games.find(game => game.id === id);
-          tempGame = thisGame;
-          console.log('thisGame', thisGame)
-          this.setActiveGame(thisGame);
+          console.log('no activegame, setting', localGames)
+          const thisGameRemote = games.find(game => game.id === id);
+          const thisGameLocal = localGames.find(game => game.id === id);
+          tempGame = thisGameRemote || thisGameLocal;
+          console.log('tempGame', tempGame)
+          this.setActiveGame(tempGame);
         }
         console.log('now activegame is', tempGame)
         this.gameData = tempGame
@@ -1355,6 +1366,25 @@ export default {
         });
       }, 2000);
 
+    },
+    saveGame(){
+      const {gameData, games} = this;
+      if(!gameData){return}
+      const id = gameData.id;
+      const game = games && games.find(game => game.id === id);
+      
+      console.log('game', game, id);
+      const tempGames = [...games]
+      tempGames.filter(game => game.id !== id);
+      tempGames.push(gameData);
+      
+      // if(!id){
+      //   console.log('something went wrong, id is missing', id)
+      // }
+      // const game = this.localGames && this.localGames.find(game => game.id === id);
+      // console.log('game is', game)
+      this.updateConfig({games: tempGames});
+      // this.$router.push(`/game/${game.id}`)
     },
     random(_, { min, max, float = false }) {
       const val = Math.random() * (max - min) + min;
