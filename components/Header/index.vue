@@ -36,7 +36,7 @@
           <nuxt-link to="/game/demo" class=" navLink">DEMO</nuxt-link>
         </div>
         <div class="navItem" >
-          <nuxt-link to="/generate" class=" navLink">NEW</nuxt-link>
+          <nuxt-link to="/games" class=" navLink">GAMES</nuxt-link>
         </div>
         <div class="navItem" >
           <nuxt-link to="/resources" class=" navLink">ELEMENTS</nuxt-link>
