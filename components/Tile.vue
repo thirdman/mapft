@@ -37,7 +37,7 @@
     <div class="blank-info" v-if="tile.meta && !tile.meta.value && !tile.src">
       <!-- <v-icon medium>mdi-help</v-icon> -->
       <v-btn outlined small @click="() => {onAction && onAction(tile.location)}" primary>
-        <span>Generate</span>
+        <span>Explore</span>
       </v-btn>
       <!-- <v-btn outlined x-small @click="() => {onAction && onAction(tile.location)}" primary>
         <span>Place Tile...</span>
