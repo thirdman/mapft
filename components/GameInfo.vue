@@ -9,7 +9,20 @@
     >
     <v-expansion-panel class="card-bg">
       <v-expansion-panel-header class="header-panel" >
-        <div class="header-text">{{game.options.rows}}x{{game.options.cols}}:{{game.id}}</div>
+        <div class="row ma-0">
+          <tile-image-preview :game="game" index="14" size="64" />
+          <div class="col pa-1">
+            <label class="x-small">Size</label>
+            {{game.options.rows}} x {{game.options.cols}}
+          </div>
+          <!-- <div class="col pa-0">
+            <label>Columns</label>
+            {{game.options.cols}}
+          </div> -->
+        </div>
+        <v-spacer />
+        <div class="header-text">{{game.title ||  game.id}}</div>
+        <v-btn plain @click="loadGame" v-if="displayMode === 'preview'">load</v-btn>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
         <div class="row">
@@ -106,11 +119,17 @@ import PlayerInfo from './PlayerInfo.vue';
 export default {
   components: { HashAddress, PlayerInfo },
   name: "GameInfo",
-  props: ['onSelect', 'onClose', 'game', 'expanded'],
+  props: ['onSelect', 'onClose', 'game', 'expanded', 'mode'],
+  created(){
+    if(this.mode){
+      this.displayMode = this.mode;
+    }
+  },
   data() {
     return {
       showPanel: false,
       devMode: false,
+      displayMode: 'preview'
     };
   },
   computed: {

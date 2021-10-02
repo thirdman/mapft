@@ -693,7 +693,7 @@ export const getters = {
       creatures,
       teams: defaultTeams,
       tileMap: [],
-      players: ["admin"],
+      players: ["admin", "player 1", "player 2", "player 3"],
       creatures: [],
       units: [
         {
@@ -705,6 +705,8 @@ export const getters = {
         rows: 3,
         cols: 4,
         mapMode: "static",
+        owner: "admin",
+        tileSetId: "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me",
       },
       map: {
         rows: 3,

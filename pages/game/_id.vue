@@ -15,7 +15,7 @@
       /> 
       <!-- //:gameData="gameData" -->
     </v-slide-y-transition>
-    <v-slide-y-transition>
+    <v-slide-y-reverse-transition>
       <v-card outlined elevation="4" :class="`claim`" v-if="showMapControls">
         <v-card-title class="d-flex align-center">
           <div class="col">
@@ -42,7 +42,7 @@
           </div>
         </v-card-text>
       </v-card>
-    </v-slide-y-transition>
+    </v-slide-y-reverse-transition>
     <v-slide-y-transition>
       <v-card outlined elevation="4" :class="`claim ${claimLocation ? 'active' : ''} ${isBattling ? 'battling' : ''}`" v-if="isBattling || claimLocation">
     <v-card-title class="d-flex justify-center">
@@ -226,7 +226,7 @@
       <div class="col col-3 info-column">
         <div class="info-game" v-if="!selectedData">
           <div class="col pa-0 summary-container info-item" v-if="gameData" >
-            <game-info :game="gameData" :expanded="false" />
+            <game-info :game="gameData" :expanded="false" mode="info" />
           </div>
           <div class="row mx-0 my-0 info-item tabs-container">
             <v-card  outlined class="pa-0 card-bg" style="width: 100%;" >
@@ -391,21 +391,24 @@
           <div class="error-message" v-if="gameStatus === 'error'"><label>Error</label>Game Data Not Found</div>
           <Loading message="Loading..." v-if="gameStatus === 'loading'" />
           <div class="map-controls row ma-0" v-if="gameData">
-            <div class="col ">
+            <div class="col pa-1 ">
               <div class="value-controller">
-                <v-btn icon  small @click="setScale(-0.1)"><v-icon>mdi-minus</v-icon></v-btn>
-                <div class="col pa-0">{{scale}}</div>
-                <v-btn icon  small @click="setScale(0.1)"><v-icon>mdi-plus</v-icon></v-btn>
+                <v-btn icon  small @click="setScale(-0.1)"><v-icon>mdi-magnify-minus-outline</v-icon></v-btn>
+                <div class="col pa-0">
+                  <!-- <label>Zoom</label> -->
+                  {{scale}}
+                  </div>
+                <v-btn icon  small @click="setScale(0.1)"><v-icon>mdi-magnify-plus-outline</v-icon></v-btn>
               </div>
             </div>
-            <div class="col">
+            <!-- <div class="col pa-0">
               <div class="value-controller">
                 <v-btn icon small @click="growMap('west')"><v-icon>mdi-arrow-left</v-icon></v-btn>
                 <div>{{gameData.options.cols}}</div>
                 <v-btn icon small  @click="growMap('east')"><v-icon>mdi-arrow-right</v-icon></v-btn>
               </div>
-            </div>
-            <div class="col">
+            </div> -->
+            <div class="col pa-1">
               <div class="value-controller">
                 <v-btn icon small @click="adjustMapSize()"><v-icon>mdi-dots-vertical</v-icon></v-btn>
             
@@ -417,19 +420,19 @@
             v-if="gameStatus !== 'loading'" ref="mapcontainer"
             
           >
-            <div class="map-position map-background" :style="`width: ${mapWidth + 48 + 48}px; height: ${mapHeight + 48 + 48}px;`">
+            <div class="map-position map-background" :style="`width: ${mapWidth + mapPadding}px; height: ${mapHeight + mapPadding}px;`">
                 <div v-if="gameData && gameData.options.mapMode === 'explore' && 1===2" >
                   width: {{mapWidth}}, height: {{mapHeight}}
                 </div>
                 <div
                   class="explore-button-row row-top"
-                  :style="`width: ${mapWidth}px; 
+                  :style="`width: ${mapWidth + mapPadding}px; left: ${mapPadding} 
                     `"
                   >
                   <v-btn
                     class="add-button"
                     rounded
-                    medium 
+                    small 
                     v-tooltip="'Add a row'"
                     @click="growMap('north')" 
                     >
@@ -445,43 +448,42 @@
                   <!-- :style="`width: ${mapWidth}px; height: ${tileSize /2}px; left: ${tileSize}px; top: ${mapHeight + tileSize}px;`" -->
                 <div
                   class="explore-button-row row-bottom"
-                  :style="`width: ${mapWidth}px;top: ${mapHeight + 48}px;`"
+                  :style="`width: ${mapWidth}px; top: ${mapHeight + mapPadding}px; left: ${mapPadding}`"
                   >
                   <v-btn   
                   class="add-button"
                     rounded
                     
-                    medium 
+                    small 
                     v-tooltip="'Add a row'"
                     @click="growMap('south')"><v-icon>mdi-plus</v-icon> Add Row </v-btn>
                 </div>
                 <div
                   class="explore-button-col col-left"
-                  :style="`height: ${mapHeight}px; `"
+                  :style="`height: ${mapHeight + mapPadding}px; `"
                   >
                     <v-btn
                     class="add-button"
                     rounded
-                    outlined
-                    medium 
+                    small
                     v-tooltip="'Add Col'"
                     @click="growMap('west')"><v-icon>mdi-plus</v-icon> West </v-btn>
                 </div>
                 <div
                   class="explore-button-col col-right"
-                  :style="`height: ${mapHeight}px; left: ${mapWidth + 48}px;`"
+                  :style="`height: ${mapHeight}px; left: ${mapWidth + mapPadding}px;`"
                   >
                   <v-btn
                     class="add-button"
                     rounded
-                    medium 
+                    snall 
                     v-tooltip="'Add Col'"
                     @click="growMap('east')" ><v-icon>mdi-plus</v-icon> East </v-btn>
                 </div>
               <div
-              :class="`grid-wrap map-background`"
+              :class="`grid-wrap`"
               draggable="true"
-              :style="gameData && gameData.tileMap && gameData.tileMap[0] && `width: ${mapWidth + 0}px; height: ${mapHeight + 0}px; transform: scale(${scale});`"
+              :style="gameData && gameData.tileMap && gameData.tileMap[0] && `width: ${mapWidth + 0}px; height: ${mapHeight + 0}px; left: ${mapPadding}; top: ${mapPadding}; transform: scale(${scale});`"
               v-if="gameData"
               >
               <Tile
@@ -501,9 +503,9 @@
             </div>
           </div>
           </div>
-            <div class="grid-resize-position east " v-if="gameData">
+            <!-- <div class="grid-resize-position east " v-if="gameData">
               <v-btn icon small  @click="growMap('east')" v-tooltip="'Add a column'"><v-icon>mdi-plus</v-icon></v-btn>
-            </div>
+            </div> -->
             <!-- <div class="grid-resize-position west" v-if="gameData">
               <v-btn icon small  @click="growMap('west')" v-tooltip="'Add a column'"><v-icon>mdi-plus</v-icon></v-btn>
             </div> -->
@@ -582,13 +584,13 @@ export default {
         
     ],
   },
-  created(){
+  async created(){
     const {params} = this.$route;
     const {id} = params;
     const {siteData} = this;
     console.log('created: ', id);
     if(!siteData){
-      this.getConfig();
+      await this.getConfig();
     }
   },
   mounted(){
@@ -603,15 +605,17 @@ export default {
       return
     }
     const {localGames, games} = this;
-    console.log('mounted localGames', localGames)
-    if(!localGames){
-      this.gameStatus="error";
-      return
-    }
+    // const hasGames = games || localGames;
+    
     console.log('mounted id', id)
+    
     const thisGameLocal = localGames.find(game => game.id === id);
     const thisGameRemote = games.find(game => game.id === id);
     const thisGame = thisGameRemote || thisGameLocal;
+    if(!thisGame){
+      this.gameStatus="error";
+      return
+    }
     console.log('mounted thisGame', thisGame)
     console.log('here', this.activeGame)
     console.log('thisgame exists', thisGame, this.activeGame)
@@ -677,6 +681,9 @@ export default {
       const {rows, cols, tileSize = 240} = gameData.options; 
       console.log('rows, cols, tileSize', rows, cols, tileSize)
       return tileSize * rows;
+    },
+    mapPadding(){
+      return 48;
     },
     tileSize(){
       const {gameData} = this; 
@@ -1498,6 +1505,7 @@ $outsideRowSize: 3rem;
       width: $outsideRowSize;
       left: unset;
       right: 0;
+      
     }
     &.col-left, &.col-right{
       .add-button{
@@ -1522,6 +1530,7 @@ $outsideRowSize: 3rem;
   &.map-mode-explore{
     .add-button{
       background: #571b4b;
+      background: var(--line-color);
     }
     // padding: calc(240px);
     .explore-button-row, .explore-button-col{
@@ -1545,8 +1554,17 @@ $outsideRowSize: 3rem;
     lefT: 50%;
     bottom: 0;
     z-index: 90;
-    background: rgba(255,255,255,.1);
+    // background: rgba(255,255,255,.9);
+    // background: var(--line-color);
     border-radius: 0.75rem .75rem 0 0 ;
+    > .col{
+      font-size: .675rem;
+      flex-direction: column;
+      height: 2rem;
+      label{
+        font-size: .675rem;
+      }
+    }
     .value-controller{
       height: 1.5rem;
       background: #444;

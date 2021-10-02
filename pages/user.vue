@@ -4,6 +4,10 @@
     
     <section id="intro" class="row ">
       <div class="col col-3">
+        <div v-if="isDevAddress">
+          dev stuff
+          <v-btn x-small @click="() => setDevMode(!devMode)">Toggle Dev {{devMode ? 'off' : 'on'}}</v-btn>
+        </div>
       </div>
       <div class="col col-9">
         <client-only>
@@ -146,6 +150,7 @@ export default {
       activeContractSymbol: "ui/activeContractSymbol",
       contrastMode: "ui/contrastMode",
       usedContracts: "ui/usedContracts",
+      isDevAddress: "ui/isDevAddress"
     }),
   },
   methods: {
@@ -155,6 +160,7 @@ export default {
       setActiveContractId: "ui/setActiveContractId",
       clearActiveContractId: "ui/clearActiveContractId",
       removeUsedContractId: "ui/removeUsedContractId",
+      setDevMode: "ui/setDevMode",
     }),
     ...mapActions({
       getProfileData: "ui/getProfileData"

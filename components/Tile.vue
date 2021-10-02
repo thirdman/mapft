@@ -35,13 +35,13 @@
       Uncontested 
     </div>
     <div class="blank-info" v-if="tile.meta && !tile.meta.value && !tile.src">
-      <v-icon medium>mdi-help</v-icon>
+      <!-- <v-icon medium>mdi-help</v-icon> -->
       <v-btn outlined small @click="() => {onAction && onAction(tile.location)}" primary>
         <span>Generate</span>
       </v-btn>
-      <v-btn outlined x-small @click="() => {onAction && onAction(tile.location)}" primary>
+      <!-- <v-btn outlined x-small @click="() => {onAction && onAction(tile.location)}" primary>
         <span>Place Tile...</span>
-      </v-btn>
+      </v-btn> -->
       <div v-if="devMode" class="location-info">{{tile.location}}</div>
     </div>
     <!-- <div class="metainfo">
@@ -180,7 +180,7 @@ export default {
     'unit'],
   data() {
     return {
-      devMode: true
+      devMode: false
     };
   },
   created(){

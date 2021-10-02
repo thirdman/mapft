@@ -21,7 +21,7 @@
         <span class="chainname" v-if="hasChainSelect">{{ walletChain }}</span>
         <span class="brandname" @click="goToHome()">{{siteName}}</span>
       </div>
-      <client-only>
+      
 
       <div class="navRow">
         <div class="navItem">
@@ -46,8 +46,7 @@
         </div> -->
       </div>
       <Loading v-if="configStatus === 'working'" />
-      <div class="navAdmin" v-if="isDevAddress">
-        <v-btn x-small @click="() => setDevMode(!devMode)">Toggle Dev {{devMode ? 'off' : 'on'}}</v-btn>
+      <div class="navAdmin" v-if="devMode">
         <v-btn x-small @click="getConfig">get config</v-btn>
         <v-btn x-small @click="updateConfig">updateConfig</v-btn>
       </div>
@@ -83,7 +82,7 @@
 
         
       </div>
-    </client-only>
+    
     </div>
   </header>
 </template>
