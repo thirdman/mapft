@@ -21,6 +21,10 @@ const tileSets = [
     name: "water",
     id: "QmPEDQuK7orQKbKwsw3z8nPJcaAXSwXT4q5E7sdgjaSvpP",
   },
+  {
+    name: "island",
+    id: "Qmd7d6UxQX4Zff7WrnqXsyUc2QaimaKKegghEub9ZaXVkk",
+  },
 ];
 const tileTemplate = {
   id: null,
@@ -527,6 +531,7 @@ export const state = () => ({
   walletNetwork: null,
   profileObject: null,
   ensName: "",
+  ipfsUrl: "https://gateway.pinata.cloud/ipfs/",
   activeContractId: "",
   activeContractName: "",
   activeContractSymbol: "",
@@ -606,6 +611,7 @@ export const getters = {
   walletNetwork: (state) => state.walletNetwork,
   walletStatus: (state) => state.walletStatus,
   ensName: (state) => state.ensName,
+  ipfsUrl: (state) => state.ipfsUrl,
   profileObject: (state) => state.profileObject,
   showSearch: (state) => state.showSearch,
   showTeamSelect: (state) => state.showTeamSelect,
@@ -1044,7 +1050,7 @@ export const actions = {
         owner: owner,
         settings: {
           generateMap: false,
-          tileSetId: "QmPEDQuK7orQKbKwsw3z8nPJcaAXSwXT4q5E7sdgjaSvpP",
+          tileSetId: "Qmd7d6UxQX4Zff7WrnqXsyUc2QaimaKKegghEub9ZaXVkk",
           hasValues: true,
           hasUnits: true,
         },

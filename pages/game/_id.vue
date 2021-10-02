@@ -17,9 +17,11 @@
     </v-slide-y-transition>
     <v-slide-y-transition>
       <v-card outlined elevation="4" :class="`claim`" v-if="showMapControls">
-        <v-card-title class="d-flex justify-center">
-          Options
+        <v-card-title class="d-flex align-center">
           <div class="col">
+            <label>Map Settings</label>
+          </div>
+          <div class="col col-1">
               <v-btn plain @click="() => showMapControls = !showMapControls">
                 <v-icon size="large">mdi-close</v-icon>
               </v-btn>
@@ -27,8 +29,16 @@
         </v-card-title>
         <v-card-text>
           <div class="row">
-          <v-btn   small  @click="growMap('east')" v-tooltip="'Add a column'"><v-icon>mdi-plus</v-icon> East </v-btn>
-          <v-btn   small  @click="growMap('west')" v-tooltip="'Add a column'"><v-icon>mdi-plus</v-icon> West </v-btn>
+            <label>Tile Set</label>
+          </div>
+          <div class="row">
+            <tile-set-select :selected="gameData.options.tileSetId" :onAction="setTileSet" />
+          </div>
+          <div class="row">
+            <v-btn small  @click="growMap('north')" v-tooltip="'Add a row'"><v-icon>mdi-plus</v-icon> Add Row North </v-btn>
+            <v-btn small  @click="growMap('west')" v-tooltip="'Add a column'"><v-icon>mdi-plus</v-icon> Add West Column </v-btn>
+            <v-btn small  @click="growMap('east')" v-tooltip="'Add a column'"><v-icon>mdi-plus</v-icon> Add East Column </v-btn>
+            <v-btn small  @click="growMap('south')" v-tooltip="'Add a row'"><v-icon>mdi-plus</v-icon> Add Row South </v-btn>
           </div>
         </v-card-text>
       </v-card>
@@ -363,6 +373,7 @@
             <v-btn block small outlined @click="() => {this.showNewGameDialog = true}">New Game</v-btn>
             <v-divider />
             <v-btn block small outlined @click="setIntroRead(!introRead)">Show Introduction</v-btn>
+            <v-btn block small outlined @click="setMapSelect(!showMapSelect)">Select Map Style</v-btn>
             </div>
           </div>
           <div class="row">
@@ -388,7 +399,7 @@
             </div>
             <div class="col">
               <div class="value-controller">
-                <v-btn icon small disabled @click="growMap('west')"><v-icon>mdi-arrow-left</v-icon></v-btn>
+                <v-btn icon small @click="growMap('west')"><v-icon>mdi-arrow-left</v-icon></v-btn>
                 <div>{{gameData.options.cols}}</div>
                 <v-btn icon small  @click="growMap('east')"><v-icon>mdi-arrow-right</v-icon></v-btn>
               </div>
@@ -534,6 +545,7 @@ export default {
       showInfo: false,
       showNewGameDialog: false,
       showMapControls: false,
+      showMapSelect: false,
       selectedTile: null,
       selectedData: null,
       claimLocation: null,
@@ -544,6 +556,7 @@ export default {
       showGameOptions: false,
       selectedAsset: null,
       highlightedIndex: null,
+      tileSetId: null,
       tab: "Scores",
       tabs: ['Scores', 'Creatures', 'User'],
       isBattling: false,
@@ -599,6 +612,7 @@ export default {
     } else {
 
       this.activeGameId = id;
+      this.tileSetId = thisGame.options.tileSetId;
       this.setActiveGame(thisGame);
     
       this.loadData(id);
@@ -1302,10 +1316,22 @@ export default {
     compare (a, b, attribute) {
       return a[attribute] - b[attribute];
     },
+    setTileSet(id){
+      const {gameData} = this
+      const tempData = {...gameData};
+      console.log('setTileSet', id, tempData);
+      // tempData.options.tileSetId = id;
+      const tempOptions = {...tempData.options, tileSetId: id};
+      tempData.options = tempOptions;
+      
+      console.log('tempData', tempData, tempOptions)
+      this.testData = tempData;
+      this.applyTestData();
+      this.updateData();
+    },
     setScale(change){
       const newValue = this.scale + change;
       var rounded = Math.round(newValue * 10) / 10
-
       this.scale = rounded
     },
     getColor(team){
@@ -1444,7 +1470,7 @@ $outsideRowSize: 3rem;
     }
     &.col-left, &.col-right{
       .add-button{
-        transform: rotate(90deg);
+        transform: rotate(-90deg);
         transform-origin: center;
       }
 

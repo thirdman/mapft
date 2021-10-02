@@ -2,18 +2,25 @@
   <div class="pageContainer">
     <Header />
     <section class="row hero  content">
-      <div class="col">
-        <h1>Game elements as NFT «» NFT as game elements</h1>
+      <div class="col" >
+        <h1>Game <br />Elements <br />as NFT</h1>
+        <h4>» NFT as Game Elements</h4>
       </div>
+      <!-- <div class="col col-1" style="text-align: center; display: grid; place-items: center; align-self: center">
+       <h1>«<br />»</h1>
+      </div>
+      <div class="col">
+        <h1>NFT as <br />Game <br />Elements</h1>
+      </div> -->
     </section>
     <section class="row ma-0 content">
+      <div class="col col-6 intro-column">
+
+        <img src="~/assets/images/screenshot.png" width="100%" class="hero-image" />
+      </div>
       <div class=" col col-6 intro-column">
         <div class="info-game">
-          <h3>
-            Map, Dungeons, Rooms, and Oh My NFT!
-          </h3>
-          <p class="text-body-2">Exploring possibilities of NFT based gaming.</p>
-            
+          <p class="text-body-1">Exploring possibilities of on-chain based gaming, building resources from elements that are re-usable NFT's - because why shouldn't you be able to use your assets elsewhere?</p>
           <div class="row">
             <div class="col ctaWrap" >
                 <!-- <v-btn @click="() => {router.push('/')}" class="btn hero">Get Started »</v-btn> -->
@@ -25,27 +32,26 @@
           </div>
         </div>
       </div>
-      <div class="col col-6 intro-column">
-
-        <img src="~/assets/images/screenshot.png" width="100%" class="hero-image" />
-      </div>
+      
     </section>
     <section class="row ma-0 content">
         <div class="col col-6 intro-column ">
-          <h3>Make games using the NFT assets you already own</h3>
+          <h2>
+            Maps, Characters, <br />Rewards, and - Oh My NFT!
+          </h2>
+          <h4>Make games using the <br />NFT assets you already own</h4>
         </div>
         <div class="col col-6 intro-column">
-          <p>[name] enables users to create an dplay boardgame-like games, using their NFT's as maps, units, loot and rewards. </p>
           <h3>Goal</h3>
-          <p>Present ideas for how NFT's can be used as game elements, combining assets from different projects in new and interesting ways.</p>
-          <p>Ideally, a systematic approach</p>
-          <p>Replayable games</p>
-          <p>set your own prizes, rules, teams, win conditions</p>
-          <h4>Notes:</h4>
-            <ul style="margin: 0; padding: 0;">
-              <li class="small">Beta functionality: use at your own risk</li>
-              <li class="small">Minting Fee: 0.1</li>
-            </ul>
+          <p>Create and play boardgame-like games, using their NFT's as maps, units, loot and rewards. </p>
+          <h3>Our Dream</h3>
+          <ul>
+          <li>User createable games</li>
+          <li>Use assets from other projects</li>
+          <li>Allow user creatable content</li>
+          <li>Assign prizes to your games, using smart-contract victory conditions</li>
+          </ul>
+          
         </div>
       
     </section>
