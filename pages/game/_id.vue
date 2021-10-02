@@ -493,6 +493,7 @@
                 :index="index"
                 :selected="selectedTile === index"
                 :highlighted="highlightedIndex === index"
+                :hideEmpty="true"
                 :onAction="handleGenerateSelect"
                 :unit="gameData && gameData.settings && gameData.settings.hasUnits && getUnit(tile.location)"
                 />

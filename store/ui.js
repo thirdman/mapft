@@ -1270,7 +1270,10 @@ export const actions = {
         return error;
       });
     console.log("sitedataaa", sitedataaa);
-    // await commit("setSiteData", sitedataaa.record);
+    await commit("setSiteData", sitedataaa);
+    if (sitedataaa.games) {
+      await commit("setGames", sitedataaa.games);
+    }
     await commit("setConfigStatus", "completed");
     // return sitedataaa.record;
   },

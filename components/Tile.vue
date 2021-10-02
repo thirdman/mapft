@@ -31,7 +31,7 @@
         {{tile.meta.defence}}
       </div>
     </div>
-    <div class="emptyinfo" v-if="tile.meta && tile.meta.value && !tile.meta.creature && tile.meta.owner !== walletAddress">
+    <div class="emptyinfo" v-if="!hideEmpty && tile.meta && tile.meta.value && !tile.meta.creature && tile.meta.owner !== walletAddress">
       Uncontested 
     </div>
     <div class="blank-info" v-if="tile.meta && !tile.meta.value && !tile.src">
@@ -166,7 +166,18 @@
 import { mapMutations, mapGetters } from "vuex";
 
 export default {
-  props: ['tile', 'handleSelect', 'selected', 'index', 'size',  'onAction', 'hideAsset', 'fill', 'highlighted', 'unit'],
+  props: [
+    'tile', 
+    'handleSelect', 
+    'selected', 
+    'index', 
+    'size',  
+    'onAction', 
+    'hideAsset', 
+    'hideEmpty', 
+    'fill', 
+    'highlighted', 
+    'unit'],
   data() {
     return {
       devMode: true
