@@ -1096,6 +1096,10 @@ export default {
       
       this.applyTestData()
       this.updateData();
+      const doIt = true;
+      if(doIt){
+        this.handleClaim(location, null, false);
+      }
     },
     async handleGenerateSelect(location, expandMap){
       /** placeholder function */
@@ -1167,7 +1171,7 @@ export default {
       const doIt = true;
       const {selectedTile, selectedData, userTeam, walletAddress, gameData} = this;
       const  {tiles} = this.gameData;
-      
+
         const tempTiles = [...tiles];
         const existingTile = tempTiles[selectedTile];
         console.log('existingTile', existingTile);
@@ -1176,8 +1180,8 @@ export default {
           return false
         }
         const defence = existingTile.meta.defence;
-        const assetAttack = asset.attack.Int64;
-        const assetHealth = asset.health.Int64;
+        const assetAttack = asset && asset.attack.Int64 || 0;
+        const assetHealth = asset && asset.health.Int64 || 0;
         console.log('defence, assetAttack', defence, assetAttack, assetHealth);
         let newDefence = defence;
         let newCreature = asset;
@@ -1259,9 +1263,11 @@ export default {
     },
     compileGameCreatures(asset, location){
       if (!this.gameData) {return}
+      if(!asset){return}
       const {creatures} = this.gameData;
-      const id = asset.id.Int64 || asset.id;
+      const id = asset && (asset.id.Int64 || asset.id);
       const tempCreatures = [...creatures];
+      if(!id){return}
       tempCreatures.push(id)
       // this.setCreatures(tempCreatures)
       return tempCreatures
