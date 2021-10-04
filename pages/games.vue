@@ -33,7 +33,7 @@
 
 
             </div>
-            <div v-for="(game, index) in games" :key="index" class="row">
+            <div v-for="(game, index) in games" :key="index" class="row" v-if="devMode">
               <div class="col col-12">
               <game-info :game="game" :expanded="false" />
               </div>

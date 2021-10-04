@@ -15,6 +15,52 @@
       /> 
       <!-- //:gameData="gameData" -->
     </v-slide-y-transition>
+    <v-slide-y-transition>
+      <v-card outlined elevation="4" :class="`claim join`" v-if="showJoin">
+        <v-card-title class="row d-flex align-center">
+          <div class="col">
+            Join Game
+          </div>
+          <div class="col col-1">
+              <v-btn icon @click="() => this.showJoin = false">
+                <v-icon size="large">mdi-close</v-icon>
+              </v-btn>
+            </div>
+        </v-card-title>
+        <v-card-text>
+          
+          <div class="row">
+            <div class="col">
+              <label>Team</label>
+              <team-select
+                :team="userTeam"
+                :teams="gameTeams"
+                direction="row"
+                :onSelect="handleTeamSelect"
+                />  
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label>Display Name</label>
+              <v-text-field small filled clearable outlined dense v-model="newUserName" hint="Display Name" />
+            </div>
+          </div>
+          <v-divider />
+          <div class="row">
+            <div class="col">
+              <label>Preview</label>
+              <div class="user preview">
+                <player-info :player="userPlayer" :address="walletAddress" preview />
+              </div>
+            </div>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="addPlayer">Join!</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-slide-y-transition>
     <v-slide-y-reverse-transition>
       <v-card outlined elevation="4" :class="`claim`" v-if="showMapControls">
         <v-card-title class="d-flex align-center">
@@ -320,21 +366,24 @@
         <div class="row ma--4 mt-0  info-item options-row">
           <div class="col pa-0">
             <v-divider class="my-0" />
-            <div class="row ma-0 pa-1">
+            <div class="row ma-0 pa-1 d-flex justify-stretch align-center">
               <div class="col pa-0 d-flex justify-stretch align-center" style="height: 100%;">
                 <v-btn plain @click="() => showGameOptions = !showGameOptions">
                   <v-icon size="large">mdi-cog</v-icon>
                 <div>Options</div>
                 </v-btn>
-                <v-divider vertical class="mx-4" />
-                <v-card outlined  class="pa-1" >
-                  <div :class="`controller ${userTeam}`" v-if="userTeam">
-                    Team {{userTeam}} 
-                  </div>
-                </v-card>
               </div>
-              
+              <v-divider vertical class="mx-2" />
+              <div class="col pa-0">
+                <player-info :player="userPlayer" />
+                <!-- <v-card outlined  class="pa-1" >
+                    <div :class="`controller ${userTeam}`" v-if="userTeam">
+                      Team {{userTeam}} 
+                    </div>
+                  </v-card> -->
+                </div>
             </div>
+            
           </div>
         </div>
        </div>
@@ -367,6 +416,7 @@
           <div class="row">
             <div class="col">
             <v-btn block outlined @click="setShowTeamSelect(!showTeamSelect)">Show Team Select</v-btn>
+            <v-btn block outlined @click="() => this.showJoin = !showJoin">Join Game</v-btn>
             <v-btn block outlined @click="resetGame">Reset Game</v-btn>
             <v-btn block outlined @click="highlightTeam(userTeam)">Highlight team tiles</v-btn>
             <v-divider />
@@ -519,6 +569,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import {calculateTile, compileTile} from "../../utils/generate"
+import { v4 as uuidv4 } from 'uuid';
 const BASE_URL = "https://unknowngame.site"
 import ogImagePreview from '~/assets/images/preview.png'
 import { dialog } from '@devlop-ab/dialog';
@@ -527,9 +578,11 @@ import AssetList from '../../components/AssetList.vue';
 import DialogIntro from '../../components/DialogIntro.vue';
 import DialogTeamSelect from '../../components/DialogTeamSelect.vue';
 import MapMini from '../../components/MapMini.vue';
+import PlayerInfo from '../../components/PlayerInfo.vue'
+import TeamSelect from '../../components/TeamSelect.vue'
  
 export default {
-  components: { DialogTeamSelect, MapMini },
+  components: { DialogTeamSelect, MapMini, PlayerInfo, TeamSelect },
   name: 'ViewPageParams',
   data() {
     
@@ -558,6 +611,8 @@ export default {
       showSelectAsset: true,
       showGenerate: false,
       showGameOptions: false,
+      showJoin: false,
+      newUserName: "New Player",
       selectedAsset: null,
       highlightedIndex: null,
       tileSetId: null,
@@ -656,6 +711,11 @@ export default {
       demoData: 'ui/demoData',
       tileTemplate: 'ui/tileTemplate'
     }),
+    userPlayer(){
+      const {walletAddress, userTeam, newUserName} = this;
+      const color = userTeam && this.getColor(userTeam)
+      return {walletAddress, id: walletAddress, displayName: newUserName, team: userTeam, color: color}
+    },
     theTile(){
       const {gameData, selectedTile} = this;
       const {tiles} = gameData
@@ -716,6 +776,23 @@ export default {
     handleTeamSelect(teamObj){
       const userTeam = teamObj.team;
       this.setUserTeam(userTeam);
+    },
+    addPlayer(){
+      const {gameData, userPlayer} = this;
+      const {players} = gameData;
+      const newId = uuidv4();
+      const newPlayer = {...userPlayer}
+      if(!newPlayer.id){
+        newPlayer.id = newId;
+      }
+      const tempPlayers = [...players, newPlayer];
+      console.log('players', players, newId, tempPlayers);
+      const tempData = {...gameData}
+      tempData.players = tempPlayers;
+      console.log('tempData', tempData)
+      this.testData = tempData;
+      this.applyTestData();
+      this.showJoin = false;
     },
     getUnit(location){
       const {units} = this;
