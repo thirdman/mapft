@@ -91,6 +91,38 @@
             </div>  
         </div>
       </div>
+      <v-divider />
+        <div class="row">
+          <div class="col">
+            <label >Map Mode</label>
+            <v-btn-toggle
+                mandatory
+                dense
+              >
+                <v-btn
+                  @click="() => this.optionMapMode = 'explore'"
+                  x-small
+                  v-tooltip="`Expand map by placing tiles`" :color="optionMapMode === 'explore' ? 'primary' : ''">
+                  Explore
+                </v-btn>
+                <v-btn
+                  @click="() => this.optionMapMode = 'hidden'"
+                  x-small
+                  v-tooltip="`Fixed map size with hidden tiles.`" :color="optionMapMode === 'hidden' ? 'primary' : ''">
+                  Hidden
+                </v-btn>
+                <v-btn
+                  @click="() => this.optionMapMode = 'static'"
+                  x-small v-tooltip="`Visible Fixed Map.`"
+                  :color="optionMapMode === 'static' ? 'primary' : ''">
+                  Visible
+                </v-btn>
+              </v-btn-toggle>
+              <div class="py-1 text-body-2 support-text" v-if="optionMapMode === 'explore'">Expand map by placing tiles. Linited by the number of tiles available.</div>
+              <div class="py-1 text-body-2 support-text" v-if="optionMapMode === 'hidden'">Fixed size map, tiles initially hidden from players.</div>
+              <div class="py-1 text-body-2 support-text" v-if="optionMapMode === 'static'">Fixed size map, tiles visible to players.</div>
+          </div>
+        </div>
       <div class="row">
         <div class="col">
           <label>Rows</label>
@@ -122,7 +154,44 @@
           <map-preview :rows="newRows" :cols="newCols" />
         </div>
       </div>
+      <div class="row">
+          <div class="col">
+            <label >Map Style</label>
+            <tile-set-select :selected="tileSetId" :onAction="setTileSet" v-if="tileSets" />
+            <!-- <div v-if="tileSets">
+              <div v-for="(set, i) in tileSets" :key="i">
+                <v-btn small :color="set.id === tileSetId ? 'primary' : '' " @click="() => setTileSet(set.id)">{{set.name}}{{set.id}}</v-btn>
+              </div>
+            </div> -->
+            <!-- <v-btn-toggle
+                v-model="toggle_tileset"
+                mandatory
+                dense
+              >
+                <v-btn x-small v-tooltip="`Basic dungeon rooms (16 variations)`" :color="toggle_tileset === 0 ? 'primary' : ''">
+                  Default
+                </v-btn>
+
+                <v-btn  x-small disabled v-tooltip="`Coming Soon`">
+                  Castle
+                </v-btn >
+
+                <v-btn x-small disabled v-tooltip="`Coming Soon: Upload your own style`">
+                  Custom
+                </v-btn>
+              </v-btn-toggle> -->
+          </div>
+        </div>
       <v-divider />
+      <div class="row" >
+        <div class="col ">
+          <label>Title</label><br />
+            <v-text-field small filled clearable outlined dense v-model="gameTitle" hint="Name for easy identification">
+          </v-text-field>
+        </div>
+      </div>
+      <v-divider />
+      
         <div class="row">
           <div class="col">
             <label >Mechanic</label>
@@ -151,67 +220,8 @@
             </div>
           </div>
         </div>
-        <v-divider />
-        <div class="row">
-          <div class="col">
-            <label >Map Mode</label>
-            <div class="text-body-2">How the Map will work</div>
-                <!-- v-model="toggle_tileset" -->
-            <v-btn-toggle
-                mandatory
-                dense
-              >
-                <v-btn
-                  @click="() => this.optionMapMode = 'explore'"
-                  x-small
-                  v-tooltip="`Expand map by placing tiles`" :color="optionMapMode === 'explore' ? 'primary' : ''">
-                  Explore
-                </v-btn>
-                <v-btn
-                  @click="() => this.optionMapMode = 'hidden'"
-                  x-small
-                  v-tooltip="`Fixed map size with hidden tiles.`" :color="optionMapMode === 'hidden' ? 'primary' : ''">
-                  Hidden
-                </v-btn>
-                <v-btn
-                  @click="() => this.optionMapMode = 'static'"
-                  x-small v-tooltip="`Visible Fixed Map.`"
-                  :color="optionMapMode === 'static' ? 'primary' : ''">
-                  Visible
-                </v-btn>
-              </v-btn-toggle>
-          </div>
-        </div>
-        <v-divider />
-        <div class="row">
-          <div class="col">
-            <label >Map Set</label>
-            <!-- <div class="text-body-2">Tile Map Style</div> -->
-            {{tileSetId || 'not set'}}
-            <div v-if="tileSets">
-              <div v-for="(set, i) in tileSets" :key="i">
-                <v-btn small :color="set.id === tileSetId ? 'primary' : '' " @click="() => setTileSet(set.id)">{{set.name}}{{set.id}}</v-btn>
-              </div>
-            </div>
-            <v-btn-toggle
-                v-model="toggle_tileset"
-                mandatory
-                dense
-              >
-                <v-btn x-small v-tooltip="`Basic dungeon rooms (16 variations)`" :color="toggle_tileset === 0 ? 'primary' : ''">
-                  Default
-                </v-btn>
-
-                <v-btn  x-small disabled v-tooltip="`Coming Soon`">
-                  Castle
-                </v-btn >
-
-                <v-btn x-small disabled v-tooltip="`Coming Soon: Upload your own style`">
-                  Custom
-                </v-btn>
-              </v-btn-toggle>
-          </div>
-        </div>
+        
+        
         </v-card-text>
         <v-divider class="ma-0"></v-divider>
         <v-card-actions >
@@ -235,14 +245,20 @@
 <style lang="scss">
 .new-game-settings{}
   
+  .support-text{
+    font-style: italic;
+    opacity: .8;
+    font-size: .675rem;
+  }
 </style>
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
 import MapPreview from './MapPreview.vue';
+import TileSetSelect from './TileSetSelect.vue';
 
 export default {
-  components: { MapPreview },
+  components: { MapPreview, TileSetSelect },
   props: ['onAction', 'onClose', 'show', 'rows', 'cols'],
   data() {
     return {
@@ -256,6 +272,7 @@ export default {
       optionUseLimitedTileSet: false,
       optionMapExpandable: true,
       optionMapMode: 'explore',
+      gameTitle: "New Game",
       toggle_mechanic: null,
       tileSetId: 'QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me',
       toggle_tileset: 0,
@@ -274,8 +291,8 @@ export default {
       tileSets: "ui/tileSets",
     }),
     compiledOptions(){
-      const {newRows, newCols, optionUseDefault, optionMapMode, generateMap, walletAddress, tileSetId} = this
-      const options = {rows: newRows, cols: newCols, useDefaultTeams: optionUseDefault, generateMap, owner: walletAddress, mapMode: optionMapMode, tileSetId}
+      const {newRows, newCols, optionUseDefault, optionMapMode, generateMap, walletAddress, tileSetId, gameTitle} = this
+      const options = {rows: newRows, cols: newCols, useDefaultTeams: optionUseDefault, generateMap, owner: walletAddress, mapMode: optionMapMode, tileSetId, title: gameTitle}
       return options;
     }
   },

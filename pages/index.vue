@@ -13,15 +13,22 @@
         <h1>NFT as <br />Game <br />Elements</h1>
       </div> -->
     </section>
-    <section class="row ma-0 content">
+    <section class="row ma-0 content d-flex align-center">
       <div class="col col-6 intro-column">
 
         <img src="~/assets/images/screenshot.png" width="100%" class="hero-image" />
       </div>
       <div class=" col col-6 intro-column">
         <div class="info-game">
-          <p class="text-body-1">Exploring possibilities of on-chain based gaming, building resources from elements that are re-usable NFT's - because why shouldn't you be able to use your assets elsewhere?</p>
-          <div class="row">
+          <h4>Create and play boardgame-like games using the NFT assets you already own</h4>
+          <!-- <p>Create and play boardgame-like games, using their NFT's as maps, units, loot and rewards. </p> -->
+          <ul>
+          <li>User createable games</li>
+          <li>Use assets from other projects</li>
+          <li>Allow user creatable content</li>
+          <li>Assign prizes to your games, using smart-contract victory conditions</li>
+          </ul>
+          <div class="row" v-if="devMode">
             <div class="col ctaWrap" >
                 <!-- <v-btn @click="() => {router.push('/')}" class="btn hero">Get Started »</v-btn> -->
                 <nuxt-link to="/game/demo" class="btn hero asButton">Get Started »</nuxt-link>
@@ -34,7 +41,7 @@
       </div>
       
     </section>
-    <section class="row ma-0 content">
+    <!-- <section class="row ma-0 content ">
         <div class="col col-6 intro-column ">
           <h2>
             Maps, Characters, <br />Rewards, and - Oh My NFT!
@@ -42,30 +49,30 @@
           <h4>Make games using the <br />NFT assets you already own</h4>
         </div>
         <div class="col col-6 intro-column">
-          <h3>Goal</h3>
-          <p>Create and play boardgame-like games, using their NFT's as maps, units, loot and rewards. </p>
-          <h3>Our Dream</h3>
-          <ul>
-          <li>User createable games</li>
-          <li>Use assets from other projects</li>
-          <li>Allow user creatable content</li>
-          <li>Assign prizes to your games, using smart-contract victory conditions</li>
-          </ul>
-          
         </div>
-      
-    </section>
+    </section> -->
     <Footer />
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   head: {
     title: 'About',
     // meta: [
     //   { hid: 'description', name: 'description', content: 'View a cool nft' },
     // ],
+  },
+  data() {
+    return {
+
+    }
+  },
+  computed: {
+    ...mapGetters({
+      devMode: "ui/devMode",
+    })
   }
 }
 </script>

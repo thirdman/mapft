@@ -5,7 +5,6 @@
     <section id="intro" class="row ">
       <div class="col col-3">
         <div v-if="isDevAddress">
-          dev stuff
           <v-btn x-small @click="() => setDevMode(!devMode)">Toggle Dev {{devMode ? 'off' : 'on'}}</v-btn>
         </div>
       </div>

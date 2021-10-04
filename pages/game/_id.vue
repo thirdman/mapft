@@ -607,10 +607,10 @@ export default {
     const {localGames, games} = this;
     // const hasGames = games || localGames;
     
-    console.log('mounted id', id)
+    console.log('mounted id', id, games)
     
-    const thisGameLocal = localGames.find(game => game.id === id);
-    const thisGameRemote = games.find(game => game.id === id);
+    const thisGameLocal = localGames && localGames.find(game => game.id === id);
+    const thisGameRemote = games && games.find(game => game.id === id);
     const thisGame = thisGameRemote || thisGameLocal;
     if(!thisGame){
       this.gameStatus="error";
@@ -854,8 +854,8 @@ export default {
         console.log('Game id exists, load data', id, activeGame)
         if(!activeGame){
           console.log('no activegame, setting', localGames)
-          const thisGameRemote = games.find(game => game.id === id);
-          const thisGameLocal = localGames.find(game => game.id === id);
+          const thisGameRemote = games && games.find(game => game.id === id);
+          const thisGameLocal = localGames && localGames.find(game => game.id === id);
           tempGame = thisGameRemote || thisGameLocal;
           console.log('tempGame', tempGame)
           this.setActiveGame(tempGame);

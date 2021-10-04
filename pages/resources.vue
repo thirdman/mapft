@@ -59,12 +59,10 @@
       </div>
       <div class="col col-6 intro-column">
           <div class="row">
-            <p class="text-body">16 variations designed to join for infinite variation.</p>
-            <!-- <img src="https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/6.png" width="100%" class="hero-image" style="background: url(https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/0.jpg) top left no-repeat; background-size: 100%;" /> -->
-            <div class="example=tile-row">
-              
+            <p class="text-body">16 variations designed to join for infinite tiling.</p>
+            <img :src="`https://ipfs.cf-ipfs.com/ipfs/${tileSetId}/6.png`" width="100%" class="hero-image" />
+            <div class="example-tile-row">
               <img v-for="(img, index) in tileIndexArray" :key="index" :src="`https://ipfs.cf-ipfs.com/ipfs/${tileSetId}/${img}.png`" width="110px" class="hero-image-preview" style="" />
-              
             </div>
           </div>
           <div class="row">
@@ -118,12 +116,14 @@ export default {
 <style lang="scss">
   .example-tile-row{
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: flex-start;
+    margin:  1rem 0;
   }
   .hero-image-preview {
     border: 1px solid white;
     box-shadow: 0 2px 7px black;
-    margin: 4px;
+    margin: 0 0 .5rem .5rem;
   }
 </style>

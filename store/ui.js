@@ -532,7 +532,7 @@ export const state = () => ({
   walletNetwork: null,
   profileObject: null,
   ensName: "",
-  ipfsUrl: "https://gateway.pinata.cloud/ipfs/",
+  ipfsUrl: "https://ipfs.cf-ipfs.com/ipfs/",
   activeContractId: "",
   activeContractName: "",
   activeContractSymbol: "",
@@ -1227,6 +1227,7 @@ export const actions = {
     const { commit, rootState, state } = context;
     const { $axios } = this;
     const { game, games } = props;
+    console.log("updateConfig props", props);
 
     const {
       svgFormStore: { svgData, activeTheme },
@@ -1234,7 +1235,8 @@ export const actions = {
     const { siteData } = state;
     const tempData = { ...siteData };
     const currentGames = siteData.games || [];
-    const tempGames = [...currentGames, game];
+    const tempGames = [...currentGames];
+
     // const newImage = { ...svgData, theme: activeTheme };
     // const newGame = { aaa: "bbb" };
 

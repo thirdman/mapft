@@ -5,7 +5,7 @@
       <div
         v-for="(set, i) in tileSets"
         :key="i"
-        class="select-option col pa-1"
+        class="select-option colsss pa-1"
         :class="set.id === selected ? 'selected' : '' "
         @click="() => setTileSet(set.id)"
         >

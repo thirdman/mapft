@@ -10,7 +10,7 @@
       <div class="col col-3 intro-column">
         <div class="info-game">
           <h3>
-            Generate your own
+            Generate a Map
           </h3>
           <p class="text-body-2">Exploring possibilities of NFT based gaming.</p>
           <!-- <v-btn block small outlined @click="() => {this.showNewGameDialog = true}">New Game</v-btn> -->
@@ -19,13 +19,13 @@
               <nuxt-link to="/game/demo" class="asButton">View Demo</nuxt-link>
             </div>
           </div>
-          <div v-if="activeGame">
+          <div v-if="activeGame && devMode">
             activeGame: {{activeGame.id}}
           </div>
           
         </div>
       </div>
-      <div class="col col-9">
+      <div class="col col-9" v-if="!devMode">
         <h2>
           Generate Game
         </h2>
@@ -65,6 +65,9 @@
 
           </div>
       </div>
+       <div class="col col-9" v-else>
+         To be built :D
+       </div>
     </section>
     <Footer />
   </div>
@@ -97,6 +100,7 @@ export default {
       games: 'ui/games',
       localGames: 'ui/localGames',
       activeGame: 'ui/activeGame',
+      devMode: "ui/devMode",
     })
   },
   methods: {
