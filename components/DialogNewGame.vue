@@ -192,33 +192,61 @@
       </div>
       <v-divider />
       
-        <div class="row">
-          <div class="col">
-            <label >Mechanic</label>
-            <div class="text-body-2">How will this game work?</div>
-            <v-btn-toggle
-                v-model="toggle_mechanic"
-                mandatory
-                dense
-              >
-                <v-btn x-small v-tooltip="`Control the entire board.`" :color="toggle_mechanic === 0 ? 'primary' : ''">
-                  Conquest
-                </v-btn>
+      <div class="row">
+        <div class="col">
+          <label >Loot</label>
+          <div class="text-body-2">Loot Tiles?</div>
+              <!-- v-model="toggle_mechanic" -->
+            
+          <v-switch
+              v-model="optionUseLootGeneration"
+              :label="`${optionUseLootGeneration ? 'Yes' : 'no'}`"
+              v-tooltip="`Assign loot rewards to tiles`"
+            ></v-switch>
+            <v-text-field v-model="optionLootCount" />
+        </div>
+        <div class="col">
+          <label >Creatures</label>
+          <div class="text-body-2">Assign Creatures</div>
+              <!-- v-model="toggle_mechanic" -->
+            
+            <v-switch
+                v-model="optionUseCreatureGeneration"
+                :label="`${optionUseCreatureGeneration ? 'Yes' : 'no'}`"
+                v-tooltip="`Assign Creatures to tiles`"
+              ></v-switch>
+              <v-text-field v-model="optionCreatureCount" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label >Mechanic</label>
+          <div class="text-body-2">How will this game work?</div>
+          <v-btn-toggle
+              v-model="toggle_mechanic"
+              mandatory
+              dense
+            >
+              <v-btn x-small v-tooltip="`Control the entire board.`" :color="toggle_mechanic === 0 ? 'primary' : ''">
+                Conquest
+              </v-btn>
 
-                <v-btn  x-small disabled v-tooltip="`Coming Soon: Capture opponent team tile`">
-                  Capture the Flag
-                </v-btn >
+              <v-btn  x-small disabled v-tooltip="`Coming Soon: Capture opponent team tile`">
+                Capture the Flag
+              </v-btn >
 
-                <v-btn  disabled x-small v-tooltip="`Coming Soon: Leading team after timeframe.`">
-                  Timed
-                </v-btn>
+              <v-btn  disabled x-small v-tooltip="`Coming Soon: Leading team after timeframe.`">
+                Timed
+              </v-btn>
 
-                <v-btn x-small disabled v-tooltip="`Coming Soon: Most value Explorred Tiles`">
-                  Exploration
-                </v-btn>
-              </v-btn-toggle>
-            </div>
+              <v-btn x-small disabled v-tooltip="`Coming Soon: Most value Explorred Tiles`">
+                Exploration
+              </v-btn>
+            </v-btn-toggle>
           </div>
+        </div>
+
+
         </div>
         
         
@@ -270,6 +298,10 @@ export default {
       optionUseDefault: true,
       optionUsePlayerUnits: false,
       optionUseLimitedTileSet: false,
+      optionUseLootGeneration: false,
+      optionLootCount: 3,
+      optionUseCreatureGeneration: false,
+      optionCreatureCount: 3,
       optionMapExpandable: true,
       optionMapMode: 'explore',
       gameTitle: "New Game",
@@ -291,8 +323,18 @@ export default {
       tileSets: "ui/tileSets",
     }),
     compiledOptions(){
-      const {newRows, newCols, optionUseDefault, optionMapMode, generateMap, walletAddress, tileSetId, gameTitle} = this
-      const options = {rows: newRows, cols: newCols, useDefaultTeams: optionUseDefault, generateMap, owner: walletAddress, mapMode: optionMapMode, tileSetId, title: gameTitle}
+      const {newRows, newCols, optionUseDefault, optionMapMode, generateMap, walletAddress, tileSetId, gameTitle, optionUseLootGeneration,
+        optionLootCount, 
+        optionUseCreatureGeneration,
+        optionCreatureCount} = this
+      const options = {
+        rows: newRows, 
+        cols: newCols, 
+        optionUseLootGeneration,
+        optionLootCount,
+        optionUseCreatureGeneration,
+        optionCreatureCount,
+        useDefaultTeams: optionUseDefault, generateMap, owner: walletAddress, mapMode: optionMapMode, tileSetId, title: gameTitle}
       return options;
     }
   },

@@ -1009,7 +1009,16 @@ export const mutations = {
 
 export const actions = {
   generateGame(context, payload) {
-    const { rows, cols, owner, tileSetId } = payload;
+    const {
+      rows,
+      cols,
+      owner,
+      tileSetId,
+      optionUseLootGeneration,
+      optionLootCount,
+      optionUseCreatureGeneration,
+      optionCreatureCount,
+    } = payload;
     const options = { ...payload };
     const id = uuidv4();
     console.log("generate Game", payload);
@@ -1047,7 +1056,34 @@ export const actions = {
     console.log("newTileMap", newTileMap);
     console.log("compiledLocations", compiledLocations);
     console.log("flatLocations", flatLocations);
-
+    const staticCreatureLocations = true;
+    const staticLootLocations = true;
+    // const creatureArray =
+    //   optionUseCreatureGeneration && new Array(optionCreatureCount).fill();
+    const creatureLocations = getRandomFromArray(
+      flatLocations,
+      optionCreatureCount
+    );
+    console.log("creatureLocations", creatureLocations);
+    const lootLocations = getRandomFromArray(flatLocations, optionLootCount);
+    const creaturesArray = creatureLocations.map((loc, i) => {
+      const obj = {
+        location: loc,
+        asset: null,
+        used: false,
+      };
+      return obj;
+    });
+    console.log("creaturesArray", creaturesArray);
+    const lootArray = lootLocations.map((loc, i) => {
+      const obj = {
+        location: loc,
+        asset: null,
+        used: false,
+      };
+      return obj;
+    });
+    console.log("lootArray", lootArray);
     if (id) {
       const tempGames = localGames.slice();
       const thisGame = {
@@ -1062,10 +1098,18 @@ export const actions = {
           tileSetId: tileSetId,
           hasValues: true,
           hasUnits: true,
+          hasLoot: optionUseLootGeneration,
+          hasCreatures: optionUseCreatureGeneration,
         },
         map: {
           rows: rows,
           cols: cols,
+        },
+        discover: {
+          creatures: creaturesArray,
+          loot: lootArray,
+          assets: null,
+          chances: null,
         },
         creatures: [],
         players: [owner],
@@ -1508,3 +1552,16 @@ export const actions = {
     }
   },
 };
+function getRandomFromArray(arr, n) {
+  var result = new Array(n),
+    len = arr.length,
+    taken = new Array(len);
+  if (n > len)
+    throw new RangeError("getRandom: more elements taken than available");
+  while (n--) {
+    var x = Math.floor(Math.random() * len);
+    result[n] = arr[x in taken ? taken[x] : x];
+    taken[x] = --len in taken ? taken[len] : len;
+  }
+  return result;
+}

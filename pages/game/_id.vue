@@ -551,6 +551,8 @@
                 :hideEmpty="true"
                 :onAction="handleGenerateSelect"
                 :unit="gameData && gameData.settings && gameData.settings.hasUnits && getUnit(tile.location)"
+                :loot="gameData && gameData.settings && gameData.settings.hasLoot && getLoot(tile.location)"
+                :creature="gameData && gameData.settings && gameData.settings.hasCreatures && getCreature(tile.location)"
                 />
               
             </div>
@@ -828,10 +830,26 @@ export default {
 
       //   });
        const thisUnit = units.find(u => u.location.toString() === stringLocation);
-       
          return thisUnit
-       
+    },
+    getLoot(location){
+      if(!this.gameData && this.gameData.discover){return}
+      const {discover} = this.gameData;
+      const lootArray = discover && discover.loot;
       
+      const stringLocation = location.toString();
+      const thisLoot = lootArray.find(u => u.location.toString() === stringLocation);
+      return thisLoot
+    },
+    getCreature(location){
+      if(!this.gameData && this.gameData.discover){return}
+      const {discover} = this.gameData;
+      const creatureArray = discover && discover.creatures;
+      
+      const stringLocation = location.toString();
+      const thisCreature = creatureArray.find(u => u.location.toString() === stringLocation);
+      console.log('thisCreature', thisCreature)
+      return thisCreature
     },
     handleAutoFill(){
       

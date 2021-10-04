@@ -66,6 +66,12 @@
             </div>
           </div>
           <div class="row">
+            <img :src="`https://ipfs.cf-ipfs.com/ipfs/${tileSetId2}/14.png`" width="100%" class="hero-image" />
+            <div class="example-tile-row">
+              <img v-for="(img, index) in tileIndexArray" :key="index" :src="`https://ipfs.cf-ipfs.com/ipfs/${tileSetId2}/${img}.png`" width="110px" class="hero-image-preview" style="" />
+            </div>
+          </div>
+          <!-- <div class="row">
             <p class="text-body">16 variations designed to join for tiling in infinite directions.</p>
             <img src="https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/6.png" width="100%" class="hero-image" style="background: url(https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/0.jpg) top left no-repeat; background-size: 100%;" />
             <div class="example=tile-row">
@@ -86,7 +92,7 @@
               <img src="https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/15.png" width="120px" class="hero-image-preview" style="" />
               <img src="https://ipfs.cf-ipfs.com/ipfs/QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me/0.jpg" width="120px" class="hero-image-preview" style="" />
             </div>
-          </div>
+          </div> -->
 
       </div>
     </section>
@@ -107,7 +113,8 @@ export default {
       tileIndexArray: [
 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
       ],
-      tileSetId: 'Qmd7d6UxQX4Zff7WrnqXsyUc2QaimaKKegghEub9ZaXVkk'
+      tileSetId: 'Qmd7d6UxQX4Zff7WrnqXsyUc2QaimaKKegghEub9ZaXVkk',
+      tileSetId2: 'QmQJXpkHNUkf5Y1LfKCYeLPZ2akZfeyoaBVUayQYreJ3ok'
     }
   }
 }

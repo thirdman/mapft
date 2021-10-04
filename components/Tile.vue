@@ -20,6 +20,12 @@
      
       <!-- :style="fill ? `width: 100%; height: auto` : `width:` " -->
     <Card  :asset="tile.meta.creature" v-if="!hideAsset && tile.meta.creature && tile.meta.creature.id" :showmeta="false" :card="false" />
+    <div v-if="creature && tile.src" class="tile-creature">
+      <v-icon large color="lime">mdi-ghost</v-icon>
+    </div>
+    <div v-if="loot && tile.src" class="tile-loot">
+      <v-icon large color="lime">mdi-sack</v-icon>
+    </div>
     <!-- <img v-if="tile.meta && tile.meta.creatureSrc" :src="tile.meta.creatureSrc" width="100px" class="creature-image" /> -->
     <div class="tile-current" v-if="tile.meta && tile.meta.value">
       <div class="tile-team"  v-tooltip="tile.meta.team ? `${tile.meta.team} controls this tile` : 'Tile Controller'"  :class="tile.meta.team" :style="`background: ${tile.meta.team ? getColor(tile.meta.team) : ''}`"></div>
@@ -132,6 +138,40 @@
   justify-content: center;
   height: 100%;
 }
+.tile-loot{
+  position: absolute;
+  top: calc(50% - 1.5rem);
+  left: calc(50% - 1.5rem);
+  // color: gold;
+  width: 3rem;
+  height: 3rem;
+  // background: gold;
+  display: grid;
+  place-content: center;
+  .v-icon::before{
+    color: var(--background-color);
+    text-shadow: 0 2px .5rem rgba(0, 0, 0, 0.5);
+  }
+  
+}
+.tile-creature{
+  position: absolute;
+  top: calc(50% - 1.5rem);
+  left: calc(50% - 1.5rem);
+  color: #eee;
+  width: 3rem;
+  height: 3rem;
+  // background: gold;
+  display: grid;
+  place-content: center;
+  .v-icon::before{
+    color: var(--background-color);
+    text-shadow: 0 2px .5rem rgba(0, 0, 0, 0.5);
+  }
+  + .tile-loot{
+    left: calc(50% + 1.5rem);
+  }
+}
 </style>
 
 <script>
@@ -150,7 +190,9 @@ export default {
     'hideEmpty', 
     'fill', 
     'highlighted', 
-    'unit'],
+    'unit',
+    'loot',
+    'creature'],
   data() {
     return {
       devMode: false

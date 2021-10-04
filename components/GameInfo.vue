@@ -34,10 +34,22 @@
           </div>
         </div>
         <div class="row">
-          <div class="col">
+          <!-- <div class="col">
             <label>ID</label>
             <div class="game-label" >
               {{game.id}}
+            </div>
+          </div> -->
+          <div class="col">
+            <label>Loot</label>
+            <div class="game-label" >
+              {{game.settings.hasLoot ? "Yes" : "No"}}
+            </div>
+          </div>
+          <div class="col">
+            <label>Creatures</label>
+            <div class="game-label" >
+              {{game.settings.hasCreatures ? "Yes" : "No"}}
             </div>
           </div>
           <div class="col">
