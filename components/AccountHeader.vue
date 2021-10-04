@@ -2,7 +2,7 @@
   <div class="account-header row" v-if="walletAddress">
         <div class="col">
           <div class="row">
-          <div class="col">
+          <div class="col col-3">
             <div class="userAvatar shadow">
               <img class="userAvatarImage"
                 :src="getProfileImage(profileObject.profileImageHash)"
@@ -15,13 +15,13 @@
               />
             </div>
           </div>
-          <div class="col">
+          <div class="col col-9">
             <h4 v-if="profileObject && profileObject.name">{{profileObject && profileObject.name}}</h4>
             <div class="subtitle">{{ walletName }}</div>
           </div>
         </div>
         
-        <div class="row">
+        <!-- <div class="row">
           <div class="col">
             <Button
               @click="handleDisconnect"
@@ -31,8 +31,8 @@
             >
               Disconnect
             </Button>
-          </div>
-        </div>
+            </div>
+          </div> -->
         </div>
       </div>
 </template>

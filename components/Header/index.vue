@@ -66,6 +66,17 @@
           v-tooltip="'Connect your Web3 Wallet'"
           id="connectButton"
           >Connnect</Button>
+          <v-btn
+          small 
+          outlined
+          rounded
+          @click="handleFakeConnect"
+          v-if="!walletAddress"
+          mode="secondary"
+          v-tooltip="'Create Demo Profile'"
+          >
+          Example Account
+          </v-btn>
         </client-only>
         <client-only>
           <div class="walletInfo ">
@@ -304,7 +315,17 @@ export default {
         path: `/`,
       })
     },
-
+    async handleFakeConnect(){
+      console.log('fake')
+      this.connectStatus="connecting";
+      this.connectError=null;
+      this.setWalletStatus("");
+      const fakeAcct = '0x10101010101010101010101010'
+      this.setWalletStatus = 'fake'
+      this.setWalletChain("eth");
+      this.setWallet(fakeAcct);
+      // this.walletCheck(true)
+    },
     async handleWeb3Connect(){
       if(!document){return}
       // RESET
@@ -344,6 +365,7 @@ export default {
         console.log("error", provider);
         throw "missing account";
       }
+      console.log('accts[]0', accts[0])
       
       this.setWalletChain("eth");
       this.setWallet(accts[0]);

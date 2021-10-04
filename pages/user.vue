@@ -8,12 +8,13 @@
           <v-btn x-small @click="() => setDevMode(!devMode)">Toggle Dev {{devMode ? 'off' : 'on'}}</v-btn>
         </div>
       </div>
-      <div class="col col-9">
+      <div class="col col-9 pt-5">
         <client-only>
             <v-card
               v-if="!walletAddress"
-              class="user-card"
+              class="user-card card-bg"
               elevation="4"
+              outlined
               >
               <v-card-title>
                 <v-icon>
@@ -29,12 +30,14 @@
           
           <v-card
               v-if="walletAddress"
-              class="user-card logged-in"
+              class="user-card card-bg logged-in"
               elevation="4"
+              outlined
               >
               <v-card-title>
                 <AccountHeader v-if="walletAddress" />
               </v-card-title>
+              <v-divider />
               <v-card-text>
                 <div class="row">
                   <div class="col">
@@ -59,9 +62,16 @@
                     <div>Loot, Assets, Player Units</div>
                   </div>
                 </div>
-                <v-divider />
-                
               </v-card-text>
+              <v-card-actions>
+                <v-btn
+                  text
+                  @click="handleDisconnect(null)"
+                  size="small"
+                >
+                  Disconnnect
+                </v-btn>
+              </v-card-actions>
           </v-card>
 
                 <!-- <UserData :selected="selected" /> -->
@@ -164,6 +174,10 @@ export default {
     ...mapActions({
       getProfileData: "ui/getProfileData"
     }),
+    handleDisconnect(){
+      this.setWallet(null);
+      this.setWalletChain("");
+    },
     goToGallery(contractId){
       this.$router.push({
         path: `/gallery/${contractId}`,
