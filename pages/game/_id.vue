@@ -1647,6 +1647,14 @@ $outsideRowSize: 3rem;
       box-shadow: 0 0 0 3px white inset;
     }
   }
+  &.map-mode-hidden{
+    .grid-wrap{
+      outline: 11px #db569e;
+      outline-offset: 1px;
+      outline-style: ridge;
+      margin: 2rem 0 0 2rem;
+    }
+  }
   &.map-mode-explore{
     .add-button{
       background: #571b4b;
@@ -1801,7 +1809,8 @@ $outsideRowSize: 3rem;
   transition: .3s ease-in-out transform, .3s ease-in-out filter;
   transform-style: preserve-3d;
   perspective: 1000;
-  background: url(https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/ground.jpg) center center no-repeat;
+  background: transparent;
+  // background: url(https://gateway.pinata.cloud/ipfs/QmTKD3AgeNSo1AGL4rKMX4RhoLNwZ1iXMUcdW75zW5iozc/ground.jpg) center center no-repeat;
   background-size: contain;
   &.generate{
     // border: 2px dotted #222;

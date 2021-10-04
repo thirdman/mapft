@@ -18,8 +18,8 @@ const tileSets = [
     id: "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me",
   },
   {
-    name: "water",
-    id: "QmPEDQuK7orQKbKwsw3z8nPJcaAXSwXT4q5E7sdgjaSvpP",
+    name: "cavern",
+    id: "QmQJXpkHNUkf5Y1LfKCYeLPZ2akZfeyoaBVUayQYreJ3ok",
   },
   {
     name: "island",
@@ -1009,10 +1009,11 @@ export const mutations = {
 
 export const actions = {
   generateGame(context, payload) {
-    const { rows, cols, owner } = payload;
+    const { rows, cols, owner, tileSetId } = payload;
     const options = { ...payload };
     const id = uuidv4();
-    console.log("generate Game", rows, cols, id);
+    console.log("generate Game", payload);
+
     const { localGames } = context.state;
     const newTileArray = new Array(rows * cols).fill(tileTemplate);
     let newGameArray = [];
@@ -1058,7 +1059,7 @@ export const actions = {
         owner: owner,
         settings: {
           generateMap: false,
-          tileSetId: "Qmd7d6UxQX4Zff7WrnqXsyUc2QaimaKKegghEub9ZaXVkk",
+          tileSetId: tileSetId,
           hasValues: true,
           hasUnits: true,
         },

@@ -88,7 +88,7 @@ const calculateTile = (data) => {
   } = data;
   const row = location[1];
   const col = location[0];
-  console.log("calculateTile location", location);
+  console.log("calculateTile data", data);
   // const { minValue = 10, maxValue = 20 } = settings;
   const { preferConnection = true, connectionChance = 75 } = settings;
   if (!tileMap[row]) {
