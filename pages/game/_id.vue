@@ -2,7 +2,7 @@
   <div class="pageContainer">
     <Header />
     <dialog-intro :show="!introRead" />
-    <dialog-team-select   />
+    <dialog-team-select  :onAction="addPlayer" :userPlayer="userPlayer"  />
     <v-slide-y-transition>
     <generate-tile
       :location="generateLocation"
@@ -15,14 +15,14 @@
       /> 
       <!-- //:gameData="gameData" -->
     </v-slide-y-transition>
-    <v-slide-y-transition>
-      <v-card outlined elevation="4" :class="`claim join`" v-if="showJoin">
+    <!-- <v-slide-y-transition>
+      <v-card outlined elevation="4" :class="`dialog join`" v-if="showTeamSelect">
         <v-card-title class="row d-flex align-center">
           <div class="col">
             Join Game
           </div>
           <div class="col col-1">
-              <v-btn icon @click="() => this.showJoin = false">
+              <v-btn icon @click="setShowTeamSelect(true)">
                 <v-icon size="large">mdi-close</v-icon>
               </v-btn>
             </div>
@@ -60,7 +60,7 @@
           <v-btn @click="addPlayer">Join!</v-btn>
         </v-card-actions>
       </v-card>
-    </v-slide-y-transition>
+    </v-slide-y-transition> -->
     <v-slide-y-reverse-transition>
       <v-card outlined elevation="4" :class="`claim`" v-if="showMapControls">
         <v-card-title class="d-flex align-center">
@@ -375,7 +375,8 @@
               </div>
               <v-divider vertical class="mx-2" />
               <div class="col pa-0">
-                <player-info :player="userPlayer" />
+                <player-info :player="userPlayer" v-if="userIsPlayer" />
+                <v-btn plain @click="setShowTeamSelect(true)" v-else>Join Game</v-btn>
                 <!-- <v-card outlined  class="pa-1" >
                     <div :class="`controller ${userTeam}`" v-if="userTeam">
                       Team {{userTeam}} 
@@ -397,7 +398,9 @@
             :onClaimSelect="handleClaimSelect"
             :onGenerateSelect="handleGenerateSelect"
             :onClaim="handleClaim"
+            :onMove="handlePlayerMove"
             :onAction="handleGenerateSelect"
+            :userPlayer="userIsPlayer && userPlayer"
             />
         </div>
        </v-slide-x-transition>
@@ -405,30 +408,30 @@
         <div class="options-content col pa-4" v-if="showGameOptions">
           <div class="row">
             <div class="col">
-              <h4>Options</h4>
+              Options
             </div>
-            <div class="col">
-              <v-btn plain @click="() => showGameOptions = !showGameOptions">
+            <div class="col col-1">
+              <v-btn icon @click="() => showGameOptions = !showGameOptions">
                 <v-icon size="large">mdi-close</v-icon>
               </v-btn>
             </div>
           </div>
           <div class="row">
             <div class="col">
-            <v-btn block outlined @click="setShowTeamSelect(!showTeamSelect)">Show Team Select</v-btn>
-            <v-btn block outlined @click="() => this.showJoin = !showJoin">Join Game</v-btn>
-            <v-btn block outlined @click="resetGame">Reset Game</v-btn>
+            <v-btn block outlined @click="setShowTeamSelect(!showTeamSelect)">Join Game</v-btn>
+            <v-divider />
             <v-btn block outlined @click="highlightTeam(userTeam)">Highlight team tiles</v-btn>
-            <v-divider />
-            <v-btn block small outlined @click="() => {this.showNewGameDialog = true}">New Game</v-btn>
-            <v-divider />
             <v-btn block small outlined @click="setIntroRead(!introRead)">Show Introduction</v-btn>
-            <v-btn block small outlined @click="setMapSelect(!showMapSelect)">Select Map Style</v-btn>
-            <v-btn block small outlined @click="saveGame()">Save Game</v-btn>
+            <v-btn block outlined @click="resetGame">Reset Game</v-btn>
             </div>
           </div>
-          <div class="row">
+          <div class="row" v-if="devMode">
             <div class="col">
+            <!-- <v-btn block outlined @click="setShowTeamSelect(!showTeamSelect)">Show Team Select</v-btn> -->
+            <v-btn block small outlined @click="setMapSelect(!showMapSelect)">Select Map Style</v-btn>
+            <v-btn block small outlined @click="saveGame()">Save Game</v-btn>
+            <!-- <v-btn block small outlined @click="() => {this.showNewGameDialog = true}">New Game</v-btn>
+            <v-divider /> -->
               <v-btn block outlined @click="handleAutoFill">Generate Map</v-btn>
               <v-btn @click="applyTestData">apply test</v-btn>
             </div>
@@ -612,7 +615,6 @@ export default {
       showGenerate: false,
       showGameOptions: false,
       showJoin: false,
-      newUserName: "New Player",
       selectedAsset: null,
       highlightedIndex: null,
       tileSetId: null,
@@ -712,9 +714,25 @@ export default {
       tileTemplate: 'ui/tileTemplate'
     }),
     userPlayer(){
-      const {walletAddress, userTeam, newUserName} = this;
-      const color = userTeam && this.getColor(userTeam)
-      return {walletAddress, id: walletAddress, displayName: newUserName, team: userTeam, color: color}
+      const {walletAddress, userTeam, gameData} = this;
+      const players = gameData && gameData.players;
+      
+      const thisPlayer = players && players.find(pl => pl.id === walletAddress );
+      if(thisPlayer) {
+        return thisPlayer
+      } else {
+        const color = userTeam && this.getColor(userTeam)
+        return {walletAddress, id: walletAddress, displayName: "New Player", team: userTeam, color}
+
+      }
+    },
+    userIsPlayer(){
+      const {gameData, walletAddress} = this;
+      if(!gameData){return false}
+      const {players} = gameData;
+      const thisPlayer = players.find(player => player.id && player.id.toString() === walletAddress.toString());
+      console.log('thisPlayer', thisPlayer)
+      return thisPlayer ? true : false;
     },
     theTile(){
       const {gameData, selectedTile} = this;
@@ -777,11 +795,13 @@ export default {
       const userTeam = teamObj.team;
       this.setUserTeam(userTeam);
     },
-    addPlayer(){
+    addPlayer(compiledPlayer){
       const {gameData, userPlayer} = this;
       const {players} = gameData;
       const newId = uuidv4();
-      const newPlayer = {...userPlayer}
+      const newPlayer = compiledPlayer || {...userPlayer}
+      console.log('compiledPlayer', compiledPlayer)
+      console.log('newPlayer', newPlayer)
       if(!newPlayer.id){
         newPlayer.id = newId;
       }
@@ -792,7 +812,7 @@ export default {
       console.log('tempData', tempData)
       this.testData = tempData;
       this.applyTestData();
-      this.showJoin = false;
+      this.setShowTeamSelect(false);
     },
     getUnit(location){
       const {units} = this;
@@ -1059,6 +1079,23 @@ export default {
         this.setUserTeam(team)
       }
       
+    },
+    handlePlayerMove(location, player){
+      const {gameData, walletAddress} = this;
+      if(!gameData || !walletAddress){return}
+      const {players, units = []} = this.gameData;
+      const newUnit = {
+        location, 
+        player: this.userPlayer,
+        id: this.userPlayer.id
+      }
+      const filteredUnits = units.filter(u => u.id !== walletAddress);
+      const tempUnits = [...filteredUnits, newUnit]
+      const tempData = {...gameData, units: tempUnits}
+      this.testData = tempData;
+      
+      this.applyTestData()
+      this.updateData();
     },
     async handleGenerateSelect(location, expandMap){
       /** placeholder function */
@@ -1936,7 +1973,17 @@ z-index: 2;
             }
           }
     }
-    
+    .dialog{
+      position: fixed !important;
+      z-index: 48;
+      left: 50%;
+      top: 50%;
+      margin-left: -300px;
+      margin-top: -250px;
+      width: 600px;
+      height: 500px;
+      background: #222;
+    }
     .claim{
       position: fixed !important;
       z-index: 48;
@@ -1951,6 +1998,9 @@ z-index: 2;
       width: 600px;
       height: 500px;
       background: #222;
+      &.join{
+        height: unset;
+      }
       &.battling{
         box-shadow: 0 0.5rem 5rem 0 gold !important;
         .claim-action-row{
