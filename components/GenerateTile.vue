@@ -424,8 +424,8 @@ export default {
       // const tileMap = this.tileMap;
       // const tiles = this.tiles;
       const {userPoints, generationCost, location, walletAddress, gameData} = this;
-      const {tiles, tileMap, options} = gameData;
-      const {mapMode} = options
+      const {tiles, tileMap, options, mapGrid} = gameData;
+      const {mapMode, useMapGrid} = options
       const {tileExists} = this;
       console.log('mapMode', mapMode, tileExists);
       if(!tileMap){
@@ -451,7 +451,16 @@ export default {
       
       
       const tempTileValue = this.random(5, 30, false);
-      const newTileImageData = calculateTile({location, tileMap, includeContext: true, settings: gameData.settings || {}, tiles});
+      const newTileImageData = calculateTile(
+        {
+          location, 
+          tileMap, 
+          includeContext: true, 
+          settings: gameData.settings || {}, 
+          tiles, 
+          mapGrid,
+          useMapGrid
+          });
       let tempTileMap = tileMap.slice();
       // const thisTile = tileMap[row][col];
       // console.log('thisTile', thisTile);
@@ -470,6 +479,7 @@ export default {
       // setTileMap(tempTileMap)
 
       const {tileImageIndex, imageSrc, possibles, cardinals} = newTileImageData;
+      
       this.possibles = possibles;
       this.cardinals = cardinals;
       this.demoTileMap = tempTileMap;
@@ -486,7 +496,7 @@ export default {
         
       }
       const newTile = compileTile(dataObj)
-      
+      console.log('newTileImageData', newTileImageData, newTile);
       // this.previewTile = tempTile;
       if(newTile){
         this.previewTile = newTile

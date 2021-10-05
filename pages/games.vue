@@ -9,6 +9,7 @@
     <section id="intro" class="row ma-0 content">
       <div class="col col-3 intro-column">
         <v-btn large outlined raised @click="resetGames" v-if="devMode && 1===2">Reset Games</v-btn>
+        <v-btn large outlined raised @click="arrayFromMapGrid" v-if="devMode ">trial</v-btn>
       </div>
       <div class="col col-9">
         <div class="row">
@@ -99,6 +100,7 @@ export default {
      ...mapActions({
       generateGame: 'ui/generateGame',
       updateConfig: 'ui/updateConfig',
+      arrayFromMapGrid: 'ui/arrayFromMapGrid',
     }),
     async handleGenerateGame(props){
       // const newId = uuidv4();
@@ -107,7 +109,8 @@ export default {
       // const gameOptions = {...props, id: newId}
       const gameId = await this.generateGame(props);
       console.log('gameId', gameId)
-      if(gameId){
+      const redirect = true
+      if(gameId && redirect){
         this.loadGame(gameId);
       }
     },

@@ -6,7 +6,7 @@ import {
   // readAdditionalMeta,
   // readImageLink,
 } from "../utils/web3Read";
-// import { getContrast } from "../utils/theme";
+import { compileStaticTileMap } from "../utils/generate";
 // import { resolveEns } from "../utils/wallet";
 // moTileMap: [
 //   [6, 14, 14, 12],
@@ -14,7 +14,7 @@ import {
 //   [3, 10, 0, 0]
 const tileSets = [
   {
-    name: "default",
+    name: "Default",
     id: "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me",
   },
   {
@@ -22,7 +22,11 @@ const tileSets = [
     id: "QmQJXpkHNUkf5Y1LfKCYeLPZ2akZfeyoaBVUayQYreJ3ok",
   },
   {
-    name: "island",
+    name: "Cavern (Tight)",
+    id: "QmY5F3Kd9K5ZJgMZbFBiYQdLsSSr3dS1f1uoiWnk4qmi3i",
+  },
+  {
+    name: "Island",
     id: "Qmd7d6UxQX4Zff7WrnqXsyUc2QaimaKKegghEub9ZaXVkk",
   },
 ];
@@ -42,6 +46,33 @@ const tileTemplate = {
     owner: null,
     creature: null,
   },
+};
+const defaultCreature = {
+  id: 319,
+  name: "Griffith, The Chosen",
+  effect:
+    "Protected. Ward.\u003cbr\u003eRoar: Set the strength of all other creatures with strength 4 or more to 1.",
+  god: "light",
+  rarity: "legendary",
+  tribe: {
+    String: "",
+    Valid: false,
+  },
+  mana: 7,
+  attack: {
+    Int64: 6,
+    Valid: true,
+  },
+  health: {
+    Int64: 7,
+    Valid: true,
+  },
+  type: "creature",
+  set: "genesis",
+  collectable: true,
+  live: "true",
+  art_id: "C136",
+  lib_id: "L1-319",
 };
 const defaultTiles = [
   {
@@ -1008,7 +1039,7 @@ export const mutations = {
 };
 
 export const actions = {
-  generateGame(context, payload) {
+  async generateGame(context, payload) {
     const {
       rows,
       cols,
@@ -1018,12 +1049,14 @@ export const actions = {
       optionLootCount,
       optionUseCreatureGeneration,
       optionCreatureCount,
+      useMapGrid,
+      mapGrid,
     } = payload;
     const options = { ...payload };
     const id = uuidv4();
     console.log("generate Game", payload);
 
-    const { localGames } = context.state;
+    const { localGames, ipfsUrl } = context.state;
     const newTileArray = new Array(rows * cols).fill(tileTemplate);
     let newGameArray = [];
     const blankRowsArray = new Array(rows).fill();
@@ -1046,51 +1079,96 @@ export const actions = {
       // console.log('thisRowLocations', thisRowLocations)
       return thisRowLocations;
     });
-
-    const newTileMap = blankRowsArray.map((_, rowIndex) => {
-      const thisRowIndexes = blankColsArray.map((_, colIndex) => {
-        return null;
+    let newTileMap = [];
+    if (useMapGrid) {
+      console.log("this would apply map", useMapGrid, mapGrid);
+      newTileMap = await context.dispatch("arrayFromMapGrid", {
+        grid: mapGrid,
       });
-      return thisRowIndexes;
-    });
+    } else {
+      newTileMap = await context.dispatch("tileMapFromBlankArrays", {
+        blankRowsArray,
+        blankColsArray,
+      });
+    }
+    // const newTileMap = useMapGrid ? staticTileMap : dynamicTileMap;
+    // const newTileMap = blankRowsArray.map((_, rowIndex) => {
+    //   const thisRowIndexes = blankColsArray.map((_, colIndex) => {
+    //     return null;
+    //   });
+    //   return thisRowIndexes;
+    // });
     console.log("newTileMap", newTileMap);
+
     console.log("compiledLocations", compiledLocations);
     console.log("flatLocations", flatLocations);
-    const staticCreatureLocations = true;
-    const staticLootLocations = true;
+    // console.log("newGameArray", newGameArray, flatLocations);
+    // const staticCreatureLocations = true;
+    // const staticLootLocations = true;
     // const creatureArray =
     //   optionUseCreatureGeneration && new Array(optionCreatureCount).fill();
-    const creatureLocations = getRandomFromArray(
-      flatLocations,
-      optionCreatureCount
-    );
-    console.log("creatureLocations", creatureLocations);
-    const lootLocations = getRandomFromArray(flatLocations, optionLootCount);
-    const creaturesArray = creatureLocations.map((loc, i) => {
-      const obj = {
-        location: loc,
-        asset: null,
-        used: false,
-      };
-      return obj;
-    });
-    console.log("creaturesArray", creaturesArray);
-    const lootArray = lootLocations.map((loc, i) => {
-      const obj = {
-        location: loc,
-        asset: null,
-        used: false,
-      };
-      return obj;
-    });
-    console.log("lootArray", lootArray);
+    // const creatureLocations = getRandomFromArray(
+    //   flatLocations,
+    //   optionCreatureCount
+    // );
+    // console.log("creatureLocations", creatureLocations);
+    // const creaturesArray = creatureLocations.map((loc, i) => {
+    //   const obj = {
+    //     location: loc,
+    //     asset: null,
+    //     used: false,
+    //   };
+    //   return obj;
+    // });
+    // const lootLocations = getRandomFromArray(flatLocations, optionLootCount);
+    const creaturesArray =
+      optionUseCreatureGeneration &&
+      (await context.dispatch("getCreatures", {
+        locations: flatLocations,
+        optionCreatureCount,
+        useMapGrid,
+        mapGrid,
+        tileMap: newTileMap,
+      }));
+    const lootArray =
+      optionUseLootGeneration &&
+      (await context.dispatch("getLoots", {
+        locations: flatLocations,
+        optionLootCount,
+        useMapGrid,
+        mapGrid,
+        tileMap: newTileMap,
+      }));
+    // console.log("creaturesArray", creaturesArray);
+    // const lootArray = lootLocations.map((loc, i) => {
+    //   const obj = {
+    //     location: loc,
+    //     asset: null,
+    //     used: false,
+    //   };
+    //   return obj;
+    // });
+    // console.log("lootArray", lootArray);
+    let gameTiles = newGameArray;
+    if (useMapGrid) {
+      gameTiles = compileStaticTileMap({
+        tileMap: newTileMap,
+        tiles: newGameArray,
+        useMapGrid,
+        mapGrid,
+        tileSetId,
+        tileSetBase: ipfsUrl,
+      });
+      // console.log("tempGameTiles", tempGameTiles);
+    }
+
     if (id) {
       const tempGames = localGames.slice();
       const thisGame = {
         ...payload,
         id,
         options: options,
-        tiles: newGameArray,
+        tiles: gameTiles,
         tileMap: newTileMap,
         owner: owner,
         settings: {
@@ -1115,6 +1193,7 @@ export const actions = {
         players: [owner],
         teams: defaultTeams,
       };
+      console.info("thisGame", thisGame);
       tempGames.push(thisGame);
       context.commit("setLocalGames", tempGames);
     }
@@ -1549,6 +1628,110 @@ export const actions = {
     if (profileObject) {
       this.profileObject = profileObject;
       dispatch.commit("setProfileObject", profileObject);
+    }
+  },
+  arrayFromMapGrid(_, payload) {
+    const { grid } = payload;
+    console.log("grid", grid);
+    if (typeof grid !== "string") {
+      console.log("type of gruid is not string", grid);
+      return;
+    }
+    const trimmed = grid.trim();
+    var inRows = trimmed.split("\n");
+    console.log("inRows", inRows);
+    const tileMap =
+      inRows &&
+      inRows.map((row) => {
+        if (row === "") return;
+        var thisRow = row.trim();
+        const cols = thisRow.split(/\s+/);
+        return cols;
+      });
+    return tileMap;
+  },
+  tileMapFromBlankArrays(_, payload) {
+    const { blankColsArray, blankRowsArray } = payload;
+    const tileMap = blankRowsArray.map((_, rowIndex) => {
+      const thisRowIndexes = blankColsArray.map((_, colIndex) => {
+        return null;
+      });
+      return thisRowIndexes;
+    });
+    return tileMap;
+  },
+  getCreatures(_, payload) {
+    const { locations, optionCreatureCount, useMapGrid, mapGrid, tileMap } =
+      payload;
+    const encounterValue = "3";
+    if (useMapGrid && tileMap) {
+      console.log("getCreatures", tileMap);
+      let flatLocations = [];
+      tileMap &&
+        tileMap.map((row, rowIndex) => {
+          row &&
+            row.map((colValue, colIndex) => {
+              const thisLocation = [colIndex, rowIndex];
+              if (colValue === encounterValue) {
+                const obj = {
+                  location: thisLocation,
+                  asset: defaultCreature,
+                  used: false,
+                };
+                flatLocations.push(obj);
+              }
+            });
+        });
+      return flatLocations;
+    } else {
+      const creatureLocations = getRandomFromArray(
+        locations,
+        optionCreatureCount
+      );
+      const creaturesArray = creatureLocations.map((loc, i) => {
+        const obj = {
+          location: loc,
+          asset: null,
+          used: false,
+        };
+        return obj;
+      });
+      return creaturesArray;
+    }
+  },
+  getLoots(_, payload) {
+    const { locations, optionLootCount, useMapGrid, mapGrid, tileMap } =
+      payload;
+    const pointValue = "2";
+    if (useMapGrid && tileMap) {
+      let flatLocations = [];
+      tileMap &&
+        tileMap.map((row, rowIndex) => {
+          row &&
+            row.map((colValue, colIndex) => {
+              const thisLocation = [colIndex, rowIndex];
+              if (colValue === pointValue) {
+                const obj = {
+                  location: thisLocation,
+                  asset: null,
+                  used: false,
+                };
+                flatLocations.push(obj);
+              }
+            });
+        });
+      return flatLocations;
+    } else {
+      const lootLocations = getRandomFromArray(locations, optionLootCount);
+      const lootArray = lootLocations.map((loc, i) => {
+        const obj = {
+          location: loc,
+          asset: null,
+          used: false,
+        };
+        return obj;
+      });
+      return lootArray;
     }
   },
 };

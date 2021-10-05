@@ -17,8 +17,12 @@
       <!-- <player-unit :unit="unit" :player="unit.player" /> -->
       <player-info :player="unit.player" mode="unit" />
     </div>
-     
+     <div class="tile-dev" v-if="devMode">
+       {{tile.hasMapElement ? "hasMapELement" : ""}}
+     </div>
       <!-- :style="fill ? `width: 100%; height: auto` : `width:` " -->
+      
+    <Card  :asset="creature.asset" v-if="creature && tile.src" :showmeta="false" :card="false" />
     <Card  :asset="tile.meta.creature" v-if="!hideAsset && tile.meta.creature && tile.meta.creature.id" :showmeta="false" :card="false" />
     <div v-if="creature && tile.src" class="tile-creature">
       <v-icon large color="lime">mdi-ghost</v-icon>
@@ -73,6 +77,14 @@
       width: 100%;
       height: auto;
     }
+  }
+  .tile-dev{
+    background: #eee;
+    padding: 2px;
+    color: red;
+    position: absolute;
+    font-size: .75rem;
+    font-weight: bold;;
   }
   &.highlighted{
       opacity: 1;
@@ -140,14 +152,21 @@
 }
 .tile-loot{
   position: absolute;
-  top: calc(50% - 1.5rem);
-  left: calc(50% - 1.5rem);
+  // top: calc(50% - 1.5rem);
+  // left: calc(50% - 1.5rem);
+  top: 0;
+  left: 0;
   // color: gold;
-  width: 3rem;
-  height: 3rem;
+  width: 100%;
+  height: 100%;
   // background: gold;
   display: grid;
   place-content: center;
+  background: url(https://gateway.pinata.cloud/ipfs/QmcLhKPBvUcGT6EfYZ2HeoPcS5MibUsKtUetJWxBtePxFa/1.png) center center no-repeat;
+  background-size: contain;
+  .v-icon{
+    display: none;
+  }
   .v-icon::before{
     color: var(--background-color);
     text-shadow: 0 2px .5rem rgba(0, 0, 0, 0.5);
@@ -195,7 +214,7 @@ export default {
     'creature'],
   data() {
     return {
-      devMode: false
+      
     };
   },
   created(){
@@ -206,6 +225,7 @@ export default {
       walletAddress: "ui/walletAddress",
       gameTeams: "ui/gameTeams",
       userTeam: "ui/userTeam",
+      devMode: "ui/devMode",
     }),
     
   },

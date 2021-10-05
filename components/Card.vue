@@ -5,7 +5,7 @@
       @click="onSelect && !disabled && onSelect(index)"
       v-tooltip="disabled && `Unavailable`"
     >
-      <img class="asset-image" :src="`https://card.godsunchained.com/?id=${asset.id.Int64 || asset.id}&q=${4}&w=128&png=true`" width="128px" />
+      <img class="asset-image" :src="`https://card.godsunchained.com/?id=${asset.id.Int64 || asset.id}&q=${4}&w=256&png=true`" width="256px" />
       <div v-if="showmeta" class="card-meta-text">
         <!-- {{asset.name}}
         <br /> -->

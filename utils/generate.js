@@ -19,6 +19,102 @@ const tileSidesMap = {
   14: [0, 1, 1, 1],
   15: [1, 1, 1, 1],
 };
+const compileStaticTileMap = (data) => {
+  const {
+    tileMap,
+    tiles,
+    useMapGrid,
+    mapGrid,
+    tileSetId,
+    tileSetBase,
+    returnTiles = true,
+  } = data;
+  if (!tiles) {
+    return;
+  }
+  /** check if the mapGrid value is eqial to the 'hasElement' value
+   * If not, then calculate the tile based on surrounding tiles;
+   * Then create a src, along with dummy tile value merged from supplied.
+   */
+  const elementIndex = 15;
+  const hasElementValue = "1";
+  const hasPointValue = "2";
+  const hasEncounterValue = "3";
+  // const noElementValue = "0";
+  const staticMapTiles = tiles.map((tile, i) => {
+    const row = tile.location[1];
+    const col = tile.location[0];
+    const targetValue = tileMap[row][col];
+    const isTileWithElement =
+      targetValue === hasElementValue ||
+      targetValue === hasPointValue ||
+      targetValue === hasEncounterValue;
+    let tileImageIndex;
+    if (isTileWithElement) {
+      tileImageIndex = elementIndex;
+    } else {
+      // calcualte as if exploring a tile....
+      let isNorth = determinePossible({
+        direction: "north",
+        row,
+        col,
+        tileMap,
+        useMapGrid,
+        mapGrid,
+      });
+      let isEast = determinePossible({
+        direction: "east",
+        row,
+        col,
+        tileMap,
+        useMapGrid,
+        mapGrid,
+      });
+      let isSouth = determinePossible({
+        direction: "south",
+        row,
+        col,
+        tileMap,
+        useMapGrid,
+        mapGrid,
+      });
+      let isWest = determinePossible({
+        direction: "west",
+        row,
+        col,
+        tileMap,
+        useMapGrid,
+        mapGrid,
+      });
+      console.log("static values", { isNorth, isEast, isSouth, isWest });
+      tileImageIndex = calculateImageIndex(isNorth, isEast, isSouth, isWest);
+    }
+
+    const imageSrc = generateSrc({
+      tileIndex: tileImageIndex,
+      tileSetId,
+      base: tileSetBase,
+      blankIsJpg: false,
+    });
+    console.log("imageSrc", imageSrc);
+    const optionObj = {
+      newTileIndex: tileImageIndex,
+      newTileSrc: imageSrc,
+      newTileValue: 0,
+      tile,
+      location: [col, row],
+    };
+
+    const mergedTile = compileTile(optionObj);
+    if (returnTiles) {
+      return mergedTile;
+    } else {
+      return imageSrc;
+    }
+  });
+  return staticMapTiles;
+};
+
 const compileTile = (data) => {
   const {
     tiles,
@@ -27,12 +123,15 @@ const compileTile = (data) => {
     newTileSrc,
     location,
     walletAddress,
+    tile,
   } = data;
   console.log("tiles", tiles);
 
   const tempTiles = tiles && [...tiles];
   const activeTile =
-    (tempTiles && tempTiles.find((tile) => tile.location === location)) || {};
+    tile ||
+    (tempTiles && tempTiles.find((tile) => tile.location === location)) ||
+    {};
 
   // const sourceTile = activeTile[0];
   const tempTile = {
@@ -85,10 +184,12 @@ const calculateTile = (data) => {
     includeContext = false,
     tiles,
     force = "south",
+    useMapGrid,
+    mapGrid,
   } = data;
   const row = location[1];
   const col = location[0];
-  console.log("calculateTile data", data);
+  console.log("calculteTile dataa", data);
   // const { minValue = 10, maxValue = 20 } = settings;
   const { preferConnection = true, connectionChance = 75 } = settings;
   if (!tileMap[row]) {
@@ -96,6 +197,12 @@ const calculateTile = (data) => {
     console.groupEnd();
     return;
   }
+  if (useMapGrid) {
+    console.group("use map grid");
+    console.log("this is where the gridmap would function");
+    console.groupEnd();
+  }
+
   let isPossibleNorth = determinePossible({
     direction: "north",
     row,
@@ -233,12 +340,25 @@ const generateContext = (data) => {
   return tempArray;
 };
 const determinePossible = (options) => {
-  const { direction, row, col, tileMap, mapMode = "static" } = options;
+  const {
+    direction,
+    row,
+    col,
+    tileMap,
+    mapMode = "static",
+    useMapGrid = true,
+  } = options;
+  console.log("determinePossible options", options);
   if (!tileMap) {
     return;
   }
 
   /** possible outcomes: generatable, true, false */
+  const wallValue = "0";
+  const floorValue = "1";
+  const pointValue = "2";
+  const encounterValue = "3";
+  const elementIndex = 15; // the index of s completely full tile
   const totelRows = tileMap[0].length;
   const totelCols = tileMap.length;
   const isFirstRow = mapMode !== "explore" && row === 0;
@@ -266,15 +386,13 @@ const determinePossible = (options) => {
   if (direction === "west" && isFirstCol) {
     return false;
   }
+
   /** CHeck For existence of tile
    * In this situation, the tile can have an index, which represents a tile.
    * we look for null or undefined, which means the tile is empty but can exist in the future.
+   * ... TODO or refacor out
    */
-  // let targetExists = false;
-  if (direction === "north") {
-    const isTarget = tileMap[row - 1] && tileMap[row - 1][col];
-    console.log("isTarget", isTarget);
-  }
+
   /** CHeck For existence of tile
    * In this situation, the tile can have an index, which represents a tile.
    * we look for null or undefined, which means the tile is empty but can exist in the future.
@@ -315,6 +433,25 @@ const determinePossible = (options) => {
     target = tileMap[row] && tileMap[row][col - 1];
   }
   const targetTileSides = tileSidesMap[target];
+  if (useMapGrid) {
+    console.log("target value is String", typeof target);
+    if (target === "0") {
+      console.log('target is "0", and does not have element (is a wall)');
+      return 0;
+    }
+    if (target === floorValue) {
+      console.log('target is "1", and has element!');
+      return elementIndex;
+    }
+    if (target === pointValue) {
+      console.log('target is "2", and has floor + point');
+      return elementIndex;
+    }
+    if (target === encounterValue) {
+      console.log('target is "3", and has floor + encounter');
+      return elementIndex;
+    }
+  }
   console.log("gene target", target);
   console.log("gene targetTileSides", targetTileSides);
   console.log("gene tileMap", tileMap);
@@ -378,4 +515,4 @@ const random = (min, max, float = false) => {
   return Math.floor(val);
 };
 
-export { calculateTile, forceCalculateTile, compileTile };
+export { calculateTile, forceCalculateTile, compileTile, compileStaticTileMap };

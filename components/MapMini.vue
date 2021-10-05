@@ -14,8 +14,8 @@
                 >
                 <div v-for="(col, colIndex) in row"
                   :key="colIndex"
-                  :class="`grid-tile`" 
-                  :style="`width: ${tileSize}px; height: ${tileSize}px; background: ${col.color}`"
+                  :class="`grid-tile ${gameData.options.useMapGrid && col.hasElement ? 'element' : ''} ${gameData.options.useMapGrid && col.hasPoint ? 'point' : ''} ${gameData.options.useMapGrid && col.hasEncounter ? 'encounter' : ''}`" 
+                  :style="`width: ${tileSize}px; height: ${tileSize}px; background: ${col.color};`"
                   >
                 </div>
               </div>
@@ -52,7 +52,15 @@
       .grid-tile{
         background: transparent;
         box-shadow: 0 0 0 1px black inset;
-        
+        &.element{
+          background: rgba(255,255,255,.1);
+        }
+        &.point{
+          background: gold;
+        }
+        &.encounter{
+          background: #00a69f;
+        }
       }
     }
   }
@@ -84,7 +92,7 @@ export default {
       const {cols} = gameData.options;
       const tileSize = previewSize / cols;
       const theWidth = tileSize * cols;
-      console.log('tileSize', tileSize, theWidth)
+      
       return theWidth
     },
     mapHeight(){
@@ -92,7 +100,7 @@ export default {
       const {rows} = gameData.options;
       const tileSize = previewSize / rows;
       const theHeight = tileSize * rows;
-      console.log('tileSize', tileSize, theWidth)
+      
       return theHeight
     },
     tileSize(){
@@ -103,15 +111,16 @@ export default {
     },
     tempTileMap(){
       const {gameData} = this;
+      const hasElementString = "1"
+      const hasPointString = "2"
+      const hasEncounterString = "3"
       
+      const {tileMap} = gameData;
       if(!gameData){return}
-      
-      const {rows, cols} = gameData.options;
-      console.log('rows, cols', rows, cols)
+      const {rows, cols, useMapGrid} = gameData.options;
       if(!rows || !cols){
         return
       }
-      
       const blankRows = new Array(rows).fill();
       const blankCols = new Array(cols).fill();
       const compiledMap = blankRows.map((_, rowIndex) => {
@@ -119,11 +128,16 @@ export default {
           const thislocation = [colIndex, rowIndex].toString();
           const locationTile = gameData.tiles && gameData.tiles.find(tile => tile.location.toString() === thislocation);
           const team = locationTile && locationTile.meta.team;
-          return {color: team, index: 0}
+          const gridElementValue = useMapGrid && tileMap && tileMap[rowIndex][colIndex];
+          console.log('gridElementValue', gridElementValue, tileMap)
+          const hasElement = gridElementValue === hasElementString;
+          const hasPoint = gridElementValue === hasPointString;
+          const hasEncounter = gridElementValue === hasEncounterString;
+          return {color: team, index: 0, hasElement, hasEncounter, hasPoint}
           })
         return asIndexes
       })
-      console.log('tempTileMap', compiledMap)
+      console.log('mini compiled map', compiledMap)
       return compiledMap;
     },
     

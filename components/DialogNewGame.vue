@@ -115,12 +115,27 @@
                   @click="() => this.optionMapMode = 'static'"
                   x-small v-tooltip="`Visible Fixed Map.`"
                   :color="optionMapMode === 'static' ? 'primary' : ''">
-                  Visible
+                  Static
                 </v-btn>
               </v-btn-toggle>
               <div class="py-1 text-body-2 support-text" v-if="optionMapMode === 'explore'">Expand map by placing tiles. Linited by the number of tiles available.</div>
               <div class="py-1 text-body-2 support-text" v-if="optionMapMode === 'hidden'">Fixed size map, tiles initially hidden from players.</div>
               <div class="py-1 text-body-2 support-text" v-if="optionMapMode === 'static'">Fixed size map, tiles visible to players.</div>
+              <div class="optional">
+                <v-btn small outlined @click="() => {useMapGrid = !useMapGrid}">{{useMapGrid ? 'Hide' : 'Use'}} Map Grid</v-btn>
+              </div>
+              <div v-if="useMapGrid">
+                <textarea
+                  max="999"
+                  name="Code"
+                  class="base-input code-input"
+                  type="string"
+                  placeholder=""
+                  v-model="mapGrid"
+                  rows="10"
+                ></textarea>
+                <v-btn small outlined @click="applyMapGrid">Apply</v-btn>
+              </div>
           </div>
         </div>
       <div class="row">
@@ -271,26 +286,41 @@
 </template>
 
 <style lang="scss">
-.new-game-settings{}
+  .new-game-settings{
+
+  }
   
   .support-text{
     font-style: italic;
     opacity: .8;
     font-size: .675rem;
   }
+  .code-input{
+    border: 1px solid var(--line-color);
+    background: #222;
+    color: #eee;
+    font-family: monospace;
+  }
 </style>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 import MapPreview from './MapPreview.vue';
 import TileSetSelect from './TileSetSelect.vue';
-
+const defaultCode = `0 0 0 0 0
+0 1 1 0 1
+0 1 0 2 1
+0 2 1 1 0
+0 1 3 1 0
+0 0 0 0 0`
 export default {
   components: { MapPreview, TileSetSelect },
   props: ['onAction', 'onClose', 'show', 'rows', 'cols'],
   data() {
     return {
       showDialog: true,
+      useMapGrid: false,
+      mapGrid: defaultCode,
       newRows: 3,
       newCols: 4,
       generateMap: false,
@@ -326,7 +356,10 @@ export default {
       const {newRows, newCols, optionUseDefault, optionMapMode, generateMap, walletAddress, tileSetId, gameTitle, optionUseLootGeneration,
         optionLootCount, 
         optionUseCreatureGeneration,
-        optionCreatureCount} = this
+        optionCreatureCount,
+        useMapGrid,
+        mapGrid,
+        } = this
       const options = {
         rows: newRows, 
         cols: newCols, 
@@ -334,7 +367,11 @@ export default {
         optionLootCount,
         optionUseCreatureGeneration,
         optionCreatureCount,
-        useDefaultTeams: optionUseDefault, generateMap, owner: walletAddress, mapMode: optionMapMode, tileSetId, title: gameTitle}
+        useDefaultTeams: optionUseDefault, generateMap, owner: walletAddress, mapMode: optionMapMode, tileSetId, 
+        title: gameTitle,
+        useMapGrid: useMapGrid,
+        mapGrid: mapGrid,
+        }
       return options;
     }
   },
@@ -342,6 +379,9 @@ export default {
   methods: {
     ...mapMutations({
       // setIntroRead: "ui/setIntroRead",
+    }),
+    ...mapActions({
+      arrayFromMapGrid: "ui/arrayFromMapGrid",
     }),
     addRow(){
       this.newRows = this.newRows + 1;
@@ -370,6 +410,24 @@ export default {
     setTileSet(id){
       console.log('setting setid to ', id)
       this.tileSetId = id;
+    },
+    async applyMapGrid(){
+      const {mapGrid} = this;
+      console.log('mapGrid', mapGrid)
+      const result = await this.arrayFromMapGrid({grid: mapGrid})
+      console.log('result', result);
+      if(!result){return}
+      const rows = result.length;
+      const cols = result[0] && result[0].length;
+      console.log('rows cols', rows, cols);
+      if(rows && cols){
+        this.newRows = rows
+        this.newCols = cols
+        this.optionMapMode = 'static'
+      } else {
+        console.error('either missing rows/cols');
+        return
+      }
     }
   },
 };

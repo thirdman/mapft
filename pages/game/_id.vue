@@ -427,6 +427,7 @@
           </div>
           <div class="row" v-if="devMode">
             <div class="col">
+            <v-btn block small outlined @click="applyMapGrid">Apply Map Grid</v-btn>
             <!-- <v-btn block outlined @click="setShowTeamSelect(!showTeamSelect)">Show Team Select</v-btn> -->
             <v-btn block small outlined @click="setMapSelect(!showMapSelect)">Select Map Style</v-btn>
             <v-btn block small outlined @click="saveGame()">Save Game</v-btn>
@@ -573,7 +574,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import {calculateTile, compileTile} from "../../utils/generate"
+import {calculateTile, forceCalculateTile, compileTile} from "../../utils/generate"
 import { v4 as uuidv4 } from 'uuid';
 const BASE_URL = "https://unknowngame.site"
 import ogImagePreview from '~/assets/images/preview.png'
@@ -594,7 +595,6 @@ export default {
     return {
       gameStatus: 'loading',
       gameTeams: null,
-      devMode: false,
       baseUrl: "https://localhost:3333",
       previewUrl: `images/preview.png`,
       siteName: "SVG Tokens",
@@ -695,6 +695,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      devMode: 'ui/devMode',
       siteData: 'ui/siteData',
       contrastMode: 'ui/contrastMode',
       hasChainSelect: 'ui/hasChainSelect',
@@ -792,6 +793,7 @@ export default {
       getAssets: "ui/getAssets",
       generateGame: 'ui/generateGame',
       generateMapTiles: 'ui/generateMapTiles',
+      arrayFromMapGrid: 'ui/arrayFromMapGrid',
     }),
     handleTeamSelect(teamObj){
       const userTeam = teamObj.team;
@@ -1531,6 +1533,86 @@ export default {
       // console.log('game is', game)
       this.updateConfig({games: tempGames});
       // this.$router.push(`/game/${game.id}`)
+    },
+    async applyMapGrid(){
+      const {gameData} = this;
+      const {mapGrid} = gameData.options;
+      const {tiles} = gameData;
+      console.log('mapGrid', mapGrid, tiles)
+      const result = await this.arrayFromMapGrid({grid: mapGrid})
+      console.log('result', result);
+      
+      if(!result){return}
+      const rows = result.length;
+      const cols = result[0] && result[0].length;
+      console.log('rows and cols, ', rows, cols);
+      const tempGridTiles = [];
+      const tempTileMap = result && result.map((row, rowIndex) => {
+        console.log('row', row);
+        const tempRows =  row.map((colValue, colIndex) => {
+          const isTrue = colValue === '1' ? true : 0;
+          const thisLocation = [colIndex, rowIndex];
+          const matchingTile = tiles.find(tile => tile.location.toString() === thisLocation.toString());
+          console.log('matchingTile', matchingTile)
+          const mergedTile = {...matchingTile, hasMapElement: isTrue}
+          
+          tempGridTiles.push(mergedTile)
+          return isTrue;
+        })
+        return tempRows;
+      });
+      console.log('tempGridTiles', tempGridTiles);
+      console.log('compiled tempTIleMap', tempTileMap);
+      const tempData = {...gameData, tiles: tempGridTiles, tileMap: tempTileMap}
+      console.log('tempData would apply:', tempData )
+      this.testData = tempData;
+      this.applyTestData();
+      this.gameData = tempData;
+    },
+    applyGeneratedTiles(){
+      const mode = 'single';
+      let tempGameTiles = gameData.tiles.slice();
+      // const newTileImageData = forceCalculateTile({directions: {north: false, east: true, south: true, west: false}, tileSetId: gameData.options.tileSetId});
+      const compiledTiles = tempGridTiles.map((tile, tileIndex) => {
+        const location = tile.location;
+        const newTileImageData = calculateTile({
+          location: location, 
+          tileMap: tempTileMap, 
+          includeContext: false, 
+          settings: gameData.settings || {}, 
+          tiles: tempGridTiles
+          });
+          console.log('newTileImageData', newTileImageData)
+          const {tileImageIndex, imageSrc, } = newTileImageData;
+          if (mode === 'single'){
+            const dataObj = {
+            newTileValue: 0,
+            newTileIndex: tileImageIndex,
+            newTileSrc: imageSrc,
+            location: location,
+            tiles: tempGameTiles,
+            // walletAddress, 
+          }
+          const newTile = compileTile(dataObj)
+          // const result = this.autoFillTile(thisOptions)
+          
+          const momentaryTiles = tempGameTiles.slice();
+          const thisTile = momentaryTiles.findIndex(item => item.location.toString() === tile.location.toString());
+          
+          if(thisTile > -1){
+            console.log('thisTile', thisTile);
+            momentaryTiles[thisTile] = newTile;
+            console.log('tile new momentaryTiles', momentaryTiles); 
+            tempGameTiles = momentaryTiles
+          }
+          // const finalTileMap = this.compileTileMap(tempTiles);
+          const tempData = {...gameData, tiles: tempGameTiles}
+          console.log('tempData would apply:', tempData )
+          this.testData = tempData;
+          this.applyTestData();
+          this.gameData = tempData;
+        }
+      })
     },
     random(_, { min, max, float = false }) {
       const val = Math.random() * (max - min) + min;
