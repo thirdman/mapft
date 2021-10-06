@@ -45,14 +45,17 @@ const compileStaticTileMap = (data) => {
     const row = tile.location[1];
     const col = tile.location[0];
     const targetValue = tileMap[row][col];
+
     const isTileWithElement =
       targetValue === hasElementValue ||
       targetValue === hasPointValue ||
       targetValue === hasEncounterValue;
+    console.log("targetValue", targetValue, isTileWithElement);
     let tileImageIndex;
     if (isTileWithElement) {
       tileImageIndex = elementIndex;
     } else {
+      console.log("targetValue is not 1", targetValue);
       // calcualte as if exploring a tile....
       let isNorth = determinePossible({
         direction: "north",
@@ -86,8 +89,37 @@ const compileStaticTileMap = (data) => {
         useMapGrid,
         mapGrid,
       });
+
       console.log("static values", { isNorth, isEast, isSouth, isWest });
+
       tileImageIndex = calculateImageIndex(isNorth, isEast, isSouth, isWest);
+      if (
+        isNorth === elementIndex &&
+        isEast === elementIndex &&
+        isSouth === elementIndex &&
+        isWest === elementIndex
+      ) {
+        console.log(
+          "this tile has all 15",
+          {
+            isNorth,
+            isEast,
+            isSouth,
+            isWest,
+          },
+          "andtargetValue is",
+          targetValue
+        );
+        tileImageIndex = 16;
+      }
+      if (i === 12) {
+        console.log("this tile is index 12", {
+          isNorth,
+          isEast,
+          isSouth,
+          isWest,
+        });
+      }
     }
 
     const imageSrc = generateSrc({

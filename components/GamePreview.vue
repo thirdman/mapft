@@ -6,7 +6,7 @@
     max-width="274"
     >
     <v-img
-      height="128"
+      height="192"
       :src="previewImage"
     >
     </v-img>
@@ -79,12 +79,14 @@ export default {
       devMode: "ui/devMode",
       activeGame: "ui/activeGame",
       ipfsUrl: "ui/ipfsUrl",
+      tileSets: "ui/tileSets",
     }),
     previewImage(){
-      const {game} = this;
+      const {game, tileSets} = this;
+      const {tileSetId} = game.options;
+      const thisTileSet = tileSets && tileSets.find(ts => ts.id === tileSetId);
       const {ipfsUrl = 'https://ipfs.cf-ipfs.com/ipfs/'} = this;
-      const tileSetId = game.options.tileSetId;
-      const tileIndex = 14;
+      const tileIndex = thisTileSet && thisTileSet.previewIndex || 14;
       return `${ipfsUrl}${tileSetId}/${tileIndex}.png`;
     },
   },

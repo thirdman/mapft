@@ -16,18 +16,32 @@ const tileSets = [
   {
     name: "Default",
     id: "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me",
+    previewIndex: 7,
+    fileType: "png",
   },
   {
     name: "cavern",
     id: "QmQJXpkHNUkf5Y1LfKCYeLPZ2akZfeyoaBVUayQYreJ3ok",
+    previewIndex: 7,
+    fileType: "png",
   },
   {
     name: "Cavern (Tight)",
-    id: "QmY5F3Kd9K5ZJgMZbFBiYQdLsSSr3dS1f1uoiWnk4qmi3i",
+    id: "QmernFPAoC7LfsRctzNQdmwvWbqiD3faWVK5ai5mugdMMM",
+    previewIndex: 7,
+    fileType: "png",
   },
   {
-    name: "Island",
+    name: "Island (Exclusive)",
+    id: "QmVQKiA2t4T376tf9R2VarHhibZC9pVAmmhjvFe7MN1ryJ",
+    previewIndex: 7,
+    fileType: "png",
+  },
+  {
+    name: "Island (Inclusive)",
     id: "Qmd7d6UxQX4Zff7WrnqXsyUc2QaimaKKegghEub9ZaXVkk",
+    previewIndex: 7,
+    fileType: "png",
   },
 ];
 const tileTemplate = {

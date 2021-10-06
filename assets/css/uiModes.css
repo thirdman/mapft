@@ -45,18 +45,13 @@ header.minimal .headerRow .brand .brandname {
 header.minimal .headerRow .brand .subtitle {
   display: none;
 }
-header.minimal .headerRow .logoWrap {
-  width: 2.5rem;
-  height: 2.5rem;
-}
+
 header.minimal .headerRow .logoPosition {
-  background-size: 20px 13px;
+  background-size: 20px 20px;
   width: 20px;
-  height: 13px;
+  height: 20px;
 }
-header.minimal .headerRow .logoBg {
-  display: none;
-}
+
 header.minimal .headerRow .navRow {
   align-items: stretch;
   justify-content: flex-start;
@@ -190,18 +185,6 @@ header.none .headerRow .brand .brandname {
   font-variation-settings: "wght" 500;
 }
 header.none .headerRow .brand .subtitle {
-  display: none;
-}
-header.none .headerRow .logoWrap {
-  width: 2.5rem;
-  height: 2.5rem;
-}
-header.none .headerRow .logoPosition {
-  background-size: 20px 13px;
-  width: 20px;
-  height: 13px;
-}
-header.none .headerRow .logoBg {
   display: none;
 }
 

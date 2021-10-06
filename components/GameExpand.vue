@@ -1,12 +1,30 @@
 <template>
   <div outlined class="game-info " :class="expanded ? 'expanded' : ''"  v-if="game && game.options" >
     <v-card-text class="pa-0">
-          <!-- <div class="col pa-1">
+    
+    <v-expansion-panels
+      v-model="panel"
+      flat 
+      
+    >
+    <v-expansion-panel class="card-bg">
+      <v-expansion-panel-header class="header-panel" >
+        <div class="row ma-0">
+          <tile-image-preview :game="game" index="14" size="64" />
+          <div class="col pa-1">
             <label class="x-small">Size</label>
             {{game.options.rows}} x {{game.options.cols}}
+          </div>
+          <!-- <div class="col pa-0">
+            <label>Columns</label>
+            {{game.options.cols}}
           </div> -->
-        
+        </div>
+        <v-spacer />
         <div class="header-text">{{game.title ||  game.id}}</div>
+        <v-btn plain @click="loadGame" v-if="displayMode === 'preview'">load</v-btn>
+      </v-expansion-panel-header>
+      <v-expansion-panel-content>
         <div class="row">
           <div class="col">
             <label>Map Mode</label>
@@ -52,21 +70,26 @@
           <div class="col">
             <label>Tile Set</label>
             <div class="game-label" >
-              {{tileSetName || game.settings.tileSetId}}
+              {{game.settings.tileSetId}}
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col">
             <label>Players</label>
-            <div class="player-list" >
-              <div v-for="(player, i) in game.players" :key="i" v-if="game && game.players" >
+            <div class="game-label" >
+              <div v-for="(player, i) in game.players" :key="i" v-if="game && game.players">
                 <player-info :player="player" :address="player" />
                 <!-- <hash-address :address="player" /> -->
               </div>
             </div>
           </div>
         </div>
+      <v-btn text x-small @click="logGame" v-if="devMode">log game</v-btn>
+      <v-btn text x-small @click="loadGame" v-if="devMode">Load</v-btn>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+    </v-expansion-panels>
     </v-card-text>
   </div>
 </template>
@@ -85,18 +108,12 @@
       padding: 0;
     }
     .header-text{
-      padding: 0;
+      padding: 0 4px;
       // width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       max-width: 100px;
-    }
-  }
-  .player-list{
-    .player-info{
-      margin-bottom: .25rem;
-      display: inline-flex;
     }
   }
   .player-icon-container{
@@ -131,18 +148,10 @@ export default {
   computed: {
     ...mapGetters({
       // walletAddress: "ui/walletAddress",
-      tileSets: "ui/tileSets",
       userTeam: "ui/userTeam",
       // gameTeams: "ui/gameTeams",
       activeGame: "ui/activeGame",
     }),
-    tileSetName(){
-      const {game, tileSets} = this;
-      const {tileSetId} = game.options
-      const thisSet = tileSetId && tileSets && tileSets.find(ts => ts.id === tileSetId)
-      const name = thisSet && thisSet.name;
-      return name
-    }
   },
 
   methods: {

@@ -4,14 +4,12 @@
     :class="`${uiMode} ${hideUi ? 'hideUi' : 'showUi'}`"
   >
     <div class="headerRow">
-    
-      <div class="brand w3-col s2">
-        <span class="logoWrap" @click="goToHome()">
-          <span class="logoBg"></span>
+      <div class="logo-container" @click="goToHome()">
           <span class="logoPosition">
             <IconLogo />
           </span>
-        </span>
+      </div>
+      <div class="brand w3-col s2">
         <div v-if="uiMode === 'none'" class="hamburgerToggle">
           <button class="btn iconButton" @click="toggleHiddenUi(!hideUi)">
             <IconMenu :strokeClass="contrastMode" />
@@ -99,6 +97,16 @@
 </template>
 
 <style lang="scss">
+.header .logo-container{
+  width: 4rem;
+  height: 100%;
+  flex-shrink: 0;
+  flex-grow: 0;
+  display: grid;
+  place-items: center;
+  border-right: 1px solid var(--line-color);
+  cursor: pointer;
+}
 .header .footerUserLabel {
   display: flex;
   flex-direction: row;

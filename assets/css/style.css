@@ -1213,7 +1213,7 @@ a.navLink.active {
 .rinkeby .headerRow .networkName {
   background: var(--danger-color, red);
 }
-.headerRow .brand:hover .logoPosition {
+.headerRow:hover .logoPosition {
   transform: rotate(180deg);
 }
 .headerRow .brand:hover .subtitle {
@@ -1228,8 +1228,8 @@ a.navLink.active {
   cursor: pointer;
   /* margin-left: 4rem; */
 }
-.headerRow .brand .logoWrap {
-  position: absolute;
+.headerRow .logoWrap {
+  /* position: absolute;
   width: 3.5rem;
   height: 3.5rem;
   left: 0rem;
@@ -1237,23 +1237,12 @@ a.navLink.active {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: 0.25rem;
+  margin-right: 0.25rem; */
+  display: block;
   cursor: pointer;
 }
-.headerRow .brand .logoBg {
-  position: absolute;
-  content: "";
-  background: var(--background-color, #fff);
-  left: 0;
-  width: 10.5rem;
-  height: 6.5rem;
-  /* border-radius: 3.5rem; */
-  z-index: 0;
-  top: 0;
-  /* transform: skew(0deg, 28deg) translateY(0rem) translateX(-10rem); */
-  transform: skew(0deg, -28deg) translateY(-4rem) translateX(-7rem);
-}
-.headerRow .brand .logoPosition {
+
+.headerRow .logoPosition {
   /* background: url('../images/logo.svg') center center no-repeat; */
   position: absolute;
   background-size: 40px 26px;
@@ -1266,10 +1255,7 @@ a.navLink.active {
   align-items: center;
   justify-content: center;
 }
-.headerRow .brand .logoPosition > svg.logo {
-  width: 100%;
-  height: auto;
-}
+
 .headerRow .navRow {
   position: relative;
 }
@@ -1484,12 +1470,12 @@ a.navLink.active {
   .headerRow .brandname {
     display: none;
   }
-  .headerRow .brand .logoPosition {
+  /* .headerRow .brand .logoPosition {
     background-size: 20px 13px;
     width: 20px;
     height: 13px;
     margin-right: 0;
-  }
+  } */
   .headerRow .navRow {
     /* becomes smaller when brand and profile exists */
     flex-basis: 100%;

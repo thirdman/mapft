@@ -164,6 +164,7 @@
   place-content: center;
   background: url(https://gateway.pinata.cloud/ipfs/QmcLhKPBvUcGT6EfYZ2HeoPcS5MibUsKtUetJWxBtePxFa/1.png) center center no-repeat;
   background-size: contain;
+  z-index: 1;
   .v-icon{
     display: none;
   }

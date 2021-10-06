@@ -58,7 +58,8 @@
         <div class="controller-mark" :class="selectedData.meta.team" :style="`background: ${selectedData.meta.team ? getColor(selectedData.meta.team) : ''}`"></div>
         <div class="col col-7">
           <label>Asset</label>
-          <Card :asset="selectedData.meta.creature" v-if="selectedData.meta.creature" />
+          <Card :asset="creature.asset" v-if="creature" />
+          <!-- <Card :asset="selectedData.meta.creature" v-if="selectedData.meta.creature" /> -->
           <p class="body-text-2" v-else>This tile is uncontested. Claim it to increas your team score </p>
         </div>
         <div class="col col-5">
@@ -78,16 +79,18 @@
           <div v-else>
             -
           </div>
-          <div v-if="selectedData.meta && selectedData.meta.asset">
+          <div v-if="creature && creature.asset">
             <v-divider class="my-2" />
             <label>Asset</label>
-            <div>{{selectedData.meta.asset}}</div>
+            <div>{{creature.asset.name}}</div>
           </div>
-          <v-divider class="my-2" />
-          <label>Defence</label>
-          {{selectedData.meta.defence}}
-          <label>Attack</label>
-          {{selectedData.meta.attack || '-'}}
+          <div v-if="creature && creature.asset">
+            <v-divider class="my-2" />
+            <label>Health</label>
+            {{creature.asset.health.Int64 || creature.asset.health }}
+            <label>Attack</label>
+            {{creature.asset.attack.Int64 || creature.asset.attack || '-'}}
+          </div>
         </div>
       </div>
     </div>
@@ -111,13 +114,14 @@
             :color="userTeam && 'primary'"
             @click="onClaimSelect && onClaimSelect(selectedData.location)"
             :disabled="!userTeam"
-            v-if="selectedData.src"
+            v-if="devMode && selectedData.src"
             >Claim Tile...</v-btn>
           <v-btn
             depressed
             primary
             block
-            :color="userTeam && 'primary'"
+            outlined
+            :color="1===3 && userTeam && 'primary'"
             @click="onMove && onMove(selectedData.location)"
             v-if="onMove && userPlayer"
             >
@@ -184,7 +188,7 @@ export default {
   'selected', 
   'userPlayer',
   'onAction', 
-  'onClose', 'onMove', 'selectedData', 'index', 'onGenerateSelect', 'onClaimSelect', 'handleClaim'],
+  'onClose', 'onMove', 'selectedData', 'index', 'onGenerateSelect', 'onClaimSelect', 'handleClaim', 'getCreature'],
   data() {
     return {
       // showTeamSelect: false,
@@ -201,7 +205,15 @@ export default {
       tiles: "ui/tiles",
       showTeamSelect: "ui/showTeamSelect",
     }),
-    
+    creature(){
+      const {getCreature, selectedData} = this;
+      if(getCreature){
+        const creature = getCreature(selectedData.location);
+          return creature
+      }else {
+        return null
+      }
+    }
   },
 
   methods: {

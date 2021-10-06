@@ -70,14 +70,17 @@
 import { mapMutations, mapGetters } from "vuex";
 
 export default {
-  props: ['onAction', 'onClose', 'gameData'],
+  props: ['onAction', 'onClose', 'gameData', 'size'],
   data() {
     return {
       previewSize: 80,
     };
   },
   created(){
-    
+    const {size} = this;
+    if(size){
+      this.previewSize = size;
+    }
   },
   mounted(){
     
@@ -129,7 +132,7 @@ export default {
           const locationTile = gameData.tiles && gameData.tiles.find(tile => tile.location.toString() === thislocation);
           const team = locationTile && locationTile.meta.team;
           const gridElementValue = useMapGrid && tileMap && tileMap[rowIndex][colIndex];
-          console.log('gridElementValue', gridElementValue, tileMap)
+          // console.log('gridElementValue', gridElementValue, tileMap)
           const hasElement = gridElementValue === hasElementString;
           const hasPoint = gridElementValue === hasPointString;
           const hasEncounter = gridElementValue === hasEncounterString;

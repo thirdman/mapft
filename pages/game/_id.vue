@@ -269,12 +269,48 @@
     </v-slide-y-transition>
     <!-- HERO Container -->
     <section id="intro" class="row ma-0 ">
+      <div class="menu-column" >
+        <v-list dense>
+            <v-list-item class="px-2">
+              <v-list-item-avatar>
+                <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+              </v-list-item-avatar>
+
+              <!-- <v-list-item-title>John Leider</v-list-item-title> -->
+
+              <!-- <v-btn
+                icon
+                @click.stop="mini = !mini"
+              >
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-btn> -->
+            </v-list-item>
+        </v-list>
+            <v-divider></v-divider>
+
+            <v-list dense>
+              <v-list-item
+                v-for="item in items"
+                :key="item.title"
+                link
+              >
+                <v-list-item-icon>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+
+                <!-- <v-list-item-content>
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item-content> -->
+              </v-list-item>
+            </v-list>
+          <v-spacer />
+      </div>
       <div class="col col-3 info-column">
         <div class="info-game" v-if="!selectedData">
-          <div class="col pa-0 summary-container info-item" v-if="gameData" >
-            <game-info :game="gameData" :expanded="false" mode="info" />
+          <div class="col pa-0  summary-container info-item" v-if="gameData" >
+            <game-info :game="gameData" :expanded="true" mode="info" />
           </div>
-          <div class="row mx-0 my-0 info-item tabs-container">
+          <div class="row mx-0 my-0 info-item tabs-container" v-if="panel === 'gameInfo'">
             <v-card  outlined class="pa-0 card-bg" style="width: 100%;" >
               <v-tabs 
                 v-model="tab"
@@ -359,9 +395,10 @@
               </v-tabs-items>
             </v-card>
           </div>
-        
-        <div class="row ma-0 mt-0  info-item minimap-row" v-if="this.gameData" >
-          <map-mini :gameData="this.gameData" />
+        <v-divider />
+        <div class="row ma-0 mt-0 py-2  info-item minimap-row d-flex align-center justify-center" v-if="this.gameData && panel === 'minimap'" >
+          
+          <map-mini :gameData="this.gameData" size="120" />
         </div>
         <div class="row ma--4 mt-0  info-item options-row">
           <div class="col pa-0">
@@ -401,6 +438,7 @@
             :onMove="handlePlayerMove"
             :onAction="handleGenerateSelect"
             :userPlayer="userIsPlayer && userPlayer"
+            :getCreature="getCreature"
             />
         </div>
        </v-slide-x-transition>
@@ -593,6 +631,13 @@ export default {
   data() {
     
     return {
+      drawer: true,
+        items: [
+          { title: 'Home', icon: 'mdi-home-city' },
+          { title: 'My Account', icon: 'mdi-account' },
+          { title: 'Users', icon: 'mdi-account-group-outline' },
+        ],
+        mini: true,
       gameStatus: 'loading',
       gameTeams: null,
       baseUrl: "https://localhost:3333",
@@ -620,6 +665,7 @@ export default {
       selectedAsset: null,
       highlightedIndex: null,
       tileSetId: null,
+      panel: 'minimap',
       tab: "Scores",
       tabs: ['Scores', 'Creatures', 'User'],
       isBattling: false,
@@ -838,7 +884,7 @@ export default {
       if(!this.gameData && this.gameData.discover){return}
       const {discover} = this.gameData;
       const lootArray = discover && discover.loot;
-      
+      if(!lootArray){return}
       const stringLocation = location.toString();
       const thisLoot = lootArray.find(u => u.location.toString() === stringLocation);
       return thisLoot
@@ -847,7 +893,7 @@ export default {
       if(!this.gameData && this.gameData.discover){return}
       const {discover} = this.gameData;
       const creatureArray = discover && discover.creatures;
-      
+      if(!creatureArray){return}
       const stringLocation = location.toString();
       const thisCreature = creatureArray.find(u => u.location.toString() === stringLocation);
       console.log('thisCreature', thisCreature)
@@ -1629,6 +1675,18 @@ export default {
 section#intro{
   height: calc(100vh - 4rem);
 }
+.menu-column{
+  border-right: 1px solid var(--line-color);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: 4rem;
+  height: 100%;
+  width: 4rem;
+}
 .info-column{
   // min-width: 320px;
   border-right: 1px solid var(--line-color);
@@ -2005,9 +2063,16 @@ $outsideRowSize: 3rem;
     }
   }
   &.selected{
-    box-shadow: 0 0 0 3px rgba(255,255,255,.8) inset;
+    // box-shadow: 0 0 0 3px rgba(255,255,255,.8) inset;
+    box-shadow: none;
+    outline: 2px solid rgba(255,255,255,.3);
+    outline: 2px solid var(--ui-color);
+    // outline: 2px solid var(--background-color);
+    outline-offset: 2px;
+    
     &:hover{
-      box-shadow: 0 0 0 3px rgba(255,255,255,.8) inset, 0 0 1px 1px rgba(73, 79, 100, 0.4), 0 15px 30px rgba(14,21,47,0.4);
+      // box-shadow: 0 0 0 3px rgba(255,255,255,.8) inset, 0 0 1px 1px rgba(73, 79, 100, 0.4), 0 15px 30px rgba(14,21,47,0.4);
+      box-shadow: none;
     }
   }
 }
