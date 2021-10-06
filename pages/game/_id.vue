@@ -3,6 +3,7 @@
     <Header />
     <dialog-intro :show="!introRead" />
     <dialog-team-select  :onAction="addPlayer" :userPlayer="userPlayer"  />
+    
     <v-slide-y-transition>
     <generate-tile
       :location="generateLocation"
@@ -270,33 +271,17 @@
     <!-- HERO Container -->
     <section id="intro" class="row ma-0 ">
       <div class="menu-column" >
-        <v-list dense>
-            <v-list-item class="px-2">
-              <v-list-item-avatar>
-                <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
-              </v-list-item-avatar>
-
-              <!-- <v-list-item-title>John Leider</v-list-item-title> -->
-
-              <!-- <v-btn
-                icon
-                @click.stop="mini = !mini"
-              >
-                <v-icon>mdi-chevron-left</v-icon>
-              </v-btn> -->
-            </v-list-item>
-        </v-list>
-            <v-divider></v-divider>
-
-            <v-list dense>
+            <v-list dense class="bg-darker pa-0">
               <v-list-item
                 v-for="item in items"
                 :key="item.title"
-                link
+                @click="handlePanel(item.id)"
+                class="menu-item"
+                :class="panel === item.id ? 'selected' : ''"
               >
-                <v-list-item-icon>
-                  <v-icon>{{ item.icon }}</v-icon>
-                </v-list-item-icon>
+                <v-icon>{{ item.icon }}</v-icon>
+                <!-- <v-list-item-icon>
+                </v-list-item-icon> -->
 
                 <!-- <v-list-item-content>
                   <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -304,13 +289,26 @@
               </v-list-item>
             </v-list>
           <v-spacer />
+          <v-divider class="ma-0"></v-divider>
+          <v-list dens class="bg-darker pa-0">
+            
+            <!-- <v-list-item class="px-2" @click="() => {this.$router.push('/user')}">
+              <v-list-item-avatar>
+                <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+              </v-list-item-avatar>
+            </v-list-item> -->
+            <v-list-item class="px-4" @click="() => {this.$router.push('/user')}">
+                <ProfileButton />
+            </v-list-item>
+        </v-list>
+          
       </div>
-      <div class="col col-3 info-column">
+      <div class="col col-2 info-column" v-if="panel">
         <div class="info-game" v-if="!selectedData">
           <div class="col pa-0  summary-container info-item" v-if="gameData" >
-            <game-info :game="gameData" :expanded="true" mode="info" />
+            <game-info :game="gameData" :expanded="true" mode="info" v-if="panel === 'info'" />
           </div>
-          <div class="row mx-0 my-0 info-item tabs-container" v-if="panel === 'gameInfo'">
+          <div class="row mx-0 my-0 info-item tabs-container" v-if="panel === 'scores'">
             <v-card  outlined class="pa-0 card-bg" style="width: 100%;" >
               <v-tabs 
                 v-model="tab"
@@ -396,24 +394,26 @@
             </v-card>
           </div>
         <v-divider />
-        <div class="row ma-0 mt-0 py-2  info-item minimap-row d-flex align-center justify-center" v-if="this.gameData && panel === 'minimap'" >
-          
+        <div class="row ma-0 mt-0 py-2  info-item minimap-row d-flex align-center justify-center" v-if="this.gameData && (panel === 'info' || panel === 'minimap')" >
           <map-mini :gameData="this.gameData" size="120" />
+        </div>
+        <div class="row ma-0 info-item" v-if="panel === 'inspect'" >
+          Select a tile to inspect....
         </div>
         <div class="row ma--4 mt-0  info-item options-row">
           <div class="col pa-0">
             <v-divider class="my-0" />
             <div class="row ma-0 pa-1 d-flex justify-stretch align-center">
-              <div class="col pa-0 d-flex justify-stretch align-center" style="height: 100%;">
+              <!-- <div class="col pa-0 d-flex justify-stretch align-center" style="height: 100%;">
                 <v-btn plain @click="() => showGameOptions = !showGameOptions">
                   <v-icon size="large">mdi-cog</v-icon>
                 <div>Options</div>
                 </v-btn>
               </div>
-              <v-divider vertical class="mx-2" />
+              <v-divider vertical class="mx-2" /> -->
               <div class="col pa-0">
                 <player-info :player="userPlayer" v-if="userIsPlayer" />
-                <v-btn plain @click="setShowTeamSelect(true)" v-else>Join Game</v-btn>
+                <v-btn plain primary @click="setShowTeamSelect(true)" v-else>Join Game</v-btn>
                 <!-- <v-card outlined  class="pa-1" >
                     <div :class="`controller ${userTeam}`" v-if="userTeam">
                       Team {{userTeam}} 
@@ -424,33 +424,15 @@
             
           </div>
         </div>
-       </div>
-       <v-slide-x-transition>
-        <div class="selected-content col" v-if="showInfo && typeof selectedTile === 'number'" transition="slide-x-transition">
-          <Info
-            :selectedData="selectedData"
-            :index="selectedTile"
-            :tile="theTile"
-            :onClose="handleTileSelect"
-            :onClaimSelect="handleClaimSelect"
-            :onGenerateSelect="handleGenerateSelect"
-            :onClaim="handleClaim"
-            :onMove="handlePlayerMove"
-            :onAction="handleGenerateSelect"
-            :userPlayer="userIsPlayer && userPlayer"
-            :getCreature="getCreature"
-            />
-        </div>
-       </v-slide-x-transition>
-       <v-slide-y-reverse-transition>
-        <div class="options-content col pa-4" v-if="showGameOptions">
+        <v-slide-x-transition>
+        <div class="options-content col pa-4" v-if="showGameOptions || panel === 'options'">
           <div class="row">
             <div class="col">
               Options
             </div>
-            <div class="col col-1">
-              <v-btn icon @click="() => showGameOptions = !showGameOptions">
-                <v-icon size="large">mdi-close</v-icon>
+            <div class="col col-3">
+              <v-btn icon @click="() => {showGameOptions = !showGameOptions; this.panel = null;}">
+                <v-icon medium>mdi-close</v-icon>
               </v-btn>
             </div>
           </div>
@@ -476,9 +458,29 @@
             </div>
           </div>
         </div>
-       </v-slide-y-reverse-transition>
+       </v-slide-x-transition>
+       </div>
+       <v-slide-x-transition>
+        <div class="selected-content col" v-if="showInfo && typeof selectedTile === 'number'" transition="slide-x-transition">
+          <Info
+            :selectedData="selectedData"
+            :index="selectedTile"
+            :tile="theTile"
+            :onClose="handleTileSelect"
+            :onClaimSelect="handleClaimSelect"
+            :onGenerateSelect="handleGenerateSelect"
+            :onClaim="handleClaim"
+            :onMove="handlePlayerMove"
+            :onAction="handleGenerateSelect"
+            :userPlayer="userIsPlayer && userPlayer"
+            :getCreature="getCreature"
+            :getLoot="getLoot"
+            />
+        </div>
+       </v-slide-x-transition>
+       
       </div>
-      <div class="col col-9 content-column">
+      <div class="col content-column" :class="panel ? 'col-9' : 'col-11'">
         <client-only>
           <div class="error-message" v-if="gameStatus === 'error'"><label>Error</label>Game Data Not Found</div>
           <Loading message="Loading..." v-if="gameStatus === 'loading'" />
@@ -631,13 +633,16 @@ export default {
   data() {
     
     return {
-      drawer: true,
-        items: [
-          { title: 'Home', icon: 'mdi-home-city' },
-          { title: 'My Account', icon: 'mdi-account' },
-          { title: 'Users', icon: 'mdi-account-group-outline' },
-        ],
-        mini: true,
+      
+      items: [
+        { title: 'Info', icon: 'mdi-text-box-outline', id: 'info' },
+        { title: 'Inspect', icon: 'mdi-crosshairs', id: 'inspect' },
+        { title: 'Map', icon: 'mdi-checkerboard', id: 'minimap' },
+        { title: 'My Account', icon: 'mdi-account', id: 'account' },
+        { title: 'Scores', icon: 'mdi-shield-account', id: 'scores' },
+        { title: 'Settings', icon: 'mdi-cog', id: 'options' },
+      ],
+      
       gameStatus: 'loading',
       gameTeams: null,
       baseUrl: "https://localhost:3333",
@@ -665,7 +670,7 @@ export default {
       selectedAsset: null,
       highlightedIndex: null,
       tileSetId: null,
-      panel: 'minimap',
+      panel: 'info',
       tab: "Scores",
       tabs: ['Scores', 'Creatures', 'User'],
       isBattling: false,
@@ -841,6 +846,9 @@ export default {
       generateMapTiles: 'ui/generateMapTiles',
       arrayFromMapGrid: 'ui/arrayFromMapGrid',
     }),
+    handlePanel(item){
+      this.panel = item === this.panel ? null : item;
+    },
     handleTeamSelect(teamObj){
       const userTeam = teamObj.team;
       this.setUserTeam(userTeam);
@@ -1170,7 +1178,6 @@ export default {
     async handleGenerateSelect(location, expandMap){
       /** placeholder function */
       const {gameData} = this
-      console.log('gameData', gameData);
       this.setActiveGame(gameData);
       this.generateLocation = location
       this.generateMode = expandMap ? 'expand' : 'normal';
@@ -1686,6 +1693,13 @@ section#intro{
   flex-basis: 4rem;
   height: 100%;
   width: 4rem;
+  background-color: var(--v-card-darken1);
+  .menu-item{
+    &.selected{
+      // background: var(--v-card-lighten1);
+      background: var(--line-color);
+    }
+  }
 }
 .info-column{
   // min-width: 320px;
@@ -2093,13 +2107,13 @@ $outsideRowSize: 3rem;
     
   }
   .options-content, .selected-content{
-z-index: 2;
+    z-index: 2;
     position: absolute;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    border-right: 1px solid var(--line-color);
+    // border-right: 1px solid var(--line-color);
     overflow-y: scroll;
     padding: 0;
   }
@@ -2110,9 +2124,7 @@ z-index: 2;
       border: .5rem;
     }
   }
-  .options-content{
-    background: var(--ui-color);
-  }
+  
     .controller{
         &:before{
           content: "";
@@ -2473,6 +2485,9 @@ z-index: 2;
     100% {
       transform: scale(1);
     }
+  }
+  .bg-darker{
+    background-color: var(--v-card-darken1) !important;
   }
   .card-bg{
     // background-color: var(--v-card-base) !important;

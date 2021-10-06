@@ -530,17 +530,17 @@ const defaultTiles = [
 
 const defaultCreatures = [106, 319, 341, 23, 401, 22, 195, 276, 163, 295];
 
-const themeArray = [
-  "lemon",
-  "sand",
-  "greyscale",
-  "grayscale",
-  "turquoise",
-  "peach",
-  "violet",
-  "teal",
-  "charcoal",
-];
+// const themeArray = [
+//   "lemon",
+//   "sand",
+//   "greyscale",
+//   "grayscale",
+//   "turquoise",
+//   "peach",
+//   "violet",
+//   "teal",
+//   "charcoal",
+// ];
 
 const defaultTeams = [
   { team: "Red", count: 0, totalValue: 0, god: "war", color: "#d15a47" },
@@ -1099,6 +1099,7 @@ export const actions = {
       newTileMap = await context.dispatch("arrayFromMapGrid", {
         grid: mapGrid,
       });
+      console.log("result tileMap", newTileMap);
     } else {
       newTileMap = await context.dispatch("tileMapFromBlankArrays", {
         blankRowsArray,
@@ -1153,16 +1154,7 @@ export const actions = {
         mapGrid,
         tileMap: newTileMap,
       }));
-    // console.log("creaturesArray", creaturesArray);
-    // const lootArray = lootLocations.map((loc, i) => {
-    //   const obj = {
-    //     location: loc,
-    //     asset: null,
-    //     used: false,
-    //   };
-    //   return obj;
-    // });
-    // console.log("lootArray", lootArray);
+
     let gameTiles = newGameArray;
     if (useMapGrid) {
       gameTiles = compileStaticTileMap({
@@ -1644,25 +1636,79 @@ export const actions = {
       dispatch.commit("setProfileObject", profileObject);
     }
   },
+  arrayFromLayoutString(_, payload) {
+    // Assume you start with the integer API call
+    const { layoutString } = payload;
+    let map = String(layoutString);
+    const size = Math.sqrt(map.length);
+
+    let mapArray = [];
+    let count = 0;
+
+    for (let y = 0; y < size; y++) {
+      let row = [];
+      for (let x = 0; x < size; x++) {
+        row.push(map[count]);
+        count++;
+      }
+      mapArray.push(row);
+    }
+  },
   arrayFromMapGrid(_, payload) {
     const { grid } = payload;
-    console.log("grid", grid);
+
     if (typeof grid !== "string") {
-      console.log("type of gruid is not string", grid);
+      console.log("type of grid is not string", grid);
       return;
     }
+
     const trimmed = grid.trim();
-    var inRows = trimmed.split("\n");
-    console.log("inRows", inRows);
-    const tileMap =
-      inRows &&
-      inRows.map((row) => {
-        if (row === "") return;
-        var thisRow = row.trim();
-        const cols = thisRow.split(/\s+/);
-        return cols;
-      });
-    return tileMap;
+    const firstCharacter = trimmed.substring(0, 1);
+    if (firstCharacter === "[") {
+      console.log("arrayFromGrid from string array!", grid);
+      let inRows = trimmed.split("\n");
+      inRows = inRows.filter((row) => row !== "[");
+      inRows = inRows.filter((row) => row !== "]");
+      // console.log("arrayFromGrid inRows", inRows);
+      const tileMap =
+        inRows &&
+        inRows.map((row) => {
+          if (row === "") return;
+          if (row === "[") return;
+          if (row === "]") return;
+          let thisRow = row.trim();
+          thisRow = thisRow.replace("[", "");
+          thisRow = thisRow.replace("]", "");
+          thisRow = thisRow.replace("'", "");
+          thisRow = thisRow.replace('"', "");
+          thisRow = thisRow.replace(/'/g, "");
+          thisRow = thisRow.replace(/ /g, "");
+          thisRow = thisRow.replace(/"/g, "");
+          thisRow = thisRow.trim();
+          if (thisRow.substring(thisRow.length - 1, thisRow.length) === ",") {
+            /** replace the last comma */
+            thisRow = thisRow.substring(0, thisRow.length - 1);
+          }
+          // console.log("arrayFromGrid thisRow", thisRow);
+          const cols = thisRow.split(",");
+          // console.log("arrayFromGrid cols", cols);
+          return cols;
+        });
+      console.log("arrayFromGrid", tileMap);
+      return tileMap;
+    } else {
+      var inRows = trimmed.split("\n");
+      console.log("inRows", inRows);
+      const tileMap =
+        inRows &&
+        inRows.map((row) => {
+          if (row === "") return;
+          var thisRow = row.trim();
+          const cols = thisRow.split(/\s+/);
+          return cols;
+        });
+      return tileMap;
+    }
   },
   tileMapFromBlankArrays(_, payload) {
     const { blankColsArray, blankRowsArray } = payload;
@@ -1690,7 +1736,7 @@ export const actions = {
                 const obj = {
                   location: thisLocation,
                   asset: defaultCreature,
-                  used: false,
+                  active: true,
                 };
                 flatLocations.push(obj);
               }
@@ -1706,7 +1752,7 @@ export const actions = {
         const obj = {
           location: loc,
           asset: null,
-          used: false,
+          active: true,
         };
         return obj;
       });
@@ -1728,7 +1774,7 @@ export const actions = {
                 const obj = {
                   location: thisLocation,
                   asset: null,
-                  used: false,
+                  active: true,
                 };
                 flatLocations.push(obj);
               }
@@ -1741,7 +1787,7 @@ export const actions = {
         const obj = {
           location: loc,
           asset: null,
-          used: false,
+          active: true,
         };
         return obj;
       });
@@ -1749,6 +1795,8 @@ export const actions = {
     }
   },
 };
+
+/** Additional */
 function getRandomFromArray(arr, n) {
   var result = new Array(n),
     len = arr.length,

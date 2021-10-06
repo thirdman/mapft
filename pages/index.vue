@@ -59,7 +59,7 @@
 import { mapGetters } from "vuex";
 export default {
   head: {
-    title: 'About',
+    title: 'Unnamed Games: NFT based board games',
     // meta: [
     //   { hid: 'description', name: 'description', content: 'View a cool nft' },
     // ],

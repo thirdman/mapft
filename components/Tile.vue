@@ -22,7 +22,7 @@
      </div>
       <!-- :style="fill ? `width: 100%; height: auto` : `width:` " -->
       
-    <Card  :asset="creature.asset" v-if="creature && tile.src" :showmeta="false" :card="false" />
+    <Card  :asset="creature.asset" v-if="creature && creature.asset && tile.src" :showmeta="false" :card="false" />
     <Card  :asset="tile.meta.creature" v-if="!hideAsset && tile.meta.creature && tile.meta.creature.id" :showmeta="false" :card="false" />
     <div v-if="creature && tile.src" class="tile-creature">
       <v-icon large color="lime">mdi-ghost</v-icon>

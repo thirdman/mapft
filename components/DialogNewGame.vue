@@ -41,7 +41,7 @@
           </div>
         </div>
       <div class="row">
-        <div class="col">
+        <!-- <div class="col">
             <div>
               <label>Map</label>
               <div class="text-body-2">
@@ -53,8 +53,8 @@
                 v-tooltip="`Can players expand the map in any direction?`"
               ></v-switch>
             </div>
-        </div>
-        <div class="col">
+        </div> -->
+        <!-- <div class="col">
             <label>Exploration</label>
             <div class="text-body-2">
               Tiles Start Hidden
@@ -65,7 +65,7 @@
                 :label="`${generateMap ? 'yes' : 'no'}`"
               ></v-switch>
             </div>  
-        </div>
+        </div> -->
         <div class="col">
             <label>Exploration</label>
             <div class="text-body-2">
@@ -218,7 +218,7 @@
               :label="`${optionUseLootGeneration ? 'Yes' : 'no'}`"
               v-tooltip="`Assign loot rewards to tiles`"
             ></v-switch>
-            <v-text-field v-model="optionLootCount" />
+            <v-text-field v-model="optionLootCount" v-if="devMode"/>
         </div>
         <div class="col">
           <label >Creatures</label>
@@ -230,10 +230,10 @@
                 :label="`${optionUseCreatureGeneration ? 'Yes' : 'no'}`"
                 v-tooltip="`Assign Creatures to tiles`"
               ></v-switch>
-              <v-text-field v-model="optionCreatureCount" />
+              <v-text-field v-model="optionCreatureCount" v-if="devMode" />
         </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="devMode">
         <div class="col">
           <label >Mechanic</label>
           <div class="text-body-2">How will this game work?</div>
@@ -307,12 +307,20 @@
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import MapPreview from './MapPreview.vue';
 import TileSetSelect from './TileSetSelect.vue';
-const defaultCode = `0 0 0 0 0
-0 1 1 0 1
-0 1 0 2 1
-0 2 1 1 0
-0 1 3 1 0
-0 0 0 0 0`
+// const defaultCode = `0 0 0 0 0
+// 0 1 1 0 1
+// 0 1 0 2 1
+// 0 2 1 1 0
+// 0 1 3 1 0
+// 0 0 0 0 0`
+const defaultCode = `[
+  ['0', '0', '0', '0', '0'],
+  ['0', '1', '1', '0', '1'],
+  ['0', '1', '0', '2', '1'],
+  ['0', '2', '1', '1', '0'],
+  ['0', '1', '3', '1', '0'],
+  ['0', '0', '0', '0', '0']
+]`
 export default {
   components: { MapPreview, TileSetSelect },
   props: ['onAction', 'onClose', 'show', 'rows', 'cols'],
@@ -424,6 +432,8 @@ export default {
         this.newRows = rows
         this.newCols = cols
         this.optionMapMode = 'static'
+        this.optionUseCreatureGeneration = true;
+        this.optionUseLootGeneration = true;
       } else {
         console.error('either missing rows/cols');
         return

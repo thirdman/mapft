@@ -3,15 +3,19 @@
     <div :class="`minimalButton ${contrastMode} ${profileObject && profileObject.profileImageHash ? 'hasAvatar' : ''}`" v-if="walletAddress">
 
         <button @click="handleNav('/user')" class="btn iconButton " v-tooltip="'View your profile'">
-          <img class="userAvatarImage"
-            :src="getProfileImage(profileObject.profileImageHash)"
-            v-if="profileObject && profileObject.profileImageHash"
-          />
-          <IconUser
-            v-if="!profileObject || !profileObject.profileImageHash"
-            :data-mode="contrastMode"
-            :strokeClass="contrastMode"
-            />
+          <v-avatar color="secondary"  :size="size">
+            <v-img
+              :src="getProfileImage(profileObject.profileImageHash)"
+              v-if="profileObject && profileObject.profileImageHash"
+            >
+            </v-img>
+            <v-icon
+              v-if="!profileObject || !profileObject.profileImageHash"
+              size="large"
+            >
+            mdi-account
+            </v-icon>
+          </v-avatar>
         </button>
       </div>
   </div>
@@ -26,6 +30,7 @@ export default {
   data() {
     return {
       hasVerticalGrid: false,
+      size: 32
     };
   },
   mounted() {

@@ -2,7 +2,15 @@
   <div
     :class="`tile-info col pa-0 ${selected ? 'selected' : ''}`"
     >
-    
+    <dialog-object-interaction 
+      :onAction="addObject" 
+      :item="loot" 
+      type="loot"
+      v-if="showObjectInteraction && loot" 
+      :userPlayer="userPlayer" 
+      :show="showObjectInteraction && loot"
+      :onClose="()=> {showObjectInteraction = false}"
+    />    
     <div class="row ma-0 d-flex align-center" >
       <div class="col pa-2">
         <label>Tile</label>
@@ -13,7 +21,7 @@
     </div>
     
     <div v-if="!showTeamSelect" class="row ma-0">
-      <div class="col col-7">
+      <div class="col col-6">
         
         <Tile 
           :tile="tile"
@@ -24,14 +32,15 @@
           :onAction="false"
           :hideAsset="true"
           :fill="false"
-          size="200"
+          :hideEmpty="true"
+          size="90"
 
           />
           <!-- size="140" -->
           <!-- :fill="true" -->
-          
       </div>
-      <div class="col col-5">
+    
+      <div class="col ">
         <v-divider class="ma-0"/>
         <label>location</label>
         {{selectedData.location && selectedData.location.toString()}}
@@ -39,46 +48,39 @@
         <label>Value</label>
         {{selectedData.meta.value}}
         <v-divider class="my-2"/>
-        <label>Loot</label>
-        <div>-</div>
-        <v-divider class="my-2"/>
-        <div v-if="selectedData.meta.defence" >
-          <div class="row ma-0">
-            <div class="col pa-0">
-              <label>Defence</label>
-              {{selectedData.meta.defence}}
-            </div>
+        <label>Owner</label>
+        <div v-if="selectedData.meta.owner">
+          <div v-if="walletAddress && walletAddress === selectedData.meta.owner">
+            <v-icon light color="white" x-small>mdi-account-circle</v-icon> YOU
+          </div>
+          <div v-else>
+            {{selectedData.meta.owner}}
           </div>
         </div>
+        <div v-else>
+          -
+        </div>
+
+        
       </div>
     </div>
     <div v-if="!showTeamSelect && selectedData">
       <v-divider class="ma-0" />
       <div class="row ma-0 controller-section">
         <div class="controller-mark" :class="selectedData.meta.team" :style="`background: ${selectedData.meta.team ? getColor(selectedData.meta.team) : ''}`"></div>
-        <div class="col col-7">
+        <div class="col col-6">
           <label>Asset</label>
-          <Card :asset="creature.asset" v-if="creature" />
+          <Card :asset="creature.asset" v-if="creature && creature.asset" />
+          <div v-if="creature && !creature.asset">Creature</div>
           <!-- <Card :asset="selectedData.meta.creature" v-if="selectedData.meta.creature" /> -->
-          <p class="body-text-2" v-else>This tile is uncontested. Claim it to increas your team score </p>
+          <p class="body-text-2 help" v-else>This tile is uncontested. </p>
         </div>
-        <div class="col col-5">
+        <div class="col col-6">
           <label>Controller</label>
           <div v-if="tile.meta.team" :class="`controller ${selectedData.meta && selectedData.meta.team}`">{{selectedData.meta && selectedData.meta.team}}</div>
           <div v-else>Neutral</div>
           <v-divider class="my-2" />
-          <label>Owner</label>
-          <div v-if="selectedData.meta.owner">
-            <div v-if="walletAddress && walletAddress === selectedData.meta.owner">
-              <v-icon light color="white" x-small>mdi-account-circle</v-icon> YOU
-            </div>
-            <div v-else>
-              {{selectedData.meta.owner}}
-            </div>
-          </div>
-          <div v-else>
-            -
-          </div>
+          
           <div v-if="creature && creature.asset">
             <v-divider class="my-2" />
             <label>Asset</label>
@@ -90,6 +92,33 @@
             {{creature.asset.health.Int64 || creature.asset.health }}
             <label>Attack</label>
             {{creature.asset.attack.Int64 || creature.asset.attack || '-'}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="!showTeamSelect" class="tile-actions">
+      <div class="col ma-0 loot-section">
+        <v-divider class="my-2"/>
+        <label>Loot</label>
+        <div v-if="loot">
+          <game-object :item="loot" type="loot" />
+        </div>
+        <div v-if="!loot">-</div>
+
+        <div v-if="loot" >
+          <div class="row ma-0">
+            <div class="col pa-0">
+              <!-- <label>Opened</label>
+              <div>{{loot.active ? "No" : "Yes"}}</div> -->
+              <v-btn
+              
+              small
+              block
+              :color="loot && loot.active ? 'primary' : ''"
+              :disabled="loot && !loot.active"
+              @click="handlePointInteraction({type: 'loot',item: loot})"
+              >Interact</v-btn>
+            </div>
           </div>
         </div>
       </div>
@@ -179,19 +208,22 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import GameObject from "./GameObject.vue";
 // import TeamSelect from './TeamSelect.vue';
 
-export default {
+export default 
+  {
+  components: { GameObject },
   props: [
     'tile', 
   'handleSelect', 
   'selected', 
   'userPlayer',
   'onAction', 
-  'onClose', 'onMove', 'selectedData', 'index', 'onGenerateSelect', 'onClaimSelect', 'handleClaim', 'getCreature'],
+  'onClose', 'onMove', 'selectedData', 'index', 'onGenerateSelect', 'onClaimSelect', 'handleClaim', 'getCreature', 'getLoot'],
   data() {
     return {
-      // showTeamSelect: false,
+      showObjectInteraction: false
     };
   },
   created(){
@@ -204,12 +236,22 @@ export default {
       userTeam: "ui/userTeam",
       tiles: "ui/tiles",
       showTeamSelect: "ui/showTeamSelect",
+      devMode: "ui/devMode",
     }),
     creature(){
       const {getCreature, selectedData} = this;
       if(getCreature){
         const creature = getCreature(selectedData.location);
           return creature
+      }else {
+        return null
+      }
+    },
+    loot(){
+      const {getLoot, selectedData} = this;
+      if(getLoot){
+        const loot = getLoot(selectedData.location);
+        return loot
       }else {
         return null
       }
@@ -221,11 +263,16 @@ export default {
       setUserTeam: 'ui/setUserTeam',
       setShowTeamSelect: "ui/setShowTeamSelect",
     }),
-    // handleTeamSelect(teamObj){
-    //   const userTeam = teamObj.team;
-    //   this.setUserTeam(userTeam);
-    //   this.showTeamSelect = false;
-    // },
+    handlePointInteraction({type = 'loot', item}){
+      
+      console.log('loot', item);
+      this.showObjectInteraction = true;
+    },
+    addObject({type = 'loot', item}){
+      
+      console.log('add object', item);
+      this.showObjectInteraction = false;
+    },
     getColor(team){
       const {gameTeams} = this;
       if(!gameTeams || !team){return}

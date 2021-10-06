@@ -380,7 +380,6 @@ const determinePossible = (options) => {
     mapMode = "static",
     useMapGrid = true,
   } = options;
-  console.log("determinePossible options", options);
   if (!tileMap) {
     return;
   }
@@ -444,7 +443,6 @@ const determinePossible = (options) => {
   // }
   const invertDirection = mapInverseDirections[direction];
 
-  console.log("invertDirection", invertDirection);
   let target;
   /** gets the image index in the target direction */
   if (direction === "north") {
