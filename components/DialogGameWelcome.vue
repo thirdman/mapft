@@ -1,22 +1,22 @@
 <template>
   <v-dialog
-      v-model="showTeamSelect"
+      v-model="show"
       width="500"
+      scrollable
     >
-    
-          <v-card outlined elevation="4" :class="`dialog join`" v-if="showTeamSelect">
-        
+    <v-card outlined elevation="4" :class="`dialog welcome`" >    
         <v-card-title class="row d-flex align-center">
           <div class="col">
-            Join Game
+            Welcome
           </div>
+          <v-spacer />
           <div class="col col-1">
-              <v-btn icon @click="setShowTeamSelect(false)">
+              <v-btn icon @click="onClose" v-if='onClose'>
                 <v-icon size="large">mdi-close</v-icon>
               </v-btn>
             </div>
         </v-card-title>
-        <v-card-text>
+        <!-- <v-card-text>
           <div class="row">
             <div class="col">
               <label>Team</label>
@@ -44,22 +44,14 @@
               </div>
             </div>
           </div>
-        </v-card-text>
-        <!-- <v-card-actions>
-          <v-btn @click="addPlayer">Join!</v-btn>
-        </v-card-actions> -->
-      
-          <!-- <team-select
-            :team="userTeam"
-            :teams="gameTeams"
-            direction="row"
-            :onSelect="handleTeamSelect"
-            />   -->
+        </v-card-text> -->
         
         <!-- <v-divider class="ma-0"></v-divider> -->
         <v-card-actions>
-            <v-btn @click="onAction(compiledPlayer)">Join!</v-btn>
-            <v-btn depressed outlined text @click="handleTeamSelect(null)">Cancel</v-btn>
+            <v-btn @click="onAction && onAction(true)">Action</v-btn>
+            <v-btn @click="onJoin" :disabled="!onJoin">Join</v-btn>
+            <!-- <v-btn @click="onAction(compiledPlayer)">Join!</v-btn> -->
+            <!-- <v-btn depressed outlined text @click="handleTeamSelect(null)">Cancel</v-btn> -->
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -74,14 +66,12 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
-import TeamSelect from './TeamSelect.vue';
 
 export default {
-  props: ['onSelect', 'onClose', 'show', 'onAction', 'userPlayer', 'teams', 'players'],
+  props: ['onSelect', 'onClose', 'show', 'onAction', 'onJoin', 'gameData'],
   data() {
     return {
       // showTeamSelect: true
-      newUserName: "New Player",
     };
   },
   created(){
@@ -102,16 +92,6 @@ export default {
       showTeamSelect: "ui/showTeamSelect",
       playerTemplate: "ui/playerTemplate",
     }),
-    compiledPlayer(){
-      const {userPlayer, userTeam, playerTemplate} = this;
-      const color = userTeam && this.getColor(userTeam)
-      // return {walletAddress, id: walletAddress, displayName: newUserName, team: userTeam, color: color}
-      if(!userPlayer) {return}
-      const  tempPlayer = { ...playerTemplate, ...userPlayer, displayName: this.newUserName, team: userTeam, color: color}
-      console.log('about to return tempPlayer: ', tempPlayer)
-      return tempPlayer
-    }
-    
   },
 
   methods: {

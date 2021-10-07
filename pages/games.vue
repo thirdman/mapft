@@ -107,9 +107,10 @@ export default {
       // this.gameId = newId;
       this.showNewGameDialog = false;
       // const gameOptions = {...props, id: newId}
+      const redirect = props.loadGame;
       const gameId = await this.generateGame(props);
       console.log('gameId', gameId)
-      const redirect = true
+      // const redirect = false;
       if(gameId && redirect){
         this.loadGame(gameId);
       }

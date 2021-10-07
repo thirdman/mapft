@@ -9,6 +9,19 @@
           New Game
       </v-card-title>
         <v-card-text>
+        <div class="row" v-if="devMode">
+          <div class="col">
+            <label>load game </label>
+            <div>
+              
+              <v-switch
+                v-model="loadGame"
+                :label="`${loadGame ? 'Yes' : 'no'}`"
+                v-tooltip="`Load Game on generate`"
+              ></v-switch>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col">
             <label>Teams</label>
@@ -20,6 +33,19 @@
                 disabled
                 v-model="optionUseDefault"
                 :label="`${optionUseDefault ? 'Yes' : 'no'}`"
+                v-tooltip="`Coming Soon`"
+              ></v-switch>
+            </div>
+          </div>
+          <div class="col">
+            <label>Starting Positions</label>
+            <div>
+              <div class="text-body-2">
+              Generate starting positions
+              </div>
+              <v-switch
+                v-model="useStartPoints"
+                :label="`${useStartPoints ? 'Yes' : 'no'}`"
                 v-tooltip="`Coming Soon`"
               ></v-switch>
             </div>
@@ -327,7 +353,9 @@ export default {
   data() {
     return {
       showDialog: true,
+      loadGame: false,
       useMapGrid: false,
+      useStartPoints: false,
       mapGrid: defaultCode,
       newRows: 3,
       newCols: 4,
@@ -359,14 +387,18 @@ export default {
     ...mapGetters({
       walletAddress: "ui/walletAddress",
       tileSets: "ui/tileSets",
+      devMode: "ui/devMode",
     }),
     compiledOptions(){
-      const {newRows, newCols, optionUseDefault, optionMapMode, generateMap, walletAddress, tileSetId, gameTitle, optionUseLootGeneration,
+      const {
+        newRows, 
+        newCols, optionUseDefault, optionMapMode, generateMap, walletAddress, tileSetId, gameTitle, optionUseLootGeneration,
         optionLootCount, 
         optionUseCreatureGeneration,
         optionCreatureCount,
         useMapGrid,
         mapGrid,
+        useStartPoints,
         } = this
       const options = {
         rows: newRows, 
@@ -377,8 +409,11 @@ export default {
         optionCreatureCount,
         useDefaultTeams: optionUseDefault, generateMap, owner: walletAddress, mapMode: optionMapMode, tileSetId, 
         title: gameTitle,
+        useStartPoints,
         useMapGrid: useMapGrid,
         mapGrid: mapGrid,
+        loadGame: this.loadGame,
+        useEdgePoints: optionMapMode !== 'explore',
         }
       return options;
     }

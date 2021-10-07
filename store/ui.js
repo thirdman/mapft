@@ -44,6 +44,13 @@ const tileSets = [
     fileType: "png",
   },
 ];
+const playerTemplate = {
+  team: null,
+  active: false,
+  joined: false,
+  id: "admin",
+  walletAddress: null,
+};
 const tileTemplate = {
   id: null,
   src: null,
@@ -626,6 +633,7 @@ export const state = () => ({
   activeGame: null,
   tiles: defaultTiles,
   tileTemplate: tileTemplate,
+  playerTemplate: playerTemplate,
   creatures: defaultCreatures,
   gameTeams: defaultTeams,
 });
@@ -638,6 +646,7 @@ export const getters = {
   activeGame: (state) => state.activeGame,
   tiles: (state) => state.tiles,
   tileTemplate: (state) => state.tileTemplate,
+  playerTemplate: (state) => state.playerTemplate,
   creatures: (state) => state.creatures,
   gameTeams: (state) => state.gameTeams,
   userTeam: (state) => state.userTeam,
@@ -1064,13 +1073,15 @@ export const actions = {
       optionUseCreatureGeneration,
       optionCreatureCount,
       useMapGrid,
+      useStartPoints,
+      useEdgePoints,
       mapGrid,
     } = payload;
     const options = { ...payload };
     const id = uuidv4();
     console.log("generate Game", payload);
 
-    const { localGames, ipfsUrl } = context.state;
+    const { localGames, ipfsUrl, playerTemplate } = context.state;
     const newTileArray = new Array(rows * cols).fill(tileTemplate);
     let newGameArray = [];
     const blankRowsArray = new Array(rows).fill();
@@ -1154,6 +1165,16 @@ export const actions = {
         mapGrid,
         tileMap: newTileMap,
       }));
+    const startPointsArray =
+      useStartPoints &&
+      (await context.dispatch("getStartPoints", {
+        locations: flatLocations,
+        useStartPoints,
+        useEdgePoints,
+        rows,
+        cols,
+        tileMap: newTileMap,
+      }));
 
     let gameTiles = newGameArray;
     if (useMapGrid) {
@@ -1167,7 +1188,14 @@ export const actions = {
       });
       // console.log("tempGameTiles", tempGameTiles);
     }
-
+    const adminPlayer = {
+      ...playerTemplate,
+      walletAddress: owner,
+      id: owner,
+      active: true,
+      joined: false,
+    };
+    console.log("adminPlayer", adminPlayer);
     if (id) {
       const tempGames = localGames.slice();
       const thisGame = {
@@ -1194,9 +1222,10 @@ export const actions = {
           loot: lootArray,
           assets: null,
           chances: null,
+          starts: startPointsArray,
         },
         creatures: [],
-        players: [owner],
+        players: [adminPlayer],
         teams: defaultTeams,
       };
       console.info("thisGame", thisGame);
@@ -1793,6 +1822,45 @@ export const actions = {
       });
       return lootArray;
     }
+  },
+  getStartPoints(_, payload) {
+    const {
+      locations,
+      optionStartPointCount = 1,
+      useStartPoints,
+      mapGrid,
+      tileMap,
+      useEdgePoints = true,
+      rows,
+      cols,
+    } = payload;
+    const validLocations = [];
+    if (!useEdgePoints) {
+      validLocations.push([0, 0]);
+    }
+    if (tileMap && useEdgePoints && rows && cols) {
+      /** select edges */
+      tileMap &&
+        tileMap.map((row, rowIndex) => {
+          row &&
+            row.map((colValue, colIndex) => {
+              const thisLocation = [colIndex, rowIndex];
+              const isFirstRow = rowIndex === 0;
+              const isLastRow = rowIndex === rows - 1;
+              const isFirstCol = colIndex === 0;
+              const isLastCol = colIndex === cols - 1;
+              if (isFirstRow || isLastRow || isFirstCol || isLastCol) {
+                const obj = {
+                  location: thisLocation,
+                  team: null,
+                };
+                validLocations.push(obj);
+              }
+            });
+        });
+    }
+    const singleLocations = getRandomFromArray(validLocations, 1);
+    return singleLocations;
   },
 };
 

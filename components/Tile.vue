@@ -80,7 +80,6 @@
   }
   .tile-dev{
     background: #eee;
-    padding: 2px;
     color: red;
     position: absolute;
     font-size: .75rem;

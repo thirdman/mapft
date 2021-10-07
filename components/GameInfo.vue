@@ -61,7 +61,7 @@
             <label>Players</label>
             <div class="player-list" >
               <div v-for="(player, i) in game.players" :key="i" v-if="game && game.players" >
-                <player-info :player="player" :address="player" />
+                <player-info :player="player" />
                 <!-- <hash-address :address="player" /> -->
               </div>
             </div>

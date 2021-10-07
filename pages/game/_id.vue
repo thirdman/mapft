@@ -2,8 +2,14 @@
   <div class="pageContainer">
     <Header />
     <dialog-intro :show="!introRead" />
-    <dialog-team-select  :onAction="addPlayer" :userPlayer="userPlayer"  />
-    
+    <dialog-team-select  :onAction="addPlayer" :userPlayer="userPlayer" />
+    <dialog-game-welcome
+      :show="showGameWelcome"
+      :onAction="handleStartGame"
+      :onJoin="() => setShowTeamSelect(true)"
+      :onClose="() => {this.showGameWelcome = false}"
+      gameData="gameData"
+      />
     <v-slide-y-transition>
     <generate-tile
       :location="generateLocation"
@@ -414,6 +420,7 @@
               <div class="col pa-0">
                 <player-info :player="userPlayer" v-if="userIsPlayer" />
                 <v-btn plain primary @click="setShowTeamSelect(true)" v-else>Join Game</v-btn>
+                <v-btn plain primary @click="() => {this.showGameWelcome = true}" v-if="userIsPlayer">Show welcome</v-btn>
                 <!-- <v-card outlined  class="pa-1" >
                     <div :class="`controller ${userTeam}`" v-if="userTeam">
                       Team {{userTeam}} 
@@ -655,7 +662,7 @@ export default {
       gameData: null,
       testData: null,
       showInfo: false,
-      showNewGameDialog: false,
+      showGameWelcome: true,
       showMapControls: false,
       showMapSelect: false,
       selectedTile: null,
@@ -755,6 +762,7 @@ export default {
       binStatus: "ui/binStatus",
       walletAddress: "ui/walletAddress",
       // tiles: "ui/tiles",
+      playerTemplate: "ui/playerTemplate",
       games: "ui/games",
       localGames: "ui/localGames",
       userTeam: "ui/userTeam",
@@ -853,16 +861,53 @@ export default {
       const userTeam = teamObj.team;
       this.setUserTeam(userTeam);
     },
+    handleStartGame(){
+      console.group('= = START GAME = = ')
+      const {gameData} = this;
+      const {tiles, tileMap} = gameData 
+      console.log('gameData', gameData);
+      const {starts} = gameData && gameData.discover 
+      const {useStartPoints} = gameData && gameData.options 
+      
+      if(useStartPoints && starts &&  starts[0] && tileMap && tiles){
+        console.log('here')
+        const startLocation = starts[0];
+        const thisOptions = {
+          location: startLocation,
+          tileMap: tileMap,
+          settings: gameData.options, 
+          tiles: tiles
+        }
+        const resultTile = this.autoFillTile(thisOptions)
+        
+        const tempTiles = [...tiles ]
+        const filteredTiles = tempTiles.filter(tile => tile.location.toString() !== resultTile.location.toString());
+        const newTiles = [...filteredTiles, resultTile]
+        const newData = {...gameData, tiles: newTiles}
+        console.log('showGameWelcome', this.showGameWelcome)
+
+        this.showGameWelcome = false;
+        this.testData = newData;
+        this.applyTestData();
+        this.updateData();
+      }
+      
+       console.groupEnd()
+    },
     addPlayer(compiledPlayer){
-      const {gameData, userPlayer} = this;
+      const {gameData, userPlayer, playerTemplate} = this;
       const {players} = gameData;
       const newId = uuidv4();
-      const newPlayer = compiledPlayer || {...userPlayer}
-      console.log('compiledPlayer', compiledPlayer)
-      console.log('newPlayer', newPlayer)
+      const newPlayer = compiledPlayer || {...playerTemplate, ...userPlayer}
+      
+      
+      
       if(!newPlayer.id){
         newPlayer.id = newId;
       }
+      newPlayer.joined = true; // sets the player available 
+      newPlayer.active = true; // sets the player active 
+      console.log('newPlayer', newPlayer)
       const tempPlayers = [...players, newPlayer];
       console.log('players', players, newId, tempPlayers);
       const tempData = {...gameData}
@@ -1110,7 +1155,12 @@ export default {
       const orderedTeams = tempTeams.sort((a,b) => {
         return a.totalValue - b.totalValue
       }).reverse();
-      let tempGameData = {...gameData}
+      const tempTiles = [...tiles]
+      const sortedTiles = tempTiles.sort(function (a, b) {
+        /** Sort rows then columns */
+        return a.location[1] - b.location[1] || a.location[0] - b.location[0];
+      });
+      let tempGameData = {...gameData, tiles: sortedTiles}
       console.log('tempGameData', tempGameData);
       tempGameData.tileMap = newTileMap
       this.gameData = tempGameData;
@@ -1821,7 +1871,7 @@ $outsideRowSize: 3rem;
   }
   &.map-mode-hidden{
     .grid-wrap{
-      outline: 11px #db569e;
+      outline: 11px var(--line-color, #db569e);
       outline-offset: 1px;
       outline-style: ridge;
       margin: 2rem 0 0 2rem;
@@ -1894,8 +1944,8 @@ $outsideRowSize: 3rem;
 }
 .tile-current{
     position: absolute;
-    left: 2rem;
-    top: 2rem;
+    left: 3%;
+    top: 3%;
     display: flex;
     flex-direction: row;
     
