@@ -16,6 +16,9 @@
           </div>
         </v-btn>
       </div>
+      <div v-else>
+        No available Teams
+      </div>
     
   </div>
 </template>

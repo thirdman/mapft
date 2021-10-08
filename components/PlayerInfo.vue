@@ -48,11 +48,13 @@
         border: 1px solid white;
       }
     &.preview{
-      border-width: 2px;
+      background: rgba(255,255,255,.05);
+      border-width: 1px;
       border-style: solid;
       border-radius: 2rem;;
       outline: 0px solid pink;
       outline-offset: 1px;
+      display: inline-flex;
       
     }
     &.unit{
@@ -70,6 +72,9 @@
         width: 48px;
         height: 48px;
         background-size: 48px;
+      }
+      .player-name{
+        padding-right: .25rem;
       }
       .team-marker{
         display: block;

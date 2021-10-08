@@ -353,7 +353,7 @@ export default {
   data() {
     return {
       showDialog: true,
-      loadGame: false,
+      loadGame: true,
       useMapGrid: false,
       useStartPoints: false,
       mapGrid: defaultCode,
@@ -364,9 +364,9 @@ export default {
       optionUseDefault: true,
       optionUsePlayerUnits: false,
       optionUseLimitedTileSet: false,
-      optionUseLootGeneration: false,
+      optionUseLootGeneration: true,
       optionLootCount: 3,
-      optionUseCreatureGeneration: false,
+      optionUseCreatureGeneration: true,
       optionCreatureCount: 3,
       optionMapExpandable: true,
       optionMapMode: 'explore',

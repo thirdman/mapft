@@ -140,7 +140,7 @@
             depressed
             primary
             block
-            :color="userTeam && 'primary'"
+            :color="userTeam ? 'primary' : ''"
             @click="onClaimSelect && onClaimSelect(selectedData.location)"
             :disabled="!userTeam"
             v-if="devMode && selectedData.src"
@@ -150,7 +150,7 @@
             primary
             block
             outlined
-            :color="1===3 && userTeam && 'primary'"
+            :color="userTeam ? 'primary' : ''"
             @click="onMove && onMove(selectedData.location)"
             v-if="onMove && userPlayer"
             >

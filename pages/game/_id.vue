@@ -3,12 +3,14 @@
     <Header />
     <dialog-intro :show="!introRead" />
     <dialog-team-select  :onAction="addPlayer" :userPlayer="userPlayer" />
+     <!-- && userPlayer && !userIsPlayer -->
     <dialog-game-welcome
       :show="showGameWelcome"
       :onAction="handleStartGame"
       :onJoin="() => setShowTeamSelect(true)"
       :onClose="() => {this.showGameWelcome = false}"
-      gameData="gameData"
+      :gameData="gameData"
+      :userPlayer="userPlayer"
       />
     <v-slide-y-transition>
     <generate-tile
@@ -420,7 +422,7 @@
               <div class="col pa-0">
                 <player-info :player="userPlayer" v-if="userIsPlayer" />
                 <v-btn plain primary @click="setShowTeamSelect(true)" v-else>Join Game</v-btn>
-                <v-btn plain primary @click="() => {this.showGameWelcome = true}" v-if="userIsPlayer">Show welcome</v-btn>
+                <v-btn plain primary @click="() => {this.showGameWelcome = true}" v-if="!userIsPlayer">Show welcome</v-btn>
                 <!-- <v-card outlined  class="pa-1" >
                     <div :class="`controller ${userTeam}`" v-if="userTeam">
                       Team {{userTeam}} 
@@ -633,6 +635,7 @@ import DialogTeamSelect from '../../components/DialogTeamSelect.vue';
 import MapMini from '../../components/MapMini.vue';
 import PlayerInfo from '../../components/PlayerInfo.vue'
 import TeamSelect from '../../components/TeamSelect.vue'
+import { contentSwitch } from '../../utils/misc';
  
 export default {
   components: { DialogTeamSelect, MapMini, PlayerInfo, TeamSelect },
@@ -778,7 +781,6 @@ export default {
     userPlayer(){
       const {walletAddress, userTeam, gameData} = this;
       const players = gameData && gameData.players;
-      
       const thisPlayer = players && players.find(pl => pl.id === walletAddress );
       if(thisPlayer) {
         return thisPlayer
@@ -861,40 +863,49 @@ export default {
       const userTeam = teamObj.team;
       this.setUserTeam(userTeam);
     },
-    handleStartGame(){
+    handleStartGame(compiledPlayer){
       console.group('= = START GAME = = ')
       const {gameData} = this;
-      const {tiles, tileMap} = gameData 
+      const {tiles, tileMap, players} = gameData 
       console.log('gameData', gameData);
-      const {starts} = gameData && gameData.discover 
-      const {useStartPoints} = gameData && gameData.options 
+      if(!gameData){
+        console.error("no game data, bailing");
+        return
+      }
+      const {useStartPoints} = gameData.options 
+      let tempTiles = [...tiles]
+      let tempPlayers = [...players]
+      if(compiledPlayer){
+        console.log('compiledPlayer', compiledPlayer);
+        const newPlayer = this.addPlayer(compiledPlayer, true)
+        tempPlayers = [...tempPlayers, newPlayer]
+      }
       
-      if(useStartPoints && starts &&  starts[0] && tileMap && tiles){
-        console.log('here')
-        const startLocation = starts[0];
-        const thisOptions = {
-          location: startLocation,
-          tileMap: tileMap,
-          settings: gameData.options, 
-          tiles: tiles
+      if(useStartPoints){
+        const {starts} = gameData && gameData.discover 
+        if(starts &&  starts[0] && tileMap && tiles){
+          
+          const startLocation = starts[0];
+          const thisOptions = {
+            location: startLocation,
+            tileMap: tileMap,
+            settings: gameData.options, 
+            tiles: tiles
+          }
+          const resultTile = this.autoFillTile(thisOptions)
+          const filteredTiles = tempTiles.filter(tile => tile.location.toString() !== resultTile.location.toString());
+          tempTiles = [...filteredTiles, resultTile]
         }
-        const resultTile = this.autoFillTile(thisOptions)
-        
-        const tempTiles = [...tiles ]
-        const filteredTiles = tempTiles.filter(tile => tile.location.toString() !== resultTile.location.toString());
-        const newTiles = [...filteredTiles, resultTile]
-        const newData = {...gameData, tiles: newTiles}
-        console.log('showGameWelcome', this.showGameWelcome)
-
+      }
+        const newData = {...gameData, tiles: tempTiles, players: tempPlayers}
         this.showGameWelcome = false;
         this.testData = newData;
         this.applyTestData();
         this.updateData();
-      }
       
        console.groupEnd()
     },
-    addPlayer(compiledPlayer){
+    addPlayer(compiledPlayer, isNewGame = false){
       const {gameData, userPlayer, playerTemplate} = this;
       const {players} = gameData;
       const newId = uuidv4();
@@ -908,14 +919,19 @@ export default {
       newPlayer.joined = true; // sets the player available 
       newPlayer.active = true; // sets the player active 
       console.log('newPlayer', newPlayer)
-      const tempPlayers = [...players, newPlayer];
-      console.log('players', players, newId, tempPlayers);
-      const tempData = {...gameData}
-      tempData.players = tempPlayers;
-      console.log('tempData', tempData)
-      this.testData = tempData;
-      this.applyTestData();
-      this.setShowTeamSelect(false);
+      if(isNewGame){
+        this.setShowTeamSelect(false);
+        return newPlayer
+      } else {
+        const tempPlayers = [...players, newPlayer];
+        console.log('players', players, newId, tempPlayers);
+        const tempData = {...gameData}
+        tempData.players = tempPlayers;
+        console.log('tempData', tempData)
+        this.testData = tempData;
+        this.applyTestData();
+        this.setShowTeamSelect(false);
+      }
     },
     getUnit(location){
       const {units} = this;
