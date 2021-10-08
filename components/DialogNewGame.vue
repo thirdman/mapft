@@ -66,7 +66,7 @@
             </div>
           </div>
         </div>
-      <div class="row">
+      <div class="row" v-if="devMode">
         <!-- <div class="col">
             <div>
               <label>Map</label>
@@ -95,7 +95,7 @@
         <div class="col">
             <label>Exploration</label>
             <div class="text-body-2">
-              Explored Tiles must be adjacent
+              Explored Tiles must be adjacent.
               </div>
             <div>
               <v-switch
@@ -107,7 +107,7 @@
         <div class="col">
             <label>Tile Set Limit</label>
             <div class="text-body-2">
-              Limit available Tiles to set.
+              Limit available tiles to set.
               </div>
             <div>
               <v-switch

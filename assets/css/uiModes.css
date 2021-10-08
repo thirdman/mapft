@@ -45,13 +45,6 @@ header.minimal .headerRow .brand .brandname {
 header.minimal .headerRow .brand .subtitle {
   display: none;
 }
-
-header.minimal .headerRow .logoPosition {
-  background-size: 20px 20px;
-  width: 20px;
-  height: 20px;
-}
-
 header.minimal .headerRow .navRow {
   align-items: stretch;
   justify-content: flex-start;

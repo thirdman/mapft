@@ -13,6 +13,7 @@
       :userPlayer="userPlayer"
       />
     <v-slide-y-transition>
+      
     <generate-tile
       :location="generateLocation"
       :onClose="() => {this.generateLocation = null;}"
@@ -279,6 +280,7 @@
     <!-- HERO Container -->
     <section id="intro" class="row ma-0 ">
       <div class="menu-column" >
+        {{playerLocation}}
             <v-list dense class="bg-darker pa-0">
               <v-list-item
                 v-for="item in items"
@@ -790,6 +792,30 @@ export default {
 
       }
     },
+    playerLocation(player){
+      const {gameData, walletAddress, userPlayer} = this;
+      if(!gameData){return false}
+      const {players, units} = gameData;
+      console.log('units:', units)
+      if(!units){return}
+      let playerId = player && player.id;
+      if(player){
+        if(!playerId){return}
+        const playerUnit = units.find(unit => unit.id && unit.id.toString() === playerId.toString());
+        if (playerUnit){
+          return playerUnit.location;
+        } else {
+          return null;
+        }
+      } else {
+        const playerUnit = units.find(unit => unit.id && unit.id.toString() === walletAddress.toString());
+        if (playerUnit){
+          return playerUnit.location;
+        } else {
+          return null;
+        }
+      }
+    },
     userIsPlayer(){
       const {gameData, walletAddress} = this;
       if(!gameData){return false}
@@ -865,8 +891,8 @@ export default {
     },
     handleStartGame(compiledPlayer){
       console.group('= = START GAME = = ')
-      const {gameData} = this;
-      const {tiles, tileMap, players} = gameData 
+      const {gameData, userIsPlayer, userPlayer} = this;
+      const {tiles, tileMap, players, units} = gameData 
       console.log('gameData', gameData);
       if(!gameData){
         console.error("no game data, bailing");
@@ -875,6 +901,7 @@ export default {
       const {useStartPoints} = gameData.options 
       let tempTiles = [...tiles]
       let tempPlayers = [...players]
+      let tempUnits = units && [...units]
       if(compiledPlayer){
         console.log('compiledPlayer', compiledPlayer);
         const newPlayer = this.addPlayer(compiledPlayer, true)
@@ -896,12 +923,27 @@ export default {
           const filteredTiles = tempTiles.filter(tile => tile.location.toString() !== resultTile.location.toString());
           tempTiles = [...filteredTiles, resultTile]
         }
+        
       }
-        const newData = {...gameData, tiles: tempTiles, players: tempPlayers}
+        const newData = {
+          ...gameData, 
+          tiles: tempTiles, 
+          players: tempPlayers, 
+          // units: tempUnits
+        }
         this.showGameWelcome = false;
         this.testData = newData;
         this.applyTestData();
         this.updateData();
+        if(userIsPlayer){
+          console.log('user isp player, should move to start location')
+          // console.log('userPlayer', userPlayer());
+          const {starts} = gameData && gameData.discover 
+          if(useStartPoints && starts){
+            const startLocation = starts[0];
+            this.handlePlayerMove(startLocation, userPlayer);
+          }
+        }
       
        console.groupEnd()
     },
@@ -1109,39 +1151,11 @@ export default {
          
        }
        this.updateData();
-      // const {gameTeams} = this;
-      // const tempTeams = [...gameTeams];
-      // this.tiles.map(tile => {
-      //   console.log(tile.meta.team)
-      //   const team = tile.meta.team;
-      //   if(!team){return}
-      //   const tempObjIndex = tempTeams.findIndex(t => t.team === team);
-      //   if(tempObjIndex < 0){
-      //     const tempObj = {team: team, count: 1, totalValue: tile.meta.value}
-      //     tempTeams.push(tempObj)
-      //   } else {
-      //     const tempObj = {...tempTeams[tempObjIndex]};
-      //     tempObj.totalValue =  tempObj.totalValue + tile.meta.value;
-      //     tempObj.count =  tempObj.count + 1;
-      //     tempTeams[tempObjIndex] = tempObj
-      //   }
-      // }) 
-      
-      
-      // const orderedTeams = tempTeams.sort((a,b) => {
-      //   return a.totalValue - b.totalValue
-      // }).reverse();
-      // this.gameData = orderedTeams;
     },
      async updateData(id){
-      console.group('applying data')
       const {gameTeams, gameData} = this;
       const {tiles, units} = gameData;
       const newTileMap = this.compileTileMap(tiles);
-      console.log('newTIlemap', newTileMap) 
-      
-      console.log('units', units)
-      
       if(!tiles){
         console.error('no tiles');
         console.groupEnd()
@@ -1271,11 +1285,12 @@ export default {
       this.handleTileSelect(null)
     },
     handleClaimCancel(){
+      this.panel = null;
       this.selectedAsset = null;
       this.showSelectAsset = false;
       this.claimLocation =  null;
       this.selectedTile = null;
-      this.selectedData = null
+      this.selectedData = null;
     },
     handleClaimSelect(location){
       this.claimLocation = location;
@@ -1359,6 +1374,7 @@ export default {
         // this.setTiles(tempTiles)
         this.isBattling = false;
         this.updateData();
+        
         this.selectedTile = null;
         this.selectedData = null;
         this.selectedAsset = null;
@@ -1436,11 +1452,13 @@ export default {
       if(isNaN(index) || index === this.selectedTile){
         this.showInfo = false;
         this.selectedTile = null;
-        this.selectedData = null
+        this.selectedData = null;
+        // this.panel = null;
       } else {
         this.showInfo = true;
         this.selectedTile = index;
-        this.selectedData = tiles[index]
+        this.selectedData = tiles[index];
+        this.panel = 'inspect';
       }
       console.log('selectedTile', this.selectedTile)
     },

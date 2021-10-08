@@ -111,7 +111,6 @@
               <!-- <label>Opened</label>
               <div>{{loot.active ? "No" : "Yes"}}</div> -->
               <v-btn
-              
               small
               block
               :color="loot && loot.active ? 'primary' : ''"

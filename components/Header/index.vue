@@ -106,6 +106,19 @@
   place-items: center;
   border-right: 1px solid var(--line-color);
   cursor: pointer;
+  .logoPostion{
+      background-size: 20px 20px;
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      z-index: 1;
+      transition: transform 0.3s ease;
+      transform: rotate(0deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+  
 }
 .header .footerUserLabel {
   display: flex;

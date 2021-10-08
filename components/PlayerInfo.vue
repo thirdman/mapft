@@ -26,6 +26,9 @@
     text-overflow: ellipsis;
     font-size: .875rem;
     padding-right: .25rem;
+    transform: scale(1);  
+      transition: scale .3s ease-in-out;
+      transition-delay: .2s;
     .player-icon-container{
       border-radius: 1.5rem;
       width: 1.5rem;
@@ -80,26 +83,43 @@
         display: block;
       }
       &.demo{
-
-      // background: url(https://ipfs.io/ipfs/QmWY5NJR6BwjxPCt6pQg1p1As5LcWMxJvzfHsFfRia5Q2X) center center no-repeat;
-      background-size: auto;
-      background-size: contain;
-      
-      &:before{
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        background-image: linear-gradient(135deg, #ffffffc2, #fff0);
-        border-radius: 100px;
+        // background: url(https://ipfs.io/ipfs/QmWY5NJR6BwjxPCt6pQg1p1As5LcWMxJvzfHsFfRia5Q2X) center center no-repeat;
+        background-size: auto;
+        background-size: contain;
+        &:before{
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          background-image: linear-gradient(135deg, #ffffffc2, #fff0);
+          border-radius: 100px;
+        }
       }
-      
     }
+    
+  }
+  .highlighted .player-info{
+    // transform: scale(1.2);
+    animation: drawattention 1s 1 ease-in-out;
+    transform-origin: center center;
+  
+  }
+  @keyframes drawattention {
+    from {
+      transform: scale3d(1, 1, 1);
+    }
+    50% {
+      transform: scale3d(1.2, 1.2, 1.2);
+    }
+    to {
+      transform: scale3d(1, 1, 1);
     }
   }
   
+
+
 </style>
 
 <script>

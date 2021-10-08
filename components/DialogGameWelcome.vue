@@ -22,7 +22,7 @@
             <div class="col">
               <label>Team</label>
               <team-select
-                :team="userPlayer && userPlayer.team"
+                :team="userPlayer && userPlayer.team || randomTeam && randomTeam.team"
                 :teams="teams"
                 direction="row"
                 :onSelect="handleTeamSelect"
@@ -52,7 +52,7 @@
         
         <v-divider class="ma-0"></v-divider>
         <v-card-actions>
-            <v-btn @click="onAction && onAction(compiledPlayer)" :disabled="!compiledPlayer">Begin</v-btn>
+            <v-btn @click="onAction && onAction(compiledPlayer)" :disabled="!compiledPlayer || !userTeam">Begin</v-btn>
             <v-btn @click="onJoin" :disabled="!onJoin">Join</v-btn>
             <v-btn @click="onClose" text v-if="onClose">Close</v-btn>
             <!-- <v-btn @click="onAction(compiledPlayer)">Join!</v-btn> -->
@@ -77,7 +77,7 @@ export default {
   data() {
     return {
       // showTeamSelect: true
-      newUserName: "New Player",
+      newUserName: "",
     };
   },
   created(){
@@ -85,6 +85,7 @@ export default {
   },
   mounted(){
     this.newUserName = this.userName
+    console.log('randomTeam', this.randomTeam);
   },
   
   computed: {
@@ -102,8 +103,27 @@ export default {
       return gameData.teams;
     },
     userName(){
-      const {walletAddress, userPlayer, displayName} = this;
+      const {walletAddress, userPlayer} = this;
       return userPlayer && userPlayer.displayName || walletAddress || "New Player"
+    },
+    randomTeam(){
+      const {gameData, userTeam} = this;
+      if(userTeam){
+        return userTeam
+      }
+        if(!gameData){return}
+      const {teams} = gameData;
+      if(teams){
+        
+        const thisTeam = this.getRandomFromArray(teams, 1)
+        if(!thisTeam){
+          return null
+        }
+        this.setUserTeam(thisTeam[0]);
+        return thisTeam[0]
+      } else {
+        return null
+      }
     },
     compiledPlayer(){
       const {userPlayer, userTeam, playerTemplate, userName, newUserName} = this;
@@ -140,8 +160,22 @@ export default {
       const color = teamObj && teamObj.color
       return color
     },
+    getRandomFromArray(arr, n) {
+      var result = new Array(n),
+        len = arr.length,
+        taken = new Array(len);
+      if (n > len)
+        throw new RangeError("getRandom: more elements taken than available");
+      while (n--) {
+        var x = Math.floor(Math.random() * len);
+        result[n] = arr[x in taken ? taken[x] : x];
+        taken[x] = --len in taken ? taken[len] : len;
+      }
+      return result;
+    }
   },
 };
+
 </script>
 
 

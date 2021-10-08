@@ -1,7 +1,7 @@
 <template>
   <div
     class="grid-tile"
-    :class="`${!tile.src ? 'generate' : ''} ${selected ? 'selected' : ''} ${fill ? 'fill' : ''} ${highlighted ? 'highlighted' : ''}  ${tile.meta.team ? tile.meta.team.toLowerCase() : ''}`"
+    :class="`${!tile.src ? 'generate' : ''} ${selected ? 'selected' : ''} ${fill ? 'fill' : ''} ${highlighted ? 'highlighted' : ''}  ${tile.meta.team ? tile.meta.team : ''}`"
     @click="handleSelect && handleSelect(index)"
      :style="size ? `width: ${size}px; height: ${size}px` :`width: 100%; height: auto`"
     >
@@ -89,7 +89,7 @@
       opacity: 1;
       z-index: 999;
       box-shadow: 0 0 2rem -5px #d0b900, 0 0 4px 1px white;
-      transform: scale3d(1.1, 1.1, 1.1);
+      // transform: scale3d(1.1, 1.1, 1.1);
       .tile-current{
         // transform: scale(2);
         // transform-origin: top left;
@@ -137,6 +137,7 @@
   top: 10px;
   margin: 10px 0 0 -70px;
   z-index: 99;
+  
 }
 .location-info{
   font-size: .75rem;
@@ -237,7 +238,7 @@ export default {
       const {gameTeams} = this;
       if(!gameTeams || !team){return}
       const teamObj = gameTeams.filter(t => t.team === team)
-      const color = teamObj && teamObj[0].color
+      const color = teamObj && teamObj[0]  && teamObj[0].color
       return color
     }
     

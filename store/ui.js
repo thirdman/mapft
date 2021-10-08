@@ -1226,6 +1226,7 @@ export const actions = {
         },
         creatures: [],
         players: [adminPlayer],
+        units: [],
         teams: defaultTeams,
       };
       console.info("thisGame", thisGame);
