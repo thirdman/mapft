@@ -333,6 +333,13 @@
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import MapPreview from './MapPreview.vue';
 import TileSetSelect from './TileSetSelect.vue';
+import {
+  uniqueNamesGenerator,
+  Config,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
 // const defaultCode = `0 0 0 0 0
 // 0 1 1 0 1
 // 0 1 0 2 1
@@ -377,7 +384,13 @@ export default {
     };
   },
   created(){
-    
+    const nameConfig = {
+      dictionaries: [adjectives, colors, animals],
+      separator: "-",
+    };
+    const randomName = uniqueNamesGenerator(nameConfig); // big_red_donkey
+    console.log("random.name", randomName);
+    this.gameTitle = randomName;
   },
   mounted(){
     

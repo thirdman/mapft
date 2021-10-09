@@ -112,6 +112,7 @@
               <div>{{loot.active ? "No" : "Yes"}}</div> -->
               <v-btn
               small
+              outlined
               block
               :color="loot && loot.active ? 'primary' : ''"
               :disabled="loot && !loot.active"
@@ -135,7 +136,7 @@
       <v-divider class="ma-0" />
       <div class="row ma-0 tile-actions">
         <div class="col">
-          <v-btn
+          <!-- <v-btn
             depressed
             primary
             block
@@ -143,12 +144,13 @@
             @click="onClaimSelect && onClaimSelect(selectedData.location)"
             :disabled="!userTeam"
             v-if="devMode && selectedData.src"
-            >Claim Tile...</v-btn>
+            >Claim Tile...</v-btn> -->
           <v-btn
             depressed
             primary
             block
             outlined
+            :disabled="!tile.src"
             :color="userTeam ? 'primary' : ''"
             @click="onMove && onMove(selectedData.location)"
             v-if="onMove && userPlayer"
@@ -202,6 +204,13 @@
   position: absolute;
   width: 4px;
   background: rgba(0,0,0,.5);
+}
+.tile-actions{
+  .col{
+    button{
+      margin-bottom: .25rem;
+    }
+  }
 }
 </style>
 
@@ -276,8 +285,8 @@ export default
       const {gameTeams} = this;
       if(!gameTeams || !team){return}
       const teamObj = gameTeams.filter(t => t.team === team)
-      const color = teamObj && teamObj[0].color
-      return color
+      const color = teamObj && teamObj[0] && teamObj[0].color
+      return color || "#ccc"
     }
   },
 };

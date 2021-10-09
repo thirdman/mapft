@@ -7,7 +7,8 @@
   v-tooltip="mode === 'unit' && `${player && player.displayName || 'Player' }`"
   >
     <div class="player-icon-container" :style="`background-color: ${thisColor};`">
-      <v-icon :size="mode === 'unit' ? 'x-large' : 'small'">mdi-account</v-icon>
+      <v-img :src="player && player.avatarSrc" v-if="player && player.displayName" />
+      <v-icon :size="mode === 'unit' ? 'x-large' : 'small'" v-else>mdi-account</v-icon>
     </div>
     <span class="player-name" v-if="player && player.displayName">{{player.displayName}}</span>
     <hash-address :address="address || player && player.walletAddress" v-else />

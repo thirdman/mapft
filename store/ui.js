@@ -1,5 +1,6 @@
 import { getField, updateField } from "vuex-map-fields";
 import { v4 as uuidv4 } from "uuid";
+import { AvatarGenerator } from "random-avatar-generator";
 import {
   readThatShit,
   readThatMeta,
@@ -7,11 +8,8 @@ import {
   // readImageLink,
 } from "../utils/web3Read";
 import { compileStaticTileMap } from "../utils/generate";
+
 // import { resolveEns } from "../utils/wallet";
-// moTileMap: [
-//   [6, 14, 14, 12],
-//   [5, 1, 7, 0],
-//   [3, 10, 0, 0]
 const tileSets = [
   {
     name: "Default",
@@ -50,6 +48,7 @@ const playerTemplate = {
   joined: false,
   id: "admin",
   walletAddress: null,
+  displayName: "admin",
 };
 const tileTemplate = {
   id: null,
@@ -737,9 +736,25 @@ export const getters = {
   //   }
   // },
   demoData: (state) => {
-    const { tiles, activeGameId, localGames, creatures, gameTeams } = state;
+    const {
+      tiles,
+      activeGameId,
+      localGames,
+      creatures,
+      gameTeams,
+      owner,
+      playerTemplate,
+    } = state;
     const options = {};
     // teams: defaultTeams,
+    const adminPlayer = {
+      ...playerTemplate,
+      walletAddress: "admin",
+      id: "admin",
+      active: true,
+      joined: false,
+    };
+    console.log("adminPlayer", adminPlayer);
 
     let demoData = {
       tiles,
@@ -747,7 +762,8 @@ export const getters = {
       creatures,
       teams: defaultTeams,
       tileMap: [],
-      players: ["admin", "player 1", "player 2", "player 3"],
+      // players: ["admin", "player 1", "player 2", "player 3"],
+      players: [adminPlayer],
       creatures: [],
       units: [
         {
@@ -1188,14 +1204,27 @@ export const actions = {
       });
       // console.log("tempGameTiles", tempGameTiles);
     }
+
+    // Simply get a random avatar
+    const generator = new AvatarGenerator();
+    const avatarSrc = generator.generateRandomAvatar();
+
     const adminPlayer = {
       ...playerTemplate,
-      walletAddress: owner,
-      id: owner,
+      walletAddress: "admin",
+      id: "admin",
       active: true,
       joined: false,
+      avatarSrc: avatarSrc,
     };
     console.log("adminPlayer", adminPlayer);
+
+    // const nameConfig = {
+    //   dictionaries: [adjectives, colors, animals],
+    //   separator: "-",
+    // };
+    // const randomName = uniqueNamesGenerator(nameConfig); // big_red_donkey
+    // console.log("random.name", randomName);
     if (id) {
       const tempGames = localGames.slice();
       const thisGame = {

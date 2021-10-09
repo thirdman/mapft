@@ -144,6 +144,7 @@ div #body {
 }
 body .pageContainer {
   height: 100%;
+  overflow: scroll;
 }
 body .pageContainer.appPage {
   height: 100vh;

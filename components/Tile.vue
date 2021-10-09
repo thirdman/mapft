@@ -31,13 +31,28 @@
       <v-icon large color="lime">mdi-sack</v-icon>
     </div>
     <!-- <img v-if="tile.meta && tile.meta.creatureSrc" :src="tile.meta.creatureSrc" width="100px" class="creature-image" /> -->
-    <div class="tile-current" v-if="tile.meta && tile.meta.value">
-      <div class="tile-team"  v-tooltip="tile.meta.team ? `${tile.meta.team} controls this tile` : 'Tile Controller'"  :class="tile.meta.team" :style="`background: ${tile.meta.team ? getColor(tile.meta.team) : ''}`"></div>
-      <div class="tile-value" v-tooltip="`Tile Value: ${tile.meta.value}`" >{{tile.meta.value}}</div>
-      <div class="tile-owner"  v-tooltip="tile.meta && tile.meta.value && tile.meta.owner === walletAddress ? 'You own this tile!' : `Tile Owner`"  v-if="tile.meta && tile.meta.value && tile.meta.owner === walletAddress">
+    <div class="tile-current" >
+      <div class="tile-team" 
+        v-tooltip="tile.meta.team ? `${tile.meta.team} controls this tile` : 'Tile Controller'"  
+        :class="tile.meta.team" 
+        :style="`background: ${tile.meta.team ? getColor(tile.meta.team) : ''}`"
+        v-if="tile.meta && tile.meta.team"
+        ></div>
+      <div class="tile-value"
+        v-tooltip="`Tile Value: ${tile.meta.value}`" 
+        v-if="tile.meta && tile.meta.value"
+        >{{tile.meta.value}}
+        </div>
+      <div class="tile-owner" 
+        v-tooltip="tile.meta && tile.meta.value && tile.meta.owner === walletAddress ? 'You own this tile!' : `Tile Owner`" 
+        v-if="tile.meta && tile.meta.value && tile.meta.owner && tile.meta.owner === walletAddress"
+        >
         <v-icon light color="white" x-small>mdi-account-circle</v-icon>
       </div>
-      <div class="tile-defence"  v-tooltip="`Defence value: ${tile.meta.defence}`"  v-if="tile.meta && tile.meta.defence">
+      <div
+        class="tile-defence" 
+        v-tooltip="`Defence value: ${tile.meta.defence}`"  v-if="tile.meta && tile.meta.defence"
+        >
         <v-icon color="white" medium>mdi-shield</v-icon>
         {{tile.meta.defence}}
       </div>

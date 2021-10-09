@@ -30,8 +30,21 @@
             </div>
           </div>
           <div class="row">
+            
+          </div>
+          <div class="row">
             <div class="col">
-              <label>Display Name</label>
+              <label>Avatar</label>
+              <v-text-field small filled clearable outlined dense v-model="avatar" hint="Avatar iamge url" v-if="showAdvanced" />
+              <div class="row ma-0">
+                <div class="d-flex align-center justify-start">
+                  <v-img :src="avatar" :height="48" :width="48" />
+                  <v-btn outlined x-small @click="updateAvatar(true)">Regenerate</v-btn>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <label>Name</label>
               <v-text-field small filled clearable outlined dense v-model="newUserName" hint="Display Name" />
             </div>
           </div>
@@ -71,13 +84,15 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
-
+import { AvatarGenerator } from "random-avatar-generator";
 export default {
   props: ['onSelect', 'onClose', 'show', 'onAction', 'onJoin', 'gameData', 'userPlayer'],
   data() {
     return {
       // showTeamSelect: true
       newUserName: "",
+      avatar: "",
+      showAdvanced: false
     };
   },
   created(){
@@ -86,6 +101,7 @@ export default {
   mounted(){
     this.newUserName = this.userName
     console.log('randomTeam', this.randomTeam);
+    this.avatar = this.defaultAvatarSrc;
   },
   
   computed: {
@@ -105,6 +121,11 @@ export default {
     userName(){
       const {walletAddress, userPlayer} = this;
       return userPlayer && userPlayer.displayName || walletAddress || "New Player"
+    },
+    defaultAvatarSrc(){
+      const generator = new AvatarGenerator();
+      const avatarSrc = generator.generateRandomAvatar();
+      return avatarSrc
     },
     randomTeam(){
       const {gameData, userTeam} = this;
@@ -126,12 +147,12 @@ export default {
       }
     },
     compiledPlayer(){
-      const {userPlayer, userTeam, playerTemplate, userName, newUserName} = this;
+      const {userPlayer, userTeam, playerTemplate, userName, newUserName, avatar} = this;
       const color = userTeam && this.getColor(userTeam)
       const tempName = newUserName || userName;
       // return {walletAddress, id: walletAddress, displayName: newUserName, team: userTeam, color: color}
       if(!userPlayer) {return}
-      const  tempPlayer = { ...playerTemplate, ...userPlayer, displayName: tempName, team: userTeam, color: color}
+      const  tempPlayer = { ...playerTemplate, ...userPlayer, displayName: tempName, team: userTeam, color: color, avatarSrc: avatar}
       console.log('about to return tempPlayer: ', tempPlayer)
       return tempPlayer
     }
@@ -143,6 +164,13 @@ export default {
       setUserTeam: "ui/setUserTeam",
       setShowTeamSelect: "ui/setShowTeamSelect",
     }),
+    updateAvatar(doRefresh){
+      const generator = new AvatarGenerator();
+      const newSrc = generator.generateRandomAvatar();
+      this.avatar = newSrc
+      return newSrc 
+      
+    },
     handleTeamSelect(teamObj){
       if(!teamObj){
         this.setShowTeamSelect(false);  

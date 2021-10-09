@@ -5,7 +5,7 @@
     <dialog-team-select  :onAction="addPlayer" :userPlayer="userPlayer" />
      <!-- && userPlayer && !userIsPlayer -->
     <dialog-game-welcome
-      :show="showGameWelcome"
+      :show="gameData && showGameWelcome"
       :onAction="handleStartGame"
       :onJoin="() => setShowTeamSelect(true)"
       :onClose="() => {this.showGameWelcome = false}"
@@ -280,7 +280,6 @@
     <!-- HERO Container -->
     <section id="intro" class="row ma-0 ">
       <div class="menu-column" >
-        {{playerLocation}}
             <v-list dense class="bg-darker pa-0">
               <v-list-item
                 v-for="item in items"
@@ -313,7 +312,7 @@
         </v-list>
           
       </div>
-      <div class="col col-2 info-column" v-if="panel">
+      <div class="col col-3 info-column" v-if="panel">
         <div class="info-game" v-if="!selectedData">
           <div class="col pa-0  summary-container info-item" v-if="gameData" >
             <game-info :game="gameData" :expanded="true" mode="info" v-if="panel === 'info'" />
@@ -421,7 +420,7 @@
                 </v-btn>
               </div>
               <v-divider vertical class="mx-2" /> -->
-              <div class="col pa-0">
+              <div class="col pa-0 de-flex align-center justify-center">
                 <player-info :player="userPlayer" v-if="userIsPlayer" />
                 <v-btn plain primary @click="setShowTeamSelect(true)" v-else>Join Game</v-btn>
                 <v-btn plain primary @click="() => {this.showGameWelcome = true}" v-if="!userIsPlayer">Show welcome</v-btn>
@@ -1375,8 +1374,8 @@ export default {
         this.isBattling = false;
         this.updateData();
         
-        this.selectedTile = null;
-        this.selectedData = null;
+        // this.selectedTile = null;
+        // this.selectedData = null;
         this.selectedAsset = null;
         this.showSelectAsset = false;
         this.claimLocation =  null;
@@ -1833,6 +1832,11 @@ section#intro{
   padding: 0;
   background: rgba(0,0,0,.05);
   position: relative;
+  max-width: calc(75% - 4rem); // account fo menu
+}
+.menu-column + .content-column {
+  flex-basis: calc(100% - 4rem); // account fo menu
+  max-width: calc(100% - 4rem); // account fo menu
 }
 $outsideRowSize: 3rem;
 .map-container{
@@ -2140,6 +2144,8 @@ $outsideRowSize: 3rem;
     
     // box-shadow: 0 0 1px 1px rgba(14,21,47,0.4), 0 45px 100px rgba(14,21,47,0.4), 0 16px 40px rgba(14,21,47,0.5);
     box-shadow: 0 0 1px 1px rgba(73, 79, 100, 0.4), 0 15px 30px rgba(14,21,47,0.4);
+    outline: 1px dotted rgba(255,255,255,.5);
+    outline-offset: -3px;
     // transform: translateY(-12px) scale3d(1.1, 1.1, 2) perspective(800px);
     transform: translateY(-0px) scale3d(1, 1, 2) perspective(800px);
     z-index: 4;
@@ -2163,10 +2169,10 @@ $outsideRowSize: 3rem;
   &.selected{
     // box-shadow: 0 0 0 3px rgba(255,255,255,.8) inset;
     box-shadow: none;
-    outline: 2px solid rgba(255,255,255,.3);
-    outline: 2px solid var(--ui-color);
+    outline: 1px dotted rgba(255,255,255,.5);
+    outline-offset: -3px;
+    // outline: 2px solid var(--ui-color);
     // outline: 2px solid var(--background-color);
-    outline-offset: 2px;
     
     &:hover{
       // box-shadow: 0 0 0 3px rgba(255,255,255,.8) inset, 0 0 1px 1px rgba(73, 79, 100, 0.4), 0 15px 30px rgba(14,21,47,0.4);
