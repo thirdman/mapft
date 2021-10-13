@@ -157,6 +157,18 @@
             >
               Move Here
             </v-btn>
+          <v-btn
+            depressed
+            block
+            outlined
+            :disabled="!tile.src || (playerLocation && playerLocation.toString() !== selectedData.location.toString())"
+            :color="userTeam ? 'primary' : ''"
+            @click="onPlace && onPlace(selectedData.location, userPlayer)"
+            v-if="onPlace && userPlayer"
+            v-tooltip="`Leave a player piece to claim this tile`"
+            >
+              Place Item
+            </v-btn>
           <v-btn block depressed outlined primary v-if="!userTeam" @click="() => setShowTeamSelect(true)">Select Team to Play</v-btn>
           
             <v-btn
@@ -165,7 +177,6 @@
               block
               v-if="selectedData.meta && !selectedData.meta.value && !selectedData.src"
               @click="() => {onAction && onAction(tile.location)}"
-              class="primary"
               >
               Generate tile
             </v-btn>
@@ -228,7 +239,12 @@ export default
   'selected', 
   'userPlayer',
   'onAction', 
-  'onClose', 'onMove', 'selectedData', 'index', 'onGenerateSelect', 'onClaimSelect', 'handleClaim', 'getCreature', 'getLoot'],
+  'onClose', 
+  'onPlace',
+  'onMove', 
+  'playerLocation',
+  'selectedData', 
+  'index', 'onGenerateSelect', 'onClaimSelect', 'handleClaim', 'getCreature', 'getLoot'],
   data() {
     return {
       showObjectInteraction: false

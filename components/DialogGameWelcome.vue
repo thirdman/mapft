@@ -38,7 +38,12 @@
               <v-text-field small filled clearable outlined dense v-model="avatar" hint="Avatar iamge url" v-if="showAdvanced" />
               <div class="row ma-0">
                 <div class="d-flex align-center justify-start">
-                  <v-img :src="avatar" :height="48" :width="48" />
+                  <v-img 
+                    :src="avatar" 
+                    :height="48" 
+                    :width="48" 
+                    :style="`background-color: ${compiledPlayer && compiledPlayer.color};`" 
+                    class="avatar-preview" />
                   <v-btn outlined x-small @click="updateAvatar(true)">Regenerate</v-btn>
                 </div>
               </div>
@@ -65,7 +70,10 @@
         
         <v-divider class="ma-0"></v-divider>
         <v-card-actions>
-            <v-btn @click="onAction && onAction(compiledPlayer)" :disabled="!compiledPlayer || !userTeam">Begin</v-btn>
+            <v-btn 
+              @click="onAction && onAction(compiledPlayer)" 
+              :disabled="!compiledPlayer || !userTeam"
+              >Begin</v-btn>
             <v-btn @click="onJoin" :disabled="!onJoin">Join</v-btn>
             <v-btn @click="onClose" text v-if="onClose">Close</v-btn>
             <!-- <v-btn @click="onAction(compiledPlayer)">Join!</v-btn> -->
@@ -79,7 +87,10 @@
 </template>
 
 <style lang="scss">
-
+.avatar-preview{
+  border-radius: 48px;
+  overflow: hidden;
+}
 </style>
 
 <script>
@@ -123,8 +134,9 @@ export default {
       return userPlayer && userPlayer.displayName || walletAddress || "New Player"
     },
     defaultAvatarSrc(){
-      const generator = new AvatarGenerator();
-      const avatarSrc = generator.generateRandomAvatar();
+      const generator = new AvatarGenerator({avatarStyle: 'Transparent'});
+      let avatarSrc = generator.generateRandomAvatar();
+      avatarSrc = avatarSrc.replace('avatarStyle=Circle', 'avatarStyle=Transparent');
       return avatarSrc
     },
     randomTeam(){
@@ -140,8 +152,8 @@ export default {
         if(!thisTeam){
           return null
         }
-        this.setUserTeam(thisTeam[0]);
-        return thisTeam[0]
+        this.setUserTeam(thisTeam[0].team);
+        return thisTeam[0].team
       } else {
         return null
       }
@@ -165,8 +177,10 @@ export default {
       setShowTeamSelect: "ui/setShowTeamSelect",
     }),
     updateAvatar(doRefresh){
-      const generator = new AvatarGenerator();
-      const newSrc = generator.generateRandomAvatar();
+      const generator = new AvatarGenerator({avatarStyle: 'Transparent'});
+      let newSrc = generator.generateRandomAvatar();
+      newSrc = newSrc.replace('avatarStyle=Circle', 'avatarStyle=Transparent');
+      console.log('newSrc', newSrc)
       this.avatar = newSrc
       return newSrc 
       

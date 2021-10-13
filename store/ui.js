@@ -49,6 +49,29 @@ const playerTemplate = {
   id: "admin",
   walletAddress: null,
   displayName: "admin",
+  itemCount: 3,
+};
+const unitTemplate = {
+  team: null,
+  active: false,
+  joined: false,
+  owner: "admin",
+  asset: {},
+  displayName: "example Unit",
+  location: [],
+  color: "#eeeeee",
+  type: "item",
+};
+const itemTemplate = {
+  team: null,
+  active: false,
+  joined: false,
+  owner: "admin",
+  asset: {},
+  displayName: "example Item",
+  location: [],
+  color: "#eeeeee",
+  type: "item",
 };
 const tileTemplate = {
   id: null,
@@ -633,6 +656,8 @@ export const state = () => ({
   tiles: defaultTiles,
   tileTemplate: tileTemplate,
   playerTemplate: playerTemplate,
+  unitTemplate: unitTemplate,
+  itemTemplate: itemTemplate,
   creatures: defaultCreatures,
   gameTeams: defaultTeams,
 });
@@ -646,6 +671,8 @@ export const getters = {
   tiles: (state) => state.tiles,
   tileTemplate: (state) => state.tileTemplate,
   playerTemplate: (state) => state.playerTemplate,
+  unitTemplate: (state) => state.unitTemplate,
+  itemTemplate: (state) => state.itemTemplate,
   creatures: (state) => state.creatures,
   gameTeams: (state) => state.gameTeams,
   userTeam: (state) => state.userTeam,
@@ -765,6 +792,7 @@ export const getters = {
       // players: ["admin", "player 1", "player 2", "player 3"],
       players: [adminPlayer],
       creatures: [],
+      items: [],
       units: [
         {
           id: "admin",
@@ -1256,6 +1284,7 @@ export const actions = {
         creatures: [],
         players: [adminPlayer],
         units: [],
+        items: [],
         teams: defaultTeams,
       };
       console.info("thisGame", thisGame);

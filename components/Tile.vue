@@ -4,6 +4,7 @@
     :class="`${!tile.src ? 'generate' : ''} ${selected ? 'selected' : ''} ${fill ? 'fill' : ''} ${highlighted ? 'highlighted' : ''}  ${tile.meta.team ? tile.meta.team : ''}`"
     @click="handleSelect && handleSelect(index)"
      :style="size ? `width: ${size}px; height: ${size}px` :`width: 100%; height: auto`"
+     @contextmenu="tile && onRightClick && onRightClick($event, tile.location)"
     >
     
      <!-- :style="size && `width: ${size}px; height: ${size}px`" -->
@@ -29,6 +30,12 @@
     </div>
     <div v-if="loot && tile.src" class="tile-loot">
       <v-icon large color="lime">mdi-sack</v-icon>
+    </div>
+    <div v-if="items" class="tile-items">
+        <div v-for="(item, index) in items" :key="index" class="tile-item" :style="`background: ${item.color}`">
+        <!-- {{item.id}} -->
+        <v-icon>mdi-flag</v-icon>
+      </div>
     </div>
     <!-- <img v-if="tile.meta && tile.meta.creatureSrc" :src="tile.meta.creatureSrc" width="100px" class="creature-image" /> -->
     <div class="tile-current" >
@@ -167,18 +174,21 @@
 }
 .tile-loot{
   position: absolute;
-  // top: calc(50% - 1.5rem);
-  // left: calc(50% - 1.5rem);
-  top: 0;
-  left: 0;
+  top: calc(50% - 1.5rem);
+  left: calc(50% - 1.5rem);
+  // top: 0;
+  // left: 0;
   // color: gold;
-  width: 100%;
-  height: 100%;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 5rem;
   // background: gold;
   display: grid;
   place-content: center;
   background: url(https://gateway.pinata.cloud/ipfs/QmcLhKPBvUcGT6EfYZ2HeoPcS5MibUsKtUetJWxBtePxFa/1.png) center center no-repeat;
-  background-size: contain;
+  background-size: calc(648px / 2);
+  background-position: -100px -120px;
+  background-color: #eee;
   z-index: 1;
   .v-icon{
     display: none;
@@ -207,6 +217,30 @@
     left: calc(50% + 1.5rem);
   }
 }
+.tile-items{
+  position: absolute;
+  bottom: 3%;
+  right: 3%;
+  color: #eee;
+  // width: 3rem;
+  //height: 3rem;
+  display: grid;
+  place-content: center;
+  .tile-item{
+    width: 2rem; 
+    height: 2rem;
+    background: lime; 
+    color: black;
+    border-radius: 2rem;
+    display: inline-flex;
+    margin-left: 2px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px -1px rgba(0,0,0,.3);
+    display: grid;
+    place-items: center;
+  }
+  
+}
 </style>
 
 <script>
@@ -221,13 +255,16 @@ export default {
     'index', 
     'size',  
     'onAction', 
+    'onRightClick',
     'hideAsset', 
     'hideEmpty', 
     'fill', 
     'highlighted', 
     'unit',
     'loot',
-    'creature'],
+    'creature',
+    'items',
+    ],
   data() {
     return {
       
@@ -255,7 +292,8 @@ export default {
       const teamObj = gameTeams.filter(t => t.team === team)
       const color = teamObj && teamObj[0]  && teamObj[0].color
       return color
-    }
+    },
+    
     
   },
 };

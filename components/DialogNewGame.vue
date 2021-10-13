@@ -116,6 +116,30 @@
               ></v-switch>
             </div>  
         </div>
+        <div class="col">
+          <label>Claim Tile On Move</label>
+          <div class="text-body-2">
+            Team Color claims value
+          </div>
+          <div>
+            <v-switch
+              v-model="optionClaimOnMove"
+              :label="`${optionClaimOnMove ? 'yes' : 'no'}`"
+            ></v-switch>
+          </div>  
+        </div>
+        <div class="col">
+          <label>Move on Explore</label>
+          <div class="text-body-2">
+            Player moves when exploring new tile
+          </div>
+          <div>
+            <v-switch
+              v-model="optionExploreOnMove"
+              :label="`${optionExploreOnMove ? 'yes' : 'no'}`"
+            ></v-switch>
+          </div>  
+        </div>
       </div>
       <v-divider />
         <div class="row">
@@ -368,6 +392,8 @@ export default {
       newCols: 4,
       generateMap: false,
       optionMapAdjacent: false,
+      optionClaimOnMove: false,
+      optionExploreOnMove: false,
       optionUseDefault: true,
       optionUsePlayerUnits: false,
       optionUseLimitedTileSet: false,
@@ -412,6 +438,8 @@ export default {
         useMapGrid,
         mapGrid,
         useStartPoints,
+        optionClaimOnMove,
+        optionExploreOnMove
         } = this
       const options = {
         rows: newRows, 
@@ -420,7 +448,13 @@ export default {
         optionLootCount,
         optionUseCreatureGeneration,
         optionCreatureCount,
-        useDefaultTeams: optionUseDefault, generateMap, owner: walletAddress, mapMode: optionMapMode, tileSetId, 
+        optionClaimOnMove,
+        optionExploreOnMove,
+        useDefaultTeams: optionUseDefault, 
+        generateMap, 
+        owner: walletAddress, 
+        mapMode: optionMapMode, 
+        tileSetId, 
         title: gameTitle,
         useStartPoints,
         useMapGrid: useMapGrid,

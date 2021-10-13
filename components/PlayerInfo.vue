@@ -38,7 +38,8 @@
       display: grid;
       place-items: center;
       background: #ccc;
-      padding: 2px;
+      padding: 0px;
+      overflow: hidden;
     }
     .team-marker{
       display: none; // overridden

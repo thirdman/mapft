@@ -409,27 +409,22 @@
         <div class="row ma-0 info-item" v-if="panel === 'inspect'" >
           Select a tile to inspect....
         </div>
-        <div class="row ma--4 mt-0  info-item options-row">
+        <div class="row ma--4 mt-0 info-item options-row player-item">
           <div class="col pa-0">
             <v-divider class="my-0" />
-            <div class="row ma-0 pa-1 d-flex justify-stretch align-center">
-              <!-- <div class="col pa-0 d-flex justify-stretch align-center" style="height: 100%;">
-                <v-btn plain @click="() => showGameOptions = !showGameOptions">
-                  <v-icon size="large">mdi-cog</v-icon>
-                <div>Options</div>
-                </v-btn>
-              </div>
-              <v-divider vertical class="mx-2" /> -->
-              <div class="col pa-0 de-flex align-center justify-center">
+            <div class="d-flex justify-center align-center" style="height: 100%;">
+              <div v-if="userIsPlayer" class=" player-wrap">
                 <player-info :player="userPlayer" v-if="userIsPlayer" />
-                <v-btn plain primary @click="setShowTeamSelect(true)" v-else>Join Game</v-btn>
-                <v-btn plain primary @click="() => {this.showGameWelcome = true}" v-if="!userIsPlayer">Show welcome</v-btn>
-                <!-- <v-card outlined  class="pa-1" >
-                    <div :class="`controller ${userTeam}`" v-if="userTeam">
-                      Team {{userTeam}} 
-                    </div>
-                  </v-card> -->
+                <div class="tile-items">
+                  <div class="tile-item" ><v-icon>mdi-flag</v-icon></div>
+                  <div class="tile-item" ><v-icon>mdi-flag</v-icon></div>
+                  <div class="tile-item" ><v-icon>mdi-flag</v-icon></div>
                 </div>
+              </div>
+              <div class="col pa-0 d-flex align-center justify-center" v-if="!userIsPlayer">
+                <v-btn plain primary @click="setShowTeamSelect(true)">Join Game</v-btn>
+                <v-btn plain primary @click="() => {this.showGameWelcome = true}" >Show welcome</v-btn>
+              </div>
             </div>
             
           </div>
@@ -480,9 +475,11 @@
             :onClaimSelect="handleClaimSelect"
             :onGenerateSelect="handleGenerateSelect"
             :onClaim="handleClaim"
+            :onPlace="handlePlaceItemStart"
             :onMove="handlePlayerMove"
             :onAction="handleGenerateSelect"
             :userPlayer="userIsPlayer && userPlayer"
+            :playerLocation="playerLocation"
             :getCreature="getCreature"
             :getLoot="getLoot"
             />
@@ -601,9 +598,12 @@
                 :highlighted="highlightedIndex === index"
                 :hideEmpty="true"
                 :onAction="handleGenerateSelect"
+                :onRightClick="handleRightClick"
                 :unit="gameData && gameData.settings && gameData.settings.hasUnits && getUnit(tile.location)"
                 :loot="gameData && gameData.settings && gameData.settings.hasLoot && getLoot(tile.location)"
                 :creature="gameData && gameData.settings && gameData.settings.hasCreatures && getCreature(tile.location)"
+                :items="gameData && getItems(tile.location)"
+                
                 />
               
             </div>
@@ -777,7 +777,8 @@ export default {
       // tileMap: 'ui/tileMap',
       //activeGame: 'ui/activeGame',
       demoData: 'ui/demoData',
-      tileTemplate: 'ui/tileTemplate'
+      tileTemplate: 'ui/tileTemplate',
+      itemTemplate: 'ui/itemTemplate'
     }),
     userPlayer(){
       const {walletAddress, userTeam, gameData} = this;
@@ -791,23 +792,29 @@ export default {
 
       }
     },
-    playerLocation(player){
+    playerLocation(){
       const {gameData, walletAddress, userPlayer} = this;
       if(!gameData){return false}
+      console.log('player gameData:', userPlayer);
       const {players, units} = gameData;
+      const player = userPlayer;
       console.log('units:', units)
       if(!units){return}
       let playerId = player && player.id;
+        
       if(player){
         if(!playerId){return}
         const playerUnit = units.find(unit => unit.id && unit.id.toString() === playerId.toString());
+        console.log('playerUnit?', playerUnit)
         if (playerUnit){
           return playerUnit.location;
         } else {
           return null;
         }
       } else {
+        console.log('playerUnit here',  walletAddress)
         const playerUnit = units.find(unit => unit.id && unit.id.toString() === walletAddress.toString());
+        console.log('playerUnit', playerUnit, walletAddress)
         if (playerUnit){
           return playerUnit.location;
         } else {
@@ -1008,6 +1015,18 @@ export default {
       const thisCreature = creatureArray.find(u => u.location.toString() === stringLocation);
       console.log('thisCreature', thisCreature)
       return thisCreature
+    },
+    getItems(location){
+      if(!this.gameData){return}
+      const {items} = this.gameData;
+      
+      
+      // if(!items){return}
+      const stringLocation = location.toString();
+      const locationItems = items && items.filter(u => u.location.toString() === stringLocation);
+      console.log('locationItems', locationItems)
+      return locationItems
+      
     },
     handleAutoFill(){
       
@@ -1233,10 +1252,32 @@ export default {
       }
       
     },
+    handlePlaceItemStart(location, player){
+      const {gameData, walletAddress, itemTemplate} = this;
+      if(!gameData || !walletAddress){return}
+      const {items} = gameData;
+      console.log('place unit location, player', location, player, items)
+      if(location && player && items){
+        const newId = uuidv4();
+        const newItem = {...itemTemplate, location: location, name: "example", id: newId, color: player.color}
+        const tempItems = [...items, newItem];
+        console.log('place unit newUnit', newItem);
+        console.log('place unit tempUnits', tempItems);
+        const tempData = {...gameData}
+        tempData.items = tempItems;
+        console.log('tempData now', tempData)
+        
+        this.testData = tempData;
+        this.applyTestData();
+        
+      }
+    },
     handlePlayerMove(location, player){
       const {gameData, walletAddress} = this;
       if(!gameData || !walletAddress){return}
-      const {players, units = []} = this.gameData;
+      const {players, units = [], options} = this.gameData;
+      const {optionClaimOnMove = false} = options;
+      console.log('options', options)
       const newUnit = {
         location, 
         player: this.userPlayer,
@@ -1249,8 +1290,7 @@ export default {
       
       this.applyTestData()
       this.updateData();
-      const doIt = true;
-      if(doIt){
+      if(optionClaimOnMove){
         this.handleClaim(location, null, false);
       }
     },
@@ -1670,6 +1710,14 @@ export default {
       this.updateConfig({games: tempGames});
       // this.$router.push(`/game/${game.id}`)
     },
+    handleRightClick(event, location){
+      const {playerLocation} = this;
+      console.log('evenbt', event, location)
+      event.preventDefault();
+      if(location && playerLocation && playerLocation.toString() === location.toString()){
+        alert('yesss')
+      }
+    },
     async applyMapGrid(){
       const {gameData} = this;
       const {mapGrid} = gameData.options;
@@ -1818,12 +1866,11 @@ section#intro{
     display: flex;
     flex-direction: column;
     
-    // .game-options-row{
-    //   height: 3rem;
-    //   flex-basis: 3rem;
-    //   flex-grow: 1;
-    //   flex-shrink: 0;    
-    // }
+    .options-row.player-item{
+      > .col{
+        height: 100%;
+      }
+    }
   }
   
 }
