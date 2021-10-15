@@ -456,10 +456,14 @@
             <!-- <v-btn block outlined @click="setShowTeamSelect(!showTeamSelect)">Show Team Select</v-btn> -->
             <v-btn block small outlined @click="setMapSelect(!showMapSelect)">Select Map Style</v-btn>
             <v-btn block small outlined @click="saveGame()">Save Game</v-btn>
+            <v-btn block small outlined @click="createBin({test: 'blah', gameData: gameData})">Create Bin</v-btn>
+            <v-btn block small outlined @click="fetch">Fetch</v-btn>
             <!-- <v-btn block small outlined @click="() => {this.showNewGameDialog = true}">New Game</v-btn>
             <v-divider /> -->
               <v-btn block outlined @click="handleAutoFill">Generate Map</v-btn>
               <v-btn @click="applyTestData">apply test</v-btn>
+              <v-divider />
+              Status: {{binStatus}}
             </div>
           </div>
         </div>
@@ -748,12 +752,39 @@ export default {
       this.tileSetId = thisGame.options.tileSetId;
       this.setActiveGame(thisGame);
     
-      this.loadData(id);
+      this.loadData({id});
       this.gameStatus = 'ready'
     }
     // setTimeout(() =>{
     //   this.gameStatus = 'ready'
     //   }, 2000);
+  },
+  async fetch() {
+      // this.posts = await this.$http.$get('https://api.nuxtjs.dev/posts')
+      
+      const {params} = this.$route;
+      const {id} = params;
+    
+    this.gameStatus = 'loading';
+    console.log('fetching id', id)
+    if(!id){
+      this.gameStatus = 'error'
+      return
+    }
+    const remoteData = await this.getBin({binId: id});
+    console.log('remoteData', remoteData)
+    if(remoteData){
+      this.setActiveGame(remoteData);
+      this.gameData = remoteData
+      this.gameTeams = this.gameData.teams
+      this.gameStatus = 'ready';
+    }
+    // if(id === 'demo'){
+    //   this.gameData = this.demoData;
+    //   this.loadData();
+    //   this.gameStatus = 'ready'
+    //   return
+    // }
   },
   computed: {
     ...mapGetters({
@@ -882,7 +913,9 @@ export default {
     }),
     ...mapActions({
       getConfig: "ui/getConfig",
+      getBin: "ui/getBin",
       updateConfig: "ui/updateConfig",
+      createBin: "ui/createBin",
       getAssets: "ui/getAssets",
       generateGame: 'ui/generateGame',
       generateMapTiles: 'ui/generateMapTiles',
@@ -1138,9 +1171,10 @@ export default {
       console.log('assets', assets)
       this.isLoadingAssets = false;
     },
-    async loadData(id){
+    async loadData(props){
+      const {gameData, id} = props;
       const {activeGame, localGames, games, siteData} = this;
-      console.log('loadData activeGame: ', activeGame)
+      
       if(id){
         let tempGame = activeGame;
         console.log('Game id exists, load data', id, activeGame)

@@ -591,7 +591,7 @@ const defaultTeams = [
 export const state = () => ({
   devMode: true,
   configStatus: null,
-  setBinStatus: null,
+  binStatus: null,
   userAssets: null,
   assetsStatus: null,
   siteData: null,
@@ -651,6 +651,7 @@ export const state = () => ({
   tileSets: tileSets,
   // GAME
   games: [],
+  remoteGames: [],
   localGames: [],
   activeGame: null,
   tiles: defaultTiles,
@@ -666,6 +667,7 @@ export const getters = {
   getField,
   siteData: (state) => state.siteData,
   games: (state) => state.games,
+  remoteGames: (state) => state.remoteGames,
   localGames: (state) => state.localGames,
   activeGame: (state) => state.activeGame,
   tiles: (state) => state.tiles,
@@ -835,6 +837,9 @@ export const mutations = {
   },
   setLocalGames: (state, value) => {
     state.localGames = value;
+  },
+  setRemoteGames: (state, value) => {
+    state.remoteGames = value;
   },
   setGames: (state, value) => {
     state.games = value;
@@ -1122,7 +1127,7 @@ export const actions = {
       mapGrid,
     } = payload;
     const options = { ...payload };
-    const id = uuidv4();
+    let id = uuidv4();
     console.log("generate Game", payload);
 
     const { localGames, ipfsUrl, playerTemplate } = context.state;
@@ -1290,6 +1295,13 @@ export const actions = {
       console.info("thisGame", thisGame);
       tempGames.push(thisGame);
       context.commit("setLocalGames", tempGames);
+      const storedId = await context.dispatch("createBin", {
+        gameData: thisGame,
+      });
+      console.log("storedId", storedId);
+      if (storedId) {
+        id = storedId;
+      }
     }
 
     flatLocations.map((loc, i) => {
@@ -1297,6 +1309,7 @@ export const actions = {
     });
     context.commit("setTiles", newGameArray);
     // context.commit('setTileMap', newTileMap)
+
     return id;
   },
   generateMapTiles(context, payload) {
@@ -1363,9 +1376,40 @@ export const actions = {
     await commit("setSiteData", siteData);
     if (siteData.games) {
       await commit("setGames", siteData.games);
+      await commit("setRemoteGames", siteData.remoteGames);
     }
     await commit("setConfigStatus", "completed");
     return siteData;
+  },
+  async getBin(context, props) {
+    console.log("get");
+    const { commit } = context;
+    const { $axios } = this;
+    const binKey =
+      "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
+    const { binId } = props;
+
+    if (!binId) {
+      return;
+    }
+    await commit("setBinStatus", "working");
+    const gameJson = await $axios
+      .$get(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+        headers: {
+          "X-Master-Key": binKey,
+        },
+      })
+      .catch((error) => console.error("Error getting siteConfig: ", error));
+    const gameData = gameJson && gameJson.record;
+
+    console.log("gameData", gameData);
+    // await commit("setSiteData", siteData);
+    // if (siteData.games) {
+    //   await commit("setGames", siteData.games);
+    //   await commit("setRemoteGames", siteData.remoteGames);
+    // }
+    // await commit("setConfigStatus", "completed");
+    return gameData;
   },
   async getImages(context, data) {
     const { commit } = context;
@@ -1453,6 +1497,7 @@ export const actions = {
     const { siteData } = state;
     const tempData = { ...siteData };
     const currentGames = siteData.games || [];
+    const currentRemoteGames = siteData.remoteGames || [];
     const tempGames = [...currentGames];
 
     // const newImage = { ...svgData, theme: activeTheme };
@@ -1461,10 +1506,13 @@ export const actions = {
     if (game) {
       tempGames.push(game);
     }
+
     const newData = { ...tempData, modified: "now" };
 
     newData.games = games ? games : tempGames;
-    console.log("newData", newData);
+    newData.remoteGames = currentRemoteGames;
+    // newData.remoteGames = []; // DELETE ALL REMOTE GAMES
+    console.log("updateConfig newData", newData);
     const binKey =
       "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
     const binId = "6157cf3f9548541c29bc55e3";
@@ -1498,6 +1546,93 @@ export const actions = {
     }
     await commit("setConfigStatus", "completed");
     // return sitedataaa.record;
+  },
+  async createBin(context, props) {
+    const { dispatch, commit, rootState, state } = context;
+    const {
+      node,
+      adminBinId = "6157cf3f9548541c29bc55e3",
+      code,
+      name,
+      binData,
+      gameData,
+    } = props;
+    const { $axios } = this;
+    console.log("createBin gameData", gameData);
+    if (!gameData) {
+      console.log("no gameData");
+    }
+    const newTimestamp = +new Date();
+    const newData = {
+      ...binData,
+      ...gameData,
+      dateCreated: newTimestamp,
+      dateModified: newTimestamp,
+    };
+    console.log("creatBin newData", newData);
+    const binKey =
+      "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
+    // if (!newData) {
+    //   return;
+    // }
+
+    await commit("setBinStatus", "creating");
+    const result = await $axios
+      .$post(`https://api.jsonbin.io/v3/b`, newData, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": binKey,
+          "X-Collection-Id": "6157ceaa4a82881d6c595527",
+          "X-Bin-Versioning": true,
+        },
+      })
+      .then((result) => {
+        console.log("success", result);
+        return result;
+      })
+      .catch((error) => {
+        console.error(error);
+        // commit("setConfigStatus", "error");
+        return error;
+      });
+    console.log("result", result);
+    await commit("setBinStatus", "completed");
+    if (result && result.record) {
+      const { options, players, title, previewSrc, rows, cols } = gameData;
+      const miniRecord = {
+        id: result.metadata.id,
+        options,
+        players,
+        title,
+        previewSrc,
+        dateModified: result.record.dateModified,
+        rows,
+        cols,
+      };
+      console.log("miniRecord", miniRecord);
+
+      const { siteData } = state;
+      let newId = result.metadata.id;
+      if (newId) {
+        // let tempGamesArray = [...siteData.games];
+        let tempIdArray = siteData.remoteGames ? [...siteData.remoteGames] : [];
+
+        tempIdArray.push(miniRecord);
+
+        console.log("tempIdArray", tempIdArray);
+        const tempSiteData = { ...siteData };
+        tempSiteData.remoteGames = tempIdArray;
+
+        // await commit("setConfigStatus", "working");
+        await commit("setSiteData", tempSiteData);
+
+        dispatch("updateConfig", tempSiteData);
+        return newId;
+        // await commit("setBinStatus", "completed");
+      }
+    }
+    // await commit("setSiteData", sitedataaa.record);
+    // await commit("setConfigStatus", "completed");
   },
 
   async removeGallerySet(context, id) {

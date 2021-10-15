@@ -10,6 +10,10 @@
       <div class="col col-3 intro-column">
         <v-btn large outlined raised @click="resetGames" v-if="devMode && 1===2">Reset Games</v-btn>
         <v-btn large outlined raised @click="arrayFromMapGrid" v-if="devMode ">trial</v-btn>
+        <label>Config Status</label>
+<Loading v-if="configStatus === 'working'" :message="configStatus" />
+        <label>Bin Status</label>
+{{binStatus}}
       </div>
       <div class="col col-9">
         <div class="row">
@@ -34,7 +38,24 @@
 
 
             </div>
-            <div v-for="(game, index) in games" :key="index" class="row" v-if="devMode">
+            <div v-if="remoteGames">
+            <v-divider />
+            <h3>Remote Games</h3>
+            <div v-for="(game, index) in remoteGames" :key="index">
+              <game-preview
+                :key="index"
+                :game="game" 
+                />
+              <div>
+                {{game.id}} - {{game.map && game.map.rows}} rows, {{game.map && game.map.cols}} columns 
+                <v-btn text @click="loadGame(game.id)">load</v-btn> 
+                <v-btn text @click="saveGame(game.id)">save</v-btn> 
+              </div>
+            </div>
+          </div>
+          <div v-if="devMode">
+            <v-divider />
+            <div v-for="(game, index) in games" :key="index" class="row" >
               <div class="col col-12">
               <game-info :game="game" :expanded="false" />
               </div>
@@ -44,8 +65,10 @@
                 <v-btn text @click="removeGame(index)">remove</v-btn>  
               </div>
             </div>
+          </div>
+
           <div v-if="localGames && devMode">
-          <v-divider />
+            <v-divider />
             <label>Temporary Games</label>
             <div v-for="(game, index) in localGames" :key="index">
               <game-info :game="game" :expanded="false" />
@@ -82,14 +105,22 @@ export default {
       tileSize: 128,
       gameStatus: "ready",
       // gameId: null,
+      // remoteGames: null,
     }
+  },
+  mounted(){
+    
   },
   computed: {
     ...mapGetters({
       devMode: 'ui/devMode',
       games: 'ui/games',
+      remoteGames: 'ui/remoteGames',
       localGames: 'ui/localGames',
       activeGame: 'ui/activeGame',
+      binData: "ui/binData",
+      binStatus: "ui/binStatus",
+      configStatus: "ui/configStatus",
     })
   },
   methods: {
