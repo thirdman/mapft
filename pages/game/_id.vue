@@ -3,7 +3,6 @@
     <Header />
     <dialog-intro :show="!introRead" />
     <dialog-team-select  :onAction="addPlayer" :userPlayer="userPlayer" />
-     <!-- && userPlayer && !userIsPlayer -->
     <dialog-game-welcome
       :show="gameData && showGameWelcome"
       :onAction="handleStartGame"
@@ -458,6 +457,7 @@
             <v-btn block small outlined @click="saveGame()">Save Game</v-btn>
             <v-btn block small outlined @click="createBin({test: 'blah', gameData: gameData})">Create Bin</v-btn>
             <v-btn block small outlined @click="fetch">Fetch</v-btn>
+            <v-btn block small outlined @click="updateSaveMeta">Setsave</v-btn>
             <!-- <v-btn block small outlined @click="() => {this.showNewGameDialog = true}">New Game</v-btn>
             <v-divider /> -->
               <v-btn block outlined @click="handleAutoFill">Generate Map</v-btn>
@@ -771,13 +771,15 @@ export default {
       this.gameStatus = 'error'
       return
     }
-    const remoteData = await this.getBin({binId: id});
+    let remoteData = await this.getBin({binId: id});
+    remoteData.id = id;
     console.log('remoteData', remoteData)
     if(remoteData){
       this.setActiveGame(remoteData);
       this.gameData = remoteData
       this.gameTeams = this.gameData.teams
       this.gameStatus = 'ready';
+      // this.updateSaveMeta();
     }
     // if(id === 'demo'){
     //   this.gameData = this.demoData;
@@ -855,9 +857,9 @@ export default {
     },
     userIsPlayer(){
       const {gameData, walletAddress} = this;
-      if(!gameData){return false}
+      if(!gameData || !walletAddress){return false}
       const {players} = gameData;
-      const thisPlayer = players.find(player => player.id && player.id.toString() === walletAddress.toString());
+      const thisPlayer = players && players.find(player => player.id && player.id.toString() === walletAddress.toString());
       console.log('thisPlayer', thisPlayer)
       return thisPlayer ? true : false;
     },
@@ -909,7 +911,8 @@ export default {
       setInstructionsRead: 'ui/setInstructionsRead',
       setIntroRead: 'ui/setIntroRead',
       setShowTeamSelect: 'ui/setShowTeamSelect',
-      setActiveGame: 'ui/setActiveGame'
+      setActiveGame: 'ui/setActiveGame',
+      setSaveData: 'ui/setSaveData'
     }),
     ...mapActions({
       getConfig: "ui/getConfig",
@@ -920,7 +923,17 @@ export default {
       generateGame: 'ui/generateGame',
       generateMapTiles: 'ui/generateMapTiles',
       arrayFromMapGrid: 'ui/arrayFromMapGrid',
+      updateActiveGame: 'ui/updateActiveGame',
     }),
+    updateSaveMeta(){
+      const {gameData} = this;
+      if(!gameData){return}
+      this.setSaveData({
+        saveId: gameData.id, 
+        saveDate: null, 
+        reset: true
+      })
+    },
     handlePanel(item){
       this.panel = item === this.panel ? null : item;
     },
@@ -933,6 +946,7 @@ export default {
       const {gameData, userIsPlayer, userPlayer} = this;
       const {tiles, tileMap, players, units} = gameData 
       console.log('gameData', gameData);
+      this.showGameWelcome = false;
       if(!gameData){
         console.error("no game data, bailing");
         return
@@ -1248,6 +1262,8 @@ export default {
       this.gameData = tempGameData;
       this.setActiveGame(tempGameData);
       this.gameTeams = orderedTeams;
+      this.updateSaveMeta();
+      this.updateActiveGame({gameData: tempGameData});
       console.groupEnd()
     },
     compileTileMap(tiles){

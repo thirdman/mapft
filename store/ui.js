@@ -647,6 +647,9 @@ export const state = () => ({
   // viewData: "",
   // viewData2: "", // to refactor out.
   // viewStatus: "",
+  // GAMESTATE
+  saveDate: null,
+  saveId: null,
   // TILES
   tileSets: tileSets,
   // GAME
@@ -718,6 +721,8 @@ export const getters = {
   tempViewItem: (state) => state.tempViewItem,
   instructionsRead: (state) => state.instructionsRead,
   introRead: (state) => state.introRead,
+  saveDate: (state) => state.saveDate,
+  saveId: (state) => state.saveId,
   searchData: (state) => {
     return {
       searchContractId: state.searchContractId,
@@ -845,6 +850,14 @@ export const mutations = {
     state.games = value;
   },
   setActiveGame: (state, value) => {
+    // const doRemoteSave = true;
+    let gameData = value;
+    if (!gameData || !gameData.id) {
+      return;
+    }
+    const newTimestamp = +new Date();
+    gameData.dateModified = newTimestamp;
+    const id = gameData.id;
     state.activeGame = value;
   },
   setTiles: (state, value) => {
@@ -883,6 +896,13 @@ export const mutations = {
   },
   setBinData: (state, value) => {
     state.binData = value;
+  },
+  setSaveData: (state, data) => {
+    const { saveDate, saveId } = data;
+    const newTimestamp = +new Date();
+    console.log("data", data, newTimestamp);
+    state.saveDate = newTimestamp;
+    state.saveId = saveId;
   },
   add(state, text) {
     state.list.push({
@@ -1634,7 +1654,75 @@ export const actions = {
     // await commit("setSiteData", sitedataaa.record);
     // await commit("setConfigStatus", "completed");
   },
+  async updateBin(context, props) {
+    const { dispatch, commit, rootState, state } = context;
+    const {
+      node,
+      adminBinId = "6157cf3f9548541c29bc55e3",
+      code,
+      name,
+      binData,
+      gameData,
+    } = props;
+    const { $axios } = this;
+    console.log("updateBin props", props);
+    console.log("updateBin gameData", gameData);
+    if (!gameData) {
+      console.log("no gameData");
+    }
+    const newTimestamp = +new Date();
+    const newData = {
+      ...gameData,
+      dateModified: newTimestamp,
+    };
+    console.log("updateBin newData", newData);
+    const binKey =
+      "$2b$10$kIn/DemBXe9p46ZDooUw3udev8IC8LAVUiipJgYtAwPBhjqN0xAZ.";
+    const binId = gameData.id;
+    if (!binId) {
+      return;
+    }
 
+    await commit("setBinStatus", "working");
+    const savedGameData = await $axios
+      .$put(`https://api.jsonbin.io/v3/b/${binId}`, newData, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": binKey,
+          "X-Bin-Versioning": true,
+        },
+      })
+      .then((result) => {
+        console.log("success", result);
+        return result.record;
+      })
+      .catch((error) => {
+        console.error(error);
+        commit("setConfigStatus", "error");
+        return error;
+      });
+
+    console.log("updateBin savedGameData", savedGameData);
+    await commit("setActiveGame", savedGameData);
+    await commit("setBinStatus", "completed");
+  },
+  updateActiveGame: (context, props) => {
+    const { dispatch, commit } = context;
+    const { gameData } = props;
+    const doRemoteSave = true;
+    if (!gameData || !gameData.id) {
+      return;
+    }
+    const newTimestamp = +new Date();
+    const tempData = { ...gameData, dateModified: newTimestamp };
+    // const id = gameData.id;
+    if (!doRemoteSave) {
+      commit("setActiveGame", tempData);
+    }
+    if (doRemoteSave) {
+      dispatch("updateBin", { gameData: tempData });
+    }
+  },
   async removeGallerySet(context, id) {
     const { dispatch, state, commit } = context;
     const { siteData } = state;

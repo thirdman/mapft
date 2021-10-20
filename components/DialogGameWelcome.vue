@@ -73,8 +73,9 @@
             <v-btn 
               @click="onAction && onAction(compiledPlayer)" 
               :disabled="!compiledPlayer || !userTeam"
+              :color="compiledPlayer && userTeam ? `primary` : ``"
               >Begin</v-btn>
-            <v-btn @click="onJoin" :disabled="!onJoin">Join</v-btn>
+            <!-- <v-btn @click="onJoin" :disabled="!onJoin">Join</v-btn> -->
             <v-btn @click="onClose" text v-if="onClose">Close</v-btn>
             <!-- <v-btn @click="onAction(compiledPlayer)">Join!</v-btn> -->
             <!-- <v-btn depressed outlined text @click="handleTeamSelect(null)">Cancel</v-btn> -->

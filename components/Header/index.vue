@@ -85,7 +85,11 @@
           <div class="networkItem networkName" v-if="walletAddress && uiMode !== 'full'" v-tooltip="'Your current network'">
             {{walletNetwork}}
           </div>
-          <team-swatch :team="userTeam" />
+          <!-- <team-swatch :team="userTeam" /> -->
+          {{activeGameDate}}
+          <div class="game-save-state" v-if="saveId === gameId">
+            SAVED: {{saveStateDate}}
+          </div>
           <ProfileButton />          
         </client-only>
 
@@ -192,6 +196,12 @@
   text-align: right;
 }
 
+.game-save-state{
+  padding: 2px;
+  margin-right: 3px;
+  font-size: .675rem;
+  color: #ccc;
+}
 </style>
 
 <script>
@@ -278,14 +288,16 @@ export default {
       binData: "ui/binData",
       binStatus: "ui/binStatus",
       userTeam: "ui/userTeam",
-      isDevAddress: 'ui/isDevAddress'
+      isDevAddress: 'ui/isDevAddress',
+      saveId: 'ui/saveId',
+      saveDate: 'ui/saveDate',
+      activeGame: 'ui/activeGame'
     }),
     isSearchRoute() {
       const routeArray = ["view-contract-id", "ViewPage", "gallery", "view"];
       const isSearchRoute = routeArray.includes(this.$route.name);
       return isSearchRoute ? true : false;
     },
-    
     hasWallet() {
       const walletAddress = this.$store.state.ui.walletAddress;
 
@@ -308,6 +320,29 @@ export default {
     iconStrokeColor() {
       return this.$store.state.ui.uiMode === "minimal" ? "dark" : "light";
     },
+    saveStateDate() {
+      const {saveDate} = this;
+      if(!saveDate){return}
+      const milliseconds = saveDate // * 1000 // 1575909015000
+      const dateObject = new Date(milliseconds)
+      const humanDateFormat = dateObject.toLocaleTimeString();
+      return humanDateFormat
+    },
+    activeGameDate() {
+      const {activeGame} = this;
+      console.log('ACTIVE GAME', activeGame)
+      if(!activeGame){return}
+      const {dateModified} = activeGame
+      const milliseconds = dateModified // * 1000 // 1575909015000
+      const dateObject = new Date(milliseconds)
+      const humanDateFormat = dateObject.toLocaleTimeString();
+      return humanDateFormat
+    },
+    gameId() {
+      const {params} = this.$route;
+      const {id} = params;
+      return id
+    }
   },
   methods: {
     ...mapMutations({
