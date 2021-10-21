@@ -4,7 +4,7 @@
       width="700"
       scrollable
     >
-    <v-card class="new-game-settings">
+    <v-card class="new-game-settings" v-if="options">
       <v-card-title class="text-h5 ">
           New Game
       </v-card-title>
@@ -15,8 +15,8 @@
             <div>
               
               <v-switch
-                v-model="loadGame"
-                :label="`${loadGame ? 'Yes' : 'no'}`"
+                v-model="options.loadGame"
+                :label="`${options.loadGame ? 'Yes' : 'no'}`"
                 v-tooltip="`Load Game on generate`"
               ></v-switch>
             </div>
@@ -31,8 +31,8 @@
               </div>
               <v-switch
                 disabled
-                v-model="optionUseDefault"
-                :label="`${optionUseDefault ? 'Yes' : 'no'}`"
+                v-model="options.optionUseDefault"
+                :label="`${options.optionUseDefault ? 'Yes' : 'no'}`"
                 v-tooltip="`Coming Soon`"
               ></v-switch>
             </div>
@@ -44,8 +44,8 @@
               Generate starting positions
               </div>
               <v-switch
-                v-model="useStartPoints"
-                :label="`${useStartPoints ? 'Yes' : 'no'}`"
+                v-model="options.useStartPoints"
+                :label="`${options.useStartPoints ? 'Yes' : 'no'}`"
                 v-tooltip="`Coming Soon`"
               ></v-switch>
             </div>
@@ -59,8 +59,8 @@
               </div>
               <v-switch
                 disabled
-                v-model="optionUsePlayerUnits"
-                :label="`${optionUsePlayerUnits ? 'Yes' : 'no'}`"
+                v-model="options.optionUsePlayerUnits"
+                :label="`${options.optionUsePlayerUnits ? 'Yes' : 'no'}`"
                 v-tooltip="`Coming Soon`"
               ></v-switch>
             </div>
@@ -99,8 +99,8 @@
               </div>
             <div>
               <v-switch
-                v-model="optionMapAdjacent"
-                :label="`${optionMapAdjacent ? 'yes' : 'no'}`"
+                v-model="options.optionMapAdjacent"
+                :label="`${options.optionMapAdjacent ? 'yes' : 'no'}`"
               ></v-switch>
             </div>  
         </div>
@@ -111,8 +111,8 @@
               </div>
             <div>
               <v-switch
-                v-model="optionUseLimitedTileSet"
-                :label="`${optionUseLimitedTileSet ? 'yes' : 'no'}`"
+                v-model="options.optionUseLimitedTileSet"
+                :label="`${options.optionUseLimitedTileSet ? 'yes' : 'no'}`"
               ></v-switch>
             </div>  
         </div>
@@ -123,8 +123,8 @@
           </div>
           <div>
             <v-switch
-              v-model="optionClaimOnMove"
-              :label="`${optionClaimOnMove ? 'yes' : 'no'}`"
+              v-model="options.optionClaimOnMove"
+              :label="`${options.optionClaimOnMove ? 'yes' : 'no'}`"
             ></v-switch>
           </div>  
         </div>
@@ -135,8 +135,8 @@
           </div>
           <div>
             <v-switch
-              v-model="optionExploreOnMove"
-              :label="`${optionExploreOnMove ? 'yes' : 'no'}`"
+              v-model="options.optionExploreOnMove"
+              :label="`${options.optionExploreOnMove ? 'yes' : 'no'}`"
             ></v-switch>
           </div>  
         </div>
@@ -150,38 +150,38 @@
                 dense
               >
                 <v-btn
-                  @click="() => this.optionMapMode = 'explore'"
+                  @click="() => this.options.optionMapMode = 'explore'"
                   x-small
-                  v-tooltip="`Expand map by placing tiles`" :color="optionMapMode === 'explore' ? 'primary' : ''">
+                  v-tooltip="`Expand map by placing tiles`" :color="options.optionMapMode === 'explore' ? 'primary' : ''">
                   Explore
                 </v-btn>
                 <v-btn
-                  @click="() => this.optionMapMode = 'hidden'"
+                  @click="() => this.options.optionMapMode = 'hidden'"
                   x-small
-                  v-tooltip="`Fixed map size with hidden tiles.`" :color="optionMapMode === 'hidden' ? 'primary' : ''">
+                  v-tooltip="`Fixed map size with hidden tiles.`" :color="options.optionMapMode === 'hidden' ? 'primary' : ''">
                   Hidden
                 </v-btn>
                 <v-btn
-                  @click="() => this.optionMapMode = 'static'"
+                  @click="() => this.options.optionMapMode = 'static'"
                   x-small v-tooltip="`Visible Fixed Map.`"
-                  :color="optionMapMode === 'static' ? 'primary' : ''">
+                  :color="options.optionMapMode === 'static' ? 'primary' : ''">
                   Static
                 </v-btn>
               </v-btn-toggle>
-              <div class="py-1 text-body-2 support-text" v-if="optionMapMode === 'explore'">Expand map by placing tiles. Linited by the number of tiles available.</div>
-              <div class="py-1 text-body-2 support-text" v-if="optionMapMode === 'hidden'">Fixed size map, tiles initially hidden from players.</div>
-              <div class="py-1 text-body-2 support-text" v-if="optionMapMode === 'static'">Fixed size map, tiles visible to players.</div>
+              <div class="py-1 text-body-2 support-text" v-if="options.optionMapMode === 'explore'">Expand map by placing tiles. Linited by the number of tiles available.</div>
+              <div class="py-1 text-body-2 support-text" v-if="options.optionMapMode === 'hidden'">Fixed size map, tiles initially hidden from players.</div>
+              <div class="py-1 text-body-2 support-text" v-if="options.optionMapMode === 'static'">Fixed size map, tiles visible to players.</div>
               <div class="optional">
-                <v-btn small outlined @click="() => {useMapGrid = !useMapGrid}">{{useMapGrid ? 'Hide' : 'Use'}} Map Grid</v-btn>
+                <v-btn small outlined @click="() => {options.useMapGrid = !options.useMapGrid}">{{options.useMapGrid ? 'Hide' : 'Use'}} Map Grid</v-btn>
               </div>
-              <div v-if="useMapGrid">
+              <div v-if="options.useMapGrid">
                 <textarea
                   max="999"
                   name="Code"
                   class="base-input code-input"
                   type="string"
                   placeholder=""
-                  v-model="mapGrid"
+                  v-model="options.mapGrid"
                   rows="10"
                 ></textarea>
                 <v-btn small outlined @click="applyMapGrid">Apply</v-btn>
@@ -204,25 +204,25 @@
         <div class="col">
           <div class="row ma-0 f-flex align-center">
             <v-btn text x-small outlined @click="removeRow"> - 1</v-btn>
-            <div class="feature">{{newRows}}</div>
+            <div class="feature">{{options.newRows}}</div>
             <v-btn text x-small outlined @click="addRow"> + 1</v-btn>
           </div>
         </div>
         <div class="col">
           <div class="row ma-0 f-flex align-center">
             <v-btn text x-small outlined @click="removeCol"> - 1</v-btn>
-            <div class="feature">{{newCols}}</div>
+            <div class="feature">{{options.newCols}}</div>
             <v-btn text x-small outlined @click="addCol"> + 1</v-btn>
           </div>
         </div>
         <div class="col" style="flex-basis: 300px; flex-grow: 0; flex-shrink: 0;">
-          <map-preview :rows="newRows" :cols="newCols" />
+          <map-preview :rows="options.newRows" :cols="options.newCols" />
         </div>
       </div>
       <div class="row">
           <div class="col">
             <label >Map Style</label>
-            <tile-set-select :selected="tileSetId" :onAction="setTileSet" v-if="tileSets" />
+            <tile-set-select :selected="options.tileSetId" :onAction="setTileSet" v-if="tileSets" />
             <!-- <div v-if="tileSets">
               <div v-for="(set, i) in tileSets" :key="i">
                 <v-btn small :color="set.id === tileSetId ? 'primary' : '' " @click="() => setTileSet(set.id)">{{set.name}}{{set.id}}</v-btn>
@@ -251,7 +251,7 @@
       <div class="row" >
         <div class="col ">
           <label>Title</label><br />
-            <v-text-field small filled clearable outlined dense v-model="gameTitle" hint="Name for easy identification">
+            <v-text-field small filled clearable outlined dense v-model="options.gameTitle" hint="Name for easy identification">
           </v-text-field>
         </div>
       </div>
@@ -264,11 +264,11 @@
               <!-- v-model="toggle_mechanic" -->
             
           <v-switch
-              v-model="optionUseLootGeneration"
-              :label="`${optionUseLootGeneration ? 'Yes' : 'no'}`"
+              v-model="options.optionUseLootGeneration"
+              :label="`${options.optionUseLootGeneration ? 'Yes' : 'no'}`"
               v-tooltip="`Assign loot rewards to tiles`"
             ></v-switch>
-            <v-text-field v-model="optionLootCount" v-if="devMode"/>
+            <v-text-field v-model="options.optionLootCount" v-if="devMode"/>
         </div>
         <div class="col">
           <label >Creatures</label>
@@ -276,11 +276,23 @@
               <!-- v-model="toggle_mechanic" -->
             
             <v-switch
-                v-model="optionUseCreatureGeneration"
-                :label="`${optionUseCreatureGeneration ? 'Yes' : 'no'}`"
+                v-model="options.optionUseCreatureGeneration"
+                :label="`${options.optionUseCreatureGeneration ? 'Yes' : 'no'}`"
                 v-tooltip="`Assign Creatures to tiles`"
               ></v-switch>
-              <v-text-field v-model="optionCreatureCount" v-if="devMode" />
+              <v-text-field v-model="options.optionCreatureCount" v-if="devMode" />
+        </div>
+        <div class="col">
+          <label >Items</label>
+          <div class="text-body-2">Use Items to claim tiles</div>
+              <!-- v-model="toggle_mechanic" -->
+            
+            <v-switch
+                v-model="options.optionUseItems"
+                :label="`${options.optionUseItems ? 'Yes' : 'no'}`"
+                v-tooltip="`Use Items to claim tiles`"
+              ></v-switch>
+              <v-text-field v-model="options.optionItemCount" v-if="devMode" />
         </div>
       </div>
       <div class="row" v-if="devMode">
@@ -288,11 +300,11 @@
           <label >Mechanic</label>
           <div class="text-body-2">How will this game work?</div>
           <v-btn-toggle
-              v-model="toggle_mechanic"
+              v-model="options.toggle_mechanic"
               mandatory
               dense
             >
-              <v-btn x-small v-tooltip="`Control the entire board.`" :color="toggle_mechanic === 0 ? 'primary' : ''">
+              <v-btn x-small v-tooltip="`Control the entire board.`" :color="options.toggle_mechanic === 0 ? 'primary' : ''">
                 Conquest
               </v-btn>
 
@@ -370,53 +382,28 @@ import {
 // 0 2 1 1 0
 // 0 1 3 1 0
 // 0 0 0 0 0`
-const defaultCode = `[
-  ['0', '0', '0', '0', '0'],
-  ['0', '1', '1', '0', '1'],
-  ['0', '1', '0', '2', '1'],
-  ['0', '2', '1', '1', '0'],
-  ['0', '1', '3', '1', '0'],
-  ['0', '0', '0', '0', '0']
-]`
+
 export default {
   components: { MapPreview, TileSetSelect },
   props: ['onAction', 'onClose', 'show', 'rows', 'cols'],
   data() {
     return {
+      options: {},
       showDialog: true,
       loadGame: true,
-      useMapGrid: false,
-      useStartPoints: false,
-      mapGrid: defaultCode,
-      newRows: 3,
-      newCols: 4,
-      generateMap: false,
-      optionMapAdjacent: false,
-      optionClaimOnMove: false,
-      optionExploreOnMove: false,
-      optionUseDefault: true,
-      optionUsePlayerUnits: false,
-      optionUseLimitedTileSet: false,
-      optionUseLootGeneration: true,
-      optionLootCount: 3,
-      optionUseCreatureGeneration: true,
-      optionCreatureCount: 3,
-      optionMapExpandable: true,
-      optionMapMode: 'explore',
-      gameTitle: "New Game",
-      toggle_mechanic: null,
-      tileSetId: 'QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me',
-      toggle_tileset: 0,
     };
   },
   created(){
+    const {optionsTemplate} = this;
     const nameConfig = {
       dictionaries: [adjectives, colors, animals],
       separator: "-",
     };
     const randomName = uniqueNamesGenerator(nameConfig); // big_red_donkey
     console.log("random.name", randomName);
-    this.gameTitle = randomName;
+    // this.gameTitle = randomName;
+    const tempOptions = {...optionsTemplate, gameTitle: randomName}
+    this.options = tempOptions
   },
   mounted(){
     
@@ -427,42 +414,58 @@ export default {
       walletAddress: "ui/walletAddress",
       tileSets: "ui/tileSets",
       devMode: "ui/devMode",
+      optionsTemplate: "ui/optionsTemplate",
     }),
     compiledOptions(){
       const {
-        newRows, 
-        newCols, optionUseDefault, optionMapMode, generateMap, walletAddress, tileSetId, gameTitle, optionUseLootGeneration,
-        optionLootCount, 
-        optionUseCreatureGeneration,
-        optionCreatureCount,
-        useMapGrid,
-        mapGrid,
-        useStartPoints,
-        optionClaimOnMove,
-        optionExploreOnMove
+        walletAddress, 
         } = this
-      const options = {
-        rows: newRows, 
-        cols: newCols, 
-        optionUseLootGeneration,
-        optionLootCount,
-        optionUseCreatureGeneration,
-        optionCreatureCount,
-        optionClaimOnMove,
-        optionExploreOnMove,
-        useDefaultTeams: optionUseDefault, 
-        generateMap, 
+        // const {
+        // newRows, 
+        // newCols, 
+        // optionUseDefault, 
+        // optionMapMode, 
+        // generateMap, 
+        // tileSetId, 
+        // gameTitle, 
+        // optionUseLootGeneration,
+        // optionLootCount, 
+        // optionUseCreatureGeneration,
+        // optionCreatureCount,
+        // useMapGrid,
+        // mapGrid,
+        // useStartPoints,
+        // optionClaimOnMove,
+        // optionExploreOnMove,
+        // optionUseItems,
+        // optionItemCount
+        // } = this.options
+      const compiledOptions = {
+        ...this.options,
+        rows: this.options.newRows, 
+        cols: this.options.newCols, 
+        // optionUseLootGeneration,
+        // optionLootCount,
+        // optionUseCreatureGeneration,
+        // optionCreatureCount,
+        // optionClaimOnMove,
+        // optionExploreOnMove,
+        // optionUseItems,
+        // optionItemCount,
+        useDefaultTeams: this.options.optionUseDefault, 
+        // generateMap, 
         owner: walletAddress, 
-        mapMode: optionMapMode, 
-        tileSetId, 
-        title: gameTitle,
-        useStartPoints,
-        useMapGrid: useMapGrid,
-        mapGrid: mapGrid,
+        mapMode: this.options.optionMapMode, 
+        // tileSetId, 
+        title: this.options.gameTitle,
+        // useStartPoints,
+        // useMapGrid: useMapGrid,
+        // mapGrid: mapGrid,
         loadGame: this.loadGame,
-        useEdgePoints: optionMapMode !== 'explore',
+        useEdgePoints: this.options.optionMapMode !== 'explore',
         }
-      return options;
+        console.log('compiledOPtions', compiledOptions)
+      return compiledOptions;
     }
   },
 
@@ -474,35 +477,35 @@ export default {
       arrayFromMapGrid: "ui/arrayFromMapGrid",
     }),
     addRow(){
-      this.newRows = this.newRows + 1;
+      this.options.newRows = this.options.newRows + 1;
     },
     removeRow(){
-      if(this.newRows === 1){
+      if(this.options.newRows === 1){
         alert('Cannot be less than 1');
         return
       }
       else {
-        this.newRows = this.newRows - 1;
+        this.options.newRows = this.options.newRows - 1;
       }
     },
     addCol(){
-      this.newCols = this.newCols + 1;
+      this.options.newCols = this.options.newCols + 1;
     },
     removeCol(){
-      if(this.newCols === 1){
+      if(this.options.newCols === 1){
         alert('Cannot be less than 1');
         return
       }
       else {
-        this.newCols = this.newCols - 1;
+        this.options.newCols = this.options.newCols - 1;
       }
     },
     setTileSet(id){
       console.log('setting setid to ', id)
-      this.tileSetId = id;
+      this.options.tileSetId = id;
     },
     async applyMapGrid(){
-      const {mapGrid} = this;
+      const {mapGrid} = this.options;
       console.log('mapGrid', mapGrid)
       const result = await this.arrayFromMapGrid({grid: mapGrid})
       console.log('result', result);
@@ -511,11 +514,11 @@ export default {
       const cols = result[0] && result[0].length;
       console.log('rows cols', rows, cols);
       if(rows && cols){
-        this.newRows = rows
-        this.newCols = cols
-        this.optionMapMode = 'static'
-        this.optionUseCreatureGeneration = true;
-        this.optionUseLootGeneration = true;
+        this.options.newRows = rows
+        this.options.newCols = cols
+        this.options.optionMapMode = 'static'
+        this.options.optionUseCreatureGeneration = true;
+        this.options.optionUseLootGeneration = true;
       } else {
         console.error('either missing rows/cols');
         return

@@ -1,10 +1,10 @@
 <template>
   <div class="pageContainer">
     <Header />
-    <dialog-intro :show="!introRead" />
-    <dialog-team-select  :onAction="addPlayer" :userPlayer="userPlayer" />
+    <!-- <dialog-intro :show="!introRead" /> -->
+    <!-- <dialog-team-select  :onAction="addPlayer" :userPlayer="userPlayer" /> -->
     <dialog-game-welcome
-      :show="gameData && showGameWelcome"
+      :show="showGameWelcome ? true : false"
       :onAction="handleStartGame"
       :onJoin="() => setShowTeamSelect(true)"
       :onClose="() => {this.showGameWelcome = false}"
@@ -313,8 +313,8 @@
       </div>
       <div class="col col-3 info-column" v-if="panel">
         <div class="info-game" v-if="!selectedData">
-          <div class="col pa-0  summary-container info-item" v-if="gameData" >
-            <game-info :game="gameData" :expanded="true" mode="info" v-if="panel === 'info'" />
+          <div class="col pa-0  summary-container info-item" v-if="panel === 'info'" >
+            <game-info :game="gameData" :expanded="true" mode="info"  v-if="gameData" />
           </div>
           <div class="row mx-0 my-0 info-item tabs-container" v-if="panel === 'scores'">
             <v-card  outlined class="pa-0 card-bg" style="width: 100%;" >
@@ -401,9 +401,19 @@
               </v-tabs-items>
             </v-card>
           </div>
-        <v-divider />
+        
         <div class="row ma-0 mt-0 py-2  info-item minimap-row d-flex align-center justify-center" v-if="this.gameData && (panel === 'info' || panel === 'minimap')" >
           <map-mini :gameData="this.gameData" size="120" />
+        </div>
+        <div class="row ma-0 info-item" v-if="panel === 'account'" >
+          <div class="col">
+          <label>Players</label>
+          <div class="player-list" v-if="gameData && gameData.players" >
+            <div v-for="(player, i) in gameData.players" :key="i">
+              <player-info :player="player" />
+            </div>
+          </div>
+          </div>
         </div>
         <div class="row ma-0 info-item" v-if="panel === 'inspect'" >
           Select a tile to inspect....
@@ -414,15 +424,17 @@
             <div class="d-flex justify-center align-center" style="height: 100%;">
               <div v-if="userIsPlayer" class=" player-wrap">
                 <player-info :player="userPlayer" v-if="userIsPlayer" />
-                <div class="tile-items">
+                <div class="tile-items d-flex align-center justify-center" v-if="gameData && gameData.options.optionUseItems">
+                  <item-flag :item="{color: userPlayer && this.getColor(userPlayer.team)}" size="small"  />
+                  <item-flag :item="{color: userPlayer && this.getColor(userPlayer.team)}" size="small"  />
+                  <item-flag :item="{color: userPlayer && this.getColor(userPlayer.team)}" size="small"  />
+                  <!-- <div class="tile-item" ><v-icon>mdi-flag</v-icon></div>
                   <div class="tile-item" ><v-icon>mdi-flag</v-icon></div>
-                  <div class="tile-item" ><v-icon>mdi-flag</v-icon></div>
-                  <div class="tile-item" ><v-icon>mdi-flag</v-icon></div>
+                  <div class="tile-item" ><v-icon>mdi-flag</v-icon></div> -->
                 </div>
               </div>
               <div class="col pa-0 d-flex align-center justify-center" v-if="!userIsPlayer">
-                <v-btn plain primary @click="setShowTeamSelect(true)">Join Game</v-btn>
-                <v-btn plain primary @click="() => {this.showGameWelcome = true}" >Show welcome</v-btn>
+                <v-btn plain color="primary" @click="() => {this.showGameWelcome = true}">Join Game</v-btn>
               </div>
             </div>
             
@@ -494,8 +506,10 @@
       <div class="col content-column" :class="panel ? 'col-9' : 'col-11'">
         <client-only>
           <div class="error-message" v-if="gameStatus === 'error'"><label>Error</label>Game Data Not Found</div>
-          <Loading message="Loading..." v-if="gameStatus === 'loading'" />
-          <div class="map-controls row ma-0" v-if="gameData">
+          <div class="loading-container"  v-if="gameStatus === 'loading' || binStatus === 'working' ">
+            <Loading message="Loading..." /> 
+          </div>
+          <div class="map-controls row ma-0" v-if="binStatus !== 'working' && gameData">
             <div class="col pa-1 ">
               <div class="value-controller">
                 <v-btn icon  small @click="setScale(-0.1)"><v-icon>mdi-magnify-minus-outline</v-icon></v-btn>
@@ -521,7 +535,7 @@
             </div>
           </div>
           <div
-            :class="`map-container map-mode-${gameData && gameData.options.mapMode}`"
+            :class="`map-container map-mode-${gameData && gameData.options.mapMode} ${binStatus === 'working' ? 'working' : ''}`"
             v-if="gameStatus !== 'loading'" ref="mapcontainer"
             
           >
@@ -670,7 +684,7 @@ export default {
       gameData: null,
       testData: null,
       showInfo: false,
-      showGameWelcome: true,
+      showGameWelcome: false,
       showMapControls: false,
       showMapSelect: false,
       selectedTile: null,
@@ -722,7 +736,7 @@ export default {
     const {params} = this.$route;
     const {id} = params;
     
-    this.gameStatus = 'loading';
+    // this.gameStatus = 'loading';
     if(id === 'demo'){
       this.gameData = this.demoData;
       this.loadData();
@@ -730,31 +744,30 @@ export default {
       return
     }
     const {localGames, games} = this;
-    // const hasGames = games || localGames;
     
-    console.log('mounted id', id, games)
+    // console.log('mounted id', id, games)
     
-    const thisGameLocal = localGames && localGames.find(game => game.id === id);
-    const thisGameRemote = games && games.find(game => game.id === id);
-    const thisGame = thisGameRemote || thisGameLocal;
-    if(!thisGame){
-      this.gameStatus="error";
-      return
-    }
-    console.log('mounted thisGame', thisGame)
-    console.log('here', this.activeGame)
-    console.log('thisgame exists', thisGame, this.activeGame)
-    if(!thisGame){
-        this.gameStatus='error';
-    } else {
+    // const thisGameLocal = localGames && localGames.find(game => game.id === id);
+    // const thisGameRemote = games && games.find(game => game.id === id);
+    // const thisGame = thisGameRemote || thisGameLocal;
+    // if(!thisGame){
+    //   this.gameStatus="error";
+    //   return
+    // }
+    // console.log('mounted thisGame', thisGame)
+    // console.log('here', this.activeGame)
+    // console.log('thisgame exists', thisGame, this.activeGame)
+    // if(!thisGame){
+    //     this.gameStatus='error';
+    // } else {
 
-      this.activeGameId = id;
-      this.tileSetId = thisGame.options.tileSetId;
-      this.setActiveGame(thisGame);
+    //   this.activeGameId = id;
+    //   this.tileSetId = thisGame.options.tileSetId;
+    //   this.setActiveGame(thisGame);
     
-      this.loadData({id});
-      this.gameStatus = 'ready'
-    }
+    //   this.loadData({id});
+    //   this.gameStatus = 'ready'
+    // }
     // setTimeout(() =>{
     //   this.gameStatus = 'ready'
     //   }, 2000);
@@ -1216,9 +1229,9 @@ export default {
         this.gameTeams = this.demoData.teams
          
        }
-       this.updateData();
+       this.updateData({saveRemote: false});
     },
-     async updateData(id){
+     async updateData({id, saveRemote}){
       const {gameTeams, gameData} = this;
       const {tiles, units} = gameData;
       const newTileMap = this.compileTileMap(tiles);
@@ -1263,7 +1276,9 @@ export default {
       this.setActiveGame(tempGameData);
       this.gameTeams = orderedTeams;
       this.updateSaveMeta();
-      this.updateActiveGame({gameData: tempGameData});
+      if(saveRemote){
+        this.updateActiveGame({gameData: tempGameData});
+      }
       console.groupEnd()
     },
     compileTileMap(tiles){
@@ -1339,7 +1354,7 @@ export default {
       this.testData = tempData;
       
       this.applyTestData()
-      this.updateData();
+      this.updateData({saveRemote: true});
       if(optionClaimOnMove){
         this.handleClaim(location, null, false);
       }
@@ -1369,7 +1384,7 @@ export default {
       this.gameData = tempGameData;
       this.mapString = null;
       this.previewTile = null;
-      this.updateData();
+      this.updateData({saveRemote: true});
       this.generateLocation = null;
       this.handleTileSelect(null)
     },
@@ -1462,7 +1477,7 @@ export default {
         
         // this.setTiles(tempTiles)
         this.isBattling = false;
-        this.updateData();
+        this.updateData({saveRemote: true});
         
         // this.selectedTile = null;
         // this.selectedData = null;
@@ -1694,7 +1709,7 @@ export default {
         console.log('tempData would apply:', tempData )
         this.testData = tempData;
         this.applyTestData();
-        this.updateData();
+        this.updateData({saveRemote: true});
 
     },
   
@@ -1712,7 +1727,7 @@ export default {
       console.log('tempData', tempData, tempOptions)
       this.testData = tempData;
       this.applyTestData();
-      this.updateData();
+      this.updateData({saveRemote: true});
     },
     setScale(change){
       const newValue = this.scale + change;
@@ -1943,6 +1958,11 @@ $outsideRowSize: 3rem;
   padding: 0;
   user-select: none;
   transform: translateZ(0);
+  opacity: 1;
+  transition: opacity .2s ease-in;
+  &.working{
+    opacity: .8;
+  }
   .map-postion{
     position: relative;
     padding: 0;
@@ -2033,6 +2053,18 @@ $outsideRowSize: 3rem;
       }
     }
   }
+}
+.loading-container{
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--v-card-darken1);
+  z-index: 99;
+  display: grid;
+  place-items: center;
+  opacity: .8;
 }
   .map-controls{
     position: fixed;

@@ -33,7 +33,8 @@
               <game-preview
                 v-for="(game, index) in games"
                 :key="index"
-                :game="game" :onRemove="() => removeGame(index)"
+                :game="game"
+                :onRemove="() => removeGame(index)"
                 />
 
 
@@ -45,6 +46,7 @@
               <game-preview
                 :key="index"
                 :game="game" 
+                :onRemove="() => removeRemoteGame(game.id)"
                 />
               <div>
                 {{game.id}} - {{game.map && game.map.rows}} rows, {{game.map && game.map.cols}} columns 
@@ -73,7 +75,7 @@
             <div v-for="(game, index) in localGames" :key="index">
               <game-info :game="game" :expanded="false" />
               <div>
-                {{game.id.substring(0, 3)}} - {{game.map && game.map.rows}} rows, {{game.map && game.map.cols}} columns 
+                {{game.id.substring(0, 3)}}
                 <v-btn text @click="loadGame(game.id)">load</v-btn> 
                 <v-btn text @click="saveGame(game.id)">save</v-btn> 
               </div>
@@ -126,6 +128,7 @@ export default {
   methods: {
     ...mapMutations({
        setActiveGame: 'ui/setActiveGame',
+       setRemoteGames: 'ui/setRemoteGames',
        
     }),
      ...mapActions({
@@ -190,8 +193,24 @@ export default {
       const newGames = games && games.filter((game, i) => i !== index);
       console.log('filtered games would be: ', newGames)
       this.updateConfig({games: newGames});
-      
     },
+    async removeRemoteGame(id){
+      const {remoteGames} = this;
+      console.log('typeof remoteGames', typeof remoteGames);
+      console.log('remoteGames', remoteGames);
+      if(!remoteGames){return}
+      const newGames = remoteGames && remoteGames.filter(game => game.id !== id);
+      console.log('filtered games would be: ', newGames)
+      this.setRemoteGames(newGames)
+      this.$nextTick(() => {
+        // this.$nuxt.$loading.start()
+
+        // setTimeout(() => this.$nuxt.$loading.finish(), 500)
+      console.log('remoteGames is now: ', remoteGames)
+      this.updateConfig({});
+      })
+    },
+    
     resetGames(){
       // const newGames =  JSON.parse(`{"games": [
       //       {

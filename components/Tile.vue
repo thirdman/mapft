@@ -32,10 +32,10 @@
       <v-icon large color="lime">mdi-sack</v-icon>
     </div>
     <div v-if="items" class="tile-items">
-        <div v-for="(item, index) in items" :key="index" class="tile-item" :style="`background: ${item.color}`">
-        <!-- {{item.id}} -->
+      <item-flag :item="item" v-for="(item, index) in items" :key="index" />
+      <!-- <div  class="tile-item" :style="`background: ${item.color}`">
         <v-icon>mdi-flag</v-icon>
-      </div>
+      </div> -->
     </div>
     <!-- <img v-if="tile.meta && tile.meta.creatureSrc" :src="tile.meta.creatureSrc" width="100px" class="creature-image" /> -->
     <div class="tile-current" >
@@ -226,28 +226,30 @@
   //height: 3rem;
   display: grid;
   place-content: center;
-  .tile-item{
-    width: 2rem; 
-    height: 2rem;
-    background: lime; 
-    color: black;
-    border-radius: 2rem;
-    display: inline-flex;
-    margin-left: 2px;
-    overflow: hidden;
-    box-shadow: 0 1px 4px -1px rgba(0,0,0,.3);
-    display: grid;
-    place-items: center;
-  }
+  // .tile-item{
+  //   width: 2rem; 
+  //   height: 2rem;
+  //   background: lime; 
+  //   color: black;
+  //   border-radius: 2rem;
+  //   display: inline-flex;
+  //   margin-left: 2px;
+  //   overflow: hidden;
+  //   box-shadow: 0 1px 4px -1px rgba(0,0,0,.3);
+  //   display: grid;
+  //   place-items: center;
+  // }
   
 }
 </style>
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import ItemFlag from './ItemFlag.vue';
 
 
 export default {
+  components: { ItemFlag },
   props: [
     'tile', 
     'handleSelect', 

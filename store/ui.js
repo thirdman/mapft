@@ -556,7 +556,42 @@ const defaultTiles = [
     },
   },
 ];
-
+const defaultCode = `[
+  ['0', '0', '0', '0', '0'],
+  ['0', '1', '1', '0', '1'],
+  ['0', '1', '0', '2', '1'],
+  ['0', '2', '1', '1', '0'],
+  ['0', '1', '3', '1', '0'],
+  ['0', '0', '0', '0', '0']
+]`;
+const optionsTemplate = {
+  loadGame: false,
+  useMapGrid: false,
+  useStartPoints: false,
+  mapGrid: defaultCode,
+  newRows: 3,
+  newCols: 4,
+  generateMap: false,
+  optionMapAdjacent: false,
+  optionClaimOnMove: false,
+  optionExploreOnMove: false,
+  optionUseDefault: true,
+  optionUsePlayerUnits: false,
+  optionUseLimitedTileSet: false,
+  optionUseLootGeneration: true,
+  optionLootCount: 3,
+  optionUseCreatureGeneration: true,
+  optionCreatureCount: 3,
+  optionUseItems: false,
+  optionItemCount: 3,
+  optionUseDefault: true,
+  optionMapExpandable: true,
+  optionMapMode: "explore",
+  gameTitle: "New Game",
+  toggle_mechanic: null,
+  tileSetId: "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me",
+  toggle_tileset: 0,
+};
 const defaultCreatures = [106, 319, 341, 23, 401, 22, 195, 276, 163, 295];
 
 // const themeArray = [
@@ -658,6 +693,7 @@ export const state = () => ({
   localGames: [],
   activeGame: null,
   tiles: defaultTiles,
+  optionsTemplate: optionsTemplate,
   tileTemplate: tileTemplate,
   playerTemplate: playerTemplate,
   unitTemplate: unitTemplate,
@@ -675,6 +711,7 @@ export const getters = {
   activeGame: (state) => state.activeGame,
   tiles: (state) => state.tiles,
   tileTemplate: (state) => state.tileTemplate,
+  optionsTemplate: (state) => state.optionsTemplate,
   playerTemplate: (state) => state.playerTemplate,
   unitTemplate: (state) => state.unitTemplate,
   itemTemplate: (state) => state.itemTemplate,
@@ -1141,16 +1178,21 @@ export const actions = {
       optionLootCount,
       optionUseCreatureGeneration,
       optionCreatureCount,
+      optionUseDefault,
       useMapGrid,
       useStartPoints,
       useEdgePoints,
       mapGrid,
     } = payload;
     const options = { ...payload };
-    let id = uuidv4();
-    console.log("generate Game", payload);
+    const { localGames, remoteGames, ipfsUrl, playerTemplate, walletAddress } =
+      context.state;
+    if (!walletAddress) {
+      return;
+    }
 
-    const { localGames, ipfsUrl, playerTemplate } = context.state;
+    console.log("generate Game", payload);
+    let id = uuidv4();
     const newTileArray = new Array(rows * cols).fill(tileTemplate);
     let newGameArray = [];
     const blankRowsArray = new Array(rows).fill();
@@ -1244,7 +1286,13 @@ export const actions = {
         cols,
         tileMap: newTileMap,
       }));
+    const gameTeams =
+      optionUseDefault &&
+      (await context.dispatch("getTeams", {
+        defaultTeams,
+      }));
 
+    /** CREATE GRID IF SUPPLIED */
     let gameTiles = newGameArray;
     if (useMapGrid) {
       gameTiles = compileStaticTileMap({
@@ -1261,14 +1309,18 @@ export const actions = {
     // Simply get a random avatar
     const generator = new AvatarGenerator();
     const avatarSrc = generator.generateRandomAvatar();
-
+    const playerTeam = await context.dispatch("getRandomTeam", {
+      teams: gameTeams,
+    });
     const adminPlayer = {
       ...playerTemplate,
-      walletAddress: "admin",
-      id: "admin",
+      walletAddress: walletAddress,
+      id: walletAddress,
       active: true,
       joined: false,
       avatarSrc: avatarSrc,
+      displayName: "New Player",
+      team: playerTeam,
     };
     console.log("adminPlayer", adminPlayer);
 
@@ -1280,6 +1332,7 @@ export const actions = {
     // console.log("random.name", randomName);
     if (id) {
       const tempGames = localGames.slice();
+      const tempRemoteGames = remoteGames.slice();
       const thisGame = {
         ...payload,
         id,
@@ -1310,17 +1363,26 @@ export const actions = {
         players: [adminPlayer],
         units: [],
         items: [],
-        teams: defaultTeams,
+        teams: gameTeams,
       };
       console.info("thisGame", thisGame);
-      tempGames.push(thisGame);
-      context.commit("setLocalGames", tempGames);
+
       const storedId = await context.dispatch("createBin", {
         gameData: thisGame,
       });
+
       console.log("storedId", storedId);
       if (storedId) {
         id = storedId;
+        thisGame.id = storedId;
+        tempGames.push(thisGame);
+        tempRemoteGames.push(thisGame);
+        context.commit("setLocalGames", tempGames);
+        context.commit("setRemoteGames", tempRemoteGames);
+        context.dispatch("updateConfig", {
+          localGames: tempGames,
+          remoteGames: tempRemoteGames,
+        });
       }
     }
 
@@ -1328,7 +1390,6 @@ export const actions = {
       newTileArray[i].location = loc;
     });
     context.commit("setTiles", newGameArray);
-    // context.commit('setTileMap', newTileMap)
 
     return id;
   },
@@ -1423,7 +1484,7 @@ export const actions = {
     const gameData = gameJson && gameJson.record;
 
     console.log("gameData", gameData);
-    // await commit("setSiteData", siteData);
+    await commit("setBinStatus", "completed");
     // if (siteData.games) {
     //   await commit("setGames", siteData.games);
     //   await commit("setRemoteGames", siteData.remoteGames);
@@ -1510,14 +1571,15 @@ export const actions = {
     const { $axios } = this;
     const { game, games } = props;
     console.log("updateConfig props", props);
+    console.log("updateConfig remoteGames", remoteGames);
 
     const {
       svgFormStore: { svgData, activeTheme },
     } = rootState;
-    const { siteData } = state;
+    const { siteData, remoteGames } = state;
     const tempData = { ...siteData };
     const currentGames = siteData.games || [];
-    const currentRemoteGames = siteData.remoteGames || [];
+    const currentRemoteGames = remoteGames || siteData.remoteGames || [];
     const tempGames = [...currentGames];
 
     // const newImage = { ...svgData, theme: activeTheme };
@@ -2143,6 +2205,28 @@ export const actions = {
     }
     const singleLocations = getRandomFromArray(validLocations, 1);
     return singleLocations;
+  },
+  getTeams(_, payload) {
+    const { defaultTeams } = payload;
+    return defaultTeams;
+  },
+  getRandomTeam(context, payload) {
+    const { state, commit } = context;
+    const { teams } = payload;
+    const { userTeam } = state;
+    if (userTeam) {
+      return userTeam;
+    }
+    if (!teams) {
+      return;
+    }
+
+    const thisTeam = getRandomFromArray(teams, 1);
+    if (!thisTeam) {
+      return null;
+    }
+    commit("setUserTeam", thisTeam[0].team);
+    return thisTeam[0].team;
   },
 };
 
