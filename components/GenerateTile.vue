@@ -274,7 +274,7 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 import { dialog } from '@devlop-ab/dialog';
-import {calculateTile, forceCalculateTile, compileTile} from "../utils/generate"
+import {calculateTile, forceCalculateTile, compileTile, calculateAccessible} from "../utils/generate"
 const tileArray = ['nw', 'ne', 'sw', 'se', 'n', 'w', 's', 'e', 'dn', 'dw', 'de', 'ds', '00']
 const tileIndexArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
@@ -365,6 +365,7 @@ export default {
     ...mapGetters({
       walletAddress: "ui/walletAddress",
       gameTeams: "ui/gameTeams",
+      
       // tiles: "ui/tiles",
       tileMap: "ui/tileMap",
       userPoints: "ui/userPoints",
@@ -425,7 +426,7 @@ export default {
       // const tiles = this.tiles;
       const {userPoints, generationCost, location, walletAddress, gameData} = this;
       const {tiles, tileMap, options, mapGrid} = gameData;
-      const {mapMode, useMapGrid} = options
+      const {mapMode, useMapGrid, tileSetInclusive} = options
       const {tileExists} = this;
       console.log('mapMode', mapMode, tileExists);
       if(!tileMap){
@@ -460,7 +461,8 @@ export default {
           tiles, 
           mapGrid,
           useMapGrid
-          });
+        });
+        
       let tempTileMap = tileMap.slice();
       // const thisTile = tileMap[row][col];
       // console.log('thisTile', thisTile);
@@ -479,6 +481,7 @@ export default {
       // setTileMap(tempTileMap)
 
       const {tileImageIndex, imageSrc, possibles, cardinals} = newTileImageData;
+      const isAccessible = calculateAccessible(tileImageIndex, tileSetInclusive)
       
       this.possibles = possibles;
       this.cardinals = cardinals;
@@ -493,7 +496,7 @@ export default {
         location,
         tiles,
         walletAddress,
-        
+        isAccessible
       }
       const newTile = compileTile(dataObj)
       console.log('newTileImageData', newTileImageData, newTile);

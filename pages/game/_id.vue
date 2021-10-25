@@ -461,6 +461,31 @@
             <v-btn block outlined @click="resetGame">Reset Game</v-btn>
             </div>
           </div>
+          <div class="row">
+            <div class="col">
+            <label>Tile Size</label>
+            <v-btn-toggle dense>
+              <v-btn
+                x-small
+                :color="this.tileSize === 64 ? 'primary' : ''"
+                @click="() => {this.tileSize = 64}"
+                >64
+              </v-btn>
+              <v-btn  x-small
+                :color="this.tileSize === 128 ? 'primary' : ''"
+                @click="() => {this.tileSize = 128}">128</v-btn>
+              <v-btn  x-small
+                :color="this.tileSize === 240 ? 'primary' : ''"
+                @click="() => {this.tileSize = 240}">240</v-btn>
+              <v-btn  x-small
+                :color="this.tileSize === 256 ? 'primary' : ''"
+                @click="() => {this.tileSize = 256}">256</v-btn>
+              <v-btn  x-small
+                :color="this.tileSize === 512 ? 'primary' : ''"
+                @click="() => {this.tileSize = 512}">512</v-btn>
+            </v-btn-toggle>
+            </div>
+          </div>
           <div class="row" v-if="devMode">
             <div class="col">
             <v-btn block small outlined @click="applyMapGrid">Apply Map Grid</v-btn>
@@ -606,7 +631,7 @@
               v-if="gameData"
               >
               <Tile
-                size="240"
+                :size="tileSize"
                 :tile="tile"
                 :handleSelect="handleTileSelect"
                 v-for="(tile, index) in gameData.tiles"
@@ -706,22 +731,11 @@ export default {
       isLoadingAssets: false,
       units: null,
       scale: 1,
+      tileSize: 240,
     }
   },
   head: {
-    title: 'DungeoNFT',
-    meta: [
-      { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
-      { hid: "og:title", name: "og:title", content: "SVG Tokens" },
-      { hid: "og:site_name", name: "og:site_name", content: "SVG Tokens" },
-      { hid: "og:type", name: "og:type", content: "website" },
-      {
-          hid: "og:image",
-          property: "og:image",
-          content: BASE_URL + ogImagePreview
-        },
-        
-    ],
+    title: 'Load Map',
   },
   async created(){
     const {params} = this.$route;
@@ -735,8 +749,6 @@ export default {
   mounted(){
     const {params} = this.$route;
     const {id} = params;
-    
-    // this.gameStatus = 'loading';
     if(id === 'demo'){
       this.gameData = this.demoData;
       this.loadData();
@@ -744,40 +756,11 @@ export default {
       return
     }
     const {localGames, games} = this;
-    
-    // console.log('mounted id', id, games)
-    
-    // const thisGameLocal = localGames && localGames.find(game => game.id === id);
-    // const thisGameRemote = games && games.find(game => game.id === id);
-    // const thisGame = thisGameRemote || thisGameLocal;
-    // if(!thisGame){
-    //   this.gameStatus="error";
-    //   return
-    // }
-    // console.log('mounted thisGame', thisGame)
-    // console.log('here', this.activeGame)
-    // console.log('thisgame exists', thisGame, this.activeGame)
-    // if(!thisGame){
-    //     this.gameStatus='error';
-    // } else {
-
-    //   this.activeGameId = id;
-    //   this.tileSetId = thisGame.options.tileSetId;
-    //   this.setActiveGame(thisGame);
-    
-    //   this.loadData({id});
-    //   this.gameStatus = 'ready'
-    // }
-    // setTimeout(() =>{
-    //   this.gameStatus = 'ready'
-    //   }, 2000);
+   
   },
   async fetch() {
-      // this.posts = await this.$http.$get('https://api.nuxtjs.dev/posts')
-      
       const {params} = this.$route;
       const {id} = params;
-    
     this.gameStatus = 'loading';
     console.log('fetching id', id)
     if(!id){
@@ -794,12 +777,7 @@ export default {
       this.gameStatus = 'ready';
       // this.updateSaveMeta();
     }
-    // if(id === 'demo'){
-    //   this.gameData = this.demoData;
-    //   this.loadData();
-    //   this.gameStatus = 'ready'
-    //   return
-    // }
+    
   },
   computed: {
     ...mapGetters({
@@ -887,18 +865,18 @@ export default {
       }
     },
     mapWidth(){
-      const {gameData} = this; 
+      const {gameData, tileSize = 240} = this; 
       if(!gameData){return}
       const {tileMap} = gameData; 
-      const {rows, cols, tileSize = 240} = gameData.options; 
+      const {rows, cols} = gameData.options; 
       console.log('rows, cols, tileSize', rows, cols, tileSize)
       return tileSize * cols;
     },
     mapHeight(){
-      const {gameData} = this; 
+      const {gameData, tileSize = 240} = this; 
       if(!gameData){return}
       const {tileMap} = gameData; 
-      const {rows, cols, tileSize = 240} = gameData.options; 
+      const {rows, cols} = gameData.options; 
       console.log('rows, cols, tileSize', rows, cols, tileSize)
       return tileSize * rows;
     },
@@ -906,10 +884,10 @@ export default {
       return 48;
     },
     tileSize(){
-      const {gameData} = this; 
+      const {gameData, tileSize = 240} = this; 
       if(!gameData){return}
       // const {tileMap} = gameData; 
-      const {tileSize = 240} = gameData.options; 
+      // const {tileSize = 240} = gameData.options; 
       // console.log('rows, cols, tileSize', rows, cols, tileSize)
       return tileSize;
     },
@@ -1073,23 +1051,17 @@ export default {
       if(!creatureArray){return}
       const stringLocation = location.toString();
       const thisCreature = creatureArray.find(u => u.location.toString() === stringLocation);
-      console.log('thisCreature', thisCreature)
       return thisCreature
     },
     getItems(location){
       if(!this.gameData){return}
       const {items} = this.gameData;
-      
-      
-      // if(!items){return}
       const stringLocation = location.toString();
       const locationItems = items && items.filter(u => u.location.toString() === stringLocation);
-      console.log('locationItems', locationItems)
       return locationItems
       
     },
     handleAutoFill(){
-      
       const {activeGameId, gameData} = this;
       const {tileMap, tiles} = gameData;
       console.log('handle auto fill', gameData, tileMap, tiles);
@@ -2037,7 +2009,6 @@ $outsideRowSize: 3rem;
       background: #571b4b;
       background: var(--line-color);
     }
-    // padding: calc(240px);
     .explore-button-row, .explore-button-col{
       display: flex;
     }
@@ -2190,8 +2161,8 @@ $outsideRowSize: 3rem;
     }
   }
 .grid-tile{
-  width: 240px;
-  height: 240px;
+  width: 240px; // default size
+  height: 240px; // default size
   flex-shrink: 0;
   position: relative;
   transform: translateY(0px) scale3d(1, 1, 1) perspective(0px) rotate3d(0, 0, 0, 0);

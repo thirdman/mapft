@@ -22,6 +22,7 @@
     "@nuxtjs/vuetify": "^1.12.1",
     "@svgdotjs/svg.js": "^3.1.1",
     "@walletconnect/web3-provider": "^1.4.1",
+    "ethers": "^5.5.1",
     "random-avatar-generator": "^2.0.0",
     "unique-names-generator": "^4.6.0",
     "vee-validate": "^3.4.11",

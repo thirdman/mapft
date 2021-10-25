@@ -13,6 +13,7 @@ export default {
    * this brings in environment variables to public and private nuxt references
    */
   publicRuntimeConfig: {
+    etherscan_key: process.env.etherscan_key,
     network: "rinkeby",
     infuraUrlRinkeby: process.env.INFURA_URL_RINKEBY || "example",
     infuraUrlMain: process.env.INFURA_URL_RINKEBY || "example",

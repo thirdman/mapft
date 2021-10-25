@@ -8,15 +8,59 @@
       </div>
       <div class="col col-3 info-column" v-if="panel">
       </div>
-      <div class="col content-column" :class="panel ? 'col-9' : 'col-11'">
+      <div class="col content-column pa-2" :class="panel ? 'col-9' : 'col-11'">
         <client-only>
-          <!-- <div class="error-message" v-if="gameStatus === 'error'"><label>Error</label>Game Data Not Found</div> -->
-          <div class="loading-container"  v-if="gameStatus === 'loading' || binStatus === 'working' ">
-            <Loading message="Loading..." /> 
+          <div class="loading-container"  v-if="mapStatus === 'loading' || binStatus === 'working' ">
+            <Loading message="Getting Contract Data..." /> 
+          </div>
+          <div class="loading-container"  v-if="mapStatus === 'working' || binStatus === 'working' ">
+            <Loading message="Creating Game Map..." /> 
           </div>
           <div class="info-container" v-if="gameStatus === 'ready'">
-            This will load map {{mapId}}
-            <v-btn @click="handleGenerateMap(mapId)" :disabled="!mapId">load</v-btn>
+            <div class="map-load" v-if="mapStatus === 'ready' && !mapOptions">
+              <h3>Load Map from Contract</h3>
+              <p>This will load map token: {{mapId}}</p>
+              <v-btn @click="handleGenerateMap(mapId)" :disabled="!mapId" color="primary">Load</v-btn>
+            </div>
+            <v-card v-if="mapOptions" outlined>
+              <v-card-title>Preview Map</v-card-title>
+              <v-card-text>
+            <div class="row preview-row" >
+              <div class="col">
+                <map-mini :gameData="compiledPreviewData" size="240" />
+              </div>
+              <div class="col">
+                <label>Token Id</label>
+                {{mapId}}
+              </div>
+              <div class="col">
+                <label>Size</label>
+                {{mapOptions.rows}}
+              </div>
+            </div>
+            <v-divider />
+            <div class="row preview-row" v-if="mapOptions">
+              <label>Tile Set</label>
+              <tile-set-select :selected="options.tileSetId" :onAction="setTileSet" v-if="tileSets" />
+            </div>
+            </v-card-text>
+            <v-divider />
+              <v-card-actions>
+                <v-btn 
+                  @click="handleGenerateGame" 
+                  color="primary"
+                  :disabled="!mapOptions || !options.tileSetId">Render Map</v-btn>
+                <v-btn 
+                  plain
+                  @click="() => {this.mapOptions = null}" 
+                  :disabled="!mapOptions ">Cancel</v-btn>
+              </v-card-actions>
+            </v-card>
+            <!-- <div class="row ma-0 mt-0 py-2  info-item minimap-row d-flex align-center justify-center"  >
+            </div> -->
+            <div>
+              {{mapStatus}}
+            </div>
           </div>
           
         </client-only>
@@ -84,10 +128,12 @@ export default {
       isLoadingAssets: false,
       units: null,
       scale: 1,
+      mapOptions: null,
+      mapStatus: null,
     }
   },
   head: {
-    title: 'DungeoNFT',
+    title: 'Map',
     meta: [
       { hid: 'description', name: 'description', content: 'A NFT platform with a focus on extendability, flexibility, and on-chain data.' },
       { hid: "og:title", name: "og:title", content: "SVG Tokens" },
@@ -110,8 +156,10 @@ export default {
   },
   mounted(){
     // const {params} = this.$route;
-    // const {id} = params;
-    
+    const {mapId} = this;
+    if(mapId){
+      this.handleGenerateMap(mapId)
+    }
   },
   async fetch() {
       const {params} = this.$route;
@@ -134,18 +182,17 @@ export default {
       // tiles: "ui/tiles",
       playerTemplate: "ui/playerTemplate",
       games: "ui/games",
-      localGames: "ui/localGames",
+      // localGames: "ui/localGames",
       userTeam: "ui/userTeam",
-      userAssets: "ui/userAssets",
-      instructionsRead: "ui/instructionsRead",
-      introRead: "ui/introRead",
-      showTeamSelect: "ui/showTeamSelect",
-      // tileMap: 'ui/tileMap',
-      //activeGame: 'ui/activeGame',
-      demoData: 'ui/demoData',
+      // userAssets: "ui/userAssets",
+      // instructionsRead: "ui/instructionsRead",
+      // introRead: "ui/introRead",
+      // showTeamSelect: "ui/showTeamSelect",
+      
       tileTemplate: 'ui/tileTemplate',
       itemTemplate: 'ui/itemTemplate',
-      optionsTemplate: 'ui/optionsTemplate'
+      optionsTemplate: 'ui/optionsTemplate',
+      tileSets: 'ui/tileSets'
     }),
     compiledOptions(){
       const {
@@ -157,12 +204,27 @@ export default {
         cols: this.options.newCols, 
         useDefaultTeams: this.options.optionUseDefault, 
         owner: walletAddress, 
-        mapMode: this.options.optionMapMode, 
+        // mapMode: this.options.optionMapMode, 
+        // useEdgePoints: this.options.optionMapMode !== 'explore',
+        mapMode: this.options.fixed, 
+        useEdgePoints: true,
         title: this.options.gameTitle,
-        useEdgePoints: this.options.optionMapMode !== 'explore',
+        loadGame: true,
+        // tileSetId: this.tileSetId
         }
-        console.log('compiledOPtions', compiledOptions)
       return compiledOptions;
+    },
+    compiledPreviewData(){
+      const {
+        mapOptions, 
+        } = this
+        const compiledData = {
+          id: mapOptions.id,
+          name: "test",
+          tileMap: mapOptions.tileMap,
+          options: mapOptions
+        }
+      return compiledData;
     }
   },
   methods: {
@@ -188,30 +250,42 @@ export default {
       generateMapTiles: 'ui/generateMapTiles',
       arrayFromMapGrid: 'ui/arrayFromMapGrid',
       updateActiveGame: 'ui/updateActiveGame',
+      readMap: 'ui/readMap',
     }),
    
     async handleGenerateMap(mapId){
       console.log('handleGenerateMap', mapId)
       const {options, compiledOptions} = this;
-      
-      const gameId = await this.generateGame(compiledOptions);
-      console.log('handleGenerateMap gameId', gameId)
+      this.mapStatus = "loading"
+      const mapData = await this.readMap({mapId});
+      console.log('mapData', mapData)
+      if(mapData){
+        this.mapStatus = "ready"
+        const newOptions = {...compiledOptions, 
+        ...mapData,
+        // tileMap: mapData.tileMap
+        // useMapGrid: true, mapGrid: mapData.mapGrid, tileMap: mapData.tileMap, mapId: mapData.mapId
+        }
+        this.mapOptions = newOptions
+      }
     },
-    handleGenerateGame(props){
-      console.log('do it', props);
-      this.showNewGameDialog = false,
-      this.generateGame(props);
+    async handleGenerateGame(){
+      const {mapOptions} = this;
+      this.showNewGameDialog = false;
+      this.mapStatus = "working"
+      const gameId = await this.generateGame(mapOptions);
+      if(gameId){
+        this.mapStatus = "ready"
+        this.$router.push(`/game/${gameId}`)
+      }
     },
-    
-    
-    
-    
+    setTileSet(id){
+      const tempOptions = {...this.options, tileSetId: id}
+      this.options = tempOptions;
+    }
     
   }
 }
 </script>
-
 <style lang="scss">
-
-
 </style>

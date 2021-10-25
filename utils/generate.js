@@ -28,6 +28,7 @@ const compileStaticTileMap = (data) => {
     tileSetId,
     tileSetBase,
     returnTiles = true,
+    tileSetInclusive,
   } = data;
   if (!tiles) {
     return;
@@ -121,7 +122,7 @@ const compileStaticTileMap = (data) => {
         });
       }
     }
-
+    const isAccessible = calculateAccessible(tileImageIndex, tileSetInclusive);
     const imageSrc = generateSrc({
       tileIndex: tileImageIndex,
       tileSetId,
@@ -135,6 +136,7 @@ const compileStaticTileMap = (data) => {
       newTileValue: 0,
       tile,
       location: [col, row],
+      isAccessible,
     };
 
     const mergedTile = compileTile(optionObj);
@@ -156,6 +158,7 @@ const compileTile = (data) => {
     location,
     walletAddress,
     tile,
+    isAccessible,
   } = data;
   console.log("tiles", tiles);
 
@@ -179,6 +182,7 @@ const compileTile = (data) => {
     },
     index: newTileIndex,
     location: location,
+    isAccessible,
     // title: "blah",
     // id: "123",
     src: newTileSrc,
@@ -221,7 +225,7 @@ const calculateTile = (data) => {
   } = data;
   const row = location[1];
   const col = location[0];
-  console.log("calculteTile dataa", data);
+  // console.log("calculteTile dataa", data);
   // const { minValue = 10, maxValue = 20 } = settings;
   const { preferConnection = true, connectionChance = 75 } = settings;
   if (!tileMap[row]) {
@@ -522,6 +526,20 @@ const calculateImageIndex = (north, east, south, west) => {
   return sum;
 };
 
+const calculateAccessible = (tileIndex, tileSetInclusive) => {
+  console.log("calculateAccessible", tileIndex, tileSetInclusive);
+  if (tileSetInclusive) {
+    const accessibleIndexArray = [
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+    ];
+    const isAccessible = accessibleIndexArray.includes(tileIndex);
+    return isAccessible;
+  } else {
+    const accessibleIndexArray = [15, 16];
+    const isAccessible = accessibleIndexArray.includes(tileIndex);
+    return isAccessible;
+  }
+};
 const generateSrc = ({
   tileIndex,
   tileSetId = "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me",
@@ -545,4 +563,10 @@ const random = (min, max, float = false) => {
   return Math.floor(val);
 };
 
-export { calculateTile, forceCalculateTile, compileTile, compileStaticTileMap };
+export {
+  calculateTile,
+  forceCalculateTile,
+  compileTile,
+  compileStaticTileMap,
+  calculateAccessible,
+};

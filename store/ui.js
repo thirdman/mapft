@@ -1,12 +1,9 @@
 import { getField, updateField } from "vuex-map-fields";
 import { v4 as uuidv4 } from "uuid";
 import { AvatarGenerator } from "random-avatar-generator";
-import {
-  readThatShit,
-  readThatMeta,
-  // readAdditionalMeta,
-  // readImageLink,
-} from "../utils/web3Read";
+import { readThatShit, readThatMeta } from "../utils/web3Read";
+import { MAPABI } from "../utils/mapContracts";
+import { ethers } from "ethers";
 import { compileStaticTileMap } from "../utils/generate";
 
 // import { resolveEns } from "../utils/wallet";
@@ -16,30 +13,35 @@ const tileSets = [
     id: "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me",
     previewIndex: 7,
     fileType: "png",
+    inclusive: true,
   },
   {
-    name: "cavern",
+    name: "Cavern (Inclusive)",
     id: "QmQJXpkHNUkf5Y1LfKCYeLPZ2akZfeyoaBVUayQYreJ3ok",
     previewIndex: 7,
     fileType: "png",
+    inclusive: true,
   },
   {
-    name: "Cavern (Tight)",
+    name: "Cavern (Exclusive)",
     id: "QmernFPAoC7LfsRctzNQdmwvWbqiD3faWVK5ai5mugdMMM",
     previewIndex: 7,
     fileType: "png",
+    inclusive: false,
   },
   {
     name: "Island (Exclusive)",
     id: "QmVQKiA2t4T376tf9R2VarHhibZC9pVAmmhjvFe7MN1ryJ",
     previewIndex: 7,
     fileType: "png",
+    inclusive: false,
   },
   {
     name: "Island (Inclusive)",
     id: "Qmd7d6UxQX4Zff7WrnqXsyUc2QaimaKKegghEub9ZaXVkk",
     previewIndex: 7,
     fileType: "png",
+    inclusive: true,
   },
 ];
 const playerTemplate = {
@@ -589,7 +591,8 @@ const optionsTemplate = {
   optionMapMode: "explore",
   gameTitle: "New Game",
   toggle_mechanic: null,
-  tileSetId: "QmcCeeuE1hxx9R8vfqLa8ma2jEyiqgzyntS1wGX8wFU3Me",
+  tileSetId: "QmernFPAoC7LfsRctzNQdmwvWbqiD3faWVK5ai5mugdMMM",
+  tileSetInclusive: true,
   toggle_tileset: 0,
 };
 const defaultCreatures = [106, 319, 341, 23, 401, 22, 195, 276, 163, 295];
@@ -1168,6 +1171,98 @@ export const mutations = {
 };
 
 export const actions = {
+  async readMap(context, payload) {
+    const { mapId, contractId } = payload;
+    let etherscan_key = this.app.$config.etherscan_key;
+    let contractAddress =
+      contractId ||
+      this.app.$config.map_contract_address ||
+      "0xB14Cf44b866c2dd36aFfD9577962CA8755e973F8";
+    let provider = new ethers.providers.EtherscanProvider(
+      "rinkeby",
+      etherscan_key
+    );
+    const tokenId = mapId || 1;
+    // const tokenId = 1;
+    let contract = new ethers.Contract(contractAddress, MAPABI, provider);
+    const size = await contract.functions.getSize(tokenId); // Call the 'getSize' function on the contract
+    const layout = await contract.functions.getLayout(tokenId); // Call the 'getSize' function on the contract
+    const entities = await contract.functions.getEntities(tokenId); // Call the 'getSize' function on the contract
+    // const name = await contract.functions.getName(tokenId); // Call the 'getSize' function on the contract
+
+    // console.log("--- RAW OUTPUT ---");
+    // console.log(`Size: ${size}`);
+    // console.log(`Layout: ${layout}`);
+    // console.log(`Entities: ${entities}`);
+    // console.log("--- PROCESSED ---");
+
+    /* Parse Layout into binary */
+    const layoutInt = BigInt(layout); // Process uint256 -> javascript readable int
+    const bits = layoutInt.toString(2); // Convert BigInt to binary
+    console.log("bits", bits, layoutInt);
+    /* Store dungeon in 2D array */
+    let dungeon = []; // Array to store our dungeon coordinates
+
+    let counter = 0;
+    for (let y = 0; y < size; y++) {
+      let row = [];
+      for (let x = 0; x < size; x++) {
+        const bit = bits[counter];
+        row.push(bit);
+        counter++;
+      }
+      dungeon.push(row);
+    }
+
+    /* Parse entities into array */
+    let tmp = entities.toString().split(",");
+    let numEntities = tmp.length / 3; // Entities always come in 3: x, y, entityType
+    let entityList = [];
+
+    for (let i = 0; i < numEntities; i++) {
+      let entity = {
+        x: parseInt(tmp[i]),
+        y: parseInt(tmp[i + 2]),
+        entityType: parseInt(tmp[i + 4]),
+      };
+
+      entityList.push(entity);
+
+      // Update dungeon with our entity
+      if (entity.entityType == 1) {
+        // Place a door
+        dungeon[entity.y][entity.x] = "D";
+      } else if (entity.entityType == 0) {
+        // Place a point of interest
+        dungeon[entity.y][entity.x] = "p";
+      }
+    }
+
+    console.log("dungeon", dungeon);
+    const newMapGrid = toString(dungeon);
+
+    console.log(entityList);
+    const useMapGrid = true;
+    let newTileMap;
+    if (useMapGrid) {
+      newTileMap = await context.dispatch("arrayFromMapGrid", {
+        grid: toString(dungeon),
+      });
+    }
+    console.log("newTileMap", newTileMap);
+    const mapInfo = {
+      mapId,
+      mapGrid: newMapGrid,
+      tileMap: newTileMap,
+      rows: size[0],
+      cols: size[0],
+      layout: layout,
+      entities: entityList,
+      useMapGrid: true,
+    };
+    console.log("mapInfo", mapInfo);
+    return mapInfo;
+  },
   async generateGame(context, payload) {
     const {
       rows,
@@ -1184,14 +1279,23 @@ export const actions = {
       useEdgePoints,
       mapGrid,
     } = payload;
-    const options = { ...payload };
-    const { localGames, remoteGames, ipfsUrl, playerTemplate, walletAddress } =
-      context.state;
+
+    const {
+      localGames,
+      remoteGames,
+      ipfsUrl,
+      playerTemplate,
+      walletAddress,
+      tileSets,
+    } = context.state;
     if (!walletAddress) {
       return;
     }
-
     console.log("generate Game", payload);
+    const tileSetData = tileSets && tileSets.find((ts) => ts.id === tileSetId);
+    console.log("tileSetData", tileSetData);
+    const tileSetInclusive = tileSetData.inclusive;
+    const options = { ...payload, tileSetInclusive };
     let id = uuidv4();
     const newTileArray = new Array(rows * cols).fill(tileTemplate);
     let newGameArray = [];
@@ -1239,25 +1343,7 @@ export const actions = {
 
     console.log("compiledLocations", compiledLocations);
     console.log("flatLocations", flatLocations);
-    // console.log("newGameArray", newGameArray, flatLocations);
-    // const staticCreatureLocations = true;
-    // const staticLootLocations = true;
-    // const creatureArray =
-    //   optionUseCreatureGeneration && new Array(optionCreatureCount).fill();
-    // const creatureLocations = getRandomFromArray(
-    //   flatLocations,
-    //   optionCreatureCount
-    // );
-    // console.log("creatureLocations", creatureLocations);
-    // const creaturesArray = creatureLocations.map((loc, i) => {
-    //   const obj = {
-    //     location: loc,
-    //     asset: null,
-    //     used: false,
-    //   };
-    //   return obj;
-    // });
-    // const lootLocations = getRandomFromArray(flatLocations, optionLootCount);
+
     const creaturesArray =
       optionUseCreatureGeneration &&
       (await context.dispatch("getCreatures", {
@@ -1302,6 +1388,7 @@ export const actions = {
         mapGrid,
         tileSetId,
         tileSetBase: ipfsUrl,
+        tileSetInclusive,
       });
       // console.log("tempGameTiles", tempGameTiles);
     }
@@ -2243,4 +2330,18 @@ function getRandomFromArray(arr, n) {
     taken[x] = --len in taken ? taken[len] : len;
   }
   return result;
+}
+
+function toString(dungeon) {
+  // Returns a string representing the dungeon
+  let rowString = "";
+
+  for (let y = 0; y < dungeon.length; y++) {
+    for (let x = 0; x < dungeon.length; x++) {
+      const tile = dungeon[y][x];
+      rowString += `${tile} `;
+    }
+    rowString += "\n";
+  }
+  return rowString;
 }

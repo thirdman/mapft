@@ -95,7 +95,6 @@ export default {
       const {cols} = gameData.options;
       const tileSize = previewSize / cols;
       const theWidth = tileSize * cols;
-      
       return theWidth
     },
     mapHeight(){
@@ -103,7 +102,6 @@ export default {
       const {rows} = gameData.options;
       const tileSize = previewSize / rows;
       const theHeight = tileSize * rows;
-      
       return theHeight
     },
     tileSize(){
@@ -117,8 +115,8 @@ export default {
       const hasElementString = "1"
       const hasPointString = "2"
       const hasEncounterString = "3"
-      
       const {tileMap} = gameData;
+      console.log('minimap tilemap', tileMap)
       if(!gameData){return}
       const {rows, cols, useMapGrid} = gameData.options;
       if(!rows || !cols){
@@ -132,7 +130,6 @@ export default {
           const locationTile = gameData.tiles && gameData.tiles.find(tile => tile.location.toString() === thislocation);
           const team = locationTile && locationTile.meta.team;
           const gridElementValue = useMapGrid && tileMap && tileMap[rowIndex][colIndex];
-          // console.log('gridElementValue', gridElementValue, tileMap)
           const hasElement = gridElementValue === hasElementString;
           const hasPoint = gridElementValue === hasPointString;
           const hasEncounter = gridElementValue === hasEncounterString;
@@ -140,7 +137,7 @@ export default {
           })
         return asIndexes
       })
-      console.log('mini compiled map', compiledMap)
+      console.log('minimap compiled map', compiledMap)
       return compiledMap;
     },
     

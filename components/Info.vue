@@ -45,6 +45,9 @@
         <label>location</label>
         {{selectedData.location && selectedData.location.toString()}}
         <v-divider class="my-2"/>
+        <label>Accessible</label>
+        {{tile && tile.isAccessible ? "Yes" : 'No'}}
+        <v-divider class="ma-0"/>
         <label>Value</label>
         {{selectedData.meta.value}}
         <v-divider class="my-2"/>
@@ -145,15 +148,17 @@
             :disabled="!userTeam"
             v-if="devMode && selectedData.src"
             >Claim Tile...</v-btn> -->
+            
           <v-btn
             depressed
             primary
             block
             outlined
-            :disabled="!tile.src"
+            :disabled="!tile.src || tile.isAccessible === false"
             :color="userTeam ? 'primary' : ''"
             @click="onMove && onMove(selectedData.location)"
             v-if="onMove && userPlayer"
+            v-tooltip="`${tile.isAccessible ? 'Move to this tile' : 'You cannot move to this tile'}`"
             >
               Move Here
             </v-btn>
