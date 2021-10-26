@@ -37,6 +37,9 @@
           <nuxt-link to="/games" class=" navLink">GAMES</nuxt-link>
         </div>
         <div class="navItem" >
+          <nuxt-link to="/map/1" class=" navLink">MAPS</nuxt-link>
+        </div>
+        <div class="navItem" >
           <nuxt-link to="/resources" class=" navLink">ELEMENTS</nuxt-link>
         </div>
         <!-- <div class="navItem" >

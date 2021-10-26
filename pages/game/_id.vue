@@ -71,7 +71,7 @@
       </v-card>
     </v-slide-y-transition> -->
     <v-slide-y-reverse-transition>
-      <v-card outlined elevation="4" :class="`claim`" v-if="showMapControls">
+      <v-card outlined elevation="4"  :class="`claim`" v-if="showMapControls">
         <v-card-title class="d-flex align-center">
           <div class="col">
             <label>Map Settings</label>
@@ -432,6 +432,9 @@
                   <div class="tile-item" ><v-icon>mdi-flag</v-icon></div>
                   <div class="tile-item" ><v-icon>mdi-flag</v-icon></div> -->
                 </div>
+                  <div class="player-edit" v-if="userIsPlayer">
+                    <v-icon>mdi-edit</v-icon>
+                  </div>
               </div>
               <div class="col pa-0 d-flex align-center justify-center" v-if="!userIsPlayer">
                 <v-btn plain color="primary" @click="() => {this.showGameWelcome = true}">Join Game</v-btn>
